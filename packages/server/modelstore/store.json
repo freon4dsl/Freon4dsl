@@ -658,16 +658,20 @@
                     "file": "Event.json"
                 },
                 {
-                    "name": "Query",
-                    "file": "Query.json"
-                },
-                {
-                    "name": "LionWeb",
-                    "file": "LionWeb.json"
-                },
-                {
                     "name": "DeltaTypes",
                     "file": "DeltaTypes.json"
+                },
+                {
+                    "name": "Chunks",
+                    "file": "Chunks.json"
+                },
+                {
+                    "name": "Response",
+                    "file": "Response.json"
+                },
+                {
+                    "name": "Request",
+                    "file": "Request.json"
                 }
             ]
         }

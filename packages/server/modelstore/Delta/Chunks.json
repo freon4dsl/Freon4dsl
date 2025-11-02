@@ -1,0 +1,2299 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-protocol",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-276",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-Types"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Types-name"
+               },
+               "value": "Chunks"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Types-primitiveTypes"
+               },
+               "children": [
+                  "ID-285",
+                  "ID-289",
+                  "ID-291",
+                  "ID-311"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Types-objectTypes"
+               },
+               "children": [
+                  "ID-312",
+                  "ID-322",
+                  "ID-339",
+                  "ID-343",
+                  "ID-351",
+                  "ID-352",
+                  "ID-353",
+                  "ID-365",
+                  "ID-374"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-285",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PrimitiveType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-primitiveType"
+               },
+               "value": "string"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-validator"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebId"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-289",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PrimitiveType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-primitiveType"
+               },
+               "value": "string"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-validator"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebKey"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-291",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PrimitiveType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-primitiveType"
+               },
+               "value": "string"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-validator"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebVersion"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-311",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PrimitiveType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-primitiveType"
+               },
+               "value": "string"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-validator"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebSerializationFormatVersion"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-312",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebJsonMetaPointer"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": [
+                  "ID-313",
+                  "ID-318",
+                  "ID-321"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-313",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "key"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebKey",
+                     "reference": "ID-289"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-312"
+      },
+      {
+         "id": "ID-318",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "version"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebVersion",
+                     "reference": "ID-291"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-312"
+      },
+      {
+         "id": "ID-321",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "language"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebKey",
+                     "reference": "ID-289"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-312"
+      },
+      {
+         "id": "ID-322",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "ResponseMessage"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": [
+                  "ID-328",
+                  "ID-338",
+                  "ID-349"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-328",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "kind"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-322"
+      },
+      {
+         "id": "ID-338",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "message"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-322"
+      },
+      {
+         "id": "ID-349",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "data"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "KeyValuePair",
+                     "reference": "ID-13"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-322"
+      },
+      {
+         "id": "ID-339",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebJsonChunk"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": [
+                  "ID-340",
+                  "ID-341",
+                  "ID-350"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-340",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "serializationFormatVersion"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebSerializationFormatVersion",
+                     "reference": "ID-311"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-339"
+      },
+      {
+         "id": "ID-341",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "languages"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebJsonUsedLanguage",
+                     "reference": "ID-343"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-339"
+      },
+      {
+         "id": "ID-350",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "nodes"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebJsonNode",
+                     "reference": "ID-351"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-339"
+      },
+      {
+         "id": "ID-343",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebJsonUsedLanguage"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": [
+                  "ID-375",
+                  "ID-376"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-375",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "key"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebKey",
+                     "reference": "ID-289"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-343"
+      },
+      {
+         "id": "ID-376",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "version"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebVersion",
+                     "reference": "ID-291"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-343"
+      },
+      {
+         "id": "ID-351",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebJsonNode"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": [
+                  "ID-377",
+                  "ID-383",
+                  "ID-19",
+                  "ID-20",
+                  "ID-22",
+                  "ID-384",
+                  "ID-385"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-377",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "id"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebId",
+                     "reference": "ID-285"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-351"
+      },
+      {
+         "id": "ID-383",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "classifier"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-351"
+      },
+      {
+         "id": "ID-19",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "properties"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebJsonProperty",
+                     "reference": "ID-352"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-351"
+      },
+      {
+         "id": "ID-20",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "containments"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebJsonContainment",
+                     "reference": "ID-353"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-351"
+      },
+      {
+         "id": "ID-22",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "references"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebJsonReference",
+                     "reference": "ID-365"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-351"
+      },
+      {
+         "id": "ID-384",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "annotations"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebId",
+                     "reference": "ID-285"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-351"
+      },
+      {
+         "id": "ID-385",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "parent"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebId",
+                     "reference": "ID-285"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-351"
+      },
+      {
+         "id": "ID-352",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebJsonProperty"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": [
+                  "ID-386",
+                  "ID-400"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-386",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "property"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-352"
+      },
+      {
+         "id": "ID-400",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "value"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-352"
+      },
+      {
+         "id": "ID-353",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebJsonContainment"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": [
+                  "ID-387",
+                  "ID-401"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-387",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "containment"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-353"
+      },
+      {
+         "id": "ID-401",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "children"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebId",
+                     "reference": "ID-285"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-353"
+      },
+      {
+         "id": "ID-365",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebJsonReference"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": [
+                  "ID-392",
+                  "ID-402"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-392",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "reference"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-365"
+      },
+      {
+         "id": "ID-402",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "targets"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebJsonReferenceTarget",
+                     "reference": "ID-374"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-365"
+      },
+      {
+         "id": "ID-374",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "LionWebJsonReferenceTarget"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": [
+                  "ID-403",
+                  "ID-410"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-276"
+      },
+      {
+         "id": "ID-403",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "resolveInfo"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-374"
+      },
+      {
+         "id": "ID-410",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "reference"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebId",
+                     "reference": "ID-285"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-374"
+      }
+   ]
+}

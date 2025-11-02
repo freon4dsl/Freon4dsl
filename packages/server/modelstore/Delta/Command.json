@@ -291,7 +291,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -392,8 +392,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -461,7 +461,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -564,7 +564,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -631,8 +631,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -803,7 +803,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -870,8 +870,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -1041,7 +1041,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -1108,8 +1108,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -1213,7 +1213,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -1348,8 +1348,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -1521,7 +1521,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -1589,7 +1589,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -1656,8 +1656,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -1830,7 +1830,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -1965,8 +1965,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -2102,7 +2102,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -2206,7 +2206,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -2273,8 +2273,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -2410,7 +2410,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -2512,8 +2512,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -2649,7 +2649,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -2819,7 +2819,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -2924,7 +2924,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -2991,8 +2991,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -3128,7 +3128,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -3196,7 +3196,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -3299,8 +3299,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -3436,7 +3436,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -3504,7 +3504,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -3675,7 +3675,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -3743,7 +3743,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -3846,7 +3846,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -4085,7 +4085,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -4221,7 +4221,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -4325,7 +4325,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -4529,7 +4529,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -4632,7 +4632,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -4768,7 +4768,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -4938,7 +4938,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -5042,7 +5042,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -5178,7 +5178,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -5246,7 +5246,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -5417,7 +5417,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -5485,7 +5485,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -5590,7 +5590,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -5657,8 +5657,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -5794,7 +5794,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -5967,7 +5967,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -6034,8 +6034,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -6171,7 +6171,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -6346,7 +6346,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -6413,8 +6413,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -6550,7 +6550,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -6686,7 +6686,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -6862,7 +6862,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -6929,8 +6929,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -7066,7 +7066,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -7133,8 +7133,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -7338,7 +7338,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -7445,7 +7445,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -7512,8 +7512,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -7648,8 +7648,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -7853,7 +7853,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -7959,7 +7959,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -8026,8 +8026,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -8299,7 +8299,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -8409,7 +8409,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -8476,8 +8476,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -8613,7 +8613,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -8680,8 +8680,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -8885,7 +8885,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -9021,7 +9021,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -9130,7 +9130,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -9197,8 +9197,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -9333,8 +9333,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -9538,7 +9538,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -9674,7 +9674,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -9782,7 +9782,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -9849,8 +9849,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -10122,7 +10122,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -10258,7 +10258,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -10362,7 +10362,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -10429,8 +10429,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -10670,7 +10670,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -10737,8 +10737,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -10979,7 +10979,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -11046,8 +11046,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -11355,7 +11355,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -11422,8 +11422,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -11559,7 +11559,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -11663,7 +11663,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -11730,8 +11730,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -11867,7 +11867,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -11972,7 +11972,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -12039,8 +12039,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": "ID-20"
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -12176,7 +12176,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -12244,7 +12244,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -12412,8 +12412,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "String",
-                     "reference": "ID-3"
+                     "resolveInfo": "CommandId",
+                     "reference": "ID-40"
                   }
                ]
             }
@@ -12503,7 +12503,7 @@
                   "version": "2023.1",
                   "key": "-key-PropertyDef-name"
                },
-               "value": "protocolMessage"
+               "value": "protocolMessages"
             },
             {
                "property": {
@@ -12519,7 +12519,7 @@
                   "version": "2023.1",
                   "key": "-key-PropertyDef-isList"
                },
-               "value": "false"
+               "value": "true"
             },
             {
                "property": {

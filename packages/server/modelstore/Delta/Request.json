@@ -19,17 +19,17 @@
                "property": {
                   "language": "-key-protocol",
                   "version": "2023.1",
-                  "key": "-key-Type-name"
+                  "key": "-key-MessageGroup-taggedUnionProperty"
                },
-               "value": "Query"
+               "value": "messageKind"
             },
             {
                "property": {
                   "language": "-key-protocol",
                   "version": "2023.1",
-                  "key": "-key-MessageGroup-taggedUnionProperty"
+                  "key": "-key-Type-name"
                },
-               "value": "messageKind"
+               "value": "Request"
             }
          ],
          "containments": [
@@ -41,15 +41,13 @@
                },
                "children": [
                   "ID-133",
-                  "ID-152",
                   "ID-153",
-                  "ID-155",
+                  "ID-263",
                   "ID-137",
-                  "ID-140",
                   "ID-146",
-                  "ID-147",
-                  "ID-148",
-                  "ID-149"
+                  "ID-288",
+                  "ID-304",
+                  "ID-148"
                ]
             },
             {
@@ -309,37 +307,6 @@
          "parent": "ID-133"
       },
       {
-         "id": "ID-152",
-         "classifier": {
-            "language": "-key-protocol",
-            "version": "2023.1",
-            "key": "-key-ObjectType"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-Type-name"
-               },
-               "value": "SubscribeToChangingPartitionsResponse"
-            }
-         ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-ObjectType-properties"
-               },
-               "children": []
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-126"
-      },
-      {
          "id": "ID-153",
          "classifier": {
             "language": "-key-protocol",
@@ -432,7 +399,7 @@
                "targets": [
                   {
                      "resolveInfo": "LionWebId",
-                     "reference": "ID-22"
+                     "reference": "ID-285"
                   }
                ]
             }
@@ -441,7 +408,7 @@
          "parent": "ID-153"
       },
       {
-         "id": "ID-155",
+         "id": "ID-263",
          "classifier": {
             "language": "-key-protocol",
             "version": "2023.1",
@@ -454,7 +421,7 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "SubscribeToPartitionContentsResponse"
+               "value": "UnsubscribeFromPartitionContentsRequest"
             }
          ],
          "containments": [
@@ -465,7 +432,7 @@
                   "key": "-key-ObjectType-properties"
                },
                "children": [
-                  "ID-156"
+                  "ID-269"
                ]
             }
          ],
@@ -474,7 +441,7 @@
          "parent": "ID-126"
       },
       {
-         "id": "ID-156",
+         "id": "ID-269",
          "classifier": {
             "language": "-key-protocol",
             "version": "2023.1",
@@ -487,7 +454,7 @@
                   "version": "2023.1",
                   "key": "-key-PropertyDef-name"
                },
-               "value": "contents"
+               "value": "partition"
             },
             {
                "property": {
@@ -532,14 +499,14 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebDeltaJsonChunk",
-                     "reference": "ID-48"
+                     "resolveInfo": "LionWebId",
+                     "reference": "ID-285"
                   }
                ]
             }
          ],
          "annotations": [],
-         "parent": "ID-155"
+         "parent": "ID-263"
       },
       {
          "id": "ID-137",
@@ -567,7 +534,8 @@
                },
                "children": [
                   "ID-138",
-                  "ID-139"
+                  "ID-139",
+                  "ID-286"
                ]
             }
          ],
@@ -702,6 +670,74 @@
                },
                "targets": [
                   {
+                     "resolveInfo": "ClientId",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-137"
+      },
+      {
+         "id": "ID-286",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "repositoryId"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
                      "resolveInfo": "String",
                      "reference": "ID-3"
                   }
@@ -712,7 +748,7 @@
          "parent": "ID-137"
       },
       {
-         "id": "ID-140",
+         "id": "ID-146",
          "classifier": {
             "language": "-key-protocol",
             "version": "2023.1",
@@ -725,7 +761,38 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "SignOnResponse"
+               "value": "signOffRequest"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-126"
+      },
+      {
+         "id": "ID-288",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "ReconnectRequest"
             }
          ],
          "containments": [
@@ -736,7 +803,8 @@
                   "key": "-key-ObjectType-properties"
                },
                "children": [
-                  "ID-141"
+                  "ID-290",
+                  "ID-292"
                ]
             }
          ],
@@ -745,7 +813,7 @@
          "parent": "ID-126"
       },
       {
-         "id": "ID-141",
+         "id": "ID-290",
          "classifier": {
             "language": "-key-protocol",
             "version": "2023.1",
@@ -803,143 +871,17 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "String",
-                     "reference": "ID-3"
+                     "resolveInfo": "ParticipationId",
+                     "reference": "ID-41"
                   }
                ]
             }
          ],
          "annotations": [],
-         "parent": "ID-140"
+         "parent": "ID-288"
       },
       {
-         "id": "ID-146",
-         "classifier": {
-            "language": "-key-protocol",
-            "version": "2023.1",
-            "key": "-key-ObjectType"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-Type-name"
-               },
-               "value": "signOffRequest"
-            }
-         ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-ObjectType-properties"
-               },
-               "children": []
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-126"
-      },
-      {
-         "id": "ID-147",
-         "classifier": {
-            "language": "-key-protocol",
-            "version": "2023.1",
-            "key": "-key-ObjectType"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-Type-name"
-               },
-               "value": "signOffResponse"
-            }
-         ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-ObjectType-properties"
-               },
-               "children": []
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-126"
-      },
-      {
-         "id": "ID-148",
-         "classifier": {
-            "language": "-key-protocol",
-            "version": "2023.1",
-            "key": "-key-ObjectType"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-Type-name"
-               },
-               "value": "ListPartitionsRequest"
-            }
-         ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-ObjectType-properties"
-               },
-               "children": []
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-126"
-      },
-      {
-         "id": "ID-149",
-         "classifier": {
-            "language": "-key-protocol",
-            "version": "2023.1",
-            "key": "-key-ObjectType"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-Type-name"
-               },
-               "value": "ListPartitionsResponse"
-            }
-         ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-ObjectType-properties"
-               },
-               "children": [
-                  "ID-151"
-               ]
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-126"
-      },
-      {
-         "id": "ID-151",
+         "id": "ID-292",
          "classifier": {
             "language": "-key-protocol",
             "version": "2023.1",
@@ -952,7 +894,7 @@
                   "version": "2023.1",
                   "key": "-key-PropertyDef-name"
                },
-               "value": "partitions"
+               "value": "lastReceivedSequenceNumber"
             },
             {
                "property": {
@@ -997,14 +939,146 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebDeltaJsonChunk",
-                     "reference": "ID-48"
+                     "resolveInfo": "SequenceNumber",
+                     "reference": "ID-39"
                   }
                ]
             }
          ],
          "annotations": [],
-         "parent": "ID-149"
+         "parent": "ID-288"
+      },
+      {
+         "id": "ID-304",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "GetAvailableIdsRequest"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": [
+                  "ID-308"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-126"
+      },
+      {
+         "id": "ID-308",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "count"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Number",
+                     "reference": "ID-78"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-304"
+      },
+      {
+         "id": "ID-148",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-ObjectType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "ListPartitionsRequest"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-ObjectType-properties"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-126"
       },
       {
          "id": "ID-127",
@@ -1088,7 +1162,7 @@
                   "version": "2023.1",
                   "key": "-key-PropertyDef-name"
                },
-               "value": "protocolMessage"
+               "value": "protocolMessages"
             },
             {
                "property": {
@@ -1104,7 +1178,7 @@
                   "version": "2023.1",
                   "key": "-key-PropertyDef-isList"
                },
-               "value": "false"
+               "value": "true"
             },
             {
                "property": {
