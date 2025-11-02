@@ -9,7 +9,7 @@ import { jsonAsString } from "../../util/index.js";
 import * as Keys from "./Keys.js";
 import { MetaKey } from "./Keys.js";
 import { FreLogger } from "../../logging/index.js";
-import { FreCreatePartAction, FreEditor, MenuItem } from "../index.js";
+import { FreCreatePartAction, type FreEditor, MenuItem } from "../index.js";
 import type { ListElementInfo } from "../index.js";
 import { FreLanguage } from "../../language/index.js";
 import type { DragAndDropType, FreLanguageClassifier, PropertyKind } from "../../language/index.js";
@@ -387,7 +387,8 @@ function deleteListElement(listParent: FreNode, propertyName: string, index: num
  * @param editor
  */
 function cutListElement(listParent: FreNode, propertyName: string, element: FreNode, editor: FreEditor) {
-    deleteListElement(listParent, propertyName, 0, element);
+    const index = element.freOwnerDescriptor().propertyIndex
+    deleteListElement(listParent, propertyName, index, element);
     editor.copiedElement = element;
 }
 
