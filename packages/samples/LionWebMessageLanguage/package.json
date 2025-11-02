@@ -13,7 +13,7 @@
     "generate-delta-types": "node dist/types/commandline/FreonCommandLineRunner.js folder -f ../../server/modelstore/Delta",
     "build": "npm run generate && npm run typecheck && npm run generateTypes && rollup -c ", 
     "build-samples": "npm run build",
-    "compile": "tsc && rollup --config",
+    "compile": "tsc && npm run generateTypes && rollup --config",
     "install-local": "npm install --registry http://localhost:4873",
     "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d src/defs -o src/",
     "clean-gen": "bash ../../../scripts/freon-samples-dev.sh clean-it -d src/defs -o src/",

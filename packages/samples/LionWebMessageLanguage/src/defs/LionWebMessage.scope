@@ -11,5 +11,20 @@ isNamespace { Types, MessageGroup, ObjectType }
 ObjectType {
     alternatives {
         self.owner().if(MessageGroup).owner().typeDefinitions;
+        self.owner().if(MessageGroup).owner();
+        self.owner().if(Types).owner().typeDefinitions;
+        self.owner().if(Types).owner();
+    }
+}
+
+MessageGroup {
+    imports {
+        self.owner().typeDefinitions;
+    }
+}
+
+Types {
+    imports {
+        self.owner().typeDefinitions;
     }
 }

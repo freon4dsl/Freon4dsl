@@ -11,8 +11,8 @@ modelunit Types {
     objectTypes:  ObjectType[];
 }
 
-modelunit MessageGroup { 
-    name: identifier;      // Query, Command, Event    
+modelunit MessageGroup implements Type { 
+//     name: identifier;      // Query, Command, Event    
     taggedUnionProperty: string; // messageKind 
     messages: ObjectType[]; 
     // Properties for all messages in this SchemaCategory
@@ -26,16 +26,15 @@ concept PropertyDef {
     mayBeNull: boolean = false;
     isList: boolean = false;
     isOptional: boolean = false; 
-    validate: string; // TODO e.g isKey, isId, 
 }
 
-abstract concept Type {
-        name: identifier;
+interface Type {
+    name: identifier;
 }
-concept PrimitiveType base Type {
+concept PrimitiveType implements Type {
     primitiveType: string; // TODO different for TS, C#, Python, Java 
     validator: string; // TODO e.g isKey, isId, 
 }
-concept ObjectType base Type {
+concept ObjectType implements Type {
     properties: PropertyDef[];
 }

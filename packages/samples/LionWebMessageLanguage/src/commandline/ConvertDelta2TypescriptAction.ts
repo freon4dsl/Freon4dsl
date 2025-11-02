@@ -1,8 +1,9 @@
-import { FreLionwebSerializer, FreModelUnit } from "@freon4dsl/core";
+import { AST, FreLionwebSerializer, FreModelUnit } from "@freon4dsl/core"
 import { LanguageRegistry, LionWebValidator } from "@lionweb/validation";
 import { CommandLineAction, CommandLineStringParameter } from "@rushstack/ts-command-line";
 import fs from "fs";
 import path from "path"
+import { LanguageEnvironment } from "../index.js"
 import { PrimitiveType, MessageGroup, ObjectType, Type, Types, Protocol } from "../language/gen/index.js"
 
 // import { AstTemplate } from "./templates/AstTemplate.js";
@@ -30,6 +31,7 @@ export class ConvertDelta2TypescriptAction extends CommandLineAction {
             description: "Folder containing delta definitions in json format"
         });
         this.protocol.name = "DeltaProtocol"
+        LanguageEnvironment.getInstance()
     }
 
     protected async onExecute(): Promise<void> {
@@ -67,14 +69,19 @@ export class ConvertDelta2TypescriptAction extends CommandLineAction {
         const primitiveTypes: string[] = [];
         const messageGroups: MessageGroup[] = []
         const types: Types[] = []
+        const localProtocol = this.protocol
         for (const ts of this.allModelUnits) {
             if (ts.freLanguageConcept() === "MessageGroup") {
                 messageGroups.push(ts as MessageGroup)
-                this.protocol.categories.push(ts as MessageGroup)
+                AST.changeNamed("Add MessageGroup to Protocol", () => {
+                    localProtocol.categories.push(ts as MessageGroup)
+                })
             }
             if (ts.freLanguageConcept() === "Types") {
                 types.push(ts as Types)
-                this.protocol.typeDefinitions.push(ts as Types)
+                AST.changeNamed("Add Types to Protocol", () => {
+                    localProtocol.typeDefinitions.push(ts as Types)
+                })
             }
         }
         this.protocol.categories.forEach(cat => {
@@ -82,15 +89,21 @@ export class ConvertDelta2TypescriptAction extends CommandLineAction {
             // const eventDefinitions = messageGroups.find(mg => mg.name === "Event")
             const eventTemplate = new TypeTemplates(cat, "https://github.com/LionWeb-io/specification/blob/main/delta/events.adoc#evnt")
             // const result = eventTemplate.commandTemplate();
-            const result = TypeTemplates.pretty(eventTemplate.commandTemplate(), "Generated from LionWeb Delta Model");
+            const result = TypeTemplates.pretty("typescript", eventTemplate.commandTemplate(), "Generated from LionWeb Delta Model");
             this.writeToFile(`${deltaFolderName}${pathSeparator}generated_ts${pathSeparator}${cat.name}.ts`, result);
+            
+            const jsonResult = TypeTemplates.pretty("typescript", eventTemplate.messageGroup2DefinitionTemplate())
+            this.writeToFile(`${deltaFolderName}${pathSeparator}generated_ts${pathSeparator}${cat.name}Definitions.ts`, jsonResult);
         })
         this.protocol.typeDefinitions.forEach(typeDef => {
             console.log(`GENERATING types ${typeDef.name}`)
             // const eventDefinitions = messageGroups.find(mg => mg.name === "Event")
             const eventTemplate = new TypeTemplates(null, "https://github.com/LionWeb-io/specification/blob/main/delta/events.adoc#evnt")
-            const result = TypeTemplates.pretty(eventTemplate.typeTemplate(typeDef), "Generated from LionWeb Delta Model");
+            const result = TypeTemplates.pretty("typescript", eventTemplate.typeTemplate(typeDef), "Generated from LionWeb Delta Model");
             this.writeToFile(`${deltaFolderName}${pathSeparator}generated_ts${pathSeparator}${typeDef.name}.ts`, result);
+
+            const jsonResult = TypeTemplates.pretty("typescript", eventTemplate.types2DefinitionTemplate(typeDef))
+            this.writeToFile(`${deltaFolderName}${pathSeparator}generated_ts${pathSeparator}${typeDef.name}Definitions.ts`, jsonResult);
         })
 
         
