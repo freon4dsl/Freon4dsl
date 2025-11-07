@@ -34,7 +34,7 @@ InsurancePart{
 }
 
 InsuranceProduct {[
-    Insurance Product ${name} ( public name: ${productName multiline} ) USES ${basedOn horizontal separator[, ]}
+    Insurance Product ${name} ( public name: ${productName} ) USES ${basedOn horizontal separator[, ]}
             /* An insurance product defines a combination of to be insured events that are packaged as a sellable product. */
         Themes: ${themes horizontal separator[, ]}
             /* Themes gives a list of types of insurance parts that are packaged in this product. */
@@ -64,5 +64,5 @@ Parameter {
      [${name} : ${declaredType}]
 }
 
-// No need for projection for DocuType and its implementors, they
+// No need for projection for DocuType and its implementers, they
 // are only used as references, so their names suffice.

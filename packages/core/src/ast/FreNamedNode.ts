@@ -6,8 +6,6 @@ import { FreLogger } from '../logging/index.js';
 
 export interface FreNamedNode extends FreNode {
     name: string;
-
-    // copy(): FreNamedNode;
 }
 
 /**
