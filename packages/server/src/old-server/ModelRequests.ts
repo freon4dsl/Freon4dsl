@@ -1,6 +1,6 @@
 import { issuestoString, LanguageRegistry, LionWebJsonChunk, LionWebValidator } from "@lionweb/validation"
 import * as fs from "fs";
-import { IRouterContext } from "koa-router";
+import { IRouterContext } from "@koa/router";
 import * as path from "node:path"
 import { FileUtil } from "../server/FileUtil.js"
 // var path = require("path");
