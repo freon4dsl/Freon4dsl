@@ -26,7 +26,7 @@ export class ConfigurationTemplate {
             import { type ${workerName} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/index.js";
 
             /**
-             * Class ${configurationName} is the place where you can add all your customisations.
+             * Class ${configurationName} is the place where you can add all your customizations.
              * These will be used through the 'freonConfiguration' constant by any generated
              * part of your language environment.
              */
