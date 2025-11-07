@@ -63,9 +63,9 @@
     "@vitest/ui": "3.2.4"
   },
   "dependencies": {
-    "@freon4dsl/core": "2.0.0",
-    "@freon4dsl/meta": "2.0.0",
-    "@freon4dsl/test-helpers": "2.0.0",
+    "@freon4dsl/core": "~2.0.0",
+    "@freon4dsl/meta": "~2.0.0",
+    "@freon4dsl/test-helpers": "~2.0.0",
     "@lionweb/validation": "^0.6.3",
     "protobufjs": "7.5.4",
     "global": "^4.4.0",

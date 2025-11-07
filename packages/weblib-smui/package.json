@@ -16,7 +16,8 @@
   "scripts": {
     "clean": "rm -rf node_modules/",
     "dev": "vite dev",
-    "build": "vite build && npm run prepack && publint",
+      "build": "echo No build for Weblib-smui",
+    "build-old": "vite build && npm run prepack && publint",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "prepack": "svelte-kit sync && svelte-package",
@@ -82,8 +83,8 @@
     "vite": "^6.1.0"
   },
   "dependencies": {
-    "@freon4dsl/core": "2.0.0",
-    "@freon4dsl/core-svelte": "2.0.0",
+    "@freon4dsl/core": "~2.0.0",
+    "@freon4dsl/core-svelte": "~2.0.0",
     "@material/theme": "^14.0.0",
     "@material/typography": "^14.0.0",
     "@mdi/js": "^7.4.47",
