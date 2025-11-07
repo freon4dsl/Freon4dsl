@@ -5,7 +5,8 @@ import { parseIds } from "./IdParser.js";
 import { parse } from "./LanguageGrammar.js";
 import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName, setIdMap } from "./LanguageCreators.js";
 import { FreLangChecker } from "../checking/index.js";
-import { notNullOrUndefined } from '@freon4dsl/core';
+import { notNullOrUndefined } from '../../utils/file-utils/index.js';
+
 
 export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     idFile: string | undefined;
