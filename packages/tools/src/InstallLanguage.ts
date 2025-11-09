@@ -1,6 +1,6 @@
 import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";
-import { CopyLanguage } from "./CopyLanguage";
-import { SaveLanguage } from "./SaveLanguage";
+import { CopyLanguage } from "./CopyLanguage.js";
+import { SaveLanguage } from "./SaveLanguage.js";
 
 export class InstallLanguage extends CommandLineParser {
     private languageAction: CopyLanguage;

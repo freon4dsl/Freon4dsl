@@ -2,7 +2,7 @@ import { CommandLineAction, CommandLineStringParameter } from "@rushstack/ts-com
 import fs from "fs";
 import { cp } from "fs/promises";
 import path from "node:path";
-import { WebAppConfigTemplate } from "./WepAppConfigTemplate";
+import { WebAppConfigTemplate } from "./WepAppConfigTemplate.js";
 
 type Admin = {
     language: string;

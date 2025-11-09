@@ -8,12 +8,14 @@ ExpressionTest {
     "$$propertyName": "",
     "$id": "ID-1",
     "$typename": "TestConceptsModel",
+    "_FRE_annotations": [],
     "_FRE_expr": [Circular],
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "expr",
   "$id": "ID-10",
   "$typename": "ExpressionTest",
+  "_FRE_annotations": [],
   "_FRE_binEx": [
     PlusEx {
       "$$owner": [Circular],
@@ -21,12 +23,14 @@ ExpressionTest {
       "$$propertyName": "binEx",
       "$id": "ID-4",
       "$typename": "PlusEx",
+      "_FRE_annotations": [],
       "_FRE_left": StringLiteralEx {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "left",
         "$id": "ID-2",
         "$typename": "StringLiteralEx",
+        "_FRE_annotations": [],
         "_FRE_value": "literal1",
         "parseLocation": FreParseLocation {
           "column": 2,
@@ -39,6 +43,7 @@ ExpressionTest {
         "$$propertyName": "right",
         "$id": "ID-3",
         "$typename": "StringLiteralEx",
+        "_FRE_annotations": [],
         "_FRE_value": "literal2",
         "parseLocation": FreParseLocation {
           "column": 39,
@@ -56,18 +61,21 @@ ExpressionTest {
       "$$propertyName": "binEx",
       "$id": "ID-9",
       "$typename": "MultiplyEx",
+      "_FRE_annotations": [],
       "_FRE_left": DivideEx {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "left",
         "$id": "ID-7",
         "$typename": "DivideEx",
+        "_FRE_annotations": [],
         "_FRE_left": NumberLiteralEx {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "left",
           "$id": "ID-5",
           "$typename": "NumberLiteralEx",
+          "_FRE_annotations": [],
           "_FRE_value": 109,
           "parseLocation": FreParseLocation {
             "column": 2,
@@ -80,6 +88,7 @@ ExpressionTest {
           "$$propertyName": "right",
           "$id": "ID-6",
           "$typename": "StringLiteralEx",
+          "_FRE_annotations": [],
           "_FRE_value": "literal3",
           "parseLocation": FreParseLocation {
             "column": 32,
@@ -97,6 +106,7 @@ ExpressionTest {
         "$$propertyName": "right",
         "$id": "ID-8",
         "$typename": "BooleanLiteralEx",
+        "_FRE_annotations": [],
         "_FRE_value": true,
         "parseLocation": FreParseLocation {
           "column": 69,

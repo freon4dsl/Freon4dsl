@@ -5,6 +5,7 @@ import { FreParseLocation } from "../reader/index.js";
 
 class NamedNode implements FreNamedNode {
     static environment: NamedNode;
+    annotations: FreNode[]
 
     /**
      * This method implements the singleton pattern

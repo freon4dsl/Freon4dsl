@@ -7,6 +7,7 @@ import { MobxModelElementImpl } from "./decorators/index.js";
  */
 export abstract class FreNodeBaseImpl extends MobxModelElementImpl implements FreNode {
     parseLocation: FreParseLocation;
+    annotations: FreNode[];
 
     copy(): FreNode {
         throw new Error("Method should be implemented by subclasses of FreElementBaseImpl.");

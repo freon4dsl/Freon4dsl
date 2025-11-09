@@ -93,6 +93,14 @@ export function isNullOrUndefined(obj: Object | null | undefined): obj is null |
     return obj === undefined || obj === null;
 }
 
+export function isEmptyList(list: readonly any[]| null | undefined): boolean {
+    return isNullOrUndefined(list) || list.length === 0
+}
+
+export function isEmptyString(str: string | null | undefined): boolean {
+    return isNullOrUndefined(str) || str.trim().length === 0
+}
+
 export function startWithUpperCase(word: string): string {
     if (!!word) {
         return word[0].toUpperCase() + word.substring(1);

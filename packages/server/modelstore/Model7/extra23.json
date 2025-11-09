@@ -32,6 +32,14 @@
                "containment": {
                   "language": "-default-key-Example",
                   "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-interfaces"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
                   "key": "-default-key-ExampleUnit-methods"
                },
                "children": []

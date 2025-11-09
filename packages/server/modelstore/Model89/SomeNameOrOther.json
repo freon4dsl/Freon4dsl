@@ -37,7 +37,9 @@
                   "version": "2023.1",
                   "key": "-default-key-ExampleUnit-interfaces"
                },
-               "children": []
+               "children": [
+                  "ID-52"
+               ]
             },
             {
                "containment": {
@@ -76,7 +78,7 @@
                   "version": "2023.1",
                   "key": "-default-key-BaseType-name"
                },
-               "value": "ent1"
+               "value": "entity1"
             }
          ],
          "containments": [
@@ -643,7 +645,7 @@
                "targets": [
                   {
                      "resolveInfo": "ent1",
-                     "reference": "ID-19"
+                     "reference": null
                   }
                ]
             }
@@ -673,7 +675,7 @@
                   "version": "2023.1",
                   "key": "-default-key-BaseType-name"
                },
-               "value": "ent2"
+               "value": "entity2"
             }
          ],
          "containments": [
@@ -704,6 +706,19 @@
             }
          ],
          "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-baseEntity"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "entity1",
+                     "reference": "ID-19"
+                  }
+               ]
+            },
             {
                "reference": {
                   "language": "-default-key-Example",
@@ -1008,6 +1023,37 @@
          "references": [],
          "annotations": [],
          "parent": "ID-40"
+      },
+      {
+         "id": "ID-52",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Interface"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseType-name"
+               },
+               "value": "Interface1"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Interface-methods"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-18"
       },
       {
          "id": "ID-42",

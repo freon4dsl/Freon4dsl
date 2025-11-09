@@ -25,10 +25,11 @@ describe("Parser concepts of type", () => {
                     new TestConceptsModel(),
                 ) as ExpressionTest;
             })
-            // console.log(writer.writeToString(unit1, 0, false));
+            console.log(writer.writeToString(unit1, 0, false));
+            // console.log(JSON.stringify(unit1, null, 4))
             expect(unit1).toMatchSnapshot();
         } catch (e) {
-            // console.log(e.stack);
+            console.log(e.stack);
             expect(e).toBeNaN();
         }
     });

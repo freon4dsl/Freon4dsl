@@ -3,47 +3,106 @@ import { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
 
 export type DiagramEdge =   {
+    /**
+     * The id required by Svelte Flow
+     */
     id: string,
+    /**
+     * The diagram node id of the source of the edge
+     */
     source: string,
+    /**
+     * The diagram node id of the target of the edge
+     */
     target: string,
     animated: boolean,
     style: string,
-    // Freon
+    /**
+     * The node containing the reference/part for the edge.
+     */
     startFreNode?: FreNode,
+    /**
+     * The target node of the reference/part for the edge.
+     */
     endFreNode?: FreNode,
+    /**
+     * The property name in the start node 
+     * TODO Might also need the index.
+     */
     propertyName: string
 
 }
 
 export type DiagramNode = {
+    /**
+     * The id required by Svelte Flow
+     */
     id:string,
+    /**
+     * Used for mapping to the Svelte component for the node
+     */
     type: string,
+    /**
+     * Position of the node in the diagram
+     */
     position: { x: number, y: number },
-    // data is used to store the current color value
+    /**
+     * User provided data
+     */
     data: object
-    // Freon
+    /**
+     * The Freon node for this Diagram Node
+     */
     freNode?: FreNode
 }
 
-// type DiagramDef = {
-//     astNode: FreNode;
-//     // one part[] property containing all Ast nodes to be shown as diagram nodes
-//     // astNode[diagramNodesAsProperty] => FreNode[]
-//     diagramNodesAsProperty: string;
-//     // more generic, a function returning all nodes 
-//     diagramNodes: (astNode: FreNode) => FreNode[]
-//     /**
-//      * A function returning all edges for each ast node
-//      */
-//     nodeEdges(astNode: FreNode): DiagramEdge[]
-//     /**
-//      * Create node buttons for types:
-//      */
-//     create: string[]
-//     // if _diagramNodesAsProperty_ is used, automatic
-//     // All allowable types of the _diagramNodesAsProperty_
-//
-// }
+export type NodeDef = {
+    startNode: FreNode;
+    endNode: FreNode;
+}
+
+export type CreateTool = {
+    label: string;
+    creator: () => FreNode;
+}
+export type SvelteFlowConnection = {
+    sourceNode: FreNode;
+    targetNode: FreNode;
+    sourceHandle: string | null;
+    targetHandle: string | null;
+};
+
+export type EdgeDefinition = {
+    sourceType: string;
+    targetType: string;
+    sourceProperty: string;
+}
+export type DiagramDef = {
+    /**
+     * The Ast node corresponding to the diagram.
+     */
+    astNode: FreNode;
+    // one part[] property containing all Ast nodes to be shown as diagram nodes
+    // astNode[diagramNodesAsProperty] => FreNode[]
+    diagramNodesAsProperty: string;
+    // more generic, a function returning all nodes 
+    diagramNodes: (astNode: FreNode) => FreNode[]
+    /**
+     * A function returning all edges for each ast node where
+     * _astNode_ is the start of the edge.
+     */
+    nodeEdges(astNode: FreNode): DiagramEdge[]
+    /**
+     * Create buttons for creating new nodes in the toolbar
+     */
+    tools: CreateTool[]
+    // NOTE: if _diagramNodesAsProperty_ is used, automatic
+    // All allowable types of the _diagramNodesAsProperty_
+    /**
+     * 
+     */
+    edgeCreator: (edge: SvelteFlowConnection) => void
+}
 
 
 /**
@@ -54,7 +113,7 @@ export class DiagramBox extends Box {
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
     kind = "DiagramBox"
     edges: DiagramEdge[]
-    createActions: { label: string, creator: () => FreNode }[]
+    createActions: CreateTool[]
     
     constructor(
         node: FreNode,
@@ -63,7 +122,7 @@ export class DiagramBox extends Box {
         role: string,
         children: Box[],
         edges: DiagramEdge[],
-        createActions: { label: string, creator: () => FreNode }[],
+        createActions: CreateTool[],
         initializer?: Partial<DiagramBox>,
     ) {
         super(node, role);

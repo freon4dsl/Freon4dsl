@@ -1,12 +1,14 @@
-import { AST, Box, FreEditor, FreNode, isNullOrUndefined } from "@freon4dsl/core"
+import { AST, Box, FreEditor, FreLogger, FreNode, isNullOrUndefined } from "@freon4dsl/core";
 import { DiagramPosition } from "@freon4dsl/samples-example/dist/language/gen/index.js"
 import { type NodeBase } from "@xyflow/system"
+
+const LOGGER = new FreLogger("PositionsHelper")
 
 export type NodeWithBox = NodeBase<{ box: Box; editor: FreEditor }>
 
 export class PositionsHelper {
     static saveNodePositions(nodes: NodeWithBox[]): void {
-        console.log("PositionsHelper")
+        LOGGER.log("saveNodePositions")
         nodes.forEach((node) => {
             const position = PositionsHelper.findOrCreatePosition(node.data.box.node, node.position.x, node.position.y)
             if (position.x !== node.position.x || position.y !== node.position.y) {

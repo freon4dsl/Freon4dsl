@@ -11,10 +11,9 @@ Attribute {
 }
 Entity {
     [
-        ${abstract} entity ${name} [? base ${baseEntity}] [? implements ${baseInterfaces}] {
-            ${attributes }
-            ${methods vertical }
-        }
+        entity ${name} 
+        base ${baseEntity}
+        implements ${baseInterfaces}
     ]
     trigger = "entity"
 }

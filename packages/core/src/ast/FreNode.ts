@@ -7,6 +7,8 @@ import { FreParseLocation } from "../reader/index.js";
  */
 export interface FreNode {
     freId(): string;
+    
+    annotations: FreNode[]
 
     freLanguageConcept(): string;
 

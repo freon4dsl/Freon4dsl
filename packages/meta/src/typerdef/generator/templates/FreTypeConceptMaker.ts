@@ -12,10 +12,9 @@ export class FreTypeConceptMaker {
         const extendsClass = hasSuper
             ? `extends ${Names.classifier(concept.base.referred)}`
             : `implements ${this.freTypeName}`;
-        const coreImports: string[] = [Names.FreUtils, Names.FreWriter, Names.FreParseLocation];
+        const coreImports: string[] = [Names.FreUtils, Names.FreNode, Names.FreWriter, Names.FreParseLocation];
         if (!hasSuper) {
             coreImports.push(this.freTypeName);
-            coreImports.push(Names.FreNode);
         }
         const modelImports: string[] = this.findModelImports(concept);
         const typeImports: string[] = this.findTypeImports(concept, hasSuper);
@@ -39,6 +38,12 @@ export class FreTypeConceptMaker {
                     .implementedParts()
                     .map((p) => ConceptUtils.makePartProperty(p))
                     .join("\n")}
+                annotations: FreNode[]
+
+                annotationOfType(typename: string): FreNode | undefined {
+                    return this.annotations.find(ann => ann.freLanguageConcept() === typename)
+                }
+
 
                 ${this.makeConstructor(hasSuper)}
                 ${ConceptUtils.makeCopyMethod(concept, myName, false)}

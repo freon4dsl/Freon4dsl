@@ -21,9 +21,10 @@ import {
     BoxUtil,
     NumberDisplay,
     TextBox,
-    DiagramBox, BoolDisplay, FreNodeReference, FreProjectionHandler, DiagramEdge, isNullOrUndefined
+    DiagramBox, BoolDisplay, FreNodeReference, FreProjectionHandler, DiagramEdge, isNullOrUndefined, DiagramDef, isEmptyList, AST, SvelteFlowConnection
 } from "@freon4dsl/core";
-import { Documentation, Entity, ExampleUnit, NumberLiteralExpression, OrExpression, SumExpression } from "../language/gen/index.js";
+import { Language } from "@freon4dsl/samples-lionweb-core/dist/language/gen/index.js";
+import { Documentation, Entity, ExampleUnit, Interface, NumberLiteralExpression, OrExpression, SumExpression } from "../language/gen/index.js";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment.js";
 
 const sumIcon = "M 6 5 L 6.406531 20.35309 L 194.7323 255.1056 L 4.31761 481.6469 L 3.767654 495.9135 L 373 494 C 376.606 448.306 386.512 401.054 395 356 L 383 353 C 371.817 378.228 363.867 405.207 340 421.958 C 313.834 440.322 279.304 438 249 438 L 79 438 L 252.2885 228.6811 L 96.04328 33.3622 L 187 32.99999 C 245.309 32.99999 328.257 18.91731 351.329 89.00002 C 355.273 100.98 358.007 113.421 359 126 L 372 126 L 362 5 L 6 5 L 6 5 L 6 5 L 6 5 L 6 5 z ";
@@ -325,6 +326,77 @@ export class CustomExampleProjection implements FreProjection {
         console.log("    edges: " + edges.map(e => `[${e.source} => ${e.target} ${JSON.stringify(e)}] `))
         return new DiagramBox(unit, "entities", "Entity", "unitDiagramEntities", Array.from(freNodeToBox.values()), edges,                 [{label: "Entity", creator: (): FreNode => { return new Entity()} }]
         )
+    }
+    
+    c2(unit: ExampleUnit): DiagramDef {
+        const def: DiagramDef = {
+            astNode: unit,
+            diagramNodes: (node: FreNode) => {
+                const unit = node as ExampleUnit
+                return [...unit.entities, ...unit.interfaces]
+            },
+            nodeEdges(astNode: FreNode): DiagramEdge[] {
+                const result: DiagramEdge[] = []
+                if (astNode instanceof Entity) {
+                    if (!isEmptyList(astNode.$baseInterfaces)) {
+                        result.push(...astNode.$baseInterfaces.map(intf => {
+                            return {
+                                id: unit.freId() + "::" + astNode.$baseEntity.freId(),
+                                startFreNode: unit,
+                                endFreNode: intf,
+                                propertyName: "baseInterfaces",
+                                source: unit.freId(),
+                                target: intf.freId(),
+                                animated: false,
+                                style: "start-end"
+                            }
+                        }))
+                    }
+                    if (!isNullOrUndefined(astNode.$baseEntity) ){
+                        result.push({
+                            id: unit.freId() + "::" + astNode.$baseEntity.freId(),
+                            startFreNode: unit,
+                            endFreNode: astNode.$baseEntity,
+                            propertyName: "baseEntity",
+                            source: unit.freId(),
+                            target: astNode.$baseEntity.freId(),
+                            animated: false,
+                            style: "start-end"                            
+                        })
+                    }
+                }
+                return result
+            },
+            tools: [
+                {
+                    label: "Entity",
+                    creator: (): FreNode => {
+                        let result: Entity = FreLanguage.getInstance().createConceptOrUnit("Entity") as Entity
+                        AST.changeNamed("toolbar ", () => {
+                            unit.entities.push(result)
+                        })
+                        return result
+                    }
+                }
+            ],
+            edgeCreator: (connection: SvelteFlowConnection): void => {
+                // "Entity" + "Entity"    => baseEntity
+                // "Entity" + "Interface" => baseInterfaces
+                if (connection.sourceNode?.freLanguageConcept()  === "Entity" && connection.targetNode?.freLanguageConcept() === "Entity") {
+                    AST.changeNamed("Drop in diagram", () => {
+                        (connection.sourceNode as Entity).baseEntity = FreNodeReference.create((connection.targetNode as Entity), "Entity")
+                    })
+                }
+                if (connection.sourceNode?.freLanguageConcept()  === "Entity" && connection.targetNode?.freLanguageConcept() === "Interface") {
+                    AST.changeNamed("Drop in diagram", () => {
+                        (connection.sourceNode as Entity).baseInterfaces.push(FreNodeReference.create((connection.targetNode as Entity), "Entity"))
+                    })
+                }
+
+            },
+            diagramNodesAsProperty: ""
+        }
+        return def
     }
 }
 

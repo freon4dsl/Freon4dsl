@@ -6,6 +6,7 @@
     import RenderComponent from "../RenderComponent.svelte";
     import { Box, FreEditor } from "@freon4dsl/core";
     import { Handle, NodeToolbar, Position, type NodeProps } from '@xyflow/svelte';
+    import { type EdgeBase, type NodeBase } from '@xyflow/system';
 
     type $$Props = NodeProps;
     $$restProps;
@@ -26,14 +27,15 @@
     const BOTTOM_HANDLE_STYLE = 'width: 5px; height: 5px; bottom: -3px;';
 </script>
 
-<NodeToolbar>
-    <button>delete</button>
-    <button>copy</button>
-    <button>expand</button>
-</NodeToolbar>
+<!-- Add a toolbar to a nodes, showing when selected -->
+<!--<NodeToolbar>-->
+<!--    <button>delete</button>-->
+<!--    <button>copy</button>-->
+<!--    <button>expand</button>-->
+<!--</NodeToolbar>-->
 <div class="box">
     <Handle 
-        type="target"
+        type="source"
         id="black"
         position={Position.Left}
         style="{LEFT_HANDLE_STYLE}; background: black;"
@@ -48,7 +50,7 @@
         type="source"
         id="green"
         position={Position.Bottom}
-        style="{BOTTOM_HANDLE_STYLE}; background: green;"
+        style="background: green;"
     />
     <RenderComponent box={box} editor={editor} />
     <Handle

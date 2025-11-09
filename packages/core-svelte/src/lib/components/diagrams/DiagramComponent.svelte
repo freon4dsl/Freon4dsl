@@ -5,7 +5,8 @@
     import DiagramBoxComponent from "$lib/components/diagrams/DiagramBoxComponent.svelte";
     import DiagramColorPicker from "$lib/components/diagrams/DiagramColorPicker.svelte";
     import { useDnD } from "$lib/components/diagrams/dnd.js";
-    import { PositionsHelper } from "$lib/components/diagrams/Positions.js";
+    import { getLayoutedElements } from "$lib/components/diagrams/ElkLayout.js";
+    import { type NodeWithBox, PositionsHelper } from "$lib/components/diagrams/PositionsHelper.js";
     import Toolbar from "$lib/components/diagrams/Toolbar.svelte";
     import { DiagramPosition, Entity } from "@freon4dsl/samples-example/dist/language/gen/index.js";
     import {
@@ -15,7 +16,6 @@
         SvelteFlow,
         useNodes, useSvelteFlow
     } from "@xyflow/svelte";
-    import { type NodeWithBox } from "./Positions.js"
     // type NodeWithBox = NodeBase<{ box: Box, editor: FreEditor }>
     /**
      * This component shows to piece of non-editable text.
@@ -37,7 +37,7 @@
     export let editor: FreEditor;
 
     const LOGGER = DIAGRAM_LOGGER;
-
+    
     LOGGER.log("Initializing new DiagramComponent")
     // Ensure that node positions are stored in the model each time that they are changed
     const nodesStore = useNodes();
@@ -49,6 +49,8 @@
         if (!!box) {
             box.refreshComponent = refresh;
         }
+        // AutoLayout
+        // onLayout()
     });
 
     afterUpdate(() => {
@@ -62,7 +64,9 @@
         LOGGER.log("REFRESH DiagramComponent (" + why + ")");
 
         const newNodes = childNodes();
-        const newEdges = [...box.edges.map(e => {e["markerEnd"] = { type: MarkerType.Arrow }; return e})]
+        // Add an arrow at the target side
+        const newEdges = [...box.edges.map(e => {e["markerEnd"] = { type: MarkerType.Arrow, width: 20,
+            height: 20 }; return e})]
         // Only refresh when there are new nodes or edges
         // Otherwise a change inside a box will trigger a refresh of the diagram and
         // as a result the HTML focus of the box will be lost
@@ -106,7 +110,8 @@
     };
     const nodes = writable<NodeWithBox[]>([]);
     $nodes.push(...childNodes());
-    const edges = writable([...box.edges.map(e => {e["markerEnd"] = { type: MarkerType.Arrow }; return e})]);
+    const edges = writable([...box.edges.map(e => {e["markerEnd"] = { type: MarkerType.Arrow, width: 20,
+        height: 20 }; return e})]);
 
     const snapGrid = [20, 20];
 
@@ -164,7 +169,7 @@
     const onedgecreate = (connection: Connection): Edge => {
         const sourceNode = $nodes.find(node => node.id === connection.source)?.data?.box?.node as Entity
         const targetNode = $nodes.find(node => node.id === connection.target)?.data?.box?.node as Entity
-        LOGGER.log(`onedgecreate: ${JSON.stringify(connection)} spourceNode ${sourceNode?.freLanguageConcept()} targetNode ${targetNode?.freLanguageConcept()}`)
+        LOGGER.log(`onedgecreate: ${JSON.stringify(connection)} spourceNode ${sourceNode?.freLanguageConcept()}.${sourceNode?.name} targetNode ${targetNode?.freLanguageConcept()}${targetNode?.name}`)
         LOGGER.log(`     sourceNode ${sourceNode instanceof Entity} targetNode ${targetNode  instanceof Entity} src ${sourceNode?.constructor?.name} tgt: src ${targetNode?.constructor?.name}`)
         if (sourceNode?.freLanguageConcept()  === "Entity" && targetNode?.freLanguageConcept() === "Entity") {
             LOGGER.log("Creating relationship")
@@ -176,6 +181,25 @@
     const onconnectstart = (event: MouseEvent | TouchEvent, params: { nodeId?: string; handleId?: string; handleType?: 'source' | 'target'; }): void => {
         LOGGER.log(`onconnectstart: ${JSON.stringify(params)}`)
 
+    }
+    
+    /********************************************************************
+     * Auto layout
+     * ******************************************************************/
+
+
+    async function onLayout() {
+        const ns = $nodes;
+        const es = $edges;
+
+        const layout = await getLayoutedElements(ns, es)
+        $nodes = layout.nodes;
+        $edges = layout.edges;
+
+        // fitView();
+
+        // window.requestAnimationFrame(() => fitView());
+        // });
     }
 </script>
 
@@ -197,6 +221,7 @@
                 onconnectstart={() => { LOGGER.log("ON:connectstart") } }
                 onconnectend={() => { LOGGER.log("ON:connectend") } }
                 onedgecreate={onedgecreate}
+                connectionMode="loose"
     >
         <Controls />
         <Background variant={BackgroundVariant.Dots} />
