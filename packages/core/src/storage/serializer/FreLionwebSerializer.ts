@@ -210,7 +210,7 @@ export class FreLionwebSerializer implements FreSerializer {
                 propertyMetaPointer.key,
             );
             if (property === undefined || property === null) {
-                LOGGER.error("NULL PROPERTY for key " + propertyMetaPointer.key);
+                LOGGER.error(`NULL PROPERTY for key ${propertyMetaPointer.key} in concept ${concept}`);
             }
             if (isNullOrUndefined(property)) {
                 // FIXME known prpblems
