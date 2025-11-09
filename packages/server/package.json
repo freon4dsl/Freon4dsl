@@ -33,12 +33,12 @@
     "@vitest/ui": "3.2.4"
   },
   "dependencies": {
-    "@types/koa": "2.15.0",
+    "@types/koa": "3.0.1",
     "@lionweb/validation": "^0.6.3",
-    "koa": "3.0.0",
+    "koa": "3.1.1",
     "koa-bodyparser": "4.4.1",
-    "koa-router": "13.0.1",
-    "koa2-cors": "2.0.6",
+    "@koa/router": "14.0.0",
+    "@koa/cors": "5.0.0",
     "supertest": "^7.0.0",
     "tslib": "^2.6.3"
   }

@@ -12,7 +12,7 @@ To clarify the algorithm, we include the pseudocode for this class.
 FreNamespace {
     getDeclaredNodes(publicOnly: boolean): FreNamedNode[] {
         return all AST nodes in the subtree of which this namespace is the top,
-        and the leafs are AST nodes that are themselves namespaces.
+        and the leaves are AST nodes that are themselves namespaces.
         The parameter 'publicOnly' indicates whether to include AST nodes that are marked private.
     }
     getParentNodes(): FreNamedNode[] {

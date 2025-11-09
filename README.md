@@ -1,6 +1,11 @@
 # Freon — The Language Workbench for the Web
 
-[![Build Status](https://github.com/freon4dsl/freon4dsl/actions/workflows/node.js.yml/badge.svg)]
+[![Build Status](https://github.com/freon4dsl/freon4dsl/actions/workflows/node.js.yml/badge.svg)](https://github.com/freon4dsl/freon4dsl/actions)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](../../discussions)
+[![GitHub issues](https://img.shields.io/github/issues/freon4dsl/freon4dsl)](../../issues)
+
+📦 [NPM](https://www.npmjs.com/org/freon4dsl) · 🧠 [Docs](https://www.freon4dsl.dev) · 💬 [Discussions](../../discussions)
+
 
 **From documents to models**  
 Freon is a language workbench that generates browser-based editors from your own domain-specific language (DSL).  
@@ -22,6 +27,23 @@ It helps businesses capture knowledge in a structured way — turning Word-style
 > This repository (`freon4dsl/freon4dsl`) is for **developing Freon itself** — its core framework, editor engine, and generators.
 
 ---
+
+## 🤝 Want to Contribute?
+
+We’re always happy to welcome new contributors to the **Freon** project!
+
+Whether you’re fixing bugs, improving documentation, or adding new features — your help makes a real difference.  
+If you’d like to join in:
+
+1. **Fork** this repository
+2. **Create a branch** for your change
+3. **Submit a pull request**
+
+Not sure where to start? Check our [issues](../../issues) labeled `good first issue`, or reach out by opening a [discussion](../../discussions).
+
+📘 For full contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Let’s build something great together!
 
 ## Releases
 
@@ -51,9 +73,13 @@ If you want to work on the Freon framework itself:
 
 We typically use the latest versions, although older versions may work as well.
 
+For more background on Freon’s internal structure and build process, check out the [`developer-documentation`](developer-documentation) folder.  
+It includes technical notes and guidelines for maintainers and advanced contributors.
+
+
 ### Build and Test
 ```bash
-git clone https://github.com/freon4dsl/Freon4dsl.git
+git clone https://github.com/freon4dsl/freon4dsl.git
 cd Freon4dsl
 npm install
 npm run build
@@ -74,7 +100,7 @@ npm run build
 Edit `packages/webapp-flowbite/package.json`:  
 ```json
 "dependencies": {
-"@freon4dsl/<your-sample>": "2.0.0-beta.2"
+"@freon4dsl/<your-sample>": "2.0.0"
 }
 ```
 
@@ -88,7 +114,7 @@ import { LanguageEnvironment } from "@freon4dsl/<your-sample>";
 cd packages/server
 npm run start
 ```
-Note that the server keeps running in the background, therefore you need to open another terminal to start the web app.
+The server runs continuously in the background, so open another terminal to start the web app.
 
 #### 4. Run the web app
 ```bash
@@ -121,3 +147,9 @@ The codebase is organized into multiple packages:
 - **packages/weblib-*`** – shared web libraries
 - **packages/webapp-flowbite** – current demo web app using [Flowbite-Svelte](https://flowbite-svelte.com/)
 - **packages/webapp-smui** – older demo web app using [Svelte Material UI (SMUI)](https://sveltematerialui.com/)
+- **developer-documentation** – technical information for contributors and maintainers
+  - Explains architecture, build setup, generators, and API internals
+
+
+We build Freon and its documentation out of curiosity, passion, and love for language engineering.
+We invite you to share that enthusiasm and help make something meaningful — together. ❤️

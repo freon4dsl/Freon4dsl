@@ -9,9 +9,9 @@ BaseProduct {
     fragment FirstCard [
     First Card
         is still under construction: ${self.isUnderConstruction switch}
-        is approved level1: ${self.isApprovedLevel1 radio}
-        is approved level2: ${self.isApprovedLevel2 inner-switch}
-        is approved level3: ${self.isApprovedLevel3 checkbox}
+        is approved level 1: ${self.isApprovedLevel1 radio}
+        is approved level 2: ${self.isApprovedLevel2 inner-switch}
+        is approved level 3: ${self.isApprovedLevel3 checkbox}
         [external=AnimatedGif number="1"]
     ]
     fragment SecondCard [

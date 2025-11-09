@@ -13,6 +13,10 @@ export function isNullOrUndefined(obj: Object | null | undefined): obj is null |
     return obj === undefined || obj === null;
 }
 
+export function notNullOrUndefined<T>(obj: T | null | undefined): obj is NonNullable<T> {
+    return obj != null; // catches both null and undefined
+}
+
 export class FileUtil {
     public static separator(): string {
         return path.sep;
