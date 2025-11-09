@@ -287,14 +287,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -355,14 +347,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -423,14 +407,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -526,14 +502,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -594,14 +562,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -662,14 +622,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "true"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -765,14 +717,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -833,14 +777,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -901,14 +837,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1003,14 +931,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1071,14 +991,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1178,14 +1090,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1246,14 +1150,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1314,14 +1210,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1382,14 +1270,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1450,14 +1330,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1518,14 +1390,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1586,14 +1450,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1688,14 +1544,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1756,14 +1604,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1858,14 +1698,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1926,14 +1758,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -2028,14 +1852,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -2096,14 +1912,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -2198,14 +2006,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -2266,14 +2066,6 @@
                   "key": "-key-PropertyDef-isOptional"
                },
                "value": "false"
-            },
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-PropertyDef-validate"
-               },
-               "value": ""
             }
          ],
          "containments": [],
