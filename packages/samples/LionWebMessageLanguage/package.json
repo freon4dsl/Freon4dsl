@@ -24,11 +24,11 @@
   "devDependencies": {
     "rollup-plugin-esbuild": "^6.2.1",
     "rollup-plugin-dts": "^6.2.3",
-    "@freon4dsl/meta": "2.0.0",
-    "@freon4dsl/test-helpers": "2.0.0"
+    "@freon4dsl/meta": "~2.0.0",
+    "@freon4dsl/test-helpers": "~2.0.0"
   },
   "dependencies": {
-    "@freon4dsl/core": "2.0.0",
+    "@freon4dsl/core": "~2.0.0",
     "@prettier/sync": "0.6.1",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",

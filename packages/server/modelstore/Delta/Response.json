@@ -345,7 +345,7 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "signOffResponse"
+               "value": "SignOffResponse"
             }
          ],
          "containments": [

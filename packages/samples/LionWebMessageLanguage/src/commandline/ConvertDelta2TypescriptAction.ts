@@ -12,6 +12,13 @@ import { TypeTemplates } from "./templates/TypeTemplates.js"
 
 const pathSeparator = path.sep
 
+const linkmap: Map<string, string> = new Map<string, string>([
+    ["Event", "https://github.com/LionWeb-io/specification/blob/main/delta/events.adoc#evnt"],
+    ["Command", "https://github.com/LionWeb-io/specification/blob/main/delta/commands.adoc#cmd"],
+    ["Request", "https://github.com/LionWeb-io/specification/blob/main/delta/queries.adoc#qry"],
+    ["Response", "https://github.com/LionWeb-io/specification/blob/main/delta/queries.adoc#qry"]
+])
+
 export class ConvertDelta2TypescriptAction extends CommandLineAction {
     // protected model: CommandLineStringParameter;
     protected lionWebM3File: CommandLineStringParameter;
@@ -84,21 +91,21 @@ export class ConvertDelta2TypescriptAction extends CommandLineAction {
                 })
             }
         }
-        this.protocol.categories.forEach(cat => {
-            console.log(`GENERATING message group ${cat.name}`)
+        this.protocol.categories.forEach(messageGroup => {
+            console.log(`GENERATING message group ${messageGroup.name}`)
             // const eventDefinitions = messageGroups.find(mg => mg.name === "Event")
-            const eventTemplate = new TypeTemplates(cat, "https://github.com/LionWeb-io/specification/blob/main/delta/events.adoc#evnt")
+            const eventTemplate = new TypeTemplates()
             // const result = eventTemplate.commandTemplate();
-            const result = TypeTemplates.pretty("typescript", eventTemplate.commandTemplate(), "Generated from LionWeb Delta Model");
-            this.writeToFile(`${deltaFolderName}${pathSeparator}generated_ts${pathSeparator}${cat.name}.ts`, result);
+            const result = TypeTemplates.pretty("typescript", eventTemplate.commandTemplate(messageGroup, linkmap.get(messageGroup.name)), "Generated from LionWeb Delta Model");
+            this.writeToFile(`${deltaFolderName}${pathSeparator}generated_ts${pathSeparator}${messageGroup.name}.ts`, result);
             
-            const jsonResult = TypeTemplates.pretty("typescript", eventTemplate.messageGroup2DefinitionTemplate())
-            this.writeToFile(`${deltaFolderName}${pathSeparator}generated_ts${pathSeparator}${cat.name}Definitions.ts`, jsonResult);
+            const jsonResult = TypeTemplates.pretty("typescript", eventTemplate.messageGroup2DefinitionTemplate(messageGroup))
+            this.writeToFile(`${deltaFolderName}${pathSeparator}generated_ts${pathSeparator}${messageGroup.name}Definitions.ts`, jsonResult);
         })
         this.protocol.typeDefinitions.forEach(typeDef => {
             console.log(`GENERATING types ${typeDef.name}`)
             // const eventDefinitions = messageGroups.find(mg => mg.name === "Event")
-            const eventTemplate = new TypeTemplates(null, "https://github.com/LionWeb-io/specification/blob/main/delta/events.adoc#evnt")
+            const eventTemplate = new TypeTemplates()
             const result = TypeTemplates.pretty("typescript", eventTemplate.typeTemplate(typeDef), "Generated from LionWeb Delta Model");
             this.writeToFile(`${deltaFolderName}${pathSeparator}generated_ts${pathSeparator}${typeDef.name}.ts`, result);
 

@@ -1559,8 +1559,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebJsonPointer",
-                     "reference": null
+                     "resolveInfo": "LionWebJsonMetaPointer",
+                     "reference": "ID-312"
                   }
                ]
             }
@@ -6019,8 +6019,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "LionWebDeltaJsonChunk",
-                     "reference": "ID-48"
+                     "resolveInfo": "LionWebId",
+                     "reference": "ID-285"
                   }
                ]
             }

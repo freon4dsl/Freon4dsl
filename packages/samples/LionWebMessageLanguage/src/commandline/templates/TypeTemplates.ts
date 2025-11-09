@@ -4,30 +4,25 @@ import synchronizedPrettier from "@prettier/sync";
 import { MessageGroup, ObjectType, PrimitiveType, PropertyDef, Type, Types } from "../../language/gen/index.js"
 
 export class TypeTemplates {
-
-    schema: MessageGroup
-    doclinkRoot: string
     
-    constructor(schema: MessageGroup, doclinkRoot: string) {
-        this.schema = schema
-        this.doclinkRoot = doclinkRoot
+    constructor() {
     }
     /** 
      * Convert a DefinitionSchema to a collection of typescript types
      */
-    commandTemplate(): string {
+    commandTemplate(messageGroup: MessageGroup, doclinkRoot: string): string {
         const referredTypes: Set<FreNodeReference<Type>> = new Set<FreNodeReference<Type>>()
         let result = `
             
-            ${this.schema.messages.map(msg => {
-            const typeName = `${msg.name}${msg.name.endsWith(this.schema.name) ? "" : this.schema.name}`
+            ${messageGroup.messages.map(msg => {
+            const typeName = `${msg.name}${msg.name.endsWith(messageGroup.name) ? "" : messageGroup.name}`
                     return`
                             /**
-                              *  @see ${this.doclinkRoot}-${msg.name}
+                              *  @see ${doclinkRoot ?? "unknown"}-${msg.name}
                               */
                             export type ${typeName} = {
-                            ${msg.properties.concat(this.schema.sharedProperties).map((propDef) => {
-                                    return this.generatePropertyDef(msg, propDef, referredTypes)
+                            ${msg.properties.concat(messageGroup.sharedProperties).map((propDef) => {
+                                    return this.generatePropertyDef(messageGroup, msg, propDef, referredTypes)
                                 }).join(",\n")
                             }
                             }
@@ -35,13 +30,22 @@ export class TypeTemplates {
             }).join("\n")}
         
             // The overall "super-type"    
-            export type ${this.schema.name} = ${this.schema.messages.map(msg =>
-                `${msg.name}${msg.name.endsWith(this.schema.name) ? "" : this.schema.name}`
-            ).join(" |\n")}`
+            export type Delta${messageGroup.name} = ${messageGroup.messages.map(msg =>
+                `${msg.name}${msg.name.endsWith(messageGroup.name) ? "" : messageGroup.name}`
+            ).join(" |\n")}
+            
+            export function isDelta${messageGroup.name}(object: unknown): object is Delta${messageGroup.name} {
+               const castObject = object as Delta${messageGroup.name}
+                return (
+                    castObject.messageKind !== undefined && [ ${messageGroup.messages.map(msg =>
+                        `"${msg.name}"`
+                    ).join(",\n")} ].includes(castObject.messageKind)
+                )
+            }`
 
         // Handle import statements
 
-        const defNames = this.schema.messages.map(msg => msg.name)
+        const defNames = messageGroup.messages.map(msg => msg.name)
         const uniqueReferredTypes = new Set<FreNodeReference<FreNamedNode>>();
         const uniqueReferredNames = new Set<string>();
         referredTypes.forEach(ref => {
@@ -75,21 +79,26 @@ export class TypeTemplates {
         `
     }
     
-    generatePropertyDef(msg: ObjectType, propDef: PropertyDef, referredTypes: Set<FreNodeReference<Type>>): string {
+    generatePropertyDef(messageGroup: MessageGroup | undefined, msg: ObjectType, propDef: PropertyDef, referredTypes: Set<FreNodeReference<Type>>): string {
         referredTypes.add(propDef.type)
         const optional = (propDef.isOptional ? "?" : "")
         const isList = propDef.isList ? "[]" : ""
-        const isDiscriminator = this.schema?.taggedUnionProperty === propDef.name
+        const isDiscriminator = messageGroup?.taggedUnionProperty === propDef.name
         if (isDiscriminator) {
             return `${propDef.name} : "${msg.name}"`
         } else {
-            return `${propDef.name}${optional} : ${this.tsType(propDef.$type?.name)}${isList}`
+            return `${propDef.name}${optional} : ${this.tsType(messageGroup, propDef.$type?.name)}${isList}`
         }
 
     }
     
-    tsType(type: string): string {
-        return `${type}`
+    tsType(messageGroup: MessageGroup | undefined, type: string): string {
+        if (messageGroup !== undefined && type === messageGroup.name) {
+            // overall type handles special
+            return "Delta" + type
+        } else {
+            return type
+        }
     }
 
     typeTemplate(types: Types): string {
@@ -100,7 +109,7 @@ export class TypeTemplates {
         const objects = types.objectTypes.map(objType => {
             return `
                 export type ${objType.name} = {
-                    ${objType.properties.map(propDef => this.generatePropertyDef(objType, propDef, referredTypes)).join("\n")}
+                    ${objType.properties.map(propDef => this.generatePropertyDef(undefined, objType, propDef, referredTypes)).join("\n")}
                 }
             `
         })
@@ -142,24 +151,24 @@ export class TypeTemplates {
         `
     }
     
-    messageGroup2DefinitionTemplate(): string {
+    messageGroup2DefinitionTemplate(messageGroup: MessageGroup): string {
         return `
         import { MessageGroup } from "../generic/schema/SyntaxDefinition.js";
         
-        export const ${this.schema.name}Definitions: MessageGroup = {
-            "name": "${this.schema.name}",
-            "taggedUnionProperty": "${this.schema.taggedUnionProperty}",
+        export const ${messageGroup.name}Definitions: MessageGroup = {
+            "name": "${messageGroup.name}",
+            "taggedUnionProperty": "${messageGroup.taggedUnionProperty}",
             "sharedProperties": [
-                ${this.schema.sharedProperties.map(shared => {
+                ${messageGroup.sharedProperties.map(shared => {
                     return this.generatePropertyJson(shared)
                 }).join(",\n")}
             ],
             "messages": [
-                ${this.schema.messages.map(message => {
+                ${messageGroup.messages.map(message => {
                     return `{
                                 "name": "${message.name}",
                                 "properties": [
-                                    ${message.properties.map(prop => {
+                                    ${message.properties.concat(messageGroup.sharedProperties).map(prop => {
                                         return this.generatePropertyJson(prop)
                                     }).join(",\n")}
                                 ]
@@ -180,7 +189,7 @@ export class TypeTemplates {
                     return this.generatePrimitiveTypeJson(prim)
                 }).join(",\n")}
             ],
-            "objectTypes": [
+            "structuredTypes": [
                 ${types.objectTypes.map(objectType => {
                     return `{
                         "name": "${objectType.name}",

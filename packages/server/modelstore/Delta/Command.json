@@ -961,7 +961,7 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "DeletePropery"
+               "value": "DeleteProperty"
             }
          ],
          "containments": [
@@ -6193,7 +6193,7 @@
                   "version": "2023.1",
                   "key": "-key-PropertyDef-name"
                },
-               "value": "deleteResolveInfo"
+               "value": "deletedResolveInfo"
             },
             {
                "property": {
@@ -12315,7 +12315,7 @@
                   "version": "2023.1",
                   "key": "-key-PropertyDef-isList"
                },
-               "value": "false"
+               "value": "true"
             },
             {
                "property": {

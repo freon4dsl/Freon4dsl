@@ -38,7 +38,8 @@
                   "ID-41",
                   "ID-78",
                   "ID-131",
-                  "ID-5"
+                  "ID-5",
+                  "ID-152"
                ]
             },
             {
@@ -318,6 +319,44 @@
                   "key": "-key-Type-name"
                },
                "value": "Boolean"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-2"
+      },
+      {
+         "id": "ID-152",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PrimitiveType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-primitiveType"
+               },
+               "value": "string"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-validator"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "ClientId"
             }
          ],
          "containments": [],
@@ -928,12 +967,82 @@
                   "version": "2023.1",
                   "key": "-key-ObjectType-properties"
                },
-               "children": []
+               "children": [
+                  "ID-412"
+               ]
             }
          ],
          "references": [],
          "annotations": [],
          "parent": "ID-2"
+      },
+      {
+         "id": "ID-412",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "nodes"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "LionWebJsonNode",
+                     "reference": "ID-351"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-48"
       }
    ]
 }

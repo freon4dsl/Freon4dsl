@@ -81,7 +81,7 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "SubscribeToChangingPartitionsRequest"
+               "value": "SubscribeToChangingPartitions"
             }
          ],
          "containments": [
@@ -320,7 +320,7 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "SubscribeToPartitionContentsRequest"
+               "value": "SubscribeToPartitionContents"
             }
          ],
          "containments": [
@@ -421,7 +421,7 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "UnsubscribeFromPartitionContentsRequest"
+               "value": "UnsubscribeFromPartitionContents"
             }
          ],
          "containments": [
@@ -522,7 +522,7 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "SignOnRequest"
+               "value": "SignOn"
             }
          ],
          "containments": [
@@ -761,7 +761,7 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "signOffRequest"
+               "value": "SignOff"
             }
          ],
          "containments": [
@@ -792,7 +792,7 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "ReconnectRequest"
+               "value": "Reconnect"
             }
          ],
          "containments": [
@@ -962,7 +962,7 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "GetAvailableIdsRequest"
+               "value": "GetAvailableIds"
             }
          ],
          "containments": [
@@ -1063,7 +1063,7 @@
                   "version": "2023.1",
                   "key": "-key-Type-name"
                },
-               "value": "ListPartitionsRequest"
+               "value": "ListPartitions"
             }
          ],
          "containments": [
