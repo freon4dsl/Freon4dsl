@@ -14,3 +14,7 @@
     border: 2px black solid;
     background-color: lightgrey;
 }
+
+.boolean-checkbox-component {
+    margin-left: 8px;
+}
