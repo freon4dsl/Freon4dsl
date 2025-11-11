@@ -2,9 +2,7 @@ import * as fs from "fs";
 import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 import {
     Names,
-    READER_FOLDER,
     READER_GEN_FOLDER,
-    WRITER_FOLDER,
     WRITER_GEN_FOLDER,
 } from "../utils/on-lang/index.js";
 import { FreEditUnit } from "../editordef/metalanguage/index.js";
@@ -28,9 +26,7 @@ export class ReaderWriterGenerator {
     public outputfolder: string = ".";
     public customsfolder: string = ".";
     public language: FreMetaLanguage | undefined;
-    private writerFolder: string = "";
     private writerGenFolder: string = "";
-    private readerFolder: string = "";
     private readerGenFolder: string = "";
 
     generate(editDef: FreEditUnit): void {
@@ -157,8 +153,6 @@ export class ReaderWriterGenerator {
     // }
 
     private getFolderNames() {
-        this.writerFolder = this.outputfolder + "/" + WRITER_FOLDER;
-        this.readerFolder = this.outputfolder + "/" + READER_FOLDER;
         this.writerGenFolder = this.outputfolder + "/" + WRITER_GEN_FOLDER;
         this.readerGenFolder = this.outputfolder + "/" + READER_GEN_FOLDER;
     }
@@ -172,18 +166,5 @@ export class ReaderWriterGenerator {
         LOGGER.log(`Generating ${generationMessage}: ${generatedFilePath}`);
         generatedContent = FileUtil.pretty(generatedContent, `${generatedFilePath}`, generationStatus);
         fs.writeFileSync(`${generatedFilePath}`, generatedContent);
-    }
-
-    clean(force: boolean) {
-        this.getFolderNames();
-        FileUtil.deleteDirAndContent(this.writerGenFolder);
-        FileUtil.deleteDirAndContent(this.readerGenFolder);
-        if (force) {
-            FileUtil.deleteDirAndContent(this.writerFolder);
-            FileUtil.deleteDirAndContent(this.readerFolder);
-        } else {
-            FileUtil.deleteDirIfEmpty(this.writerFolder);
-            FileUtil.deleteDirIfEmpty(this.readerFolder);
-        }
     }
 }

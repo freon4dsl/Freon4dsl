@@ -9,7 +9,6 @@ import { ValidatorTemplate } from "./templates/ValidatorTemplate.js";
 import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate.js";
 import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate.js";
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate.js";
-import { LOG2USER } from "../../utils/basic-dependencies/UserLogger.js";
 import { NamespaceCheckerTemplate } from './templates/NamespaceCheckerTemplate.js';
 import { getOutputForUseInCustom } from '../../utils/no-dependencies/FolderPathHelper.js';
 
@@ -152,26 +151,5 @@ export class ValidatorGenerator {
     private getFolderNames() {
         this.validatorFolder = this.outputfolder + "/" + VALIDATOR_FOLDER;
         this.validatorGenFolder = this.outputfolder + "/" + VALIDATOR_GEN_FOLDER;
-    }
-
-    clean(force: boolean) {
-        this.getFolderNames();
-        FileUtil.deleteDirAndContent(this.validatorGenFolder);
-        if (force) {
-            FileUtil.deleteFile(`${this.validatorFolder}/index.ts`);
-            if (this.language === null || this.language === undefined) {
-                LOG2USER.error("Cannot remove all because language is not set.");
-            } else {
-                FileUtil.deleteFile(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts`);
-            }
-            FileUtil.deleteDirIfEmpty(this.validatorFolder);
-        } else {
-            // do not delete the following files, because these may contain user edits
-            LOG2USER.info(
-                `Not deleted: ${this.validatorFolder}/${!!this.language ? Names.customValidator(this.language) : "<Custom Validator>"}.ts` +
-                    "\n\t" +
-                    `${this.validatorFolder}/index.ts`,
-            );
-        }
     }
 }

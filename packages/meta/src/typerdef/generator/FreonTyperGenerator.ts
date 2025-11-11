@@ -14,7 +14,6 @@ import { FreTypeConceptMaker } from "./templates/FreTypeConceptMaker.js";
 import { TyperDefTemplate } from "./templates/TyperDefTemplate.js";
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { FileUtil, GenerationStatus } from "../../utils/file-utils/index.js";
-import { LOG2USER } from '../../utils/basic-dependencies/index.js';
 
 const LOGGER = new MetaLogger("FreonTyperGenerator");
 
@@ -145,29 +144,5 @@ export class FreonTyperGenerator {
         this.typerFolder = this.outputfolder + "/" + TYPER_FOLDER;
         this.typerGenFolder = this.outputfolder + "/" + TYPER_GEN_FOLDER;
         this.typerConceptsFolder = this.outputfolder + "/" + TYPER_CONCEPTS_FOLDER;
-    }
-
-    clean(force: boolean) {
-        // TODO error " FreonCleanAction: ERROR: Stopping typer cleansing because of errors: EPERM: operation not permitted,
-        //  unlink 'src\testNoParserAvailable\typer\gen\type-concepts' "
-        this.getFolderNames();
-        FileUtil.deleteDirAndContent(this.typerConceptsFolder);
-        FileUtil.deleteDirAndContent(this.typerGenFolder);
-        if (force) {
-            FileUtil.deleteFile(`${this.typerFolder}/index.ts`);
-            if (this.language === undefined || this.language === null) {
-                LOG2USER.error("Cannot remove all files because language is not set.");
-            } else {
-                FileUtil.deleteFile(`${this.typerFolder}/${Names.customTyper(this.language)}.ts`);
-            }
-            FileUtil.deleteDirIfEmpty(this.typerFolder);
-        } else {
-            // do not delete the following files, because these may contain user edits
-            LOG2USER.info(
-                `Not removed: ${this.typerFolder}/${!!this.language ? Names.customTyper(this.language) : "<Custom Typer>"}.ts` +
-                    "\n\t" +
-                    `${this.typerFolder}/index.ts`,
-            );
-        }
     }
 }

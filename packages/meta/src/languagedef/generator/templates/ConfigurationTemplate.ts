@@ -45,4 +45,19 @@ export class ConfigurationTemplate {
             export const freonConfiguration = new ${configurationName}();
         `;
     }
+
+    generateCustomIndex(language: FreMetaLanguage): string {
+        return `
+            // TEMPLATE: ConfigurationTemplate.generateCustomIndex(...)
+            export * from "./${Names.customActions(language)}.js";
+            export * from "./${Names.customProjection(language)}.js";
+            export * from "./${Names.customScoper(language)}.js";
+            export * from "./${Names.customStdlib(language)}.js";
+            export * from "./${Names.customTyper(language)}.js";
+            export * from "./${Names.customValidator(language)}.js";
+            export * from "./${Names.configuration}.js";
+            export * from "./${Names.interpreterClassname(language)}.js";
+            export * from "./${Names.interpreterName(language)}.js";
+            `
+    }
 }

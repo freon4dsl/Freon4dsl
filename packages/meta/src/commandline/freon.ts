@@ -10,7 +10,6 @@ import { FreonGenerateTyper } from "./FreonGenerateTyper.js";
 import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { FreonGenerateParser } from "./FreonGenerateParser.js";
 import { FreonGenerateDiagrams } from "./FreonGenerateDiagrams.js";
-import { FreonCleanAction } from "./FreonCleanAction.js";
 
 // require('source-map-support').install();
 // import sm_support from 'source-map-support';
@@ -31,7 +30,6 @@ export class Freon extends CommandLineParser {
     private readonly validatorAction: FreonGenerateValidator;
     private readonly typerAction: FreonGenerateTyper;
     private readonly interpreterAction: FreonGenerateInterpreter;
-    private readonly cleanAction: FreonCleanAction;
     private verboseArg: CommandLineFlagParameter;
     private watchArg: CommandLineFlagParameter;
 
@@ -51,7 +49,6 @@ export class Freon extends CommandLineParser {
         this.validatorAction = new FreonGenerateValidator();
         this.typerAction = new FreonGenerateTyper();
         this.interpreterAction = new FreonGenerateInterpreter();
-        this.cleanAction = new FreonCleanAction();
         this.addAction(this.allAction);
         this.addAction(this.languageAction);
         this.addAction(this.lionwebAction)
@@ -62,7 +59,6 @@ export class Freon extends CommandLineParser {
         this.addAction(this.validatorAction);
         this.addAction(this.typerAction);
         this.addAction(this.interpreterAction);
-        this.addAction(this.cleanAction);
 
         this.verboseArg = this.defineFlagParameter({
             parameterLongName: "--verbose",

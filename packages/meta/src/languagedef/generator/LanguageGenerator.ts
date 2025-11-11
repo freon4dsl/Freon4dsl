@@ -1,13 +1,10 @@
 import * as fs from "fs";
-import { LOG2USER } from "../../utils/basic-dependencies/index.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import {
     COMMAND_LINE_FOLDER, COMMAND_LINE_GEN_FOLDER,
     CONFIGURATION_FOLDER,
     CONFIGURATION_GEN_FOLDER,
-    LANGUAGE_FOLDER,
     LANGUAGE_GEN_FOLDER,
-    LANGUAGE_UTILS_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
     STDLIB_FOLDER,
@@ -44,8 +41,6 @@ export class LanguageGenerator {
     private stdlibGenFolder: string = "";
     private configurationFolder: string = "";
     private configurationGenFolder: string = "";
-    private languageFolder: string = "";
-    private utilsFolder: string = "";
     private stdlibFolder: string = "";
     private commandlineFolder: string = "";
     private commandlineGenFolder: string = "";
@@ -160,24 +155,27 @@ export class LanguageGenerator {
 
         // Generate Freon configuration if it isn't there
         const combinedPath = getOutputForUseInCustom(this.outputfolder, this.customsfolder);
-        LOGGER.log(`Generating Freon Configuration: ${this.outputfolder}${this.customsfolder}/${Names.configuration}.ts`);
+        let filePath: string = `${this.outputfolder}${this.customsfolder}/${Names.configuration}.ts`
+        LOGGER.log(`Generating Freon Configuration: ${filePath}`);
         const configurationFile = FileUtil.pretty(
             configurationTemplate.generate(language, combinedPath),
             "Configuration",
             generationStatus,
         );
-        FileUtil.generateManualFile(
-            `${this.outputfolder}${this.customsfolder}/${Names.configuration}.ts`,
-            configurationFile,
-            "Configuration",
+        FileUtil.generateManualFile(filePath, configurationFile, "Configuration");
+
+        // Generate index to customs folder if it isn't there
+        filePath = `${this.outputfolder}${this.customsfolder}/index.ts`
+        LOGGER.log(`Generating Freon Configuration: ${filePath}`);
+        const indexFile = FileUtil.pretty(
+          configurationTemplate.generateCustomIndex(language),
+          "Custom Index",
+          generationStatus,
         );
+        FileUtil.generateManualFile(filePath, indexFile, "Custom Index" );
 
         // set relative path to an extra level to get the imports right
         relativePath = "../../";
-
-        // LOGGER.log(`Generating FreNodeReference: ${this.languageGenFolder}/${Names.FreNodeReference}.ts`);
-        // const referenceFile = FileUtil.pretty(freReferenceTemplate.generateFreReference(language, relativePath), "FreNodeReference", generationStatus);
-        // fs.writeFileSync(`${this.languageGenFolder}/${Names.FreNodeReference}.ts`, referenceFile);
 
         LOGGER.log(
             `Generating language structure information: ${this.languageGenFolder}/${Names.language(language)}.ts`,
@@ -319,29 +317,9 @@ export class LanguageGenerator {
         this.utilsGenFolder = this.outputfolder + "/" + LANGUAGE_UTILS_GEN_FOLDER;
         this.configurationGenFolder = this.outputfolder + "/" + CONFIGURATION_GEN_FOLDER;
         this.stdlibGenFolder = this.outputfolder + "/" + STDLIB_GEN_FOLDER;
-        this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
-        this.utilsFolder = this.outputfolder + "/" + LANGUAGE_UTILS_FOLDER;
         this.configurationFolder = this.outputfolder + "/" + CONFIGURATION_FOLDER;
         this.stdlibFolder = this.outputfolder + "/" + STDLIB_FOLDER;
         this.commandlineFolder = this.outputfolder + "/" + COMMAND_LINE_FOLDER;
         this.commandlineGenFolder = this.outputfolder + "/" + COMMAND_LINE_GEN_FOLDER;
-    }
-
-    clean(force: boolean) {
-        this.getFolderNames();
-        FileUtil.deleteDirAndContent(this.languageGenFolder);
-        FileUtil.deleteDirAndContent(this.utilsGenFolder);
-        FileUtil.deleteDirAndContent(this.configurationGenFolder);
-        FileUtil.deleteDirAndContent(this.stdlibGenFolder);
-        FileUtil.deleteDirIfEmpty(this.languageFolder);
-        FileUtil.deleteDirIfEmpty(this.utilsFolder);
-        FileUtil.deleteDirIfEmpty(this.stdlibFolder);
-        if (force) {
-            FileUtil.deleteFile(`${this.configurationFolder}/${Names.configuration}.ts`);
-            FileUtil.deleteDirIfEmpty(this.configurationFolder);
-        } else {
-            // do not delete the following files, because these may contain user edits
-            LOG2USER.info(`Not removed: ${this.configurationFolder}/${Names.configuration}.ts`);
-        }
     }
 }

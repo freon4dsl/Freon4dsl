@@ -20,7 +20,6 @@ import { FreEditUnit } from "../metalanguage/index.js";
 import { ActionsTemplate, EditorIndexTemplate, BoxProviderTemplate } from "./templates/index.js";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate } from "./templates/index.js";
 import { EditorDefTemplate } from "./templates/index.js";
-import { LOG2USER } from "../../utils/basic-dependencies/index.js";
 import { NamesForEditor } from '../../utils/on-lang-and-editor/index.js';
 
 const LOGGER = new MetaLogger("EditorGenerator").mute();
@@ -184,31 +183,5 @@ export class EditorGenerator {
     private getFolderNames() {
         this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
-    }
-
-    clean(force: boolean) {
-        this.getFolderNames();
-        FileUtil.deleteDirAndContent(this.editorGenFolder);
-        if (force) {
-            FileUtil.deleteFile(`${this.editorFolder}/index.ts`);
-            if (this.language === null || this.language === undefined) {
-                LOG2USER.error("Cannot remove all files because language is not set.");
-            } else {
-                FileUtil.deleteFile(`${this.editorFolder}/${Names.customActions(this.language)}.ts`);
-                FileUtil.deleteFile(`${this.editorFolder}/${Names.customProjection(this.language)}.ts`);
-                FileUtil.deleteDirIfEmpty(this.editorFolder);
-            }
-        } else {
-            if (this.language !== null && this.language !== undefined) {
-                // do not delete the following files, because these may contain user edits
-                LOG2USER.info(
-                    `Not removed: ${this.editorFolder}/${Names.customActions(this.language)}.ts` +
-                        "\n\t" +
-                        `${this.editorFolder}/${Names.customProjection(this.language)}.ts` +
-                        "\n\t" +
-                        `${this.editorFolder}/index.ts`
-                );
-            }
-        }
     }
 }

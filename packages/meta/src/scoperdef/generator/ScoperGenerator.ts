@@ -107,14 +107,4 @@ export class ScoperGenerator {
         this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
         this.scoperGenFolder = this.outputfolder + "/" + SCOPER_GEN_FOLDER;
     }
-
-    clean(force: boolean) {
-        this.getFolderNames();
-        FileUtil.deleteDirAndContent(this.scoperGenFolder);
-        if (force) {
-            FileUtil.deleteDirAndContent(this.scoperFolder);
-        } else {
-            FileUtil.deleteDirIfEmpty(this.scoperFolder);
-        }
-    }
 }
