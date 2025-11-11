@@ -33,6 +33,7 @@ import { ModelTemplate } from "./templates/ModelTemplate.js";
 import { RootIndexTemplate } from "./templates/RootIndexTemplate.js";
 import { UnitTemplate } from "./templates/UnitTemplate.js";
 import { ListUtilTemplate } from "./templates/ListUtilTemplate.js";
+import { getOutputForUseInCustom } from '../../utils/no-dependencies/FolderPathHelper.js';
 
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
@@ -158,9 +159,10 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.languageGenFolder}/internal.ts`, internalIndexFile);
 
         // Generate Freon configuration if it isn't there
+        const combinedPath = getOutputForUseInCustom(this.outputfolder, this.customsfolder);
         LOGGER.log(`Generating Freon Configuration: ${this.outputfolder}${this.customsfolder}/${Names.configuration}.ts`);
         const configurationFile = FileUtil.pretty(
-            configurationTemplate.generate(language, relativePath),
+            configurationTemplate.generate(language, combinedPath),
             "Configuration",
             generationStatus,
         );

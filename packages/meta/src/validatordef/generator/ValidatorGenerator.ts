@@ -11,6 +11,7 @@ import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemp
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate.js";
 import { LOG2USER } from "../../utils/basic-dependencies/UserLogger.js";
 import { NamespaceCheckerTemplate } from './templates/NamespaceCheckerTemplate.js';
+import { getOutputForUseInCustom } from '../../utils/no-dependencies/FolderPathHelper.js';
 
 // TODO use new AstWalker and AstWorker
 
@@ -117,7 +118,7 @@ export class ValidatorGenerator {
         fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, genIndexFile);
 
         // set relative path to get the imports right
-        relativePath = "../";
+        relativePath = getOutputForUseInCustom(this.outputfolder, this.customsfolder);
 
         LOGGER.log(
             `Generating validator gen index: ${this.outputfolder}${this.customsfolder}/${Names.customValidator(this.language)}.ts`,

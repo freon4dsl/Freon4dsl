@@ -6,6 +6,7 @@ import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { FreInterpreterDef } from "../metalanguage/FreInterpreterDef.js";
 import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate.js";
 import { InterpreterMainTemplate } from "./templates/InterpreterMainTemplate.js";
+import { getOutputForUseInCustom } from '../../utils/no-dependencies/FolderPathHelper.js';
 
 const LOGGER = new MetaLogger("InterpreterGenerator").mute();
 
@@ -50,7 +51,7 @@ export class InterpreterGenerator {
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
         // Change relative path to get the imports right
-        relativePath = "../";
+        relativePath = getOutputForUseInCustom(this.outputfolder, this.customsfolder);
 
         generatedFilePath = `${this.outputfolder}${this.customsfolder}/${Names.interpreterName(this.language)}.ts`;
         generatedContent = mainTemplate.interpreterMain(this.language, relativePath);

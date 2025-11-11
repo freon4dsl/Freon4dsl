@@ -11,7 +11,6 @@ export class ConfigurationTemplate {
         const workerName = Names.checkerInterface(language);
         const imports = new Imports(relativePath)
         imports.core = new Set<string>([Names.FreProjection, Names.FreActions, Names.FreTyper, Names.FreStdlib, Names.FreScoperPart])
-        // TODO remove "${relativePath}${customsFolder}" from imports
         return `
             // TEMPLATE: ConfigurationTemplate.generate(...)
             ${imports.makeImports(language)}

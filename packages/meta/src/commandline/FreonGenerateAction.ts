@@ -32,7 +32,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
         });
         this.outputFolderArg = this.defineStringParameter({
             argumentName: "OUTPUT_DIR",
-            defaultValue: ".",
+            defaultValue: "src/freon",
             parameterLongName: "--output",
             parameterShortName: "-o",
             description: "The directory where the files are generated",
@@ -40,7 +40,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
         });
         this.customsFolderArg = this.defineStringParameter({
             argumentName: "CUSTOM_DIR",
-            defaultValue: "custom/",
+            defaultValue: "../custom/",
             parameterLongName: "--custom",
             parameterShortName: "-c",
             description: "The directory where the custom code is located - relative to OUTPUT_DIR",
