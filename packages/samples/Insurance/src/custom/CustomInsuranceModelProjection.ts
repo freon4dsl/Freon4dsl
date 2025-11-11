@@ -8,7 +8,7 @@ import {
   BoxFactory,
   BoxUtil, NumberDisplay, SvgBox, FreProjectionHandler
 } from '@freon4dsl/core';
-import {EuroLiteral} from "../language/gen/index.js";
+import {EuroLiteral} from "freon/language/gen/index.js";
 
 /**
  * Original:
