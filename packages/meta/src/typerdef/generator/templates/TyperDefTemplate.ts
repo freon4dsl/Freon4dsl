@@ -1,13 +1,13 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { CONFIGURATION_FOLDER, FREON_CORE, Names } from '../../../utils/on-lang/index.js';
+import { FREON_CORE, Names } from '../../../utils/on-lang/index.js';
 
 
 export class TyperDefTemplate {
-    generateTyperDef(language: FreMetaLanguage, relativePath: string): string {
+    generateTyperDef(language: FreMetaLanguage, customsFolder: string, relativePath: string): string {
         return `import { type FreCompositeTyper } from "${FREON_CORE}";
 
             import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}.js";
-            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
+            import { freonConfiguration } from "${relativePath}${customsFolder}/${Names.configuration}.js";
 
             /**
              * Adds all known type-providers the root typer.

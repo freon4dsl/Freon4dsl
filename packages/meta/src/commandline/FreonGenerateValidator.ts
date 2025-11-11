@@ -29,6 +29,7 @@ export class FreonGenerateValidator extends FreonGeneratePartAction {
         this.validatorGenerator = new ValidatorGenerator();
         this.validatorGenerator.language = this.language;
         this.validatorGenerator.outputfolder = this.outputFolder;
+        this.validatorGenerator.customsfolder = this.customsFolder;
 
         const validator: ValidatorDef | undefined = new ValidatorParser(this.language).parseMulti(this.validFiles);
         if (validator === null || validator === undefined) {

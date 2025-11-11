@@ -17,6 +17,7 @@ import { NamespaceCheckerTemplate } from './templates/NamespaceCheckerTemplate.j
 const LOGGER = new MetaLogger("ValidatorGenerator").mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
+    public customsfolder: string = ".";
     public language: FreMetaLanguage | undefined;
     protected validatorGenFolder: string = "";
     protected validatorFolder: string = "";
@@ -38,6 +39,7 @@ export class ValidatorGenerator {
         const reservedWordsTemplate = new ReservedWordsTemplate();
 
         // Prepare folders
+        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.validatorFolder);
         FileUtil.createDirIfNotExisting(this.validatorGenFolder);
         FileUtil.deleteFilesInDir(this.validatorGenFolder, generationStatus);
@@ -48,7 +50,7 @@ export class ValidatorGenerator {
         //  Generate validator
         LOGGER.log(`Generating validator: ${this.validatorGenFolder}/${Names.validator(this.language)}.ts`);
         const validatorFile = FileUtil.pretty(
-            validatorTemplate.generateValidator(this.language, validdef, relativePath),
+            validatorTemplate.generateValidator(this.language, validdef, this.customsfolder, relativePath),
             "Validator Class",
             generationStatus,
         );
@@ -118,7 +120,7 @@ export class ValidatorGenerator {
         relativePath = "../";
 
         LOGGER.log(
-            `Generating validator gen index: ${this.validatorFolder}/${Names.customValidator(this.language)}.ts`,
+            `Generating validator gen index: ${this.outputfolder}${this.customsfolder}/${Names.customValidator(this.language)}.ts`,
         );
         const customFile = FileUtil.pretty(
             validatorTemplate.generateCustomValidator(this.language, relativePath),
@@ -126,14 +128,14 @@ export class ValidatorGenerator {
             generationStatus,
         );
         FileUtil.generateManualFile(
-            `${this.validatorFolder}/${Names.customValidator(this.language)}.ts`,
+            `${this.outputfolder}${this.customsfolder}/${Names.customValidator(this.language)}.ts`,
             customFile,
             "Custom Validator Class",
         );
 
         LOGGER.log(`Generating validator gen index: ${this.validatorFolder}/index.ts`);
         const indexFile = FileUtil.pretty(
-            validatorTemplate.generateIndex(this.language),
+            validatorTemplate.generateIndex(),
             "Index Class",
             generationStatus,
         );

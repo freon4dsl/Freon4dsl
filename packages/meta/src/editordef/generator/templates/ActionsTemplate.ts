@@ -2,14 +2,14 @@ import { Names, Imports } from '../../../utils/on-lang/index.js';
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 
 export class ActionsTemplate {
-    generate(language: FreMetaLanguage): string {
+    generate(language: FreMetaLanguage, customsFolder: string, relativePath: string): string {
         const imports = new Imports() 
         imports.core.add(Names.FreActions).add(Names.ActionsUtil).add(Names.FreCreateBinaryExpressionAction).add(Names.FreCustomAction)
         return `
             // TEMPLATE: ActionsTemplate.generate(...)
             ${imports.makeImports(language)}
             import { BINARY_EXPRESSION_CREATORS, CUSTOM_ACTIONS } from "./${Names.defaultActions(language)}.js";
-            import { MANUAL_BINARY_EXPRESSION_ACTIONS, MANUAL_CUSTOM_ACTIONS } from "../${Names.customActions(language)}.js";
+            import { MANUAL_BINARY_EXPRESSION_ACTIONS, MANUAL_CUSTOM_ACTIONS } from "${relativePath}${customsFolder}${Names.customActions(language)}.js";
 
              /**
              * Class ${Names.actions(language)} implements the actions available to the user in the editor.

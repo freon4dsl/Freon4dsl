@@ -26,6 +26,7 @@ const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
  */
 export class ReaderWriterGenerator {
     public outputfolder: string = ".";
+    public customsfolder: string = ".";
     public language: FreMetaLanguage | undefined;
     private writerFolder: string = "";
     private writerGenFolder: string = "";
@@ -48,6 +49,7 @@ export class ReaderWriterGenerator {
         const grammarGenerator = new GrammarGenerator();
 
         // Prepare folders
+        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.writerGenFolder);
         FileUtil.deleteFilesInDir(this.writerGenFolder, generationStatus);
         FileUtil.createDirIfNotExisting(this.readerGenFolder);

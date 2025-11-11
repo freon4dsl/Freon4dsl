@@ -27,6 +27,7 @@ export class FreonGenerateScoper extends FreonGeneratePartAction {
         }
         this.scoperGenerator.language = this.language;
         this.scoperGenerator.outputfolder = this.outputFolder;
+        this.scoperGenerator.customsfolder = this.customsFolder;
 
         const scoper: ScopeDef | undefined = new ScoperParser(this.language).parseMulti(this.scopeFiles);
         if (scoper === null || scoper === undefined) {

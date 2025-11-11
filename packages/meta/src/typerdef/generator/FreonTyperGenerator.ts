@@ -24,6 +24,7 @@ const LOGGER = new MetaLogger("FreonTyperGenerator");
  */
 export class FreonTyperGenerator {
     public outputfolder: string = ".";
+    public customsfolder: string = ".";
     public language: FreMetaLanguage | undefined;
     protected typerGenFolder: string = "";
     protected typerConceptsFolder: string = "";
@@ -45,6 +46,7 @@ export class FreonTyperGenerator {
         const typerPart: FreTyperPartTemplate = new FreTyperPartTemplate();
 
         // Prepare folders
+        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.typerFolder);
         FileUtil.createDirIfNotExisting(this.typerGenFolder);
         // Note that the creation of the concepts folder must follow the deletion of
@@ -89,10 +91,6 @@ export class FreonTyperGenerator {
             fs.writeFileSync(`${this.typerConceptsFolder}/internal.ts`, typeConceptInternalFile);
         }
 
-        // LOGGER.log(`Generating typer: ${this.typerGenFolder}/${Names.typer(this.language)}.ts`);
-        // const typerFile = FileUtil.pretty(typer.generateTyper(this.language, typerdef, relativePath), "Typer Class", generationStatus);
-        // fs.writeFileSync(`${this.typerGenFolder}/${Names.typer(this.language)}.ts`, typerFile);
-
         LOGGER.log(`Generating typerPart: ${this.typerGenFolder}/${Names.typerPart(this.language)}.ts`);
         const checkerFile: string = FileUtil.pretty(
             typerPart.generateTyperPart(this.language, typerdef, relativePath),
@@ -111,7 +109,7 @@ export class FreonTyperGenerator {
 
         LOGGER.log(`Generating typer init: ${this.typerGenFolder}/${Names.typerDef(this.language)}.ts`);
         const typerDefFile = FileUtil.pretty(
-            typerDef.generateTyperDef(this.language, relativePath),
+            typerDef.generateTyperDef(this.language, this.customsfolder, relativePath),
             "Typer Init",
             generationStatus,
         );
@@ -120,14 +118,14 @@ export class FreonTyperGenerator {
         // change relative path to get the imports right
         relativePath = "../";
 
-        LOGGER.log(`Generating custom typerPart: ${this.typerFolder}/index.ts`);
+        LOGGER.log(`Generating custom typerPart: ${this.outputfolder}${this.customsfolder}/index.ts`);
         const customTyperFile = FileUtil.pretty(
             customPart.generateCustomTyperPart(this.language),
             "Custom TyperPart",
             generationStatus,
         );
         FileUtil.generateManualFile(
-            `${this.typerFolder}/${Names.customTyper(this.language)}.ts`,
+            `${this.outputfolder}${this.customsfolder}/${Names.customTyper(this.language)}.ts`,
             customTyperFile,
             "Custom TyperPart",
         );

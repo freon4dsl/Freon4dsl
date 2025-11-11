@@ -19,6 +19,7 @@ import {
 const LOGGER: MetaLogger = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
+    public customsfolder: string = ".";
     public language: FreMetaLanguage | undefined;
     protected scoperGenFolder: string = "";
     protected scoperFolder: string = "";
@@ -44,6 +45,7 @@ export class ScoperGenerator {
         const customScoperTemplate: CustomScoperTemplate = new CustomScoperTemplate();
 
         // Prepare folders
+        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.scoperFolder);
         FileUtil.createDirIfNotExisting(this.scoperGenFolder);
         FileUtil.deleteFilesInDir(this.scoperGenFolder, generationStatus);
@@ -64,20 +66,20 @@ export class ScoperGenerator {
             `Generating scope language definition: ${this.scoperGenFolder}/${Names.scoperDef(this.language)}.ts`,
         );
         const scoperDefFile = FileUtil.pretty(
-            scoperDefTemplate.generateScoperDef(this.language, scopedef, relativePath),
+            scoperDefTemplate.generateScoperDef(this.language, scopedef, this.customsfolder, relativePath),
             "Scoper Definition",
             generationStatus,
         );
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoperDef(this.language)}.ts`, scoperDefFile);
 
-        LOGGER.log(`Generating custom scoper: ${this.scoperGenFolder}/${Names.customScoper(this.language)}.ts`);
+        LOGGER.log(`Generating custom scoper: ${this.outputfolder}${this.customsfolder}/${Names.customScoper(this.language)}.ts`);
         const scoperCustomFile = FileUtil.pretty(
             customScoperTemplate.generateCustomScoperPart(this.language),
             "Custom Scoper",
             generationStatus,
         );
         FileUtil.generateManualFile(
-            `${this.scoperFolder}/${Names.customScoper(this.language)}.ts`,
+            `${this.outputfolder}${this.customsfolder}/${Names.customScoper(this.language)}.ts`,
             scoperCustomFile,
             "Custom Scoper",
         );
@@ -91,7 +93,7 @@ export class ScoperGenerator {
         fs.writeFileSync(`${this.scoperGenFolder}/index.ts`, scoperGenIndexFile);
 
         LOGGER.log(`Generating scoper index: ${this.scoperFolder}/index.ts`);
-        const scoperIndexFile = FileUtil.pretty(scoper.generateIndex(this.language), "Scoper Index", generationStatus);
+        const scoperIndexFile = FileUtil.pretty(scoper.generateIndex(), "Scoper Index", generationStatus);
         FileUtil.generateManualFile(`${this.scoperFolder}/index.ts`, scoperIndexFile, "Scoper Index");
 
         if (generationStatus.numberOfErrors > 0) {

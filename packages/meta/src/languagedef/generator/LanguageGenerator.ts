@@ -37,6 +37,7 @@ import { ListUtilTemplate } from "./templates/ListUtilTemplate.js";
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
     public outputfolder: string = ".";
+    public customsfolder: string = ".";
     private languageGenFolder: string = "";
     private utilsGenFolder: string = "";
     private stdlibGenFolder: string = "";
@@ -74,6 +75,7 @@ export class LanguageGenerator {
         const commandLineTemplate = new CommandLineTemplate();
 
         // Prepare folders
+        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.configurationFolder);
         FileUtil.createDirIfNotExisting(this.languageGenFolder);
         FileUtil.createDirIfNotExisting(this.configurationGenFolder);
@@ -156,14 +158,14 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.languageGenFolder}/internal.ts`, internalIndexFile);
 
         // Generate Freon configuration if it isn't there
-        LOGGER.log(`Generating Freon Configuration: ${this.configurationFolder}/${Names.configuration}.ts`);
+        LOGGER.log(`Generating Freon Configuration: ${this.outputfolder}${this.customsfolder}/${Names.configuration}.ts`);
         const configurationFile = FileUtil.pretty(
             configurationTemplate.generate(language, relativePath),
             "Configuration",
             generationStatus,
         );
         FileUtil.generateManualFile(
-            `${this.configurationFolder}/${Names.configuration}.ts`,
+            `${this.outputfolder}${this.customsfolder}/${Names.configuration}.ts`,
             configurationFile,
             "Configuration",
         );
@@ -187,7 +189,7 @@ export class LanguageGenerator {
 
         LOGGER.log(`Generating language environment: ${this.configurationGenFolder}/${Names.environment(language)}.ts`);
         const environmentFile = FileUtil.pretty(
-            environmentTemplate.generateEnvironment(language, relativePath),
+            environmentTemplate.generateEnvironment(language, this.customsfolder, relativePath),
             "Language Environment",
             generationStatus,
         );
@@ -195,7 +197,7 @@ export class LanguageGenerator {
 
         LOGGER.log(`Generating standard library: ${this.stdlibGenFolder}/${Names.stdlib(language)}.ts`);
         const stdlibFile = FileUtil.pretty(
-            stdlibTemplate.generateStdlibClass(language, relativePath),
+            stdlibTemplate.generateStdlibClass(language, this.customsfolder, relativePath),
             "Language Standard Library",
             generationStatus,
         );
@@ -241,14 +243,14 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.utilsGenFolder}/index.ts`, utilIndexFile);
 
         {
-            LOGGER.log(`Generating custom stdlib: ${this.stdlibFolder}/${Names.customStdlib(language)}.ts`);
+            LOGGER.log(`Generating custom stdlib: ${this.outputfolder}${this.customsfolder}/${Names.customStdlib(language)}.ts`);
             const customFile = FileUtil.pretty(
                 stdlibTemplate.generateCustomStdlibClass(language),
                 "Custom Stdlib Class",
                 generationStatus,
             );
             FileUtil.generateManualFile(
-                `${this.stdlibFolder}/${Names.customStdlib(language)}.ts`,
+                `${this.outputfolder}${this.customsfolder}/${Names.customStdlib(language)}.ts`,
                 customFile,
                 "Custom Stdlib Class",
             );
@@ -256,7 +258,7 @@ export class LanguageGenerator {
         {
             LOGGER.log(`Generating stdlib index: ${this.stdlibFolder}/index.ts`);
             const indexFile = FileUtil.pretty(
-                stdlibTemplate.generateIndex(language),
+                stdlibTemplate.generateIndex(),
                 "Stdlib Index Class",
                 generationStatus,
             );

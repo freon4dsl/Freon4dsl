@@ -24,6 +24,7 @@ export class FreonGenerateParser extends FreonGeneratePartAction {
             return;
         }
         this.parserGenerator.outputfolder = this.outputFolder;
+        this.parserGenerator.customsfolder = this.customsFolder;
         this.parserGenerator.language = this.language;
 
         const editor = new FreEditParser(this.language).parseMulti(this.editFiles);

@@ -23,11 +23,9 @@ export class EditorIndexTemplate {
             export * from "./EditorDef.js"; `;
     }
 
-    generateIndex(language: FreMetaLanguage): string {
+    generateIndex(): string {
         return `
         export * from "./gen/index.js";
-        export * from "./${Names.customProjection(language)}.js";
-        export * from "./${Names.customActions(language)}.js";
         `;
     }
 }

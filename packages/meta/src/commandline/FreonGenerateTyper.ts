@@ -27,6 +27,7 @@ export class FreonGenerateTyper extends FreonGeneratePartAction {
         this.typerGenerator = new FreonTyperGenerator();
         this.typerGenerator.language = this.language;
         this.typerGenerator.outputfolder = this.outputFolder;
+        this.typerGenerator.customsfolder = this.customsFolder;
 
         const typer: TyperDef | undefined = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
         if (typer === null || typer === undefined) {

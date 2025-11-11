@@ -18,9 +18,9 @@ export class ScoperTemplate {
         `;
     }
 
-    generateIndex(language: FreMetaLanguage): string {
+    generateIndex(): string {
         return `
-        export * from "./${Names.customScoper(language)}.js";
+        export * from "./index.js";
         `;
     }
 

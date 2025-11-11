@@ -13,6 +13,7 @@ const LOGGER = new MetaLogger("InterpreterGenerator").mute();
  */
 export class InterpreterGenerator {
     public outputfolder: string = ".";
+    public customsfolder: string = ".";
     public language: FreMetaLanguage | undefined;
     private interpreterFolder: string = "";
     private interpreterGenFolder: string = "";
@@ -33,9 +34,10 @@ export class InterpreterGenerator {
         const mainTemplate = new InterpreterMainTemplate();
 
         // Set relative path to get the imports right
-        const relativePath = "../../";
+        let relativePath = "../../";
 
         // Prepare folders
+        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.interpreterGenFolder);
         FileUtil.deleteFilesInDir(this.interpreterGenFolder, generationStatus);
 
@@ -43,19 +45,20 @@ export class InterpreterGenerator {
         let generatedContent = template.interpreterBase(this.language, interpreterDef, relativePath);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
-        generatedFilePath = `${this.interpreterFolder}/${Names.interpreterClassname(this.language)}.ts`;
+        generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterInitname(this.language)}.ts`;
+        generatedContent = template.interpreterInit(this.language, interpreterDef, this.customsfolder, relativePath);
+        this.makeFile(generatedFilePath, generatedContent, generationStatus);
+
+        // Change relative path to get the imports right
+        relativePath = "../";
+
+        generatedFilePath = `${this.outputfolder}${this.customsfolder}/${Names.interpreterName(this.language)}.ts`;
+        generatedContent = mainTemplate.interpreterMain(this.language, relativePath);
+        this.makeFile(generatedFilePath, generatedContent, generationStatus);
+
+        generatedFilePath = `${this.outputfolder}${this.customsfolder}/${Names.interpreterClassname(this.language)}.ts`;
         generatedContent = FileUtil.pretty(template.interpreterClass(this.language, relativePath), "interpreter manual file" ,generationStatus);
         FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter class");
-        // this.makeFile("interpreter class", generatedFilePath, generatedContent, generationStatus);
-
-        generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterInitname(this.language)}.ts`;
-        generatedContent = template.interpreterInit(this.language, interpreterDef);
-        this.makeFile(generatedFilePath, generatedContent, generationStatus);
-        // FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter init")
-
-        generatedFilePath = `${this.interpreterFolder}/${Names.interpreterName(this.language)}.ts`;
-        generatedContent = mainTemplate.interpreterMain(this.language);
-        this.makeFile(generatedFilePath, generatedContent, generationStatus);
     }
 
     private makeFile(generatedFilePath: string, generatedContent: string, generationStatus: GenerationStatus) {

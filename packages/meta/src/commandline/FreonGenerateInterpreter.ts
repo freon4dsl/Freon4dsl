@@ -29,6 +29,7 @@ export class FreonGenerateInterpreter extends FreonGeneratePartAction {
             interpeterDef.conceptsToEvaluate.push(c);
         }
         this.interpreterGenerator.outputfolder = this.outputFolder;
+        this.interpreterGenerator.customsfolder = this.customsFolder;
         this.interpreterGenerator.language = this.language;
         this.interpreterGenerator.fileNames = this.languageFiles;
         this.interpreterGenerator.generate(interpeterDef);

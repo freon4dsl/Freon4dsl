@@ -6,12 +6,12 @@ import {
     STDLIB_GEN_FOLDER,
     WRITER_GEN_FOLDER,
     READER_GEN_FOLDER,
-    INTERPRETER_FOLDER, Imports
+    Imports
 } from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class EnvironmentTemplate {
-    generateEnvironment(language: FreMetaLanguage, relativePath: string): string {
+    generateEnvironment(language: FreMetaLanguage, customsFolder: string, relativePath: string): string {
         const imports = new Imports(relativePath)
         imports.core = new Set<string>([
             Names.FreEditor, Names.FreEnvironment, Names.FreReader,
@@ -33,7 +33,7 @@ export class EnvironmentTemplate {
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}.js";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}.js";
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}.js";
-        import { ${Names.interpreterName(language)}  } from "${relativePath}${INTERPRETER_FOLDER}/${Names.interpreterName(language)}.js";
+        import { ${Names.interpreterName(language)}  } from "${relativePath}${customsFolder}${Names.interpreterName(language)}.js";
 
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.
@@ -90,6 +90,7 @@ export class EnvironmentTemplate {
             writer: ${Names.FreWriter} = new ${Names.writer(language)}();
             reader: ${Names.FreReader} = new ${Names.reader(language)}();
             interpreter: ${Names.FreInterpreter} = new ${Names.interpreterName(language)};
+            stdlib: ${Names.FreStdlib} = ${Names.stdlib(language)}.getInstance();
             projectionHandler: FreProjectionHandler;
             languageName: string = "${language.name}";
             fileExtensions: Map<string, string> = new Map([

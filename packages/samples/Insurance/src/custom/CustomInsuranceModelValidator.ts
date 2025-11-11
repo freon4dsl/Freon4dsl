@@ -8,9 +8,9 @@ import {
     notNullOrUndefined
 } from '@freon4dsl/core';
 import { InsuranceModelDefaultWorker } from "../utils/gen/InsuranceModelDefaultWorker.js";
-import { InsuranceModelCheckerInterface } from "./gen/InsuranceModelValidator.js";
+import { InsuranceModelCheckerInterface } from "../validator/gen/InsuranceModelValidator.js";
 import { EuroType, MultiplyExpression, NumberType, PercentageType, Product } from '../language/gen/index.js';
-import { CustomInsuranceModelTyperPart } from '../typer/index.js';
+import { CustomInsuranceModelTyperPart } from './CustomInsuranceModelTyperPart.js';
 import { InsuranceModelEnvironment } from '../config/gen/InsuranceModelEnvironment.js';
 
 export class CustomInsuranceModelValidator extends InsuranceModelDefaultWorker implements InsuranceModelCheckerInterface {

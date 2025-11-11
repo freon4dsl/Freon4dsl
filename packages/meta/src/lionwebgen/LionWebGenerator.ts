@@ -10,6 +10,7 @@ export class LionWebGenerator {
     // @ts-ignore
     public language: FreMetaLanguage
     public outputfolder: string = ".";
+    public customsfolder: string = ".";
     private languageFolder: string = "";
     private lionWebFolder: string = "lionweb";
 
@@ -21,6 +22,7 @@ export class LionWebGenerator {
         this.getFolderNames();
         
         // Prepare folders
+        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.lionWebFolder);
         FileUtil.deleteFilesInDir(this.lionWebFolder, generationStatus);
 

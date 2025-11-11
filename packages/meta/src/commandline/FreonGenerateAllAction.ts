@@ -119,6 +119,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     //     try {
     //         this.lionWebGenerator.language = this.language;
     //         this.lionWebGenerator.outputfolder = this.outputFolder;
+    //         this.lionWebGenerator.customsfolder = this.customsFolder;
     //         this.lionWebGenerator.generate();
     //     } catch (e: unknown) {
     //         if (e instanceof Error) {
@@ -140,6 +141,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             }
             this.typerGenerator.language = this.language;
             this.typerGenerator.outputfolder = this.outputFolder;
+            this.typerGenerator.customsfolder = this.customsFolder;
             this.typerGenerator.generate(typer);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -165,6 +167,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         try {
             this.interpreterGenerator.language = this.language;
             this.interpreterGenerator.outputfolder = this.outputFolder;
+            this.interpreterGenerator.customsfolder = this.customsFolder;
             this.interpreterGenerator.generate(interpreterDef);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -186,6 +189,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             }
             this.scoperGenerator.language = this.language;
             this.scoperGenerator.outputfolder = this.outputFolder;
+            this.scoperGenerator.customsfolder = this.customsFolder;
             this.scoperGenerator.generate(scoper);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -207,6 +211,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             }
             this.validatorGenerator.language = this.language;
             this.validatorGenerator.outputfolder = this.outputFolder;
+            this.validatorGenerator.customsfolder = this.customsFolder;
             this.validatorGenerator.generate(validator);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -224,8 +229,10 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         let editor: FreEditUnit | undefined;
         try {
             this.editorGenerator.outputfolder = this.outputFolder;
+            this.editorGenerator.customsfolder = this.customsFolder;
             this.editorGenerator.language = this.language;
             this.parserGenerator.outputfolder = this.outputFolder;
+            this.parserGenerator.customsfolder = this.customsFolder;
             this.parserGenerator.language = this.language;
 
             if (this.editFiles.length > 0) {
@@ -261,6 +268,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         }
         Imports.initialize(this.language)
         this.languageGenerator.outputfolder = this.outputFolder;
+        this.languageGenerator.customsfolder = this.customsFolder;
         this.languageGenerator.generate(this.language!);
     };
 

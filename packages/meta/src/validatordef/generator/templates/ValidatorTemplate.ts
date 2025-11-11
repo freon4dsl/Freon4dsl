@@ -1,16 +1,15 @@
 import {
-    CONFIGURATION_FOLDER,
     Names,
-    Imports
-} from "../../../utils/on-lang/index.js"
+    Imports,
+    VALIDATOR_GEN_FOLDER
+} from '../../../utils/on-lang/index.js';
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { ValidatorDef } from "../../metalanguage/index.js";
 
 export class ValidatorTemplate {
     errorClassName: string = Names.FreError;
-    validatorInterfaceName: string = Names.FreValidator;
 
-    generateValidator(language: FreMetaLanguage, validdef: ValidatorDef | undefined, relativePath: string): string {
+    generateValidator(language: FreMetaLanguage, validdef: ValidatorDef | undefined, customsFolder: string, relativePath: string): string {
         const doValidDef: boolean = validdef !== null && validdef !== undefined;
 
         const generatedClassName: string = Names.validator(language);
@@ -32,7 +31,7 @@ export class ValidatorTemplate {
         import { ${namespaceChecker} } from "./${namespaceChecker}.js";
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}.js";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}.js";
-        import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
+        import { freonConfiguration } from "${relativePath}${customsFolder}${Names.configuration}.js";
 
         /**
          * Interface '${Names.checkerInterface(language)}' represents any object that traverses the model tree and checks
@@ -130,16 +129,16 @@ export class ValidatorTemplate {
         return `
         // TEMPLATE: ValidatorTemplate.generateCustomValidator
         ${imports.makeImports(language)}
-        import { type ${interfaceName} } from "./gen/${validatorName}.js";
+        import { type ${interfaceName} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${validatorName}.js";
 
         export class ${className} extends ${defaultWorkerName} implements ${interfaceName} {
             errorList: ${Names.FreError}[] = [];
         }`;
     }
 
-    generateIndex(language: FreMetaLanguage) {
+    generateIndex() {
         return `
-        export * from "./${Names.customValidator(language)}.js";
+        export * from "./index.js";
         `;
     }
 }

@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Imports, Names } from "../../../utils/on-lang/index.js"
+import { Imports, INTERPRETER_FOLDER, Names } from '../../../utils/on-lang/index.js';
 import { FreInterpreterDef } from "../../metalanguage/FreInterpreterDef.js";
 
 export class InterpreterBaseTemplate {
@@ -45,7 +45,7 @@ export class InterpreterBaseTemplate {
         return `// TEMPLATE: InterpreterBaseTemplate.interpreterClass(...)
         // Generated once, will NEVER be overwritten.
         ${imports.makeImports(language)}
-        import { ${baseName} } from "./gen/${baseName}.js";
+        import { ${baseName} } from "${relativePath}${INTERPRETER_FOLDER}/gen/${baseName}.js";
 
         let main: IMainInterpreter;
 
@@ -63,12 +63,12 @@ export class InterpreterBaseTemplate {
         `;
     }
 
-    public interpreterInit(language: FreMetaLanguage, interpreterDef: FreInterpreterDef): string {
+    public interpreterInit(language: FreMetaLanguage, interpreterDef: FreInterpreterDef, customsFolder: string, relativePath: string): string {
         const interpreter = Names.interpreterClassname(language);
         return `
         // TEMPLATE: InterpreterBaseTemplate.interpreterInit(...)
         import { type IMainInterpreter } from "@freon4dsl/core";
-        import { ${interpreter} } from "../${interpreter}.js";
+        import { ${interpreter} } from "${relativePath}${customsFolder}/${interpreter}.js";
 
         /**
          * The class that registers all interpreter function with the main interpreter.

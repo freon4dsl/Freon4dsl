@@ -1,11 +1,7 @@
 import {
     Names,
-    EDITOR_FOLDER,
     VALIDATOR_GEN_FOLDER,
-    TYPER_FOLDER,
-    VALIDATOR_FOLDER,
-    STDLIB_FOLDER,
-    SCOPER_FOLDER, Imports
+    Imports
 } from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage } from "../../metalanguage/index.js";
 
@@ -15,14 +11,16 @@ export class ConfigurationTemplate {
         const workerName = Names.checkerInterface(language);
         const imports = new Imports(relativePath)
         imports.core = new Set<string>([Names.FreProjection, Names.FreActions, Names.FreTyper, Names.FreStdlib, Names.FreScoperPart])
+        // TODO remove "${relativePath}${customsFolder}" from imports
         return `
             // TEMPLATE: ConfigurationTemplate.generate(...)
             ${imports.makeImports(language)}
-            import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}/index.js";
-            import { ${Names.customScoper(language)} } from "${relativePath}${SCOPER_FOLDER}/index.js";
-            import { ${Names.customTyper(language)} } from "${relativePath}${TYPER_FOLDER}/${Names.customTyper(language)}.js";
-            import { ${Names.customValidator(language)} } from "${relativePath}${VALIDATOR_FOLDER}/index.js";
-            import { ${Names.customStdlib(language)} } from "${relativePath}${STDLIB_FOLDER}/${Names.customStdlib(language)}.js";
+            import { ${Names.customActions(language)} } from "./${Names.customActions(language)}.js";
+            import { ${Names.customProjection(language)} } from "./${Names.customProjection(language)}.js";
+            import { ${Names.customScoper(language)} } from "./${Names.customScoper(language)}.js";
+            import { ${Names.customTyper(language)} } from "./${Names.customTyper(language)}.js";
+            import { ${Names.customValidator(language)} } from "./${Names.customValidator(language)}.js";
+            import { ${Names.customStdlib(language)} } from "./${Names.customStdlib(language)}.js";
             import { type ${workerName} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/index.js";
 
             /**
