@@ -221,11 +221,16 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
 
     async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<VoidServerResponse> {
         LOGGER.log(`renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
+        // If oldName and newName are the same, no rename is needed
+        if (oldName === newName) {
+            LOGGER.log(`renameModelUnit skipped: oldName and newName are the same (${oldName})`);
+            return { errors: [] };
+        }
         this.client.repository = modelName;
         // put the unit and its interface under the new name
         await this.saveModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
         // remove the old unit and interface
-        await this.deleteModelUnit(modelName, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() });
+        await this.deleteModelUnit(modelName, { name: oldName, id: unit.freId(), type: unit.freLanguageConcept() });
         return { errors: [] }
     }
 }
