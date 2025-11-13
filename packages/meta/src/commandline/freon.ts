@@ -51,14 +51,14 @@ export class Freon extends CommandLineParser {
         this.interpreterAction = new FreonGenerateInterpreter();
         this.addAction(this.allAction);
         this.addAction(this.languageAction);
-        this.addAction(this.lionwebAction)
         this.addAction(this.editorAction);
         this.addAction(this.parserAction);
-        this.addAction(this.diagramAction);
+        this.addAction(this.interpreterAction);
         this.addAction(this.scoperAction);
         this.addAction(this.validatorAction);
         this.addAction(this.typerAction);
-        this.addAction(this.interpreterAction);
+        this.addAction(this.diagramAction);
+        this.addAction(this.lionwebAction)
 
         this.verboseArg = this.defineFlagParameter({
             parameterLongName: "--verbose",
