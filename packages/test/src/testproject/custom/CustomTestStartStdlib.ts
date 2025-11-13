@@ -2,7 +2,7 @@
 // TEMPLATE: StdlibTemplate.generateStdlibClass
 
 import { AST, type FreNamedNode, type FreStdlib } from "@freon4dsl/core";
-import { AA, BB } from "../language/gen/index.js";
+import { AA, BB } from "../freon/language/gen/index.js";
 
 export class CustomTestStartStdlib implements FreStdlib {
     // add all your extra predefined instances here

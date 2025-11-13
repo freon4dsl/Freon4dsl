@@ -9,11 +9,11 @@ import {
     DemoFunction,
     DemoVariable,
     DemoAttributeType,
-} from "../language/gen";
+} from "../freon/language/gen";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.js";
-import { DemoValidator } from "../validator/gen/index.js";
-import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
+import { DemoValidator } from "../freon/validator/gen/index.js";
+import { DemoEnvironment } from "../freon/config/gen/DemoEnvironment.js";
 import { FileHandler } from "../../utils/FileHandler";
 import { describe, test, expect } from "vitest";
 

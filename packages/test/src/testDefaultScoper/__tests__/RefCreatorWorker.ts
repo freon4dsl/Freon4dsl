@@ -1,5 +1,5 @@
 import { AstWorker, FreNode, FreNodeReference } from "@freon4dsl/core";
-import { DSprivate, DSpublic, DSref, DSunit } from "../language/gen/index.js";
+import { DSprivate, DSpublic, DSref, DSunit } from "../freon/language/gen/index.js";
 
 /**
  * For each DSpublic and DSprivate part in the model a reference to the part is created in

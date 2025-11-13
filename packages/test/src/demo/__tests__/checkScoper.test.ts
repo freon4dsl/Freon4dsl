@@ -1,5 +1,5 @@
-import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
-import { DemoModel, Demo } from '../language/gen';
+import { DemoEnvironment } from "../freon/config/gen/DemoEnvironment.js";
+import { DemoModel, Demo } from '../freon/language/gen';
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe, test, expect, beforeEach } from "vitest";
 import { FreCompositeScoper } from '@freon4dsl/core';

@@ -1,6 +1,6 @@
 import {AST} from "@freon4dsl/core";
-import {Demo, DemoUnit} from "../language/gen";
-import {DemoEnvironment} from "../config/gen/DemoEnvironment";
+import {Demo, DemoUnit} from "../freon/language/gen";
+import {DemoEnvironment} from "../freon/config/gen/DemoEnvironment";
 import {FileHandler} from "../../utils/FileHandler";
 import {describe, test, expect} from "vitest";
 

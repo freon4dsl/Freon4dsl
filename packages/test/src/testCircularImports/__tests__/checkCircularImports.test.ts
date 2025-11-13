@@ -1,5 +1,5 @@
 import { AST } from "@freon4dsl/core";
-import { ConceptA } from "../language/gen/internal";
+import { ConceptA } from "../freon/language/gen/internal";
 import { describe, test, expect } from "vitest";
 
 describe("Checking circular imports", () => {

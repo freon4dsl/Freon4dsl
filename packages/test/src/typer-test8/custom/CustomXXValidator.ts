@@ -2,10 +2,10 @@
 // TEMPLATE: ValidatorTemplate.generateCustomValidator
 
 import { FreError, FreErrorSeverity } from "@freon4dsl/core";
-import { XXEnvironment } from "../config/gen/XXEnvironment.js";
-import { ExpWithType } from "../language/gen/index.js";
-import { XXDefaultWorker } from "../utils/gen/index.js";
-import { type XXCheckerInterface } from "../validator/gen/index.js";
+import { XXEnvironment } from "../freon/config/gen/XXEnvironment.js";
+import { ExpWithType } from "../freon/language/gen/index.js";
+import { XXDefaultWorker } from "../freon/utils/gen/index.js";
+import { type XXCheckerInterface } from "../freon/validator/gen/index.js";
 
 export class CustomXXValidator extends XXDefaultWorker implements XXCheckerInterface {
     errorList: FreError[] = [];

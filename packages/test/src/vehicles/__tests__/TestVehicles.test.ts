@@ -1,5 +1,5 @@
-import { VehicleModelEnvironment } from "../config/gen/VehicleModelEnvironment";
-import { VehicleModel, VehicleUnit } from "../language/gen";
+import { VehicleModelEnvironment } from "../freon/config/gen/VehicleModelEnvironment";
+import { VehicleModel, VehicleUnit } from "../freon/language/gen";
 import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions";
 import { describe, test } from "vitest";
 

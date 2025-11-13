@@ -1,5 +1,5 @@
 import { AST, FreModelSerializer } from "@freon4dsl/core";
-import { Demo, DemoModel } from "../language/gen/index.js";
+import { Demo, DemoModel } from "../freon/language/gen/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 
 export class DemoUnitCreator {

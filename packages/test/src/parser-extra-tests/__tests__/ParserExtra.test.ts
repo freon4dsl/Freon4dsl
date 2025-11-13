@@ -4,9 +4,9 @@ import {
     PartsInitiatorTest,
     PitExpTest, PrimsTest,
     ProductTest, TestParserExtra,
-} from "../language/gen";
+} from "../freon/language/gen";
 import {describe, test, expect, beforeEach} from "vitest";
-import {TestParserExtraEnvironment} from "../config/gen/TestParserExtraEnvironment";
+import {TestParserExtraEnvironment} from "../freon/config/gen/TestParserExtraEnvironment";
 
 describe("Parser on extra elements", () => {
     const reader = TestParserExtraEnvironment.getInstance().reader;

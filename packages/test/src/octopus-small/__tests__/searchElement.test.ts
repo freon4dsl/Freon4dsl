@@ -9,8 +9,8 @@ import {
     OctopusModel,
     UmlClass,
     UmlPart,
-} from "../language/gen";
-import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
+} from "../freon/language/gen";
+import { OctopusModelEnvironment } from "../freon/config/gen/OctopusModelEnvironment";
 import { describe, test, expect } from "vitest";
 
 const writer = OctopusModelEnvironment.getInstance().writer;

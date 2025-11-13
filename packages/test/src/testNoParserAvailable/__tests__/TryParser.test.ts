@@ -1,6 +1,6 @@
 import { FileHandler } from "../../utils/FileHandler";
-import { DemoEnvironment } from "../config/gen/DemoEnvironment";
-import { Demo, ExModel } from "../language/gen";
+import { DemoEnvironment } from "../freon/config/gen/DemoEnvironment";
+import { Demo, ExModel } from "../freon/language/gen";
 import { describe, test, expect } from "vitest";
 
 describe("Test the STUB that replaces the parser", () => {

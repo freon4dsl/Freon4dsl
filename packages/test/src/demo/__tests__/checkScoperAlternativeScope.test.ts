@@ -1,5 +1,5 @@
-import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
-import { AppliedFeature, DemoAttributeRef, Demo, initializeLanguage } from '../language/gen/index.js';
+import { DemoEnvironment } from "../freon/config/gen/DemoEnvironment.js";
+import { AppliedFeature, DemoAttributeRef, Demo, initializeLanguage } from '../freon/language/gen/index.js';
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe,  test, expect, beforeEach } from "vitest";
 import { isInScope, } from '../../utils/HelperFunctions.js';

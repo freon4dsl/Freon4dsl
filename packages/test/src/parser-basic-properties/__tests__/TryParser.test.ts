@@ -1,5 +1,5 @@
 import {FreUtils} from "@freon4dsl/core";
-import {TestParserModelEnvironment} from "../config/gen/TestParserModelEnvironment";
+import {TestParserModelEnvironment} from "../freon/config/gen/TestParserModelEnvironment";
 import {FileHandler} from "../../utils/FileHandler";
 import {
     LimitedTest,
@@ -8,7 +8,7 @@ import {
     RefsTest,
     PrimsWithKeywordTest,
     TestParserModel, OptionalPrimitivesTest
-} from '../language/gen';
+} from '../freon/language/gen';
 import {describe, it, test, expect, beforeEach} from "vitest";
 
 describe("Parser properties of type", () => {

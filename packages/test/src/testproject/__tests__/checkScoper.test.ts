@@ -1,7 +1,7 @@
 import { AST, FreLanguage } from "@freon4dsl/core";
-import { TestStartEnvironment } from "../config/gen/TestStartEnvironment";
-import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../language/gen";
-import { TestStartStdlib } from "../stdlib/gen/TestStartStdlib";
+import { TestStartEnvironment } from "../freon/config/gen/TestStartEnvironment";
+import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../freon/language/gen";
+import { TestStartStdlib } from "../freon/stdlib/gen/TestStartStdlib";
 import { describe, test, expect, beforeEach } from "vitest";
 import { getVisibleNames } from '../../utils/HelperFunctions';
 
