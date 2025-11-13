@@ -6,7 +6,7 @@ import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { FreInterpreterDef } from "../metalanguage/FreInterpreterDef.js";
 import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate.js";
 import { InterpreterMainTemplate } from "./templates/InterpreterMainTemplate.js";
-import { getOutputForUseInCustom } from '../../utils/no-dependencies/FolderPathHelper.js';
+import { getCombinedFolderPath } from '../../utils/no-dependencies/FolderPathHelper.js';
 
 const LOGGER = new MetaLogger("InterpreterGenerator").mute();
 
@@ -51,7 +51,7 @@ export class InterpreterGenerator {
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
         // Change relative path to get the imports right
-        relativePath = getOutputForUseInCustom(this.outputfolder, this.customsfolder);
+        relativePath = getCombinedFolderPath(this.outputfolder, this.customsfolder);
 
         generatedFilePath = `${this.outputfolder}${this.customsfolder}/${Names.interpreterName(this.language)}.ts`;
         generatedContent = mainTemplate.interpreterMain(this.language, relativePath);
@@ -71,15 +71,5 @@ export class InterpreterGenerator {
     private getFolderNames() {
         this.interpreterFolder = this.outputfolder + "/" + INTERPRETER_FOLDER;
         this.interpreterGenFolder = this.outputfolder + "/" + INTERPRETER_GEN_FOLDER;
-    }
-
-    clean(force: boolean) {
-        this.getFolderNames();
-        FileUtil.deleteDirAndContent(this.interpreterGenFolder);
-        if (force) {
-            FileUtil.deleteDirAndContent(this.interpreterFolder);
-        } else {
-            FileUtil.deleteDirIfEmpty(this.interpreterFolder);
-        }
     }
 }

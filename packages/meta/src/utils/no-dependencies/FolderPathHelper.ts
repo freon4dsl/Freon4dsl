@@ -1,40 +1,31 @@
 import * as path from 'path';
 
 /**
- * Returns the portion of `outputFolder` that comes after the common ancestor
- * of `outputFolder` and `customFolder` (where `customFolder` is relative to `outputFolder`).
+ * Combines two folder paths and returns the relative subfolder path.
  *
  * Example:
  *  outputFolder = "src/freon"
  *  customFolder = "../custom"
- * *  → "freon/"
- *  *
- *  *  output = "a/b/c/d", custom = "../../x/y"  → "c/d/"
- *  *  output = "a/b/c",   custom = "./x/y"     → "c/"
+ *  → returns "../freon/"
  */
-export function getOutputForUseInCustom(outputFolder: string, customFolder: string): string {
+export function getCombinedFolderPath(outputFolder: string, customFolder: string): string {
+	// Resolve both paths to absolute
 	const absOutput = path.resolve(outputFolder);
 	const absCustom = path.resolve(outputFolder, customFolder);
 
-	const outParts = path.normalize(absOutput).split(path.sep).filter(Boolean);
-	const cusParts = path.normalize(absCustom).split(path.sep).filter(Boolean);
-
-	// Find common prefix (case-sensitive)
-	let i = 0;
-	while (i < outParts.length && i < cusParts.length && outParts[i] === cusParts[i]) {
-		i++;
-	}
-
-	// The tail of output after the common ancestor
-	let tail = outParts.slice(i).join(path.sep);
+	// Compute the relative path from outputFolder to customFolder
+	let relative = path.relative(absCustom, absOutput);
 
 	// Normalize to forward slashes for consistency
-	tail = tail.replace(/\\/g, "/");
+	relative = relative.replace(/\\/g, "/");
 
 	// Ensure it ends with a '/'
-	if (!tail.endsWith("/")) {
-		tail += "/";
+	if (!relative.endsWith("/")) {
+		relative += "/";
 	}
 
-	return tail;
+	return relative;
 }
+
+// Example usage
+console.log(getCombinedFolderPath("src/freon", "../custom")); // → "freon"

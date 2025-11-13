@@ -42,16 +42,16 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         super({
             actionName: "all",
             summary:
-                "Generates the TypeScript code for all parts of the work environment for your language, plus some diagrams that show the AST",
+                "Generates the TypeScript code for all parts of the work environment for your language, plus some diagrams that show the AST.",
             documentation:
-                "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, the reader, the writer, and the " +
-                "validator for language as defined in files in DEFINITIONS_DIR.",
+                "Generates the TypeScript code for all parts of the work environment for your language as defined in files in DEFINITIONS_DIR, plus some diagrams that show the AST",
         });
     }
 
     generate(): void {
         LOG2USER.info("Starting generation of all parts of your language as defined in " + this.defFolder.value);
         // LOG2USER.log("Output will be generated in: " + this.outputFolder);
+        // LOG2USER.log("Custom files will be generated in: " + this.customsFolder);
 
         // this try-catch is here for debugging purposes, should be removed from release
         try {

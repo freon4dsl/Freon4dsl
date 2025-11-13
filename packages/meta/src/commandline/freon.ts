@@ -72,19 +72,6 @@ export class Freon extends CommandLineParser {
         });
     }
 
-    // protected onDefineParameters(): void {
-    //     this.verboseArg = this.defineFlagParameter({
-    //         parameterLongName: "--verbose",
-    //         parameterShortName: "-v",
-    //         description: "Show extra logging detail"
-    //     });
-    //     this.watchArg = this.defineFlagParameter({
-    //         parameterLongName: "--watch",
-    //         parameterShortName: "-w",
-    //         description: "Start generator in watch mode (only in combination with 'all')"
-    //     });
-    // }
-
     protected onExecute(): Promise<void> {
         if (!this.verboseArg.value) {
             MetaLogger.muteAllLogs();
@@ -105,7 +92,3 @@ export class Freon extends CommandLineParser {
         return Promise.resolve();
     }
 }
-//
-// // Run this as the main program.
-// const freon: Freon = new Freon();
-// freon.executeAsync();

@@ -10,7 +10,7 @@ import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate.js";
 import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate.js";
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate.js";
 import { NamespaceCheckerTemplate } from './templates/NamespaceCheckerTemplate.js';
-import { getOutputForUseInCustom } from '../../utils/no-dependencies/FolderPathHelper.js';
+import { getCombinedFolderPath } from '../../utils/no-dependencies/FolderPathHelper.js';
 
 // TODO use new AstWalker and AstWorker
 
@@ -117,7 +117,7 @@ export class ValidatorGenerator {
         fs.writeFileSync(`${this.validatorGenFolder}/index.ts`, genIndexFile);
 
         // set relative path to get the imports right
-        relativePath = getOutputForUseInCustom(this.outputfolder, this.customsfolder);
+        relativePath = getCombinedFolderPath(this.outputfolder, this.customsfolder);
 
         LOGGER.log(
             `Generating validator gen index: ${this.outputfolder}${this.customsfolder}/${Names.customValidator(this.language)}.ts`,

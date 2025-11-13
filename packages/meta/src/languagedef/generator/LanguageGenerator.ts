@@ -30,7 +30,7 @@ import { ModelTemplate } from "./templates/ModelTemplate.js";
 import { RootIndexTemplate } from "./templates/RootIndexTemplate.js";
 import { UnitTemplate } from "./templates/UnitTemplate.js";
 import { ListUtilTemplate } from "./templates/ListUtilTemplate.js";
-import { getOutputForUseInCustom } from '../../utils/no-dependencies/FolderPathHelper.js';
+import { getCombinedFolderPath } from '../../utils/no-dependencies/FolderPathHelper.js';
 
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
@@ -154,7 +154,7 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.languageGenFolder}/internal.ts`, internalIndexFile);
 
         // Generate Freon configuration if it isn't there
-        const combinedPath = getOutputForUseInCustom(this.outputfolder, this.customsfolder);
+        const combinedPath = getCombinedFolderPath(this.outputfolder, this.customsfolder);
         let filePath: string = `${this.outputfolder}${this.customsfolder}/${Names.configuration}.ts`
         LOGGER.log(`Generating Freon Configuration: ${filePath}`);
         const configurationFile = FileUtil.pretty(
@@ -277,14 +277,15 @@ export class LanguageGenerator {
             "CommandLine Class",
         );
 
-        LOGGER.log(`Generating command line runner: ${this.commandlineFolder}/FreonCommandLineRunner.ts`);
+        const filePath2 = `${this.outputfolder}${this.customsfolder}/FreonCommandLineRunner.ts`
+        LOGGER.log(`Generating command line runner: ${filePath2}`);
         const commandLineRunnerFile = FileUtil.pretty(
-            commandLineTemplate.generateCommandLineRunner(language),
+            commandLineTemplate.generateCommandLineRunner(language, getCombinedFolderPath(this.outputfolder, this.customsfolder)),
             "CommandLineRunner Class",
             generationStatus,
         );
         FileUtil.generateManualFile(
-            `${this.commandlineFolder}/FreonCommandLineRunner.ts`,
+            `${filePath2}`,
             commandLineRunnerFile,
             "CommandLineRunner Class",
         );
