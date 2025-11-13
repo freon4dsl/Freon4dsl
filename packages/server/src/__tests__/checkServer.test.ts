@@ -49,7 +49,7 @@ describe("Freon Model Server", () => {
 
         const response2 = await serv.get("/getModelList");
         expect(response2.status).toBe(201);
-        console.log(JSON.stringify(response2.text))
+        // console.log(JSON.stringify(response2.text))
         expect(response2.text).toContain("__TEST__");
         expect(response2.text).toContain("631(&$][:) 12!");
 
@@ -58,7 +58,7 @@ describe("Freon Model Server", () => {
 
         const response4 = await serv.get("/getModelList");
         expect(response4.status).toBe(201);
-        console.log(JSON.stringify(response4.text))
+        // console.log(JSON.stringify(response4.text))
         expect(response4.text).toContain("__TEST__");
         expect(response4.text).to.not.contain("631(&$][:) 12!");
     });

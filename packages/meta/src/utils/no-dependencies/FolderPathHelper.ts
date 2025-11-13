@@ -26,6 +26,3 @@ export function getCombinedFolderPath(outputFolder: string, customFolder: string
 
 	return relative;
 }
-
-// Example usage
-console.log(getCombinedFolderPath("src/freon", "../custom")); // → "freon"

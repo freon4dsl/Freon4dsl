@@ -179,10 +179,10 @@ describe("Testing Validator", () => {
 
             errors = validator.validate(personEnt, true);
             errors.forEach((e) => {
-                console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity);
+                // console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity);
                 expect(e.reportedOn === personEnt);
             });
-            console.log(personEnt.attributes.map(att => att.name))
+            // console.log(personEnt.attributes.map(att => att.name))
             expect(errors.length).toBe(2);
         })
     });
