@@ -14,12 +14,8 @@
     "build-samples": "npm run build",
     "compile": "tsc && rollup --config",
     "install-local": "npm install --registry http://localhost:4873",
-    "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d src/defs -o src/",
-    "copy": "cp src/lionweb/Example.json ../LionCore/src/__inputs__/Example.json && cp src/lionweb/Example.json ../../server/modelstore/lionweb_example",
-    "clean-gen": "bash ../../../scripts/freon-samples-dev.sh clean-it -d src/defs -o src/",
-    "clean-config": "rm */config/FreonConfiguration.ts",
-    "clean-custom": "rm */*/Custom*.ts",
-    "clean-all": "npm run clean-gen && npm run clean-config && npm run clean-custom"
+    "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d defs",
+    "copy": "cp src/lionweb/Example.json ../LionCore/src/__inputs__/Example.json && cp src/lionweb/Example.json ../../server/modelstore/lionweb_example"
   },
   "devDependencies": {
     "@freon4dsl/meta": "~2.0.0"

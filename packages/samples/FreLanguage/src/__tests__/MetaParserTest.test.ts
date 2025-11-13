@@ -1,6 +1,6 @@
-import {FreStructureDef, FreValidatorDef, FreScoperDef, FreTyperDef, FreLanguageX} from "../language/gen";
+import { FreStructureDef, FreValidatorDef, FreScoperDef, FreTyperDef, FreLanguageX} from "../freon/language/gen";
 import { FreError } from "@freon4dsl/core"
-import { FreLanguageXEnvironment } from "../config/gen/FreLanguageXEnvironment.js";
+import { FreLanguageXEnvironment } from "../freon/config/gen/FreLanguageXEnvironment.js";
 import { describe, test, expect } from "vitest";
 import { FileUtil } from '@freon4dsl/test-helpers';
 
