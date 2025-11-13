@@ -4,7 +4,7 @@
 import { FreError, FreErrorSeverity } from "@freon4dsl/core";
 
 import { DemoDefaultWorker } from "../utils/gen/index.js";
-import { type DemoCheckerInterface } from "./gen/index.js";
+import { type DemoCheckerInterface } from "../validator/gen/index.js";
 import { DemoFunction } from "../language/gen/index.js";
 
 export class CustomDemoValidator extends DemoDefaultWorker implements DemoCheckerInterface {
