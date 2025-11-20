@@ -29,7 +29,8 @@
     let currentValue: boolean | undefined = $state(box.getBoolean());
     let ariaLabel = 'toBeDone'; // todo create useful aria-label
     let isHorizontal: boolean = false; // todo expose horizontal/vertical to user
-    let isOptional: boolean = $state(false);
+    let isOptional: boolean = $state(false); // is set in $effect to optionality from box
+
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
@@ -181,3 +182,5 @@
         </span>
     {/if}
 </span>
+
+

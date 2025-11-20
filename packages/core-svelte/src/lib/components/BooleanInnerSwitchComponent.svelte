@@ -58,7 +58,7 @@
         aria-labelledby={`switch-${id}`}
         onclick={handleClick}
     >
-        <span>{box.labels.yes}</span>
-        <span>{box.labels.no}</span>
+        <span class="inner-switch-component-label">{box.labels.yes}</span>
+        <span class="inner-switch-component-label">{box.labels.no}</span>
     </button>
 </span>

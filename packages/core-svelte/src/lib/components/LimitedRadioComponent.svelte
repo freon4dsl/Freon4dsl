@@ -13,7 +13,6 @@
         SHIFT
     } from '@freon4dsl/core';
     import { onMount } from 'svelte';
-    import { MdRadio } from '@material/web/radio/radio.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
@@ -24,12 +23,12 @@
     let id: string = box.id;
     let myEnum = box.getPossibleNames();
     let currentValue: string = $state(box.getNames()[0]);
-    let allElements: MdRadio[] = $state([]);
-    let ariaLabel: string = 'toBeDone'; // todo ariaLabel
-    let isHorizontal: boolean = false; // todo expose horizontal/vertical to user
+    let allElements: HTMLInputElement[] = $state([]);
+    let ariaLabel: string = box.propertyName;
+    let isHorizontal: boolean = box.horizontal;
 
-    function findSelectedElement(): MdRadio | undefined {
-        let selected: MdRadio | undefined = undefined;
+    function findSelectedElement(): HTMLInputElement | undefined {
+        let selected: HTMLInputElement | undefined = undefined;
         for (let i = 0; i < myEnum.length; i++) {
             if (myEnum[i] === currentValue) {
                 selected = allElements[i];
@@ -68,7 +67,9 @@
         refresh('Refresh limited radio box changed ' + box?.id);
     });
 
-    const onChange = (event: MouseEvent) => {
+    const onChange = (event: Event & {
+        currentTarget: EventTarget & HTMLInputElement;
+    }) => {
         // @ts-expect-error it is known that the target has a 'value' prop
         currentValue = event.target!['value'];
         AST.change(() => {
@@ -101,29 +102,32 @@
 </script>
 
 <span
-    role="radiogroup"
-    aria-labelledby={ariaLabel}
-    {id}
-    class="limited-radio-component-group {box.cssClass}"
-    class:limited-radio-component-vertical={!isHorizontal}
+  role="radiogroup"
+  aria-labelledby={ariaLabel}
+  {id}
+  class="limited-radio-component-group  {box.cssClass}"
+  class:limited-radio-component-vertical={!isHorizontal}
 >
     {#each myEnum as nn, i}
         <span class="limited-radio-component-single">
-            <md-radio
-                id="{id}-{nn}-{i}"
-                name="{id}-group"
-                role="radio"
-                tabindex="0"
-                aria-checked={currentValue === nn}
-                value={nn}
-                checked={currentValue === nn}
-                aria-label="radio-control-{nn}"
-                onclick={onClick}
-                onchange={onChange}
-                onkeydown={onKeyDown}
-                bind:this={allElements[i]}
-            ></md-radio>
-            <label class="limited-radio-component-label" for="{id}-{nn}-{i}">{nn}</label>
+            <label class="limited-radio-component-label">
+                <input
+                  class="limited-radio-component-input"
+                  type="radio"
+                  id="{id}-{nn}-{i}"
+                  name="{id}-group"
+                  tabindex="0"
+                  aria-checked={currentValue === nn}
+                  value={nn}
+                  checked={currentValue === nn}
+                  aria-label="radio-control-{nn}"
+                  onclick={onClick}
+                  onchange={onChange}
+                  onkeydown={onKeyDown}
+                  bind:this={allElements[i]}
+                />
+                {nn}
+            </label>
         </span>
     {/each}
 </span>

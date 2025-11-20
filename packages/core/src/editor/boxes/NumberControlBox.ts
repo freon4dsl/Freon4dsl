@@ -10,7 +10,6 @@ export type NumberDisplayInfo = {
     max?: number | undefined;
     min?: number | undefined;
     step?: number | undefined;
-    showMarks?: boolean | undefined;
     discrete?: boolean | undefined;
 };
 export enum NumberDisplay {
@@ -84,12 +83,10 @@ export class NumberControlBox extends Box {
         // check the current value, step must be a valid divider
         let myStep: number = 1;
         let myDiscrete: boolean = true;
-        let myShowMarks: boolean = false;
         if (currentValue % myStep !== 0) {
             console.log("Step not valid divider, step: " + myStep + ", value: " + currentValue);
             myStep = undefined;
             myDiscrete = false;
-            myShowMarks = false;
         }
 
         if (isNullOrUndefined(this.displayInfo)) {
@@ -97,7 +94,6 @@ export class NumberControlBox extends Box {
                 min: myMin,
                 max: myMax,
                 step: myStep,
-                showMarks: myShowMarks,
                 discrete: myDiscrete,
             };
         } else {
@@ -133,28 +129,23 @@ export class NumberControlBox extends Box {
                     console.log("Value in NumberBox is not an integer value: " + currentValue);
                     this.displayInfo.step = undefined;
                     this.displayInfo.discrete = false;
-                    this.displayInfo.showMarks = false;
                 } else {
-                    if (this.displayInfo.showMarks === undefined) {
-                        this.displayInfo.showMarks = false;
+                    if (this.displayInfo.step === undefined) {
+                        this.displayInfo.step = 1;
                     } else {
-                        if (this.displayInfo.step === undefined) {
+                        // step must be a positive number
+                        if (this.displayInfo.step < 0) {
+                            this.displayInfo.step = Math.abs(this.displayInfo.step);
+                        }
+                        // check the step, it must be a valid divider of the current value
+                        if (currentValue % this.displayInfo.step !== 0) {
                             this.displayInfo.step = 1;
                         } else {
-                            // step must be a positive number
-                            if (this.displayInfo.step < 0) {
-                                this.displayInfo.step = Math.abs(this.displayInfo.step);
-                            }
-                            // check the step, it must be a valid divider of the current value
-                            if (currentValue % this.displayInfo.step !== 0) {
-                                this.displayInfo.step = 1;
-                            } else {
-                                // increase max if the step does not fit
-                                let remainder: number =
-                                    (this.displayInfo.max - this.displayInfo.min) % this.displayInfo.step;
-                                if (remainder !== 0) {
-                                    this.displayInfo.max += remainder;
-                                }
+                            // increase max if the step does not fit
+                            let remainder: number =
+                              (this.displayInfo.max - this.displayInfo.min) % this.displayInfo.step;
+                            if (remainder !== 0) {
+                                this.displayInfo.max += remainder;
                             }
                         }
                     }

@@ -1,10 +1,10 @@
 /* These css styles are used when the pages in /src/routes are visited directly,
  * for instance when testing. They are not meant to be exported or included elsewhere.
 */
-@import 'lib/styles/freon.css';
 @import 'lib/styles/freon-color-definitions.css';
 @import 'lib/styles/freon-plain-dark.css';
 @import 'lib/styles/freon-light.css';
+@import 'lib/styles/freon.css';
 
 h1 {
     font-size: xx-large;
@@ -36,12 +36,6 @@ a {
     height: 8rem;
     border: solid black 1px;
     position: relative;
-}
-
-.limited-checkbox-component-group {
-    --md-sys-color-primary: darkblue;
-    --md-sys-color-on-surface-variant: darkblue;
-    --md-sys-color-on-surface: darkblue;
 }
 
 .top {
