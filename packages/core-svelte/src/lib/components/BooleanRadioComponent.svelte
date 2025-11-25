@@ -90,7 +90,7 @@
         }
     };
 
-    const onClick = (event: MouseEvent & { currentTarget: EventTarget & HTMLInputElement }) => {
+    const onClick = (event: MouseEvent & { currentTarget: EventTarget & HTMLLabelElement }) => {
         event.stopPropagation();
     };
 
@@ -115,23 +115,21 @@
 <span
     role="radiogroup"
     aria-labelledby={ariaLabel}
-    class="boolean-radio-component-group {box.cssClass}"
+    class="freon-radio-group boolean-radio-component-group {box.cssClass}"
     class:boolean-radio-component-vertical={!isHorizontal}
     {id}
 >
-    <span class="boolean-radio-component-single">
-        <label for="{id}-trueOne" class="boolean-radio-component-label">
+    <span class="freon-radio-item boolean-radio-component-single">
+        <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
             <input
                 type="radio"
                 id="{id}-trueOne"
                 name="{id}-group"
-                role="radio"
                 tabindex="0"
                 aria-checked={currentValue === true}
                 value={true}
                 checked={currentValue === true}
                 aria-label="radio-control-true"
-                onclick={onClick}
                 onchange={onChange}
                 onkeydown={onKeyDown}
                 bind:this={trueElement}
@@ -139,19 +137,17 @@
             {box.labels.yes}
         </label>
     </span>
-    <span class="boolean-radio-component-single">
-        <label class="boolean-radio-component-label" for="{id}-falseOne">
+    <span class="freon-radio-item boolean-radio-component-single">
+        <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
             <input
                 type="radio"
                 id="{id}-falseOne"
                 name="{id}-group"
-                role="radio"
                 tabindex="0"
                 aria-checked={currentValue === false}
                 value={false}
                 checked={currentValue === false}
                 aria-label="radio-control-false"
-                onclick={onClick}
                 onchange={onChange}
                 onkeydown={onKeyDown}
                 bind:this={falseElement}
@@ -160,19 +156,17 @@
         </label>
     </span>
     {#if isOptional} 
-        <span class="boolean-radio-component-single">
-            <label class="boolean-radio-component-label" for="{id}-undefinedOne">
+        <span class="freon-radio-item boolean-radio-component-single">
+            <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
                 <input
                     type="radio"
                     id="{id}-undefinedOne"
                     name="{id}-group"
-                    role="radio"
                     tabindex="0"
                     aria-checked={currentValue === undefined}
                     value="unknown"
                     checked={currentValue === undefined}
                     aria-label="radio-control-undefined"
-                    onclick={onClick}
                     onchange={onChange}
                     onkeydown={onKeyDown}
                     bind:this={undefinedElement}

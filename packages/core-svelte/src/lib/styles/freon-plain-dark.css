@@ -113,6 +113,8 @@
     /* Label */
     --limited-radio-label-color: var(--color-dark-freon-900);
     --limited-radio-disabled-label-color: var(--color-dark-freon-400);
+
+    --limited-radio-shadow-color: var(--color-dark-freon-300);
 }
 .limited-radio-component-group:hover,
 .limited-radio-component-group:focus-within {
@@ -213,12 +215,27 @@
 .boolean-checkbox-component:focus-within {
     outline: var(--color-dark-freon-900) solid 1px;
 }
-.boolean-radio-component-group {
-    --boolean-radio-label-color: var(--color-dark-freon-900);
-    --boolean-radio-border-color: var(--color-dark-freon-400); /* Unchecked outer ring color */
-    --boolean-radio-color: var(--color-dark-freon-900); /* Primary selected color (checked inner dot + border when checked) */
-    --boolean-radio-hover-ripple: var(--color-dark-freon-200); /* Hover ripple halo */
+.boolean-checkbox-component:focus-within {
+    outline: var(--color-dark-freon-250) solid 1px;
 }
+.boolean-radio-component-group {
+    /* Label */
+    --boolean-radio-label-color: var(--color-dark-freon-50);
+
+    /* Base (unchecked outer ring) */
+    --boolean-radio-border-color: var(--color-dark-freon-400);
+
+    /* Checked state (border + inner dot) */
+    --boolean-radio-color: var(--color-dark-freon-200);
+
+    /* Hover ripple halo */
+    --boolean-radio-hover-ripple: var(--color-dark-freon-200);
+
+    /* Shadow color for the whole group, mirroring the light-mode token */
+    --boolean-radio-shadow-color: var(--color-dark-freon-300);
+}
+
+/* Hover halo around the *input* */
 .boolean-radio-component-label input::after {
     /* Fallback: if color-mix is not supported, this will be ignored,
        but at least the variable is valid. */
@@ -231,10 +248,16 @@
             transparent
     );
 }
+
+/* Group outline / focus */
 .boolean-radio-component-group:hover,
 .boolean-radio-component-group:focus-within {
-    outline: var(--color-dark-freon-900) solid 1px;
-    box-shadow: 0 0 10px var(--color-dark-freon-800);
+    outline: 1px solid var(--color-dark-freon-300);
+    box-shadow: 0 0 10px color-mix(
+            in srgb,
+            var(--boolean-radio-shadow-color) 40%,
+            transparent
+    );
 }
 
 /*******************************************************

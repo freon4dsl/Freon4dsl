@@ -34,6 +34,13 @@
     min-height: 0;       /* avoids flex/grid ancestors forcing scrollbars */
     min-width: 0;        /* same for horizontal cases */
     flex: 1 1 auto;      /* if it's inside a flex layout */
+
+    /* Base tokens (non-color) */
+    --freon-radio-size: 18px;
+    --freon-radio-dot-size: 10px;
+    --freon-radio-font-size: 0.95rem;
+    --freon-radio-gap-inline: 0.5rem;
+    --freon-radio-gap-block: 1rem;
 }
 .gutter {
     /*border: 1px solid;*/
@@ -208,23 +215,68 @@
 }
 
 /*******************************************************
+ *  Shared Structure of Radio Groups
+ *******************************************************/
+
+/* Group */
+.freon-radio-group {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--freon-radio-gap-inline) var(--freon-radio-gap-block);
+    align-items: center;
+    padding: 4px 6px;
+    margin: 2px;
+    border: none;
+    box-shadow: none;
+    transition: box-shadow 0.2s ease, border-radius 0.2s ease;
+}
+
+/* Vertical variant */
+.freon-radio-group-vertical {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.freon-radio-item {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+/* Label + text */
+.freon-radio-label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--freon-radio-font-size);
+    cursor: pointer;
+    user-select: none;
+    color: var(--freon-radio-label-color);
+}
+
+/*******************************************************
  *  LimitedRadioComponent
  *******************************************************/
- .limited-radio-component-group {
-     display: flex;
-     flex-wrap: wrap;
-     gap: 0.5rem 1rem;    /* row-gap and column-gap */
-     margin: 2px;
-     padding: 4px 6px 4px 6px;
-     border: none;
-     align-items: center;
- }
-
+.limited-radio-component-group {
+    display: inline-flex;          /* was: flex */
+    flex-direction: row;
+    flex-wrap: wrap;               /* keep wrapping if needed */
+    gap: 0.5rem 1rem;
+    align-items: center;
+    padding: 4px 6px;
+    margin: 2px;
+    border: none;
+    box-shadow: none;
+    transition: box-shadow 0.2s ease;
+}
+/* Match the group hover/focus “card” feel */
 .limited-radio-component-group:hover,
 .limited-radio-component-group:focus-within {
     border-radius: 0.1em;
+    box-shadow: 2px 2px 8px var(--limited-radio-shadow-color);
 }
-
 /* Vertical variant */
 .limited-radio-component-group.limited-radio-component-vertical {
     flex-direction: column;
@@ -246,48 +298,58 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    font-size: 0.95rem; /* same text size as BooleanRadio */
+    cursor: pointer;
+    user-select: none;
+    color: var(--limited-radio-label-color);
 }
-
 /* Outer circle */
 .limited-radio-component-label::before {
     content: "";
-    width: 1.1em;
-    height: 1.1em;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     border: 2px solid var(--limited-radio-unchecked-border-color);
+    background-color: transparent;
     box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+
+    transition:
+            border-color 0.18s ease-out,
+            background-color 0.18s ease-out,
+            box-shadow 0.18s ease-out;
 }
 
 /* Inner dot – hidden by default */
 .limited-radio-component-label::after {
     content: "";
     position: absolute;
-    width: 0.6em;
-    height: 0.6em;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: var(--limited-radio-dot-color);
-    left: 0.25em;  /* center inside the outer circle */
+    left: 4px;             /* center inside 18px circle with 2px border */
     top: 50%;
     transform: translateY(-50%) scale(0);
-    transition: transform 0.2s ease;
+    transition: transform 0.18s ease-out;
+    z-index: 2;
 }
-
-/* ✅ Show the dot when the nested input is checked */
+/* Show the dot when the nested input is checked */
 .limited-radio-component-label:has(> .limited-radio-component-input:checked)::after {
     transform: translateY(-50%) scale(1);
 }
-
 /* Hover halo (Material-ish) */
-.limited-radio-component-single:hover .limited-radio-component-label::before {
+.limited-radio-component-single:hover .limited-radio-component-label::before,
+.limited-radio-component-single:focus-within .limited-radio-component-label::before {
     background-color: var(--limited-radio-hover-background-color);
 }
-
 /* Keyboard focus outline */
 .limited-radio-component-single input:focus-visible
 + .limited-radio-component-label::before {
     box-shadow: 0 0 0 3px var(--limited-radio-focus-ring-color);
 }
-
 .limited-radio-component-single input:disabled
 + .limited-radio-component-label {
     cursor: default;
@@ -557,7 +619,7 @@
             transform 0.18s ease-out;
     pointer-events: none;
     z-index: 0;           /* behind ring + dot */
-    background-color: var(--limited-radio-hover-background-color);
+    background-color: var(--boolean-radio-hover-ripple);
 }
 /* Checked state */
 .boolean-radio-component-label input:checked {
@@ -650,7 +712,6 @@
  *  NumericSliderComponent
  *******************************************************/
  .numeric-slider-component {
-
      max-width: 320px;
      margin-top: 1.5rem;
      position: relative;

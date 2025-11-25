@@ -6,7 +6,6 @@
         ARROW_LEFT,
         ARROW_RIGHT,
         ARROW_UP,
-        AST,
         CONTROL,
         notNullOrUndefined,
         LimitedControlBox,
@@ -70,17 +69,18 @@
     const onChange = (event: Event & {
         currentTarget: EventTarget & HTMLInputElement;
     }) => {
-        // @ts-expect-error it is known that the target has a 'value' prop
-        currentValue = event.target!['value'];
-        AST.change(() => {
+        if (notNullOrUndefined(event.target)) {
+            LOGGER.log(
+              'LimitedRadioComponent.onChange for box ' +
+              box.role +
+              ', value:' +
+              event.target['value' as keyof EventTarget]
+            );
+            currentValue = event.currentTarget.value
             box.setNames([currentValue]);
-        });
-        editor.selectElementForBox(box);
-        event.stopPropagation();
-    };
-
-    const onClick = (event: MouseEvent & { currentTarget: EventTarget & HTMLInputElement }) => {
-        event.stopPropagation();
+            editor.selectElementForBox(box);
+            event.stopPropagation();
+        }
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -99,18 +99,23 @@
             }
         }
     };
+
+    const onClickLabel = (event: MouseEvent & { currentTarget: EventTarget & HTMLLabelElement }) => {
+        event.stopPropagation();
+    };
+
 </script>
 
 <span
   role="radiogroup"
   aria-labelledby={ariaLabel}
   {id}
-  class="limited-radio-component-group  {box.cssClass}"
+  class="freon-radio-group limited-radio-component-group  {box.cssClass}"
   class:limited-radio-component-vertical={!isHorizontal}
 >
     {#each myEnum as nn, i}
-        <span class="limited-radio-component-single">
-            <label class="limited-radio-component-label">
+        <span class="freon-radio-item limited-radio-component-single">
+            <label class="freon-radio-label limited-radio-component-label"   onclick={onClickLabel}>
                 <input
                   class="limited-radio-component-input"
                   type="radio"
@@ -121,7 +126,6 @@
                   value={nn}
                   checked={currentValue === nn}
                   aria-label="radio-control-{nn}"
-                  onclick={onClick}
                   onchange={onChange}
                   onkeydown={onKeyDown}
                   bind:this={allElements[i]}

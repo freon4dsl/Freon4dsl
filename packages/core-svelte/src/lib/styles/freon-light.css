@@ -87,6 +87,9 @@
 .limited-checkbox-component-single {
 }
 
+/*******************************************************
+ *  LimitedRadioComponent
+ *******************************************************/
 .limited-radio-component-group {
     /* Base (unchecked) */
     --limited-radio-unchecked-border-color: var(--color-light-freon-600);
@@ -113,6 +116,9 @@
     /* Label */
     --limited-radio-label-color: var(--color-light-freon-900);
     --limited-radio-disabled-label-color: var(--color-light-freon-400);
+
+    /* Shadow */
+    --limited-radio-shadow-color: var(--color-light-freon-700);
 }
 .limited-radio-component-group:hover,
 .limited-radio-component-group:focus-within {
@@ -125,6 +131,33 @@
 }
 .limited-radio-component-label {
 }
+
+/*******************************************************
+ *  BooleanRadioComponent
+ *******************************************************/
+.boolean-radio-component-group {
+    --boolean-radio-label-color: var(--color-light-freon-900);
+    --boolean-radio-border-color: var(--color-light-freon-400); /* Unchecked outer ring color */
+    --boolean-radio-color: var(--color-light-freon-900); /* Primary selected color (checked inner dot + border when checked) */
+    --boolean-radio-hover-ripple: var(--color-light-freon-200); /* Hover ripple halo */
+    --boolean-radio-shadow-color: var(--color-light-freon-700);
+}
+.boolean-radio-component-label input::after {
+    /* Fallback: if color-mix is not supported, this will be ignored,
+       but at least the variable is valid. */
+    background-color: var(--boolean-radio-hover-ripple);
+
+    /* Modern browsers: translucent halo based on the accent color */
+    background-color: color-mix(
+            in srgb,
+            var(--boolean-radio-hover-ripple) 12%,
+            transparent
+    );
+}
+
+/*******************************************************
+ *  ContextMenuComponent
+ *******************************************************/
 .contextmenu {
     border-color: var(--color-light-freon-150);
     background: var(--color-light-freon-50);
@@ -221,27 +254,10 @@
     /*box-shadow: 0 0 10 var(--color-light-freon-800);*/
 }
 
-.boolean-radio-component-group {
-    --boolean-radio-label-color: var(--color-light-freon-900);
-    --boolean-radio-border-color: var(--color-light-freon-400); /* Unchecked outer ring color */
-    --boolean-radio-color: var(--color-light-freon-900); /* Primary selected color (checked inner dot + border when checked) */
-    --boolean-radio-hover-ripple: var(--color-light-freon-200); /* Hover ripple halo */
-    --boolean-radio-shadow-color: var(--color-light-freon-700);
-}
 
-.boolean-radio-component-label input::after {
-    /* Fallback: if color-mix is not supported, this will be ignored,
-       but at least the variable is valid. */
-    background-color: var(--boolean-radio-hover-ripple);
-
-    /* Modern browsers: translucent halo based on the accent color */
-    background-color: color-mix(
-            in srgb,
-            var(--boolean-radio-hover-ripple) 12%,
-            transparent
-    );
-}
-
+/*******************************************************
+ *  TextComponent
+ *******************************************************/
 .text-component-input {
     color: var(--color-light-freon-400);
     background: var(--color-freon-light-accent-lightgreen);
