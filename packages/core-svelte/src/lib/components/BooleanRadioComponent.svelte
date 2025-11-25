@@ -25,10 +25,10 @@
     let id: string = box.id;
     let trueElement: HTMLInputElement;
     let falseElement: HTMLInputElement;
-    let undefinedElement: HTMLInputElement;
+    let undefinedElement: HTMLInputElement | undefined = $state(undefined);
     let currentValue: boolean | undefined = $state(box.getBoolean());
-    let ariaLabel = 'toBeDone'; // todo create useful aria-label
-    let isHorizontal: boolean = false; // todo expose horizontal/vertical to user
+    let ariaLabel = box.propertyName;
+    let isHorizontal: boolean = box.horizontal;
     let isOptional: boolean = $state(false); // is set in $effect to optionality from box
 
     /**
@@ -42,7 +42,7 @@
             trueElement.focus();
         } else if (currentValue === false) {
             falseElement.focus();
-        } else if (currentValue === "unknown") {
+        } else if (currentValue === "unknown" && notNullOrUndefined(undefinedElement)) {
             undefinedElement.focus();
         }
     }
@@ -77,12 +77,13 @@
             if (tmp === "unknown") {
                 // Using value "unknown", as undefined does not work with radio button
                 currentValue = undefined
-            } else if (typeof tmp === "boolean") {
-                currentValue = tmp
-            } else if (typeof tmp === "string") {
-                currentValue = tmp === "true"
+            } else if (tmp === "true") {
+                currentValue = true;
+            } else if (tmp === "false") {
+                currentValue = false;
             } else {
-                LOGGER.error(`unkown value in BooleanRadioComponent: '${tmp}'`)
+                LOGGER.error(`unknown value in BooleanRadioComponent: '${tmp}'`)
+                return; // bail out, don't update box
             }
             box.setBoolean(currentValue);
             editor.selectElementForBox(box);
@@ -120,6 +121,8 @@
     {id}
 >
     <span class="freon-radio-item boolean-radio-component-single">
+        <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
         <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
             <input
                 type="radio"
@@ -138,6 +141,8 @@
         </label>
     </span>
     <span class="freon-radio-item boolean-radio-component-single">
+        <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
         <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
             <input
                 type="radio"
@@ -157,6 +162,8 @@
     </span>
     {#if isOptional} 
         <span class="freon-radio-item boolean-radio-component-single">
+            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
             <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
                 <input
                     type="radio"

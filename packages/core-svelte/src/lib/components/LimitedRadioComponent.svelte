@@ -115,6 +115,8 @@
 >
     {#each myEnum as nn, i}
         <span class="freon-radio-item limited-radio-component-single">
+            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
             <label class="freon-radio-label limited-radio-component-label"   onclick={onClickLabel}>
                 <input
                   class="limited-radio-component-input"

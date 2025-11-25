@@ -269,7 +269,7 @@
         LOGGER.log(`FreonComponent visibleRect`)
         const rect = await getVisibleRect(freonRootElement);
         if (rect) {
-            LOGGER.log("visible size:", rect.width, rect.height);
+            LOGGER.log("visible size: " + rect.width + ", " + rect.height);
             return rect;
         } else {
             LOGGER.log("freonRootElement was null, skipping");
