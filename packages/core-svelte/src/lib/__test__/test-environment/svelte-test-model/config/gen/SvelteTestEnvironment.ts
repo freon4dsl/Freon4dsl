@@ -16,7 +16,7 @@ import { initializeScoperDef } from "../../scoper/gen/index.js";
 import { initializeTypers } from "../../typer/gen/index.js";
 import { SvelteTestValidator } from "../../validator/gen/index.js";
 import { SvelteTest, SvelteTestUnit, initializeLanguage } from "../../language/gen/index.js";
-import { MainSvelteTestInterpreter } from '@freon4dsl/samples-svelte-test';
+
 
 /**
  * Class SvelteTestEnvironment provides the link between all parts of the language environment.
