@@ -42,6 +42,15 @@
     --freon-radio-gap-inline: 0.5rem;
     --freon-radio-gap-block: 1rem;
 }
+/* Defaults for shared color tokens used by all radio groups. Overwritten in 'freon-light.css' etc. */
+.freon-radio-group {
+    --freon-radio-label-color: #1f1f1f;
+    --freon-radio-border-color: #5f6368;
+    --freon-radio-dot-color: #1f1f1f;
+    --freon-radio-hover-background-color: transparent;
+    --freon-radio-focus-ring-color: rgba(26, 115, 232, 0.3);
+    --freon-radio-shadow-color: rgba(0, 0, 0, 0.2);
+}
 .gutter {
     /*border: 1px solid;*/
     min-width: 4px;
@@ -260,117 +269,73 @@
  *  LimitedRadioComponent
  *******************************************************/
 .limited-radio-component-group {
-    display: inline-flex;          /* was: flex */
-    flex-direction: row;
-    flex-wrap: wrap;               /* keep wrapping if needed */
-    gap: 0.5rem 1rem;
-    align-items: center;
-    padding: 4px 6px;
-    margin: 2px;
-    border: none;
-    box-shadow: none;
-    transition: box-shadow 0.2s ease;
+    --freon-radio-label-color: var(--limited-radio-label-color);
+    --freon-radio-border-color: var(--limited-radio-unchecked-border-color);
+    --freon-radio-dot-color: var(--limited-radio-dot-color);
+    --freon-radio-hover-background-color: var(--limited-radio-hover-background-color);
+    --freon-radio-focus-ring-color: var(--limited-radio-focus-ring-color);
+    --freon-radio-shadow-color: var(--limited-radio-shadow-color);
 }
-/* Match the group hover/focus “card” feel */
-.limited-radio-component-group:hover,
-.limited-radio-component-group:focus-within {
-    border-radius: 0.1em;
-    box-shadow: 2px 2px 8px var(--limited-radio-shadow-color);
-}
-/* Vertical variant */
-.limited-radio-component-group.limited-radio-component-vertical {
-    flex-direction: column;
-    align-items: flex-start;
-}
-.limited-radio-component-single {
-    display: inline-flex;
-    align-items: center;
-    position: relative;
-}
+/* Hide native input; use label pseudo-elements to draw circle/dot */
 .limited-radio-component-single input {
     position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
 }
-.limited-radio-component-label {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.95rem; /* same text size as BooleanRadio */
-    cursor: pointer;
-    user-select: none;
-    color: var(--limited-radio-label-color);
-}
+
 /* Outer circle */
 .limited-radio-component-label::before {
     content: "";
-    width: 18px;
-    height: 18px;
+    width: var(--freon-radio-size);
+    height: var(--freon-radio-size);
     border-radius: 50%;
-    border: 2px solid var(--limited-radio-unchecked-border-color);
+    border: 2px solid var(--freon-radio-border-color);
     background-color: transparent;
     box-sizing: border-box;
-    position: relative;
     display: inline-block;
     z-index: 1;
-
     transition:
             border-color 0.18s ease-out,
             background-color 0.18s ease-out,
             box-shadow 0.18s ease-out;
 }
 
-/* Inner dot – hidden by default */
+/* Inner dot */
 .limited-radio-component-label::after {
     content: "";
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: var(--freon-radio-dot-size);
+    height: var(--freon-radio-dot-size);
     border-radius: 50%;
-    background: var(--limited-radio-dot-color);
-    left: 4px;             /* center inside 18px circle with 2px border */
+    background: var(--freon-radio-dot-color);
+    left: calc((var(--freon-radio-size) - var(--freon-radio-dot-size)) / 2);
     top: 50%;
     transform: translateY(-50%) scale(0);
     transition: transform 0.18s ease-out;
     z-index: 2;
 }
-/* Show the dot when the nested input is checked */
+
+/* Show dot when checked */
 .limited-radio-component-label:has(> .limited-radio-component-input:checked)::after {
     transform: translateY(-50%) scale(1);
 }
-/* Hover halo (Material-ish) */
+
+/* Hover halo */
 .limited-radio-component-single:hover .limited-radio-component-label::before,
 .limited-radio-component-single:focus-within .limited-radio-component-label::before {
-    background-color: var(--limited-radio-hover-background-color);
+    background-color: var(--freon-radio-hover-background-color);
 }
-/* Keyboard focus outline */
+
+/* Focus */
 .limited-radio-component-single input:focus-visible
 + .limited-radio-component-label::before {
-    box-shadow: 0 0 0 3px var(--limited-radio-focus-ring-color);
-}
-.limited-radio-component-single input:disabled
-+ .limited-radio-component-label {
-    cursor: default;
-    color: var(--limited-radio-disabled-label-color);
+    box-shadow: 0 0 0 3px var(--freon-radio-focus-ring-color);
 }
 
-/* Disabled outer circle */
-.limited-radio-component-single input:disabled
-+ .limited-radio-component-label::before {
-    border-color: var(--limited-radio-disabled-border-color);
-    background-color: var(--limited-radio-disabled-background-color);
-    box-shadow: none;
-}
-
-/* Disabled inner dot */
-.limited-radio-component-single input:disabled:checked
-+ .limited-radio-component-label::after {
-    background-color: var(--limited-radio-disabled-dot-color);
-}
-/* end styling limited radio group */
-
+/*******************************************************
+ *  ContextMenuComponent
+ *******************************************************/
 .contextmenu {
     border-width: 1px;
     border-style: solid;
@@ -534,123 +499,82 @@
 /*******************************************************
  *  BooleanRadioComponent
  *******************************************************/
-  /* Layout of the group */
- .boolean-radio-component-group {
-     display: inline-flex;
-     flex-direction: row;
-     gap: 0.5rem 1rem;    /* row-gap and column-gap */
-     align-items: center;
-     padding: 4px 6px 4px 6px;
-     border: none;
-     box-shadow: none;
-     transition: box-shadow 0.2s ease;
- }
- /* When hovered or in focus */
-.boolean-radio-component-group:hover,
-.boolean-radio-component-group:focus-within {
-    box-shadow: 2px 2px 8px var(--boolean-radio-shadow-color);
+/* Map BooleanRadio colors into the shared tokens */
+.boolean-radio-component-group {
+    --freon-radio-label-color: var(--boolean-radio-label-color);
+    --freon-radio-border-color: var(--boolean-radio-border-color);
+    --freon-radio-dot-color: var(--boolean-radio-color);
+    --freon-radio-hover-background-color: var(--boolean-radio-hover-ripple);
+    --freon-radio-shadow-color: var(--boolean-radio-shadow-color);
+    --freon-radio-focus-ring-color: var(--boolean-radio-focus-ring-color, rgba(26, 115, 232, 0.3));
 }
-/* When isHorizontal === false */
-.boolean-radio-component-vertical {
-    flex-direction: column;
-    align-items: flex-start;
-}
-.boolean-radio-component-single {
-    display: inline-flex;
-}
-.boolean-radio-component-single:hover .boolean-radio-component-label input::after,
-.boolean-radio-component-single:focus-within .boolean-radio-component-label input::after {
-    opacity: 1;
-    transform: scale(1);
-}
-/* Label + radio alignment */
-.boolean-radio-component-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.95rem;
-    cursor: pointer;
-    user-select: none;
-    color: var(--boolean-radio-label-color, #1f1f1f);
-}
-/* --- Radio Material-ish --- */
+
+/* Use base layout classes; only define circle/dot mechanics here */
 .boolean-radio-component-label input {
-    /* reset native */
     -webkit-appearance: none;
     appearance: none;
     margin: 0;
     padding: 0;
 
-    width: 18px;
-    height: 18px;
+    width: var(--freon-radio-size);
+    height: var(--freon-radio-size);
     border-radius: 50%;
-    border: 2px solid var(--boolean-radio-border-color, #5f6368);
+    border: 2px solid var(--freon-radio-border-color);
     background-color: transparent;
     position: relative;
     display: inline-block;
-    z-index: 1; /* base layer for ring */
+    z-index: 1;
 
     transition:
             border-color 0.18s ease-out,
             box-shadow 0.18s ease-out,
             background-color 0.18s ease-out;
 }
+
 /* Inner dot */
 .boolean-radio-component-label input::before {
     content: "";
     position: absolute;
-    inset: 3px;
+    inset: calc((var(--freon-radio-size) - var(--freon-radio-dot-size)) / 2);
     border-radius: 50%;
-    background-color: var(--boolean-radio-color);
+    background-color: var(--freon-radio-dot-color);
     transform: scale(0);
     transition: transform 0.18s ease-out;
-    z-index: 2;           /* above ring */
+    z-index: 2;
 }
-/* Ripple-ish hover ring */
+
+/* Hover halo */
 .boolean-radio-component-label input::after {
     content: "";
     position: absolute;
     inset: -6px;
     border-radius: 50%;
-    opacity: 1;           /* translucency is in the color-mix itself */
+    opacity: 1;
     transform: scale(0.8);
     transition:
             opacity 0.18s ease-out,
             transform 0.18s ease-out;
     pointer-events: none;
-    z-index: 0;           /* behind ring + dot */
-    background-color: var(--boolean-radio-hover-ripple);
+    z-index: 0;
+    background-color: color-mix(
+            in srgb,
+            var(--freon-radio-hover-background-color) 12%,
+            transparent
+    );
 }
-/* Checked state */
+
+/* Checked */
 .boolean-radio-component-label input:checked {
-    border-color: var(--boolean-radio-color, #1a73e8);
+    border-color: var(--freon-radio-dot-color);
 }
 .boolean-radio-component-label input:checked::before {
     transform: scale(1);
 }
-/* Hover */
-.boolean-radio-component-label:hover input::after {
-    opacity: 1;
-    transform: scale(1);
-}
-/* Focus ring (keyboard focus) */
+
+/* Focus */
 .boolean-radio-component-label input:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.3);
-}
-/* Disabled state, if you ever use it */
-.boolean-radio-component-label input:disabled {
-    cursor: default;
-    border-color: #c4c7cc;
-    background-color: #f1f3f4;
-}
-.boolean-radio-component-label input:disabled::before {
-    background-color: #c4c7cc;
-}
-.boolean-radio-component-label input:disabled + span,
-.boolean-radio-component-label input:disabled ~ * {
-    color: #9aa0a6;
-    cursor: default;
+    box-shadow: 0 0 0 3px var(--freon-radio-focus-ring-color);
 }
 
 /*******************************************************
@@ -732,10 +656,19 @@
     border: none;
 }
 
+/* Remove default rectangular focus outline */
+.numeric-slider-input:focus-visible,
+.numeric-slider-input:focus {
+    outline: none;
+}
+
 /* Track (WebKit) */
 .numeric-slider-input::-webkit-slider-runnable-track {
     height: 6px;
     border-radius: 999px;
+    border: none;
+    outline: none;
+    box-shadow: none;
     background: /* TOP LAYER: mask – transparent left, --numeric-slider-background-color */ linear-gradient(
             to right,
             transparent 0,
@@ -831,8 +764,10 @@
     border-style: solid;
     border-color: var(--numeric-slider-tooltip-background-color) transparent transparent transparent;
 }
-/* end styling numeric slider */
 
+/*******************************************************
+ *  DropdownComponent
+ *******************************************************/
 .dropdown-component {
     border-width: 1px;
     border-style: solid;

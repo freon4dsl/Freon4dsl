@@ -111,7 +111,7 @@
   aria-labelledby={ariaLabel}
   {id}
   class="freon-radio-group limited-radio-component-group  {box.cssClass}"
-  class:limited-radio-component-vertical={!isHorizontal}
+  class:freon-radio-group-vertical={!isHorizontal}
 >
     {#each myEnum as nn, i}
         <span class="freon-radio-item limited-radio-component-single">

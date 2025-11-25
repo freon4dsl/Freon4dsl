@@ -91,68 +91,32 @@
  *  LimitedRadioComponent
  *******************************************************/
 .limited-radio-component-group {
-    /* Base (unchecked) */
     --limited-radio-unchecked-border-color: var(--color-light-freon-600);
-    --limited-radio-unchecked-background-color: transparent;
-
-    /* Checked */
-    --limited-radio-checked-border-color: var(--color-light-freon-900);
-    --limited-radio-checked-background-color: transparent;
     --limited-radio-dot-color: var(--color-light-freon-900);
-
-    /* Hover / focus */
     --limited-radio-hover-background-color: var(--color-light-freon-150);
     --limited-radio-focus-ring-color: color-mix(
             in srgb,
             var(--color-light-freon-accent-dropdown) 30%,
             transparent
     );
-
-    /* Disabled */
-    --limited-radio-disabled-border-color: var(--color-light-freon-400);
-    --limited-radio-disabled-background-color: var(--color-light-freon-250);
-    --limited-radio-disabled-dot-color: var(--color-light-freon-400);
-
-    /* Label */
     --limited-radio-label-color: var(--color-light-freon-900);
-    --limited-radio-disabled-label-color: var(--color-light-freon-400);
-
-    /* Shadow */
     --limited-radio-shadow-color: var(--color-light-freon-700);
-}
-.limited-radio-component-group:hover,
-.limited-radio-component-group:focus-within {
-    outline: var(--color-light-freon-900) solid 1px;
-    box-shadow: 0 0 10px var(--color-light-freon-900);
-}
-.limited-radio-component-single {
-}
-.limited-radio-component-vertical {
-}
-.limited-radio-component-label {
 }
 
 /*******************************************************
  *  BooleanRadioComponent
  *******************************************************/
 .boolean-radio-component-group {
-    --boolean-radio-label-color: var(--color-light-freon-900);
-    --boolean-radio-border-color: var(--color-light-freon-400); /* Unchecked outer ring color */
-    --boolean-radio-color: var(--color-light-freon-900); /* Primary selected color (checked inner dot + border when checked) */
-    --boolean-radio-hover-ripple: var(--color-light-freon-200); /* Hover ripple halo */
-    --boolean-radio-shadow-color: var(--color-light-freon-700);
-}
-.boolean-radio-component-label input::after {
-    /* Fallback: if color-mix is not supported, this will be ignored,
-       but at least the variable is valid. */
-    background-color: var(--boolean-radio-hover-ripple);
-
-    /* Modern browsers: translucent halo based on the accent color */
-    background-color: color-mix(
+    --boolean-radio-border-color: var(--color-light-freon-400);
+    --boolean-radio-color: var(--color-light-freon-900);
+    --boolean-radio-hover-ripple: var(--color-light-freon-200);
+    --boolean-radio-focus-ring-color: color-mix(
             in srgb,
-            var(--boolean-radio-hover-ripple) 12%,
+            var(--color-light-freon-accent-dropdown) 30%,
             transparent
     );
+    --boolean-radio-label-color: var(--color-light-freon-900);
+    --boolean-radio-shadow-color: var(--color-light-freon-700);
 }
 
 /*******************************************************

@@ -116,7 +116,7 @@
     role="radiogroup"
     aria-labelledby={ariaLabel}
     class="freon-radio-group boolean-radio-component-group {box.cssClass}"
-    class:boolean-radio-component-vertical={!isHorizontal}
+    class:freon-radio-group-vertical={!isHorizontal}
     {id}
 >
     <span class="freon-radio-item boolean-radio-component-single">
