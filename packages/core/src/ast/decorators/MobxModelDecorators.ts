@@ -144,6 +144,9 @@ export function observableprim(target: DecoratedModelElement, propertyKey: strin
 
         if (!!storedObserver) {
             const oldValue = storedObserver.get()
+            if (oldValue === newValue) {
+                return;
+            }
             runInAction(() => {
                 storedObserver.set(newValue);
             });
