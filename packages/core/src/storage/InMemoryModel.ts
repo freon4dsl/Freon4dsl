@@ -211,6 +211,11 @@ export class InMemoryModel {
      * @param unit
      */
     async renameUnit(oldName: string, newName: string, unit: FreModelUnit): Promise<void | InMemoryError> {
+        // If oldName and newName are the same, no rename is needed
+        if (oldName === newName) {
+            LOGGER.log(`renameUnit skipped: oldName and newName are the same (${oldName})`)
+            return
+        }
         LOGGER.log(`renameUnit from ${oldName} to ${newName}`)
         const response = await this.server.renameModelUnit(this.model.name, oldName, newName, unit)
         if (response.errors.length > 0) {
