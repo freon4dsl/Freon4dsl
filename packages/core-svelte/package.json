@@ -69,9 +69,6 @@
     "vitest": "^3.2.4"
 },
   "dependencies": {
-    "@material/web": "^2.3.0",
-    "@material/slider": "^14.0.0",
-    "@material/switch": "^14.0.0",
     "@freon4dsl/core": "~2.0.0"
   },
   "keywords": [
