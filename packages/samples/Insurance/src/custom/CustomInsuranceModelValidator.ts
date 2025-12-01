@@ -7,11 +7,11 @@ import {
     FreWriter,
     notNullOrUndefined
 } from '@freon4dsl/core';
-import { InsuranceModelDefaultWorker } from "../freon/utils/gen/InsuranceModelDefaultWorker.js";
-import { InsuranceModelCheckerInterface } from "../freon/validator/gen/InsuranceModelValidator.js";
-import { EuroType, MultiplyExpression, NumberType, PercentageType, Product } from '../freon/language/gen/index.js';
+import { InsuranceModelDefaultWorker } from "../freon/utils/InsuranceModelDefaultWorker.js";
+import { InsuranceModelCheckerInterface } from "../freon/validator/InsuranceModelValidator.js";
+import { EuroType, MultiplyExpression, NumberType, PercentageType, Product } from '../freon/language/index.js';
 import { CustomInsuranceModelTyperPart } from './CustomInsuranceModelTyperPart.js';
-import { InsuranceModelEnvironment } from '../freon/config/gen/InsuranceModelEnvironment.js';
+import { InsuranceModelEnvironment } from '../freon/config/InsuranceModelEnvironment.js';
 
 export class CustomInsuranceModelValidator extends InsuranceModelDefaultWorker implements InsuranceModelCheckerInterface {
     errorList: FreError[] = [];

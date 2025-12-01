@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { ScoperTryoutEnvironment } from '../freon/config/gen/ScoperTryoutEnvironment';
-import { NamedPart, QualifiedName, ScoperTryout, Unit, UnitType1, UnitType2 } from '../freon/language/gen';
+import { ScoperTryoutEnvironment } from '../freon/config/ScoperTryoutEnvironment';
+import { NamedPart, QualifiedName, ScoperTryout, Unit, UnitType1, UnitType2 } from '../freon/language';
 import { FileHandler } from '../../utils/FileHandler';
 import { AST, FreNamedNode, FreNodeReference } from '@freon4dsl/core';
 import { getVisibleNames } from '../../utils/HelperFunctions';

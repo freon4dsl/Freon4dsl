@@ -23,8 +23,8 @@ export class FreonGenerateLionWeb extends FreonGeneratePartAction {
         }
 
         // read interpreter .eval file
-        this.lionWebGenerator.outputfolder = this.outputFolder;
-        this.lionWebGenerator.customsfolder = this.customsFolder;
+        this.lionWebGenerator.outputFolder = this.outputFolder;
+        this.lionWebGenerator.customsFolder = this.customsFolder;
         this.lionWebGenerator.language = this.language;
         this.lionWebGenerator.generate();
     }

@@ -1,5 +1,5 @@
 import { FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept, LangUtil } from '../../metalanguage/index.js';
-import { Names, STDLIB_GEN_FOLDER, Imports } from "../../../utils/on-lang/index.js"
+import { Names, STDLIB_FOLDER, Imports } from "../../../utils/on-lang/index.js"
 import { GenerationUtil } from '../../../utils/on-lang/GenerationUtil.js';
 
 export class LanguageTemplate {
@@ -19,7 +19,7 @@ export class LanguageTemplate {
             ${imports.makeImports(language)}
             // Import as MyLanguage to avoid naming conflicts in generated constructors
             import * as MyLanguage from "./internal.js";
-            import { ${Names.stdlib(language)} } from "${relativePath}/${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}.js";
+            import { ${Names.stdlib(language)} } from "${relativePath}/${STDLIB_FOLDER}/${Names.stdlib(language)}.js";
 
             /**
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.

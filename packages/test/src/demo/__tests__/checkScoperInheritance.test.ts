@@ -1,5 +1,5 @@
-import { DemoEnvironment } from "../freon/config/gen/DemoEnvironment.js";
-import { DemoEntity, Demo } from "../freon/language/gen/index.js";
+import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
+import { DemoEntity, Demo } from "../freon/language/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { getVisibleNames } from '../../utils/HelperFunctions.js';
 import { describe, test, expect, beforeEach } from "vitest";

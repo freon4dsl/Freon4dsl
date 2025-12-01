@@ -32,7 +32,7 @@ describe("Checking the validator generator", () => {
     });
 
     afterAll(() => {
-        FileUtil.deleteDirAndContent(outputDir + "validator/gen/");
+        FileUtil.deleteDirAndContent(outputDir + "validator/");
         FileUtil.deleteDirAndContent(outputDir + "validator/");
         FileUtil.deleteDirAndContent(outputDir);
     });
@@ -47,7 +47,7 @@ describe("Checking the validator generator", () => {
             generator.language = language;
             generator.outputfolder = outputDir;
             generator.generate(validatorDef!);
-            const outputFile = outputDir + "validator/gen/ROOTValidationRulesChecker.ts";
+            const outputFile = outputDir + "validator/ROOTValidationRulesChecker.ts";
             const isPresent: boolean = fs.existsSync(outputFile);
             expect(isPresent).toBe(true);
             if (isPresent) {

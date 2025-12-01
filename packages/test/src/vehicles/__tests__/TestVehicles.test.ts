@@ -1,5 +1,5 @@
-import { VehicleModelEnvironment } from "../freon/config/gen/VehicleModelEnvironment.js";
-import { VehicleModel, VehicleUnit } from "../freon/language/gen/index.js";
+import { VehicleModelEnvironment } from "../freon/config/VehicleModelEnvironment.js";
+import { VehicleModel, VehicleUnit } from "../freon/language/index.js";
 import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions.js";
 import { describe, test } from "vitest";
 

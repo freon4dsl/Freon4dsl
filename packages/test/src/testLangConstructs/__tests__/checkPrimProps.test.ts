@@ -4,7 +4,7 @@ import {
     ConceptWithAllProps,
     ConceptWithBasePrim,
     ConceptWithInheritanceTree1,
-} from "../freon/language/gen";
+} from "../freon/language";
 import { describe, test, expect } from "vitest";
 
 describe("Checking primitive properties", () => {

@@ -31,7 +31,7 @@ describe("Checking the scoper generator", () => {
     });
 
     afterAll(() => {
-        FileUtil.deleteDirAndContent(outputDir + "scoper/gen/");
+        FileUtil.deleteDirAndContent(outputDir + "scoper/");
         FileUtil.deleteDirAndContent(outputDir + "scoper/");
         FileUtil.deleteDirAndContent(outputDir);
     });
@@ -46,7 +46,7 @@ describe("Checking the scoper generator", () => {
             generator.language = language;
             generator.outputfolder = outputDir;
             generator.generate(scopeDef!);
-            const outputFile = outputDir + "scoper/gen/ROOTScoper.ts";
+            const outputFile = outputDir + "scoper/ROOTScoper.ts";
             const isPresent: boolean = FileUtil.exists(outputFile);
             expect(isPresent).toBe(true);
             if (isPresent) {

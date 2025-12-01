@@ -1,7 +1,7 @@
 import {
     Names,
     Imports,
-    VALIDATOR_GEN_FOLDER
+    VALIDATOR_FOLDER
 } from '../../../utils/on-lang/index.js';
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { ValidatorDef } from "../../metalanguage/index.js";
@@ -129,7 +129,7 @@ export class ValidatorTemplate {
         return `
         // TEMPLATE: ValidatorTemplate.generateCustomValidator
         ${imports.makeImports(language)}
-        import { type ${interfaceName} } from "${relativePath}/${VALIDATOR_GEN_FOLDER}/${validatorName}.js";
+        import { type ${interfaceName} } from "${relativePath}/${VALIDATOR_FOLDER}/${validatorName}.js";
 
         export class ${className} extends ${defaultWorkerName} implements ${interfaceName} {
             errorList: ${Names.FreError}[] = [];

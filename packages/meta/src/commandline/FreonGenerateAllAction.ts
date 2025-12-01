@@ -140,8 +140,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 typer = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
             }
             this.typerGenerator.language = this.language;
-            this.typerGenerator.outputfolder = this.outputFolder;
-            this.typerGenerator.customsfolder = this.customsFolder;
+            this.typerGenerator.outputFolder = this.outputFolder;
+            this.typerGenerator.customsFolder = this.customsFolder;
             this.typerGenerator.generate(typer);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -276,7 +276,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         if (this.language !== undefined && this.language !== null) {
             // generate the diagrams
             LOG2USER.info("Generating language diagrams");
-            this.diagramGenerator.outputfolder = this.outputFolder;
+            this.diagramGenerator.outputFolder = this.outputFolder;
             this.diagramGenerator.language = this.language;
             this.diagramGenerator.fileNames = this.languageFiles;
             this.diagramGenerator.generate();

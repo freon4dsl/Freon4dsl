@@ -79,8 +79,8 @@ export class CommandLineTemplate {
         return `// TEMPLATE: CommandLineTemplate.generateCommandLineRunner()
             // Run this as the main program.
             ${imports.makeImports(language)}
-            import { FreonCommandLine } from "${relativePath}/commandline/gen/FreonCommandLine.js";
-            import { DummyAction } from "${relativePath}/commandline/gen/DummyAction.js";
+            import { FreonCommandLine } from "${relativePath}/commandline/FreonCommandLine.js";
+            import { DummyAction } from "${relativePath}/commandline/DummyAction.js";
             
             // ensure language is initialized
             const tmp = ${Names.LanguageEnvironment}.getInstance();

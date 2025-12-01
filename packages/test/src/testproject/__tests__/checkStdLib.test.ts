@@ -1,7 +1,7 @@
 import { AST, FreLanguage } from "@freon4dsl/core";
-import { KK, TestLimited, XX, ZZ } from "../freon/language/gen";
-import { TestStartEnvironment } from "../freon/config/gen/TestStartEnvironment";
-import { TestStartStdlib } from "../freon/stdlib/gen/TestStartStdlib";
+import { KK, TestLimited, XX, ZZ } from "../freon/language";
+import { TestStartEnvironment } from "../freon/config/TestStartEnvironment";
+import { TestStartStdlib } from "../freon/stdlib/TestStartStdlib";
 import { describe, test, expect } from "vitest";
 
 describe("Checking stdlib for Demo", () => {

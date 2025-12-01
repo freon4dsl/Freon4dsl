@@ -3,26 +3,25 @@ import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 import { LionWebTemplate } from "./templates/LionWebTemplate.js";
 import { MetaLogger } from '../utils/no-dependencies/index.js';
 import { FileUtil, GenerationStatus } from '../utils/file-utils/index.js';
-import { LANGUAGE_FOLDER, LANGUAGE_GEN_FOLDER, Names } from '../utils/on-lang/index.js';
+import { LANGUAGE_FOLDER, Names } from '../utils/on-lang/index.js';
 
 const LOGGER = new MetaLogger("LionWebGenerator").mute();
 export class LionWebGenerator {
     // @ts-ignore
     public language: FreMetaLanguage
-    public outputfolder: string = ".";
-    public customsfolder: string = ".";
-    private languageFolder: string = "";
+    public outputFolder: string = ".";
+    public customsFolder: string = ".";
     private lionWebFolder: string = "lionweb";
 
     generate(): void {
         LOGGER.log(
-            "Generating LionWeb language '" + this.language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_GEN_FOLDER,
+            "Generating LionWeb language '" + this.language.name + "' in folder " + this.outputFolder + "/" + LANGUAGE_FOLDER,
         );
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
         
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.outputFolder + this.customsFolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.lionWebFolder);
         FileUtil.deleteFilesInDir(this.lionWebFolder, generationStatus);
 
@@ -40,13 +39,6 @@ export class LionWebGenerator {
     }
 
     private getFolderNames() {
-        this.lionWebFolder = this.outputfolder + "/" + "lionweb";
-        this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
-    }
-
-    clean() {
-        this.getFolderNames();
-        FileUtil.deleteDirAndContent(this.lionWebFolder);
-        FileUtil.deleteDirIfEmpty(this.languageFolder);
+        this.lionWebFolder = this.outputFolder + "/" + "lionweb";
     }
 }

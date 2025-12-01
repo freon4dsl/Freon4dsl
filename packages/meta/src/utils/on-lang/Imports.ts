@@ -1,6 +1,6 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js"
 import { Names } from "./Names.js"
-import { EDITOR_GEN_FOLDER, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "./PathProvider.js"
+import { EDITOR_FOLDER, FREON_CORE, LANGUAGE_FOLDER, LANGUAGE_UTILS_FOLDER, TYPER_CONCEPTS_FOLDER } from "./PathProvider.js"
 
 /**
  * All the types and interfaces exported from Freon core and core-svelte.
@@ -91,7 +91,7 @@ export class Imports {
     }
 
     private makeLanguageImportStatements(): string {
-        const fromPath = (this.relativePath === "" ? "./internal.js" : `${this.relativePath}/${LANGUAGE_GEN_FOLDER}/index.js`)
+        const fromPath = (this.relativePath === "" ? "./internal.js" : `${this.relativePath}/${LANGUAGE_FOLDER}/index.js`)
         return this.makeImportStatement(this.language, fromPath)
     }
 
@@ -106,12 +106,12 @@ export class Imports {
     }
 
     private makeEditorImportStatements(): string {
-        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/${EDITOR_GEN_FOLDER}/index.js`)
+        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/${EDITOR_FOLDER}/index.js`)
         return this.makeImportStatement(this.editor, fromPath)
     }
 
     private makeUtilsImportStatements(): string {
-        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/${LANGUAGE_UTILS_GEN_FOLDER}/index.js`)
+        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/${LANGUAGE_UTILS_FOLDER}/index.js`)
         return this.makeImportStatement(this.utils, fromPath)
     }
 

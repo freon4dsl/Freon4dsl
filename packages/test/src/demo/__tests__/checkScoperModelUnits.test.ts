@@ -1,8 +1,8 @@
-import { DemoModel, Demo } from "../freon/language/gen/index.js";
+import { DemoModel, Demo } from "../freon/language/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
-import { DemoStdlib } from "../freon/stdlib/gen/DemoStdlib.js";
+import { DemoStdlib } from "../freon/stdlib/DemoStdlib.js";
 import { DemoUnitCreator } from "./DemoUnitCreator.js";
-import { DemoEnvironment } from "../freon/config/gen/DemoEnvironment.js";
+import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { describe, test, expect } from "vitest";
 import { FreCompositeScoper } from '@freon4dsl/core';
 import { isInScope, getVisibleNames } from '../../utils/HelperFunctions.js';

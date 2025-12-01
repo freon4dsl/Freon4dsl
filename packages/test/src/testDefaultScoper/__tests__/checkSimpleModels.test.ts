@@ -1,6 +1,6 @@
-import { DSmodel } from '../freon/language/gen';
+import { DSmodel } from '../freon/language';
 import { SimpleModelCreator } from "./SimpleModelCreator.js";
-import { DSmodelEnvironment } from "../freon/config/gen/DSmodelEnvironment.js";
+import { DSmodelEnvironment } from "../freon/config/DSmodelEnvironment.js";
 import { describe, test, expect } from "vitest";
 import { getVisibleNames } from '../../utils/HelperFunctions';
 

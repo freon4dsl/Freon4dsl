@@ -1,11 +1,11 @@
 import {
     Names,
-    TYPER_GEN_FOLDER,
-    SCOPER_GEN_FOLDER,
-    VALIDATOR_GEN_FOLDER,
-    STDLIB_GEN_FOLDER,
-    WRITER_GEN_FOLDER,
-    READER_GEN_FOLDER,
+    TYPER_FOLDER,
+    SCOPER_FOLDER,
+    VALIDATOR_FOLDER,
+    STDLIB_FOLDER,
+    WRITER_FOLDER,
+    READER_FOLDER,
     Imports
 } from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage } from "../../metalanguage/index.js";
@@ -27,12 +27,12 @@ export class EnvironmentTemplate {
         return `
         // TEMPLATE EnvironmentTemplate.generateEnvironment(...)
         ${imports.makeImports(language)}
-        import { initializeScoperDef } from "${relativePath}/${SCOPER_GEN_FOLDER}/index.js";
-        import { initializeTypers } from "${relativePath}/${TYPER_GEN_FOLDER}/index.js";
-        import { ${Names.validator(language)} } from "${relativePath}/${VALIDATOR_GEN_FOLDER}/index.js";
-        import { ${Names.stdlib(language)}  } from "${relativePath}/${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}.js";
-        import { ${Names.writer(language)}  } from "${relativePath}/${WRITER_GEN_FOLDER}/${Names.writer(language)}.js";
-        import { ${Names.reader(language)}  } from "${relativePath}/${READER_GEN_FOLDER}/${Names.reader(language)}.js";
+        import { initializeScoperDef } from "${relativePath}/${SCOPER_FOLDER}/index.js";
+        import { initializeTypers } from "${relativePath}/${TYPER_FOLDER}/index.js";
+        import { ${Names.validator(language)} } from "${relativePath}/${VALIDATOR_FOLDER}/index.js";
+        import { ${Names.stdlib(language)}  } from "${relativePath}/${STDLIB_FOLDER}/${Names.stdlib(language)}.js";
+        import { ${Names.writer(language)}  } from "${relativePath}/${WRITER_FOLDER}/${Names.writer(language)}.js";
+        import { ${Names.reader(language)}  } from "${relativePath}/${READER_FOLDER}/${Names.reader(language)}.js";
         import { ${Names.interpreterName(language)}  } from "${relativePath}/${customsFolder}${Names.interpreterName(language)}.js";
 
         /**

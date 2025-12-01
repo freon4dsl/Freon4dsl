@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { INTERPRETER_FOLDER, INTERPRETER_GEN_FOLDER, Names } from "../../utils/on-lang/index.js";
+import { INTERPRETER_FOLDER, Names } from "../../utils/on-lang/index.js";
 import { GenerationStatus, FileUtil } from "../../utils/file-utils/index.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { FreInterpreterDef } from "../metalanguage/FreInterpreterDef.js";
@@ -17,7 +17,7 @@ export class InterpreterGenerator {
     public customsfolder: string = ".";
     public language: FreMetaLanguage | undefined;
     private interpreterFolder: string = "";
-    private interpreterGenFolder: string = "";
+    // private interpreterFolder: string = "";
     fileNames: string[] = [];
 
     generate(interpreterDef: FreInterpreterDef): void {
@@ -35,18 +35,18 @@ export class InterpreterGenerator {
         const mainTemplate = new InterpreterMainTemplate();
 
         // Set relative path to get the imports right
-        let relativePath = "../..";
+        let relativePath = "..";
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
-        FileUtil.createDirIfNotExisting(this.interpreterGenFolder);
-        FileUtil.deleteFilesInDir(this.interpreterGenFolder, generationStatus);
+        FileUtil.createDirIfNotExisting(this.interpreterFolder);
+        FileUtil.deleteFilesInDir(this.interpreterFolder, generationStatus);
 
-        let generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterBaseClassname(this.language)}.ts`;
+        let generatedFilePath = `${this.interpreterFolder}/${Names.interpreterBaseClassname(this.language)}.ts`;
         let generatedContent = template.interpreterBase(this.language, interpreterDef, relativePath);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
-        generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterInitname(this.language)}.ts`;
+        generatedFilePath = `${this.interpreterFolder}/${Names.interpreterInitname(this.language)}.ts`;
         generatedContent = template.interpreterInit(this.language, interpreterDef, this.customsfolder, relativePath);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
@@ -70,6 +70,5 @@ export class InterpreterGenerator {
 
     private getFolderNames() {
         this.interpreterFolder = this.outputfolder + "/" + INTERPRETER_FOLDER;
-        this.interpreterGenFolder = this.outputfolder + "/" + INTERPRETER_GEN_FOLDER;
     }
 }

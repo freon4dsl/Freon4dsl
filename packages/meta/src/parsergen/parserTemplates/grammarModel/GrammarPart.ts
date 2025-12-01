@@ -1,6 +1,6 @@
 import { GrammarRule } from "./GrammarRule.js";
 import { FreMetaClassifier, FreMetaLanguage, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
-import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils/on-lang/index.js";
+import { LANGUAGE_FOLDER, Names } from "../../../utils/on-lang/index.js";
 import { FreMetaUnitDescription } from "../../../languagedef/metalanguage/FreMetaLanguage.js";
 
 export class GrammarPart {
@@ -34,7 +34,7 @@ export class GrammarPart {
         import { ${Names.FreNodeReference}, ${Names.notNullOrUndefined} } from "@freon4dsl/core";` : ""}
         ${
             this.imports.length > 0
-                ? `import { ${this.imports.map((imp) => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}/${LANGUAGE_GEN_FOLDER}/index.js";`
+                ? `import { ${this.imports.map((imp) => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}/${LANGUAGE_FOLDER}/index.js";`
                 : ""
         }
         import { PrimValueType, ${Names.syntaxAnalyser(language)}${this.importParsedNodeReference ? `, ParsedNodeReference` : ``} } from "./${Names.syntaxAnalyser(language)}.js";

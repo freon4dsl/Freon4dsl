@@ -1,7 +1,7 @@
 import { AST, FreNodeReference } from '@freon4dsl/core';
-import { DSmodel, DSref, DSunit } from "../freon/language/gen/index.js";
+import { DSmodel, DSref, DSunit } from "../freon/language/index.js";
 import { SimpleModelCreator } from "./SimpleModelCreator.js";
-import { DSmodelEnvironment } from "../freon/config/gen/DSmodelEnvironment.js";
+import { DSmodelEnvironment } from "../freon/config/DSmodelEnvironment.js";
 import { ExtendedModelCreator } from "./ExtendedModelCreator.js";
 import { describe, test, expect, beforeEach } from "vitest";
 import { getVisibleNames } from '../../utils/HelperFunctions';

@@ -22,10 +22,4 @@ export class EditorIndexTemplate {
         ${boxProviderConcepts.map(cls => `export * from "./${NamesForEditor.boxProvider(cls)}.js";` ).join("")} 
             export * from "./EditorDef.js"; `;
     }
-
-    generateIndex(): string {
-        return `
-        export * from "./gen/index.js";
-        `;
-    }
 }

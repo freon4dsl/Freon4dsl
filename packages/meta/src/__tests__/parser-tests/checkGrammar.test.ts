@@ -22,9 +22,6 @@ describe("Checking parser generation", () => {
     MetaLogger.muteAllErrors();
 
     afterAll(() => {
-        // TODO make recursive version of deleteDirAndContent
-        FileUtil.deleteDirAndContent(outputDir + "reader/gen/");
-        FileUtil.deleteDirAndContent(outputDir + "writer/gen/");
         FileUtil.deleteDirAndContent(outputDir + "reader/");
         FileUtil.deleteDirAndContent(outputDir + "writer/");
         FileUtil.deleteDirAndContent(outputDir);
@@ -52,7 +49,7 @@ describe("Checking parser generation", () => {
             generator.language = language;
             generator.outputfolder = outputDir;
             generator.generate(editor!);
-            const grammarFile = outputDir + "reader/gen/TEST1Grammar.ts";
+            const grammarFile = outputDir + "reader/TEST1Grammar.ts";
             const isPresent: boolean = FileUtil.exists(grammarFile);
             expect(isPresent).toBe(true);
             if (isPresent) {
@@ -90,7 +87,7 @@ describe("Checking parser generation", () => {
                 generator.language = language;
                 generator.outputfolder = outputDir;
                 generator.generate(editor);
-                const grammarFile = outputDir + "reader/gen/TEST2Grammar.ts";
+                const grammarFile = outputDir + "reader/TEST2Grammar.ts";
                 const isPresent: boolean = FileUtil.exists(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
@@ -129,7 +126,7 @@ describe("Checking parser generation", () => {
                 generator.language = language;
                 generator.outputfolder = outputDir;
                 generator.generate(editor);
-                const grammarFile = outputDir + "reader/gen/TEST3Grammar.ts";
+                const grammarFile = outputDir + "reader/TEST3Grammar.ts";
                 const isPresent: boolean = FileUtil.exists(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
@@ -168,7 +165,7 @@ describe("Checking parser generation", () => {
                 generator.language = language;
                 generator.outputfolder = outputDir;
                 generator.generate(editor);
-                const grammarFile = outputDir + "reader/gen/TEST4Grammar.ts";
+                const grammarFile = outputDir + "reader/TEST4Grammar.ts";
                 const isPresent: boolean = FileUtil.exists(grammarFile);
                 expect(isPresent).toBe(true);
                 if (isPresent) {
