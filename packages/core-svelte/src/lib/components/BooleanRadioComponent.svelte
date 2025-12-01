@@ -25,7 +25,7 @@
     let id: string = box.id;
     let trueElement: HTMLInputElement;
     let falseElement: HTMLInputElement;
-    let undefinedElement: HTMLInputElement;
+    let undefinedElement = $state<HTMLInputElement | undefined>(undefined);
     let currentValue: boolean | undefined = $state(box.getBoolean());
     let ariaLabel = 'toBeDone'; // todo create useful aria-label
     let isHorizontal: boolean = false; // todo expose horizontal/vertical to user
@@ -41,7 +41,7 @@
             trueElement.focus();
         } else if (currentValue === false) {
             falseElement.focus();
-        } else if (currentValue === "unknown") {
+        } else if (currentValue === undefined && undefinedElement) {
             undefinedElement.focus();
         }
     }
@@ -70,7 +70,7 @@
                 'BooleanRadioComponent.onChange for box ' +
                     box.role +
                     ', value:' +
-                    event.target['value' as keyof EventTarget]
+                    event.currentTarget.value
             );
             const tmp = event.currentTarget.value
             if (tmp === "unknown") {
@@ -124,7 +124,6 @@
                 type="radio"
                 id="{id}-trueOne"
                 name="{id}-group"
-                role="radio"
                 tabindex="0"
                 aria-checked={currentValue === true}
                 value={true}
@@ -144,7 +143,6 @@
                 type="radio"
                 id="{id}-falseOne"
                 name="{id}-group"
-                role="radio"
                 tabindex="0"
                 aria-checked={currentValue === false}
                 value={false}
@@ -165,7 +163,6 @@
                     type="radio"
                     id="{id}-undefinedOne"
                     name="{id}-group"
-                    role="radio"
                     tabindex="0"
                     aria-checked={currentValue === undefined}
                     value="unknown"

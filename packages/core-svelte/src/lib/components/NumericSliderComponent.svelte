@@ -1,7 +1,7 @@
 <script lang="ts">
     import '@material/web/slider/slider.js';
     import { NUMERICSLIDER_LOGGER } from './ComponentLoggers.js';
-    import { MdSlider } from '@material/web/slider/slider.js';
+    import type { MdSlider } from '@material/web/slider/slider.js';
     import { notNullOrUndefined } from '@freon4dsl/core';
     import type { NumberControlBox } from '@freon4dsl/core';
     import { onMount } from 'svelte';

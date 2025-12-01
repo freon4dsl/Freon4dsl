@@ -5,7 +5,7 @@
     /**
      * This component shows a boolean value as checkbox.
      */
-    import { BooleanControlBox, FreLanguage, isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
+    import { type BooleanControlBox, FreLanguage, isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
     import { componentId } from '../index.js';
     import { onMount } from 'svelte';
     // import '@material/web/checkbox/checkbox.js';
@@ -95,7 +95,6 @@
         bind:indeterminate
         bind:this={inputElement}
         checked={value}
-        role="checkbox"
         tabindex="0"
     >
 <!--</span>-->

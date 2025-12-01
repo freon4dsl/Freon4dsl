@@ -6,7 +6,7 @@ import {
     observablepartlist,
     type FreModel,
     FreLanguage,
-    FreParseLocation,
+    type FreParseLocation,
     AST,
     FreUtils,
     matchElementList,

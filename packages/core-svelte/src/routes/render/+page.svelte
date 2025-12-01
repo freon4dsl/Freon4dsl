@@ -12,7 +12,7 @@
         HorizontalLayoutBox,
         IndentBox,
         LabelBox,
-        LayoutBox,
+        type LayoutBox,
         OptionalBox2,
         VerticalLayoutBox
     } from '@freon4dsl/core';

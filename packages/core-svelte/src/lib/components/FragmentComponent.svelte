@@ -1,7 +1,7 @@
 <script lang="ts">
     import { FRAGMENT_LOGGER } from './ComponentLoggers.js';
     import RenderComponent from './RenderComponent.svelte';
-    import { Box, notNullOrUndefined } from '@freon4dsl/core';
+    import { type Box, notNullOrUndefined } from '@freon4dsl/core';
     import type { FragmentBox } from '@freon4dsl/core';
     import { componentId } from './svelte-utils/index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
