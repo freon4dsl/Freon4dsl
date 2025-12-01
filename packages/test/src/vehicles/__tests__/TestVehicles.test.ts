@@ -1,6 +1,6 @@
-import { VehicleModelEnvironment } from "../freon/config/gen/VehicleModelEnvironment";
-import { VehicleModel, VehicleUnit } from "../freon/language/gen";
-import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions";
+import { VehicleModelEnvironment } from "../freon/config/gen/VehicleModelEnvironment.js";
+import { VehicleModel, VehicleUnit } from "../freon/language/gen/index.js";
+import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions.js";
 import { describe, test } from "vitest";
 
 const writer = VehicleModelEnvironment.getInstance().writer;
