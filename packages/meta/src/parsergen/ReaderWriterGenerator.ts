@@ -52,7 +52,7 @@ export class ReaderWriterGenerator {
         FileUtil.deleteFilesInDir(this.readerGenFolder, generationStatus);
 
         // set relative path to get the imports right
-        const relativePath = "../../";
+        const relativePath = "../..";
 
         // remember all file names etc. for the index
         let indexContent: string = "";

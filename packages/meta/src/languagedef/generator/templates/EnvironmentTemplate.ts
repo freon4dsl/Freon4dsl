@@ -27,13 +27,13 @@ export class EnvironmentTemplate {
         return `
         // TEMPLATE EnvironmentTemplate.generateEnvironment(...)
         ${imports.makeImports(language)}
-        import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/index.js";
-        import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}/index.js";
-        import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/index.js";
-        import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}.js";
-        import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}.js";
-        import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}.js";
-        import { ${Names.interpreterName(language)}  } from "${relativePath}${customsFolder}${Names.interpreterName(language)}.js";
+        import { initializeScoperDef } from "${relativePath}/${SCOPER_GEN_FOLDER}/index.js";
+        import { initializeTypers } from "${relativePath}/${TYPER_GEN_FOLDER}/index.js";
+        import { ${Names.validator(language)} } from "${relativePath}/${VALIDATOR_GEN_FOLDER}/index.js";
+        import { ${Names.stdlib(language)}  } from "${relativePath}/${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}.js";
+        import { ${Names.writer(language)}  } from "${relativePath}/${WRITER_GEN_FOLDER}/${Names.writer(language)}.js";
+        import { ${Names.reader(language)}  } from "${relativePath}/${READER_GEN_FOLDER}/${Names.reader(language)}.js";
+        import { ${Names.interpreterName(language)}  } from "${relativePath}/${customsFolder}${Names.interpreterName(language)}.js";
 
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.

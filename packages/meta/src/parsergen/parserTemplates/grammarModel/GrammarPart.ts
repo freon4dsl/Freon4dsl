@@ -34,7 +34,7 @@ export class GrammarPart {
         import { ${Names.FreNodeReference}, ${Names.notNullOrUndefined} } from "@freon4dsl/core";` : ""}
         ${
             this.imports.length > 0
-                ? `import { ${this.imports.map((imp) => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";`
+                ? `import { ${this.imports.map((imp) => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}/${LANGUAGE_GEN_FOLDER}/index.js";`
                 : ""
         }
         import { PrimValueType, ${Names.syntaxAnalyser(language)}${this.importParsedNodeReference ? `, ParsedNodeReference` : ``} } from "./${Names.syntaxAnalyser(language)}.js";

@@ -115,7 +115,7 @@ export class FreonTyperGenerator {
         fs.writeFileSync(`${this.typerGenFolder}/${Names.typerDef(this.language)}.ts`, typerDefFile);
 
         // change relative path to get the imports right
-        relativePath = "../";
+        relativePath = "..";
 
         LOGGER.log(`Generating custom typerPart: ${this.outputfolder}${this.customsfolder}/index.ts`);
         const customTyperFile = FileUtil.pretty(

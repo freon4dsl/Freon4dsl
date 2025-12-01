@@ -19,7 +19,7 @@ export class LanguageTemplate {
             ${imports.makeImports(language)}
             // Import as MyLanguage to avoid naming conflicts in generated constructors
             import * as MyLanguage from "./internal.js";
-            import { ${Names.stdlib(language)} } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}.js";
+            import { ${Names.stdlib(language)} } from "${relativePath}/${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}.js";
 
             /**
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.

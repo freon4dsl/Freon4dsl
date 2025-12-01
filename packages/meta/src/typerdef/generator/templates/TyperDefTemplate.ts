@@ -7,7 +7,7 @@ export class TyperDefTemplate {
         return `import { type FreCompositeTyper } from "${FREON_CORE}";
 
             import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}.js";
-            import { freonConfiguration } from "${relativePath}${customsFolder}/${Names.configuration}.js";
+            import { freonConfiguration } from "${relativePath}/${customsFolder}/${Names.configuration}.js";
 
             /**
              * Adds all known type-providers the root typer.

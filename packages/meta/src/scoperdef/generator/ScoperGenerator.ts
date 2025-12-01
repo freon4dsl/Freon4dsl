@@ -51,7 +51,7 @@ export class ScoperGenerator {
         FileUtil.deleteFilesInDir(this.scoperGenFolder, generationStatus);
 
         // set relative path to get the imports right
-        const relativePath = "../../";
+        const relativePath = "../..";
 
         //  Generate it
         LOGGER.log(`Generating scoper: ${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`);

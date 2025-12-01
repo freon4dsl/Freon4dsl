@@ -61,7 +61,7 @@ export class EditorGenerator {
         FileUtil.deleteFilesInDir(this.editorGenFolder, generationStatus);
 
         // Set relative path to get the imports right
-        const relativePath = "../../";
+        const relativePath = "../..";
 
         // During generation, we may conclude that extra box providers classes need to be generated.
         // We keep the classifiers for which this is necessary in the list 'extraClassifiers'.

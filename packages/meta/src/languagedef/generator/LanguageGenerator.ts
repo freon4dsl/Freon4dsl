@@ -87,7 +87,7 @@ export class LanguageGenerator {
         FileUtil.deleteFilesInDir(this.commandlineGenFolder, generationStatus);
 
         // set relative path to get the imports right
-        let relativePath = "../";
+        let relativePath = "..";
 
         //  Generate it
         LOGGER.log(`Generating model: ${this.languageGenFolder}/${Names.classifier(language.modelConcept)}.ts`);
@@ -175,7 +175,7 @@ export class LanguageGenerator {
         FileUtil.generateManualFile(filePath, indexFile, "Custom Index" );
 
         // set relative path to an extra level to get the imports right
-        relativePath = "../../";
+        relativePath = "../..";
 
         LOGGER.log(
             `Generating language structure information: ${this.languageGenFolder}/${Names.language(language)}.ts`,

@@ -91,27 +91,27 @@ export class Imports {
     }
 
     private makeLanguageImportStatements(): string {
-        const fromPath = (this.relativePath === "" ? "./internal.js" : `${this.relativePath}${LANGUAGE_GEN_FOLDER}/index.js`)
+        const fromPath = (this.relativePath === "" ? "./internal.js" : `${this.relativePath}/${LANGUAGE_GEN_FOLDER}/index.js`)
         return this.makeImportStatement(this.language, fromPath)
     }
 
     private makeTyperImportStatements(): string {
-        const fromPath = (this.relativePath === "" ? "./internal.js" : `${this.relativePath}${TYPER_CONCEPTS_FOLDER}/index.js`)
+        const fromPath = (this.relativePath === "" ? "./internal.js" : `${this.relativePath}/${TYPER_CONCEPTS_FOLDER}/index.js`)
         return this.makeImportStatement(this.typer, fromPath)
     }
 
     private makeConfigImportStatements(): string {
-        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}index.js`)
+        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/index.js`)
         return this.makeImportStatement(this.root, fromPath)
     }
 
     private makeEditorImportStatements(): string {
-        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}${EDITOR_GEN_FOLDER}/index.js`)
+        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/${EDITOR_GEN_FOLDER}/index.js`)
         return this.makeImportStatement(this.editor, fromPath)
     }
 
     private makeUtilsImportStatements(): string {
-        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js`)
+        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/${LANGUAGE_UTILS_GEN_FOLDER}/index.js`)
         return this.makeImportStatement(this.utils, fromPath)
     }
 

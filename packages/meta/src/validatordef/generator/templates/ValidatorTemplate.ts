@@ -31,7 +31,7 @@ export class ValidatorTemplate {
         import { ${namespaceChecker} } from "./${namespaceChecker}.js";
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}.js";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}.js";
-        import { freonConfiguration } from "${relativePath}${customsFolder}${Names.configuration}.js";
+        import { freonConfiguration } from "${relativePath}/${customsFolder}${Names.configuration}.js";
 
         /**
          * Interface '${Names.checkerInterface(language)}' represents any object that traverses the model tree and checks
@@ -129,7 +129,7 @@ export class ValidatorTemplate {
         return `
         // TEMPLATE: ValidatorTemplate.generateCustomValidator
         ${imports.makeImports(language)}
-        import { type ${interfaceName} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${validatorName}.js";
+        import { type ${interfaceName} } from "${relativePath}/${VALIDATOR_GEN_FOLDER}/${validatorName}.js";
 
         export class ${className} extends ${defaultWorkerName} implements ${interfaceName} {
             errorList: ${Names.FreError}[] = [];

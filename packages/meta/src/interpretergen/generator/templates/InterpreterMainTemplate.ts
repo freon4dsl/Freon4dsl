@@ -19,7 +19,7 @@ export class InterpreterMainTemplate {
         return `// TEMPLATE: InterpreterBaseTemplate.interpreterInit(...)
         // Will be overwritten with every generation.
         ${imports.makeImports(language)}
-        import {  ${Names.interpreterInitname(language)} } from "${relativePath}${INTERPRETER_FOLDER}/gen/${Names.interpreterInitname(language)}.js";
+        import {  ${Names.interpreterInitname(language)} } from "${relativePath}/${INTERPRETER_FOLDER}/gen/${Names.interpreterInitname(language)}.js";
 
         const getPropertyFunction: OwningPropertyFunction = (node: Object) => {
             const index = (node as ${Names.FreNode}).freOwnerDescriptor().propertyIndex;

@@ -45,7 +45,7 @@ export class ValidatorGenerator {
         FileUtil.deleteFilesInDir(this.validatorGenFolder, generationStatus);
 
         // set relative path to get the imports right
-        let relativePath = "../../";
+        let relativePath = "../..";
 
         //  Generate validator
         LOGGER.log(`Generating validator: ${this.validatorGenFolder}/${Names.validator(this.language)}.ts`);

@@ -35,7 +35,7 @@ export class InterpreterGenerator {
         const mainTemplate = new InterpreterMainTemplate();
 
         // Set relative path to get the imports right
-        let relativePath = "../../";
+        let relativePath = "../..";
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten

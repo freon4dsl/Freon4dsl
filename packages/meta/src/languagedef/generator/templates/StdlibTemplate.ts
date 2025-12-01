@@ -21,7 +21,7 @@ export class StdlibTemplate {
         return `
         // TEMPLATE: StdlibTemplate.generateStdlibClass
         ${imports.makeImports(language)}
-        import { freonConfiguration } from "${relativePath}${customsFolder}/${Names.configuration}.js";
+        import { freonConfiguration } from "${relativePath}/${customsFolder}/${Names.configuration}.js";
 
         /**
          * Class ${Names.stdlib(language)} provides an entry point for all predefined elements in language ${language.name}.

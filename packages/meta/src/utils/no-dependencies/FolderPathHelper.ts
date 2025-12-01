@@ -6,7 +6,7 @@ import * as path from 'path';
  * Example:
  *  outputFolder = "src/freon"
  *  customFolder = "../custom"
- *  → returns "../freon/"
+ *  → returns "../freon"
  */
 export function getCombinedFolderPath(outputFolder: string, customFolder: string): string {
 	// Resolve both paths to absolute
@@ -19,9 +19,9 @@ export function getCombinedFolderPath(outputFolder: string, customFolder: string
 	// Normalize to forward slashes for consistency
 	relative = relative.replace(/\\/g, "/");
 
-	// Ensure it ends with a '/'
-	if (!relative.endsWith("/")) {
-		relative += "/";
+	// Ensure it doesn't end with a '/'
+	if (relative.endsWith("/")) {
+		relative = relative.slice(0, -1);
 	}
 
 	return relative;
