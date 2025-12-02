@@ -44,7 +44,7 @@ describe("Checking the scoper generator", () => {
             expect(scopeDef).not.toBeUndefined();
             //
             generator.language = language;
-            generator.outputfolder = outputDir;
+            generator.outputFolder = outputDir;
             generator.generate(scopeDef!);
             const outputFile = outputDir + "scoper/ROOTScoper.ts";
             const isPresent: boolean = FileUtil.exists(outputFile);

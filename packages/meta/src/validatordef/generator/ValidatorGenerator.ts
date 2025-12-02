@@ -16,8 +16,8 @@ import { getCombinedFolderPath } from '../../utils/no-dependencies/FolderPathHel
 
 const LOGGER = new MetaLogger("ValidatorGenerator").mute();
 export class ValidatorGenerator {
-    public outputfolder: string = ".";
-    public customsfolder: string = ".";
+    public outputFolder: string = ".";
+    public customsFolder: string = ".";
     public language: FreMetaLanguage | undefined;
     protected validatorFolder: string = "";
 
@@ -38,7 +38,7 @@ export class ValidatorGenerator {
         const reservedWordsTemplate = new ReservedWordsTemplate();
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.outputFolder + "/" + this.customsFolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.validatorFolder);
         FileUtil.deleteFilesInDir(this.validatorFolder, generationStatus);
 
@@ -48,7 +48,7 @@ export class ValidatorGenerator {
         //  Generate validator
         LOGGER.log(`Generating validator: ${this.validatorFolder}/${Names.validator(this.language)}.ts`);
         const validatorFile = FileUtil.pretty(
-            validatorTemplate.generateValidator(this.language, validdef, this.customsfolder, relativePath),
+            validatorTemplate.generateValidator(this.language, validdef, this.customsFolder, relativePath),
             "Validator Class",
             generationStatus,
         );
@@ -115,10 +115,10 @@ export class ValidatorGenerator {
         fs.writeFileSync(`${this.validatorFolder}/index.ts`, genIndexFile);
 
         // set relative path to get the imports right
-        relativePath = getCombinedFolderPath(this.outputfolder, this.customsfolder);
+        relativePath = getCombinedFolderPath(this.outputFolder, this.customsFolder);
 
         LOGGER.log(
-            `Generating custom validator: ${this.outputfolder}${this.customsfolder}/${Names.customValidator(this.language)}.ts`,
+            `Generating custom validator: ${this.outputFolder}/${this.customsFolder}/${Names.customValidator(this.language)}.ts`,
         );
         const customFile = FileUtil.pretty(
             validatorTemplate.generateCustomValidator(this.language, relativePath),
@@ -126,7 +126,7 @@ export class ValidatorGenerator {
             generationStatus,
         );
         FileUtil.generateManualFile(
-            `${this.outputfolder}${this.customsfolder}/${Names.customValidator(this.language)}.ts`,
+            `${this.outputFolder}/${this.customsFolder}/${Names.customValidator(this.language)}.ts`,
             customFile,
             "Custom Validator Class",
         );
@@ -139,6 +139,6 @@ export class ValidatorGenerator {
     }
 
     private getFolderNames() {
-        this.validatorFolder = this.outputfolder + "/" + VALIDATOR_FOLDER;
+        this.validatorFolder = this.outputFolder + "/" + VALIDATOR_FOLDER;
     }
 }

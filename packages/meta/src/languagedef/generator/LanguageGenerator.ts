@@ -66,7 +66,7 @@ export class LanguageGenerator {
         const commandLineTemplate = new CommandLineTemplate();
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputFolder + this.customsFolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.outputFolder + "/" + this.customsFolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.configurationFolder);
         FileUtil.createDirIfNotExisting(this.languageFolder);
         FileUtil.createDirIfNotExisting(this.configurationFolder);
@@ -140,7 +140,7 @@ export class LanguageGenerator {
 
         // Generate Freon configuration if it isn't there
         const combinedPath = getCombinedFolderPath(this.outputFolder, this.customsFolder);
-        let filePath: string = `${this.outputFolder}${this.customsFolder}/${Names.configuration}.ts`
+        let filePath: string = `${this.outputFolder}/${this.customsFolder}/${Names.configuration}.ts`
         LOGGER.log(`Generating Freon Configuration: ${filePath}`);
         const configurationFile = FileUtil.pretty(
             configurationTemplate.generate(language, combinedPath),
@@ -150,7 +150,7 @@ export class LanguageGenerator {
         FileUtil.generateManualFile(filePath, configurationFile, "Configuration");
 
         // Generate index to customs folder if it isn't there
-        filePath = `${this.outputFolder}${this.customsFolder}/index.ts`
+        filePath = `${this.outputFolder}/${this.customsFolder}/index.ts`
         LOGGER.log(`Generating Freon Configuration: ${filePath}`);
         const indexFile = FileUtil.pretty(
           configurationTemplate.generateCustomIndex(language),
@@ -228,14 +228,14 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.utilsFolder}/index.ts`, utilIndexFile);
 
         {
-            LOGGER.log(`Generating custom stdlib: ${this.outputFolder}${this.customsFolder}/${Names.customStdlib(language)}.ts`);
+            LOGGER.log(`Generating custom stdlib: ${this.outputFolder}/${this.customsFolder}/${Names.customStdlib(language)}.ts`);
             const customFile = FileUtil.pretty(
                 stdlibTemplate.generateCustomStdlibClass(language),
                 "Custom Stdlib Class",
                 generationStatus,
             );
             FileUtil.generateManualFile(
-                `${this.outputFolder}${this.customsFolder}/${Names.customStdlib(language)}.ts`,
+                `${this.outputFolder}/${this.customsFolder}/${Names.customStdlib(language)}.ts`,
                 customFile,
                 "Custom Stdlib Class",
             );
@@ -262,7 +262,7 @@ export class LanguageGenerator {
             "CommandLine Class",
         );
 
-        const filePath2 = `${this.outputFolder}${this.customsFolder}/FreonCommandLineRunner.ts`
+        const filePath2 = `${this.outputFolder}/${this.customsFolder}/FreonCommandLineRunner.ts`
         LOGGER.log(`Generating command line runner: ${filePath2}`);
         const commandLineRunnerFile = FileUtil.pretty(
             commandLineTemplate.generateCommandLineRunner(language, getCombinedFolderPath(this.outputFolder, this.customsFolder)),

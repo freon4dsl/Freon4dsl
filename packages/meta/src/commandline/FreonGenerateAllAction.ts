@@ -188,8 +188,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 scoper = new ScoperParser(this.language).parseMulti(this.scopeFiles);
             }
             this.scoperGenerator.language = this.language;
-            this.scoperGenerator.outputfolder = this.outputFolder;
-            this.scoperGenerator.customsfolder = this.customsFolder;
+            this.scoperGenerator.outputFolder = this.outputFolder;
+            this.scoperGenerator.customsFolder = this.customsFolder;
             this.scoperGenerator.generate(scoper);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -210,8 +210,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 validator = new ValidatorParser(this.language).parseMulti(this.validFiles);
             }
             this.validatorGenerator.language = this.language;
-            this.validatorGenerator.outputfolder = this.outputFolder;
-            this.validatorGenerator.customsfolder = this.customsFolder;
+            this.validatorGenerator.outputFolder = this.outputFolder;
+            this.validatorGenerator.customsFolder = this.customsFolder;
             this.validatorGenerator.generate(validator);
         } catch (e: unknown) {
             if (e instanceof Error) {

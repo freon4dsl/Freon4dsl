@@ -45,7 +45,7 @@ export class ReaderWriterGenerator {
         const grammarGenerator = new GrammarGenerator();
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.outputfolder + "/" + this.customsfolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.writerFolder);
         FileUtil.deleteFilesInDir(this.writerFolder, generationStatus);
         FileUtil.createDirIfNotExisting(this.readerFolder);

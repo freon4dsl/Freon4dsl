@@ -17,8 +17,8 @@ import {
 
 const LOGGER: MetaLogger = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
-    public outputfolder: string = ".";
-    public customsfolder: string = ".";
+    public outputFolder: string = ".";
+    public customsFolder: string = ".";
     public language: FreMetaLanguage | undefined;
     protected scoperFolder: string = "";
 
@@ -43,7 +43,7 @@ export class ScoperGenerator {
         const customScoperTemplate: CustomScoperTemplate = new CustomScoperTemplate();
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.outputFolder + "/" + this.customsFolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.scoperFolder);
         FileUtil.deleteFilesInDir(this.scoperFolder, generationStatus);
 
@@ -63,20 +63,20 @@ export class ScoperGenerator {
             `Generating scope language definition: ${this.scoperFolder}/${Names.scoperDef(this.language)}.ts`,
         );
         const scoperDefFile = FileUtil.pretty(
-            scoperDefTemplate.generateScoperDef(this.language, scopedef, this.customsfolder, relativePath),
+            scoperDefTemplate.generateScoperDef(this.language, scopedef, this.customsFolder, relativePath),
             "Scoper Definition",
             generationStatus,
         );
         fs.writeFileSync(`${this.scoperFolder}/${Names.scoperDef(this.language)}.ts`, scoperDefFile);
 
-        LOGGER.log(`Generating custom scoper: ${this.outputfolder}${this.customsfolder}/${Names.customScoper(this.language)}.ts`);
+        LOGGER.log(`Generating custom scoper: ${this.outputFolder}/${this.customsFolder}/${Names.customScoper(this.language)}.ts`);
         const scoperCustomFile = FileUtil.pretty(
             customScoperTemplate.generateCustomScoperPart(this.language),
             "Custom Scoper",
             generationStatus,
         );
         FileUtil.generateManualFile(
-            `${this.outputfolder}${this.customsfolder}/${Names.customScoper(this.language)}.ts`,
+            `${this.outputFolder}/${this.customsFolder}/${Names.customScoper(this.language)}.ts`,
             scoperCustomFile,
             "Custom Scoper",
         );
@@ -97,6 +97,6 @@ export class ScoperGenerator {
     }
 
     private getFolderNames() {
-        this.scoperFolder = this.outputfolder + "/" + SCOPER_FOLDER;
+        this.scoperFolder = this.outputFolder + "/" + SCOPER_FOLDER;
     }
 }

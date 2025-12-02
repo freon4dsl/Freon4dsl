@@ -28,8 +28,8 @@ export class FreonGenerateValidator extends FreonGeneratePartAction {
             return;
         }
         this.validatorGenerator.language = this.language;
-        this.validatorGenerator.outputfolder = this.outputFolder;
-        this.validatorGenerator.customsfolder = this.customsFolder;
+        this.validatorGenerator.outputFolder = this.outputFolder;
+        this.validatorGenerator.customsFolder = this.customsFolder;
 
         try {
             if (this.validFiles.length > 0) {

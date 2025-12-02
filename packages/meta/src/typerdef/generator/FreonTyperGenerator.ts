@@ -43,7 +43,7 @@ export class FreonTyperGenerator {
         const typerPart: FreTyperPartTemplate = new FreTyperPartTemplate();
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputFolder + this.customsFolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.outputFolder + "/" + this.customsFolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.typerFolder);
         // Note that the creation of the concepts folder must follow the deletion of
         // files in the typer folder, because the concepts folder is part of the typer folder.
@@ -116,14 +116,14 @@ export class FreonTyperGenerator {
         // change relative path to get the imports right
         relativePath = "..";
 
-        LOGGER.log(`Generating custom typerPart: ${this.outputFolder}${this.customsFolder}/index.ts`);
+        LOGGER.log(`Generating custom typerPart: ${this.outputFolder}/${this.customsFolder}/index.ts`);
         const customTyperFile = FileUtil.pretty(
             customPart.generateCustomTyperPart(this.language),
             "Custom TyperPart",
             generationStatus,
         );
         FileUtil.generateManualFile(
-            `${this.outputFolder}${this.customsFolder}/${Names.customTyper(this.language)}.ts`,
+            `${this.outputFolder}/${this.customsFolder}/${Names.customTyper(this.language)}.ts`,
             customTyperFile,
             "Custom TyperPart",
         );

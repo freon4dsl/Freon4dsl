@@ -45,7 +45,7 @@ describe("Checking the validator generator", () => {
             expect(validatorDef).not.toBeUndefined();
             //
             generator.language = language;
-            generator.outputfolder = outputDir;
+            generator.outputFolder = outputDir;
             generator.generate(validatorDef!);
             const outputFile = outputDir + "validator/ROOTValidationRulesChecker.ts";
             const isPresent: boolean = fs.existsSync(outputFile);

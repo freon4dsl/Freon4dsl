@@ -37,7 +37,7 @@ export class InterpreterGenerator {
         let relativePath = "..";
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputFolder + this.customsFolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.outputFolder + "/" + this.customsFolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.interpreterFolder);
         FileUtil.deleteFilesInDir(this.interpreterFolder, generationStatus);
 
@@ -52,11 +52,11 @@ export class InterpreterGenerator {
         // Change relative path to get the imports right
         relativePath = getCombinedFolderPath(this.outputFolder, this.customsFolder);
 
-        generatedFilePath = `${this.outputFolder}${this.customsFolder}/${Names.interpreterName(this.language)}.ts`;
+        generatedFilePath = `${this.outputFolder}/${this.customsFolder}/${Names.interpreterName(this.language)}.ts`;
         generatedContent = mainTemplate.interpreterMain(this.language, relativePath);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
-        generatedFilePath = `${this.outputFolder}${this.customsFolder}/${Names.interpreterClassname(this.language)}.ts`;
+        generatedFilePath = `${this.outputFolder}/${this.customsFolder}/${Names.interpreterClassname(this.language)}.ts`;
         generatedContent = FileUtil.pretty(template.interpreterClass(this.language, relativePath), "interpreter manual file" ,generationStatus);
         FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter class");
     }
@@ -68,6 +68,6 @@ export class InterpreterGenerator {
     }
 
     private getFolderNames() {
-        this.interpreterFolder = this.outputFolder + INTERPRETER_FOLDER;
+        this.interpreterFolder = this.outputFolder + "/" + INTERPRETER_FOLDER;
     }
 }

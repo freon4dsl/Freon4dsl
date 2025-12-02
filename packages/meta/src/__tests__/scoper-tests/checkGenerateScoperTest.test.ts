@@ -52,7 +52,7 @@ describe("Checking the scoper generator", () => {
             expect(scopeDef).not.toBeUndefined();
             // a change to make git commit this file again
             generator.language = language;
-            generator.outputfolder = outputDir;
+            generator.outputFolder = outputDir;
             generator.generate(scopeDef!);
             const outputFile = outputDir + "scoper/ScoperModelScoper.ts";
             const isPresent: boolean = FileUtil.exists(outputFile);

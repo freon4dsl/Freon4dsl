@@ -53,7 +53,7 @@ export class EditorGenerator {
         const editorDefTemplate: EditorDefTemplate = new EditorDefTemplate();
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.outputfolder + "/" + this.customsfolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.editorFolder);
         FileUtil.deleteFilesInDir(this.editorFolder, generationStatus);
 
@@ -126,26 +126,26 @@ export class EditorGenerator {
         const actionsFile = FileUtil.pretty(actions.generate(this.language!, this.customsfolder, relativePath), "Actions", generationStatus);
         fs.writeFileSync(`${this.editorFolder}/${Names.actions(this.language!)}.ts`, actionsFile);
 
-        LOGGER.log(`Generating custom actions: ${this.outputfolder + this.customsfolder}${Names.customActions(this.language!)}.ts`);
+        LOGGER.log(`Generating custom actions: ${this.outputfolder + "/" + this.customsfolder}${Names.customActions(this.language!)}.ts`);
         const customActionsFile = FileUtil.pretty(
             customActions.generate(this.language!),
             "CustomActions",
             generationStatus,
         );
         FileUtil.generateManualFile(
-            `${this.outputfolder + this.customsfolder}/${Names.customActions(this.language!)}.ts`,
+            `${this.outputfolder + "/" + this.customsfolder}/${Names.customActions(this.language!)}.ts`,
             customActionsFile,
             "CustomActions",
         );
 
-        LOGGER.log(`Generating custom projection: ${this.outputfolder + this.customsfolder}${Names.customProjection(this.language!)}.ts`);
+        LOGGER.log(`Generating custom projection: ${this.outputfolder + "/" + this.customsfolder}${Names.customProjection(this.language!)}.ts`);
         const customProjectionFile = FileUtil.pretty(
             customProjectiontemplate.generate(this.language!),
             "Custom Projection",
             generationStatus,
         );
         FileUtil.generateManualFile(
-            `${this.outputfolder + this.customsfolder}/${Names.customProjection(this.language!)}.ts`,
+            `${this.outputfolder + "/" + this.customsfolder}/${Names.customProjection(this.language!)}.ts`,
             customProjectionFile,
             "Custom Projection",
         );

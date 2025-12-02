@@ -33,7 +33,7 @@ export class EnvironmentTemplate {
         import { ${Names.stdlib(language)}  } from "${relativePath}/${STDLIB_FOLDER}/${Names.stdlib(language)}.js";
         import { ${Names.writer(language)}  } from "${relativePath}/${WRITER_FOLDER}/${Names.writer(language)}.js";
         import { ${Names.reader(language)}  } from "${relativePath}/${READER_FOLDER}/${Names.reader(language)}.js";
-        import { ${Names.interpreterName(language)}  } from "${relativePath}/${customsFolder}${Names.interpreterName(language)}.js";
+        import { ${Names.interpreterName(language)}  } from "${relativePath}/${customsFolder}/${Names.interpreterName(language)}.js";
 
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.

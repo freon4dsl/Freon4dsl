@@ -21,7 +21,7 @@ export class LionWebGenerator {
         this.getFolderNames();
         
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputFolder + this.customsFolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.outputFolder + "/" + this.customsFolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.lionWebFolder);
         FileUtil.deleteFilesInDir(this.lionWebFolder, generationStatus);
 
