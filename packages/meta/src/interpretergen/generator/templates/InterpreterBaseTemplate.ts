@@ -45,7 +45,7 @@ export class InterpreterBaseTemplate {
         return `// TEMPLATE: InterpreterBaseTemplate.interpreterClass(...)
         // Generated once, will NEVER be overwritten.
         ${imports.makeImports(language)}
-        import { ${baseName} } from "${relativePath}/${INTERPRETER_FOLDER}${baseName}.js";
+        import { ${baseName} } from "${relativePath}/${INTERPRETER_FOLDER}/${baseName}.js";
 
         let main: IMainInterpreter;
 
