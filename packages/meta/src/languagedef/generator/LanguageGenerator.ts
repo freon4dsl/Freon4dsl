@@ -82,9 +82,7 @@ export class LanguageGenerator {
 
         // set relative path to get the imports right
         let relativePath = "..";
-        console.log('this.outputFolder', this.outputFolder)
-        console.log('this.customsFolder', this.customsFolder)
-        console.log('relativePath', relativePath);
+
         //  Generate it
         LOGGER.log(`Generating model: ${this.languageFolder}/${Names.classifier(language.modelConcept)}.ts`);
         const generated = FileUtil.pretty(

@@ -41,10 +41,6 @@ export class InterpreterGenerator {
         FileUtil.createDirIfNotExisting(this.interpreterFolder);
         FileUtil.deleteFilesInDir(this.interpreterFolder, generationStatus);
 
-        console.log('this.outputFolder', this.outputFolder)
-        console.log('this.customsFolder', this.customsFolder)
-        console.log('this.interpreterFolder', this.interpreterFolder)
-        console.log('relativePath', relativePath);
         let generatedFilePath = `${this.interpreterFolder}/${Names.interpreterBaseClassname(this.language)}.ts`;
         let generatedContent = template.interpreterBase(this.language, interpreterDef, relativePath);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
