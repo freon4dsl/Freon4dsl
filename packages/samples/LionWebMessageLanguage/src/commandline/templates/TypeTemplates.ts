@@ -13,27 +13,35 @@ export class TypeTemplates {
     commandTemplate(messageGroup: MessageGroup, doclinkRoot: string): string {
         const referredTypes: Set<FreNodeReference<Type>> = new Set<FreNodeReference<Type>>()
         let result = `
-            
-            ${messageGroup.messages.map(msg => {
-            const typeName = `${msg.name}${msg.name.endsWith(messageGroup.name) ? "" : messageGroup.name}`
-                    return`
-                            /**
-                              *  @see ${doclinkRoot ?? "unknown"}-${msg.name}
-                              */
-                            export type ${typeName} = {
-                            ${msg.properties.concat(messageGroup.sharedProperties).map((propDef) => {
-                                    return this.generatePropertyDef(messageGroup, msg, propDef, referredTypes)
-                                }).join(",\n")
-                            }
-                            }
-                            `
-            }).join("\n")}
-        
             // The overall "super-type"    
-            export type Delta${messageGroup.name} = ${messageGroup.messages.map(msg =>
-                `${msg.name}${msg.name.endsWith(messageGroup.name) ? "" : messageGroup.name}`
+            export type Delta${messageGroup.name} = {
+                ${messageGroup.sharedProperties.map((propDef) => {
+                        return this.generateSharedPropertyDef(messageGroup, propDef, referredTypes)
+                    }).join(",\n")
+                }
+            }
+
+            ${messageGroup.messages.map(msg => {
+                const typeName = `${msg.name}${msg.name.endsWith(messageGroup.name) ? "" : messageGroup.name}`
+                return`
+                        /**
+                          *  @see ${doclinkRoot ?? "unknown"}-${msg.name}
+                          */
+                        export type ${typeName} = Delta${messageGroup.name} & {
+                        ${msg.properties.concat(this.getTaggedUnionProperty(messageGroup)).map((propDef) => {
+                                return this.generatePropertyDef(messageGroup, msg, propDef, referredTypes)
+                            }).join(",\n")
+                        }
+                        }
+                        `
+            }).join("\n")}
+                    
+            // The type for the tagged union property    
+            export type ${this.taggedPropertyType(messageGroup)} = ${messageGroup.messages.map(msg =>
+                `"${msg.name}"`
             ).join(" |\n")}
             
+            // Type Guard function
             export function isDelta${messageGroup.name}(object: unknown): object is Delta${messageGroup.name} {
                const castObject = object as Delta${messageGroup.name}
                 return (
@@ -79,17 +87,39 @@ export class TypeTemplates {
         `
     }
     
+    taggedPropertyType(messageGroup: MessageGroup): string {
+        return `${messageGroup.name}${this.toFirstUpper(messageGroup.taggedUnionProperty)}`
+    }
+
     generatePropertyDef(messageGroup: MessageGroup | undefined, msg: ObjectType, propDef: PropertyDef, referredTypes: Set<FreNodeReference<Type>>): string {
+        referredTypes.add(propDef.type)
+        const optional = (propDef.isOptional ? "?" : "")
+        const isList = propDef.isList ? "[]" : ""
+        const canBeNull = propDef.mayBeNull ? " | null" : ""
+        const isDiscriminator = messageGroup?.taggedUnionProperty === propDef.name
+        if (isDiscriminator) {
+            return `${propDef.name} : "${msg.name}"`
+        } else {
+            return `${propDef.name}${optional} : ${this.tsType(messageGroup, propDef.$type?.name)}${isList}${canBeNull}`
+        }
+
+    }
+
+    generateSharedPropertyDef(messageGroup: MessageGroup | undefined, propDef: PropertyDef, referredTypes: Set<FreNodeReference<Type>>): string {
         referredTypes.add(propDef.type)
         const optional = (propDef.isOptional ? "?" : "")
         const isList = propDef.isList ? "[]" : ""
         const isDiscriminator = messageGroup?.taggedUnionProperty === propDef.name
         if (isDiscriminator) {
-            return `${propDef.name} : "${msg.name}"`
+            return `${propDef.name} : ${this.taggedPropertyType(messageGroup)}`
         } else {
             return `${propDef.name}${optional} : ${this.tsType(messageGroup, propDef.$type?.name)}${isList}`
         }
-
+    }
+    
+    getTaggedUnionProperty(messageGroup: MessageGroup): PropertyDef[] {
+        const propDef = messageGroup.sharedProperties.find(p => p.name === messageGroup.taggedUnionProperty)
+        return propDef === undefined ? [] : [propDef]
     }
     
     tsType(messageGroup: MessageGroup | undefined, type: string): string {
@@ -246,5 +276,9 @@ export class TypeTemplates {
                 return typescriptFile
             }
         }
+    }
+
+    protected toFirstUpper(text: string): string {
+        return text[0].toUpperCase().concat(text.substr(1));
     }
 }
