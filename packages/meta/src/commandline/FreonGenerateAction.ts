@@ -11,7 +11,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
     private outputFolderArg: CommandLineStringParameter;
     private customsFolderArg: CommandLineStringParameter;
     protected outputFolder: string = "";
-    protected customsFolder: string = "./src/custom/";
+    protected customsFolder: string = "./src/custom";
 
     protected defFolder: CommandLineStringParameter;
     protected languageFiles: string[] = [];
@@ -40,7 +40,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
         });
         this.customsFolderArg = this.defineStringParameter({
             argumentName: "CUSTOM_DIR",
-            defaultValue: "../custom/",
+            defaultValue: "../custom",
             parameterLongName: "--custom",
             parameterShortName: "-c",
             description: "The directory where the custom code is located - relative to OUTPUT_DIR",

@@ -32,8 +32,8 @@ import { getCombinedFolderPath } from '../../utils/no-dependencies/FolderPathHel
 
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
-    public outputfolder: string = ".";
-    public customsfolder: string = ".";
+    public outputFolder: string = ".";
+    public customsFolder: string = ".";
     private configurationFolder: string = "";
     private stdlibFolder: string = "";
     private commandlineFolder: string = "";
@@ -42,7 +42,7 @@ export class LanguageGenerator {
 
     generate(language: FreMetaLanguage): void {
         LOGGER.log(
-            "Generating language '" + language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_FOLDER,
+            "Generating language '" + language.name + "' in folder " + this.outputFolder + "/" + LANGUAGE_FOLDER,
         );
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
@@ -66,7 +66,7 @@ export class LanguageGenerator {
         const commandLineTemplate = new CommandLineTemplate();
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.outputFolder + this.customsFolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.configurationFolder);
         FileUtil.createDirIfNotExisting(this.languageFolder);
         FileUtil.createDirIfNotExisting(this.configurationFolder);
@@ -82,7 +82,9 @@ export class LanguageGenerator {
 
         // set relative path to get the imports right
         let relativePath = "..";
-
+        console.log('this.outputFolder', this.outputFolder)
+        console.log('this.customsFolder', this.customsFolder)
+        console.log('relativePath', relativePath);
         //  Generate it
         LOGGER.log(`Generating model: ${this.languageFolder}/${Names.classifier(language.modelConcept)}.ts`);
         const generated = FileUtil.pretty(
@@ -139,8 +141,8 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.languageFolder}/internal.ts`, internalIndexFile);
 
         // Generate Freon configuration if it isn't there
-        const combinedPath = getCombinedFolderPath(this.outputfolder, this.customsfolder);
-        let filePath: string = `${this.outputfolder}${this.customsfolder}/${Names.configuration}.ts`
+        const combinedPath = getCombinedFolderPath(this.outputFolder, this.customsFolder);
+        let filePath: string = `${this.outputFolder}${this.customsFolder}/${Names.configuration}.ts`
         LOGGER.log(`Generating Freon Configuration: ${filePath}`);
         const configurationFile = FileUtil.pretty(
             configurationTemplate.generate(language, combinedPath),
@@ -150,7 +152,7 @@ export class LanguageGenerator {
         FileUtil.generateManualFile(filePath, configurationFile, "Configuration");
 
         // Generate index to customs folder if it isn't there
-        filePath = `${this.outputfolder}${this.customsfolder}/index.ts`
+        filePath = `${this.outputFolder}${this.customsFolder}/index.ts`
         LOGGER.log(`Generating Freon Configuration: ${filePath}`);
         const indexFile = FileUtil.pretty(
           configurationTemplate.generateCustomIndex(language),
@@ -174,7 +176,7 @@ export class LanguageGenerator {
 
         LOGGER.log(`Generating language environment: ${this.configurationFolder}/${Names.environment(language)}.ts`);
         const environmentFile = FileUtil.pretty(
-            environmentTemplate.generateEnvironment(language, this.customsfolder, relativePath),
+            environmentTemplate.generateEnvironment(language, this.customsFolder, relativePath),
             "Language Environment",
             generationStatus,
         );
@@ -182,7 +184,7 @@ export class LanguageGenerator {
 
         LOGGER.log(`Generating standard library: ${this.stdlibFolder}/${Names.stdlib(language)}.ts`);
         const stdlibFile = FileUtil.pretty(
-            stdlibTemplate.generateStdlibClass(language, this.customsfolder, relativePath),
+            stdlibTemplate.generateStdlibClass(language, this.customsFolder, relativePath),
             "Language Standard Library",
             generationStatus,
         );
@@ -228,14 +230,14 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.utilsFolder}/index.ts`, utilIndexFile);
 
         {
-            LOGGER.log(`Generating custom stdlib: ${this.outputfolder}${this.customsfolder}/${Names.customStdlib(language)}.ts`);
+            LOGGER.log(`Generating custom stdlib: ${this.outputFolder}${this.customsFolder}/${Names.customStdlib(language)}.ts`);
             const customFile = FileUtil.pretty(
                 stdlibTemplate.generateCustomStdlibClass(language),
                 "Custom Stdlib Class",
                 generationStatus,
             );
             FileUtil.generateManualFile(
-                `${this.outputfolder}${this.customsfolder}/${Names.customStdlib(language)}.ts`,
+                `${this.outputFolder}${this.customsFolder}/${Names.customStdlib(language)}.ts`,
                 customFile,
                 "Custom Stdlib Class",
             );
@@ -262,10 +264,10 @@ export class LanguageGenerator {
             "CommandLine Class",
         );
 
-        const filePath2 = `${this.outputfolder}${this.customsfolder}/FreonCommandLineRunner.ts`
+        const filePath2 = `${this.outputFolder}${this.customsFolder}/FreonCommandLineRunner.ts`
         LOGGER.log(`Generating command line runner: ${filePath2}`);
         const commandLineRunnerFile = FileUtil.pretty(
-            commandLineTemplate.generateCommandLineRunner(language, getCombinedFolderPath(this.outputfolder, this.customsfolder)),
+            commandLineTemplate.generateCommandLineRunner(language, getCombinedFolderPath(this.outputFolder, this.customsFolder)),
             "CommandLineRunner Class",
             generationStatus,
         );
@@ -289,7 +291,7 @@ export class LanguageGenerator {
             "Root Index",
             generationStatus,
         );
-        fs.writeFileSync(`${this.outputfolder}/index.ts`, rootIndexFile);
+        fs.writeFileSync(`${this.outputFolder}/index.ts`, rootIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.info(`Generated language '${language.name}' with ${generationStatus.numberOfErrors} errors.`);
@@ -299,14 +301,14 @@ export class LanguageGenerator {
     }
 
     private getFolderNames() {
-        this.languageFolder = this.outputfolder + "/" + LANGUAGE_FOLDER;
-        this.utilsFolder = this.outputfolder + "/" + LANGUAGE_UTILS_FOLDER;
-        this.configurationFolder = this.outputfolder + "/" + CONFIGURATION_FOLDER;
-        this.stdlibFolder = this.outputfolder + "/" + STDLIB_FOLDER;
-        this.commandlineFolder = this.outputfolder + "/" + COMMAND_LINE_FOLDER;
+        this.languageFolder = this.outputFolder + "/" + LANGUAGE_FOLDER;
+        this.utilsFolder = this.outputFolder + "/" + LANGUAGE_UTILS_FOLDER;
+        this.configurationFolder = this.outputFolder + "/" + CONFIGURATION_FOLDER;
+        this.stdlibFolder = this.outputFolder + "/" + STDLIB_FOLDER;
+        this.commandlineFolder = this.outputFolder + "/" + COMMAND_LINE_FOLDER;
         
-        this.configurationFolder = this.outputfolder + "/" + CONFIGURATION_FOLDER;
-        this.stdlibFolder = this.outputfolder + "/" + STDLIB_FOLDER;
-        this.commandlineFolder = this.outputfolder + "/" + COMMAND_LINE_FOLDER;
+        this.configurationFolder = this.outputFolder + "/" + CONFIGURATION_FOLDER;
+        this.stdlibFolder = this.outputFolder + "/" + STDLIB_FOLDER;
+        this.commandlineFolder = this.outputFolder + "/" + COMMAND_LINE_FOLDER;
     }
 }

@@ -13,11 +13,10 @@ const LOGGER = new MetaLogger("InterpreterGenerator").mute();
 /**
  */
 export class InterpreterGenerator {
-    public outputfolder: string = ".";
-    public customsfolder: string = ".";
+    public outputFolder: string = ".";
+    public customsFolder: string = ".";
     public language: FreMetaLanguage | undefined;
     private interpreterFolder: string = "";
-    // private interpreterFolder: string = "";
     fileNames: string[] = [];
 
     generate(interpreterDef: FreInterpreterDef): void {
@@ -38,26 +37,30 @@ export class InterpreterGenerator {
         let relativePath = "..";
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputfolder + this.customsfolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.outputFolder + this.customsFolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.interpreterFolder);
         FileUtil.deleteFilesInDir(this.interpreterFolder, generationStatus);
 
+        console.log('this.outputFolder', this.outputFolder)
+        console.log('this.customsFolder', this.customsFolder)
+        console.log('this.interpreterFolder', this.interpreterFolder)
+        console.log('relativePath', relativePath);
         let generatedFilePath = `${this.interpreterFolder}/${Names.interpreterBaseClassname(this.language)}.ts`;
         let generatedContent = template.interpreterBase(this.language, interpreterDef, relativePath);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterInitname(this.language)}.ts`;
-        generatedContent = template.interpreterInit(this.language, interpreterDef, this.customsfolder, relativePath);
+        generatedContent = template.interpreterInit(this.language, interpreterDef, this.customsFolder, relativePath);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
         // Change relative path to get the imports right
-        relativePath = getCombinedFolderPath(this.outputfolder, this.customsfolder);
+        relativePath = getCombinedFolderPath(this.outputFolder, this.customsFolder);
 
-        generatedFilePath = `${this.outputfolder}${this.customsfolder}/${Names.interpreterName(this.language)}.ts`;
+        generatedFilePath = `${this.outputFolder}${this.customsFolder}/${Names.interpreterName(this.language)}.ts`;
         generatedContent = mainTemplate.interpreterMain(this.language, relativePath);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
-        generatedFilePath = `${this.outputfolder}${this.customsfolder}/${Names.interpreterClassname(this.language)}.ts`;
+        generatedFilePath = `${this.outputFolder}${this.customsFolder}/${Names.interpreterClassname(this.language)}.ts`;
         generatedContent = FileUtil.pretty(template.interpreterClass(this.language, relativePath), "interpreter manual file" ,generationStatus);
         FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter class");
     }
@@ -69,6 +72,6 @@ export class InterpreterGenerator {
     }
 
     private getFolderNames() {
-        this.interpreterFolder = this.outputfolder + "/" + INTERPRETER_FOLDER;
+        this.interpreterFolder = this.outputFolder + INTERPRETER_FOLDER;
     }
 }

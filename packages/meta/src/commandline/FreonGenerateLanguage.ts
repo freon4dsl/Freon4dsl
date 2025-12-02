@@ -17,8 +17,8 @@ export class FreonGenerateLanguage extends FreonGeneratePartAction {
     generate(): void {
         LOGGER.log("Starting Freon language generation ...");
         super.generate();
-        this.languageGenerator.outputfolder = this.outputFolder;
-        this.languageGenerator.customsfolder = this.customsFolder;
+        this.languageGenerator.outputFolder = this.outputFolder;
+        this.languageGenerator.customsFolder = this.customsFolder;
         if (this.language !== null && this.language !== undefined) {
             this.languageGenerator.generate(this.language);
         }

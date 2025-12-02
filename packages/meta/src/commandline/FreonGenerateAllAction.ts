@@ -166,8 +166,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         }
         try {
             this.interpreterGenerator.language = this.language;
-            this.interpreterGenerator.outputfolder = this.outputFolder;
-            this.interpreterGenerator.customsfolder = this.customsFolder;
+            this.interpreterGenerator.outputFolder = this.outputFolder;
+            this.interpreterGenerator.customsFolder = this.customsFolder;
             this.interpreterGenerator.generate(interpreterDef);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -267,8 +267,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             throw new Error("Language could not be parsed, exiting.");
         }
         Imports.initialize(this.language)
-        this.languageGenerator.outputfolder = this.outputFolder;
-        this.languageGenerator.customsfolder = this.customsFolder;
+        this.languageGenerator.outputFolder = this.outputFolder;
+        this.languageGenerator.customsFolder = this.customsFolder;
         this.languageGenerator.generate(this.language!);
     };
 
