@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
-import { CalculatorModelEnvironment } from "../config/gen/CalculatorModelEnvironment";
-import {CalculatorModel} from "../language/gen/internal";
+import { CalculatorModelEnvironment } from "../freon/config/CalculatorModelEnvironment";
+import {CalculatorModel} from "../freon/language/internal";
 import {FreModelUnit} from "@freon4dsl/core";
 
 describe("Parser test", () => {
