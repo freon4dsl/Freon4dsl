@@ -25,7 +25,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
         super(options);
         this.defFolder = this.defineStringParameter({
             argumentName: "DEFINITIONS_DIR",
-            defaultValue: "defs",
+            defaultValue: "src/defs",
             parameterLongName: "--definitions",
             parameterShortName: "-d",
             description: "Folder where your language definition files can be found",
