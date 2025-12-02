@@ -1,7 +1,7 @@
 import { FreLanguage } from "@freon4dsl/core";
-import { AllEnvironment } from "../freon/config/AllEnvironment";
-import { LimitedConcept1, LimitedWithBase, LimitedWithInheritanceTree, LimitedWithInterface } from "../freon/language";
-import { AllStdlib } from "../freon/stdlib/AllStdlib";
+import { AllEnvironment } from "../freon/config/AllEnvironment.js";
+import { LimitedConcept1, LimitedWithBase, LimitedWithInheritanceTree, LimitedWithInterface } from "../freon/language/index.js";
+import { AllStdlib } from "../freon/stdlib/AllStdlib.js";
 import { describe, it, test, expect } from "vitest";
 
 describe("Checking stdlib for Lang Constructs", () => {

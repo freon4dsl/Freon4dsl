@@ -43,7 +43,8 @@
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local",
     "test": "vitest run",
-    "circular": "madge --circular src/* > DEPENDENCIES.md"
+    "circular": "madge --circular src/* > DEPENDENCIES.md",
+    "check-imports": "bash ../../scripts/check-import-extensions.sh"
   },
   "devDependencies": {
     "vitest": "3.2.4",

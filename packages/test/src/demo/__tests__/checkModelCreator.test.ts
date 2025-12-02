@@ -1,5 +1,5 @@
 import { FreNode } from "@freon4dsl/core";
-import { DemoEnvironment } from "../freon/config/DemoEnvironment";
+import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { DemoModel, DemoFunction, DemoEntity } from "../freon/language/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe, test, expect } from "vitest";

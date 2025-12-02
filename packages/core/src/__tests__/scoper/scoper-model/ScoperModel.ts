@@ -12,14 +12,14 @@
 //     matchElementList,
 // } from "@freon4dsl/core";
 import { UnitA, UnitB } from "./internal.js";
-import { FreModel, FreModelUnit, MobxModelElementImpl, observablepartlist } from '../../../ast';
-import { FreParseLocation } from '../../../reader';
-import { FreUtils } from '../../../util';
-import { matchElementList } from '../../../ast-utils';
+import { FreModel, FreModelUnit, MobxModelElementImpl, observablepartlist } from '../../../ast/index.js';
+import { FreParseLocation } from '../../../reader/index.js';
+import { FreUtils } from '../../../util/index.js';
+import { matchElementList } from '../../../ast-utils/index.js';
 
 import { makeObservable, action, runInAction } from "mobx";
-import { FreLanguage } from '../../../language';
-import { AST } from '../../../change-manager';
+import { FreLanguage } from '../../../language/index.js';
+import { AST } from '../../../change-manager/index.js';
 
 /**
  * Class ScoperModel is the implementation of the model with the same name in the language definition file.

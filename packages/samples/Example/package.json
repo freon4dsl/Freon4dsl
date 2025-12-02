@@ -14,7 +14,8 @@
     "build-samples": "npm run build",
     "compile": "tsc && rollup --config",
     "install-local": "npm install --registry http://localhost:4873",
-    "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d defs",
+    "generate": "bash ../../../scripts/freon-samples-dev.sh -v all",
+    "check-imports": "bash ../../../scripts/check-import-extensions.sh",
     "copy": "cp src/lionweb/Example.json ../LionCore/src/__inputs__/Example.json && cp src/lionweb/Example.json ../../server/modelstore/lionweb_example"
   },
   "devDependencies": {

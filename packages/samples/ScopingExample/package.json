@@ -14,7 +14,8 @@
     "build-samples": "npm run build",
     "compile": "tsc && rollup --config",
     "install-local": "npm install --registry http://localhost:4873",
-    "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d defs"
+    "generate": "bash ../../../scripts/freon-samples-dev.sh -v all",
+    "check-imports": "bash ../../../scripts/check-import-extensions.sh"
   },
   "devDependencies": {
     "@freon4dsl/meta": "~2.0.0"

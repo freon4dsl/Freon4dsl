@@ -5,7 +5,6 @@
     import { usePaneContext } from "./svelte-utils/PaneLike.js";
     import { focusAndScrollIntoView } from './svelte-utils/ScrollingUtils.js';
     import { tick } from 'svelte';
-    import { scrollDebug } from './svelte-utils/Scroll-debug.js';
 
     let {
         options = $bindable(),

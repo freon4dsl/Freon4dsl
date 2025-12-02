@@ -30,7 +30,8 @@
     "release-beta": "npm publish --tag beta",
     "publish-local": "npm publish --registry http://localhost:4873 --tag local",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
-    "republish-local": "npm run unpublish-local && npm run publish-local"
+    "republish-local": "npm run unpublish-local && npm run publish-local",
+    "check-imports": "bash ../../scripts/check-import-extensions.sh"
   },
   "engines": {
     "node": ">=22.0.0"

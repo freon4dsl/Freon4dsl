@@ -4,7 +4,7 @@ import { SimpleModelCreator } from "./SimpleModelCreator.js";
 import { DSmodelEnvironment } from "../freon/config/DSmodelEnvironment.js";
 import { ExtendedModelCreator } from "./ExtendedModelCreator.js";
 import { describe, test, expect, beforeEach } from "vitest";
-import { getVisibleNames } from '../../utils/HelperFunctions';
+import { getVisibleNames } from '../../utils/HelperFunctions.js';
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";

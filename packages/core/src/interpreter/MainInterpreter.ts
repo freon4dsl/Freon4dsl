@@ -3,7 +3,7 @@ import { InterpreterError } from "./InterpreterException.js";
 import { InterpreterTracer } from "./InterpreterTracer.js";
 import type { ConceptFunction, EvaluateFunction, IMainInterpreter, InitFunction, OwningPropertyFunction } from "./IMainInterpreter.js";
 import { isRtError, RtObject } from "./runtime/index.js";
-import type { FreNode } from '../ast';
+import type { FreNode } from '../ast/index.js';
 
 /**
  * The main interpreter class, usually hidden by a facade specific for a project.

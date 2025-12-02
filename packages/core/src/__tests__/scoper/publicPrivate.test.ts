@@ -11,15 +11,13 @@
  */
 import { beforeEach, describe, test, expect } from 'vitest';
 import { ScoperModel } from './scoper-model/ScoperModel.js';
-import { ModelCreator } from './ModelCreator';
-import { initializeLanguage, NodeX, NodeY, UnitA, UnitB } from './scoper-model';
-import { FreCompositeScoper, FreScoper, } from '../../scoper';
-import { FreNamedNode, FreNodeReference } from '../../ast';
-import { FreLanguage } from '../../language';
-import { AdditionalNamespacesScoper } from './scoper-model/AdditionalNamespacesScoper.js';
-import { AST } from '../../change-manager';
-import { FreLanguageEnvironment } from '../../environment';
-import { ReplacementNamespaceScoper } from './scoper-model/ReplacementNamespaceScoper';
+import { ModelCreator } from './ModelCreator.js';
+import { initializeLanguage, NodeX, NodeY, UnitA, UnitB } from './scoper-model/index.js';
+import { FreCompositeScoper, } from '../../scoper/index.js';
+import { FreNamedNode } from '../../ast/index.js';
+import { FreLanguage } from '../../language/index.js';
+import { FreLanguageEnvironment } from '../../environment/index.js';
+import { ReplacementNamespaceScoper } from './scoper-model/ReplacementNamespaceScoper.js';
 
 // !!!!!!!!!!!!!!!!!! model name may not be in fqn. This name is not visible in the model itself!!!!!!!!!!!!!!!!!!
 

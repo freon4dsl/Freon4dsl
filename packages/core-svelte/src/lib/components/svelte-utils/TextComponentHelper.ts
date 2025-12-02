@@ -14,7 +14,7 @@ import {
 } from '@freon4dsl/core';
 import { executeCustomKeyboardShortCut } from './CommonFunctions.js';
 import { shouldBeHandledByBrowser } from '../stores/AllStores.svelte.js';
-import type { CaretDetails } from './CaretDetails';
+import type { CaretDetails } from './CaretDetails.js';
 
 const LOGGER = new FreLogger('TextComponentHelper');
 

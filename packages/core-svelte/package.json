@@ -32,7 +32,8 @@
     "republish-local": "npm run unpublish-local && npm run publish-local",
     "release-beta": "npm publish --tag beta",
     "publish-local": "npm publish --registry http://localhost:4873 --tag local",
-    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+    "check-imports": "bash ../../scripts/check-import-extensions.sh"
   },
   "files": [
     "dist",

@@ -2,8 +2,8 @@
 // TEMPLATE ConceptTemplate.generateConceptPrivate(...)
 // ... and customized for the test !
 
-import { observablepart, type FreExpressionNode, FreNodeReference } from "../../../ast";
-import { FreParseLocation } from '../../../reader';
+import { observablepart, type FreExpressionNode, FreNodeReference } from "../../../ast/index.js";
+import { FreParseLocation } from '../../../reader/index.js';
 import { CalcExpression, InputField } from "./internal.js";
 
 /**

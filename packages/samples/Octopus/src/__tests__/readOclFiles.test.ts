@@ -1,5 +1,5 @@
 import {OclPart, OctopusModel, UmlPart} from "../freon/language/index.js";
-import { OctopusModelEnvironment } from "../freon/config/OctopusModelEnvironment";
+import { OctopusModelEnvironment } from "../freon/config/OctopusModelEnvironment.js";
 import { FreModelSerializer } from "@freon4dsl/core";
 import { FileUtil } from '@freon4dsl/test-helpers';
 import {describe, test, expect} from "vitest";

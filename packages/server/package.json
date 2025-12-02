@@ -26,7 +26,8 @@
     "publish-local": "npm publish --registry http://localhost:4873 --tag local",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local",
-    "test": "vitest run"
+    "test": "vitest run",
+    "check-imports": "bash ../../scripts/check-import-extensions.sh"
   },
   "devDependencies": {
     "vitest": "3.2.4",
