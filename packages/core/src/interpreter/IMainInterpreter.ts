@@ -5,14 +5,15 @@ import type { FreNode } from '../ast/index.js';
 
 export type ConceptFunction = (node: Object) => string;
 export type OwningPropertyFunction = (node: Object) => string;
-export type EvaluateFunction = (node: FreNode, ctx: InterpreterContext) => RtObject;
+export type EvaluateFunction<TNode extends FreNode = FreNode> =
+    (node: TNode, ctx: InterpreterContext) => RtObject;
 export type InitFunction = (i: IMainInterpreter) => void;
 
 export interface IMainInterpreter {
     /**
      * Register function `func`  for node with type `name`
      */
-    registerFunction(name: string, func: EvaluateFunction): void;
+    registerFunction<TNode extends FreNode>(name: string, func: EvaluateFunction<TNode>): void;
 
     /**
      * Evaluate `node` with context `ctx` and return the  value.

@@ -41,6 +41,6 @@
     "@koa/router": "14.0.0",
     "@koa/cors": "5.0.0",
     "supertest": "^7.0.0",
-    "tslib": "^2.6.3"
+    "tslib": "^2.8.1"
   }
 }

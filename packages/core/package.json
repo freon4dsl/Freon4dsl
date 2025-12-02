@@ -50,6 +50,6 @@
     "@lionweb/server-client": "0.3.0",
     "mobx": "^6.12.3",
     "reflect-metadata": "^0.2.2",
-    "tslib": "^2.6.3"
+    "tslib": "^2.8.1"
   }
 }
