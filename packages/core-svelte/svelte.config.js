@@ -12,6 +12,15 @@ const config = {
 		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter()
+	},
+	compilerOptions: {
+		// Disable all Svelte compiler warnings
+		onwarn: () => {}
+		// Disbale all warnings except your own components
+		// onwarn(warning, handler) {
+		//   if (warning.filename?.includes('node_modules')) return;
+		//   handler(warning);
+		// }
 	}
 };
 
