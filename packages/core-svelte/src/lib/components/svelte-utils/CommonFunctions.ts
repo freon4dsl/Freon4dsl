@@ -1,12 +1,12 @@
-import { DummyNode } from './DummyNode';
+import { DummyNode } from './DummyNode.js';
 import {
     AST,
-    Box,
+    type Box,
     FreEditor,
     FreEditorUtil,
     type FrePostAction,
     toFreKey,
-    FreAction,
+    type FreAction,
     ElementBox,
     notNullOrUndefined,
     FreLanguage,

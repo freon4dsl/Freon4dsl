@@ -5,8 +5,8 @@ import {
     EqualsExpression,
     NumberLiteralExpression,
     PlusExpression
-} from "../freon/language/gen/index.js";
-import { ExampleInterpreterBase } from "../freon/interpreter/gen/ExampleInterpreterBase.js";
+} from "../freon/language/index.js";
+import { ExampleInterpreterBase } from "../freon/interpreter/ExampleInterpreterBase.js";
 
 let main: IMainInterpreter;
 

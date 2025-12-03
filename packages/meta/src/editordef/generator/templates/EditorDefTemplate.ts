@@ -177,7 +177,7 @@ export class EditorDefTemplate {
         // template starts here
         return `    // TEMPLATE: EditorDefTemplate.generateEditorDef(...)
             ${imports.makeImports(language)}
-            import { freonConfiguration } from "${relativePath}${customsFolder}${Names.configuration}.js";
+            import { freonConfiguration } from "${relativePath}/${customsFolder}/${Names.configuration}.js";
 
             const map = ${conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyProjection)};
 

@@ -1,12 +1,12 @@
 import {FreUtils} from "@freon4dsl/core";
-import {FileHandler} from "../../utils/FileHandler";
+import {FileHandler} from "../../utils/FileHandler.js";
 import {
     PartsInitiatorTest,
     PitExpTest, PrimsTest,
     ProductTest, TestParserExtra,
-} from "../freon/language/gen";
+} from "../freon/language/index.js";
 import {describe, test, expect, beforeEach} from "vitest";
-import {TestParserExtraEnvironment} from "../freon/config/gen/TestParserExtraEnvironment";
+import {TestParserExtraEnvironment} from "../freon/config/TestParserExtraEnvironment.js";
 
 describe("Parser on extra elements", () => {
     const reader = TestParserExtraEnvironment.getInstance().reader;

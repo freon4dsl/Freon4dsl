@@ -3,12 +3,12 @@
  * All tests determine whether the declared nodes of a namespace are correct.
  */
 import { beforeEach, describe, test, expect } from 'vitest';
-import { ScoperModel } from './scoper-model/ScoperModel';
-import { ModelCreator } from './ModelCreator';
-import { initializeLanguage, UnitB } from './scoper-model';
-import { FreNamespace } from '../../scoper';
-import { FreNamedNode } from '../../ast';
-import { FreLanguage } from '../../language';
+import { ScoperModel } from './scoper-model/ScoperModel.js';
+import { ModelCreator } from './ModelCreator.js';
+import { initializeLanguage, UnitB } from './scoper-model/index.js';
+import { FreNamespace } from '../../scoper/index.js';
+import { FreNamedNode } from '../../ast/index.js';
+import { FreLanguage } from '../../language/index.js';
 
 
 function printNames(set: Set<FreNamedNode>) {

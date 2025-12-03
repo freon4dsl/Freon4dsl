@@ -1,7 +1,7 @@
 <script lang="ts">
     import { ELEMENT_LOGGER } from './ComponentLoggers.js';
     import RenderComponent from './RenderComponent.svelte';
-    import { Box, ElementBox, notNullOrUndefined } from '@freon4dsl/core';
+    import { type Box, type ElementBox, notNullOrUndefined } from '@freon4dsl/core';
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 

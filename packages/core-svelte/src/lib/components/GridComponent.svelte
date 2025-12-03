@@ -1,6 +1,6 @@
 <script lang="ts">
     import { GRID_LOGGER } from './ComponentLoggers.js';
-    import { GridCellBox, GridBox, notNullOrUndefined } from '@freon4dsl/core';
+    import { type GridCellBox, type GridBox, notNullOrUndefined } from '@freon4dsl/core';
     import GridCellComponent from './GridCellComponent.svelte';
     import { componentId, type FreComponentProps } from '../index.js';
 

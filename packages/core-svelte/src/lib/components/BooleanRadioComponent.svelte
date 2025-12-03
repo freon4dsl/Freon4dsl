@@ -42,7 +42,7 @@
             trueElement.focus();
         } else if (currentValue === false) {
             falseElement.focus();
-        } else if (currentValue === "unknown" && notNullOrUndefined(undefinedElement)) {
+        } else if (currentValue === undefined && notNullOrUndefined(undefinedElement)) {
             undefinedElement.focus();
         }
     }
@@ -71,7 +71,7 @@
                 'BooleanRadioComponent.onChange for box ' +
                     box.role +
                     ', value:' +
-                    event.target['value' as keyof EventTarget]
+                    event.currentTarget.value
             );
             const tmp = event.currentTarget.value
             if (tmp === "unknown") {

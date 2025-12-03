@@ -1,5 +1,5 @@
 import { AST, FreNodeReference } from "@freon4dsl/core";
-import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, DemoFunction } from "../freon/language/gen/index.js";
+import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, DemoFunction } from "../freon/language/index.js";
 
 export class JsonModelCreator {
     model: DemoModel;

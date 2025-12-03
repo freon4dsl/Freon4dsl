@@ -29,13 +29,13 @@ import {
     SimpleNumber,
     Step,
     Test, TestFlow, Theory, Video, WorkSheet
-} from '../freon/language/gen/index.js';
+} from '../freon/language/index.js';
 import { RtFraction } from "./interpreter/runtime/RtFraction.js";
 import { RtFlow } from "./interpreter/runtime/RtFlow.js"
 import { RtGrade } from "./interpreter/runtime/RtGrade.js";
 import { isRtPage, RtPage } from "./interpreter/runtime/RtPage.js"
-import { EducationInterpreterBase } from "../freon/interpreter/gen/EducationInterpreterBase.js"
-import { EducationEnvironment } from "../freon/config/gen/EducationEnvironment.js";
+import { EducationInterpreterBase } from "../freon/interpreter/EducationInterpreterBase.js"
+import { EducationEnvironment } from "../freon/config/EducationEnvironment.js";
 
 let main: IMainInterpreter
 

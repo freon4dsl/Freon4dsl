@@ -1,5 +1,5 @@
 import { RtBoolean, RtObject } from "@freon4dsl/core";
-import { Grade } from "../../../freon/language/gen/index.js";
+import { Grade } from "../../../freon/language/index.js";
 
 export class RtGrade extends RtObject {
     readonly _type: string = "RtGrade";

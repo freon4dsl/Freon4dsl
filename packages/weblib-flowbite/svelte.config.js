@@ -13,6 +13,13 @@ const config = {
     // See https://svelte.dev/docs/kit/adapters for more information about adapters.
     adapter: adapter(),
   },
+  // Disable all Svelte compiler warnings
+  onwarn: () => {}
+  // Disable all warnings except your own components
+  // onwarn(warning, handler) {
+  //   if (warning.filename?.includes('node_modules')) return;
+  //   handler(warning);
+  // }
 };
 
 export default config;

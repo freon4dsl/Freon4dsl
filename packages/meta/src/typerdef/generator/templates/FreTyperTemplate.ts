@@ -9,7 +9,7 @@ export class FreTyperTemplate {
 
     generateGenIndex(language: FreMetaLanguage): string {
         if (language === undefined || language === null) {
-            LOG2USER.error("Could not create gen/index, because language was not set.");
+            LOG2USER.error("Could not create index, because language was not set.");
             return "";
         }
         return `

@@ -1,11 +1,9 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { ScoperTryoutEnvironment } from '../freon/config/gen/ScoperTryoutEnvironment';
-import { NamedPart, QualifiedName, ScoperTryout, Unit, UnitType1, UnitType2 } from '../freon/language/gen';
-import { FileHandler } from '../../utils/FileHandler';
+import { ScoperTryoutEnvironment } from '../freon/config/ScoperTryoutEnvironment.js';
+import { NamedPart, QualifiedName, ScoperTryout, Unit, UnitType1, UnitType2 } from '../freon/language/index.js';
+import { FileHandler } from '../../utils/FileHandler.js';
 import { AST, FreNamedNode, FreNodeReference } from '@freon4dsl/core';
-import { getVisibleNames } from '../../utils/HelperFunctions';
-
-
+import { getVisibleNames } from '../../utils/HelperFunctions.js';
 
 describe("Testing Custom Scoper", () => {
 	const reader = ScoperTryoutEnvironment.getInstance().reader;

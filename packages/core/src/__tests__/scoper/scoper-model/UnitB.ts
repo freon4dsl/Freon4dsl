@@ -15,15 +15,14 @@
 import { type IWithoutName, type IWithName } from "./internal.js";
 import {
     FreModelUnit,
-    FreNamedNode,
     FreNodeReference,
     MobxModelElementImpl,
     observablepartlist,
     observableprim
-} from '../../../ast';
-import { FreParseLocation } from '../../../reader';
-import { FreUtils } from '../../../util';
-import { matchElementList, matchReferenceList } from '../../../ast-utils';
+} from '../../../ast/index.js';
+import { FreParseLocation } from '../../../reader/index.js';
+import { FreUtils } from '../../../util/index.js';
+import { matchElementList, matchReferenceList } from '../../../ast-utils/index.js';
 
 import { makeObservable, action } from "mobx";
 

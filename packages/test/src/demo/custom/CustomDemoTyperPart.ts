@@ -2,8 +2,8 @@
 // TEMPLATE: FreCustomTyperPartTemplate,generateCustomTyperPart(...)
 
 import { type FreNode, type FreType, type FreTyper } from "@freon4dsl/core";
-import { DemoEnvironment } from "../freon/config/gen/DemoEnvironment.js";
-import { DemoEntity } from "../freon/language/gen/index.js";
+import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
+import { DemoEntity } from "../freon/language/index.js";
 
 /**
  * Class 'CustomDemoTyperPart' is meant to be a convenient place to add any

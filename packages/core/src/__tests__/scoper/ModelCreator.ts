@@ -1,6 +1,6 @@
-import { IWithName, NodeY, NodeX, ScoperModel, UnitA, UnitB } from './scoper-model';
-import { AST } from '../../change-manager';
-import { FreNodeReference } from '../../ast';
+import { IWithName, NodeY, NodeX, ScoperModel, UnitA, UnitB } from './scoper-model/index.js';
+import { AST } from '../../change-manager/index.js';
+import { FreNodeReference } from '../../ast/index.js';
 
 export class ModelCreator {
 

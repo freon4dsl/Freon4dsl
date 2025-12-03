@@ -1,7 +1,7 @@
 import {AST} from "@freon4dsl/core";
-import {Demo, DemoUnit} from "../freon/language/gen";
-import {DemoEnvironment} from "../freon/config/gen/DemoEnvironment";
-import {FileHandler} from "../../utils/FileHandler";
+import {Demo, DemoUnit} from "../freon/language/index.js";
+import {DemoEnvironment} from "../freon/config/DemoEnvironment.js";
+import {FileHandler} from "../../utils/FileHandler.js";
 import {describe, test, expect} from "vitest";
 
 describe("Test the parser", () => {

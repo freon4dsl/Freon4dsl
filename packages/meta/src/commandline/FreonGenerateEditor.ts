@@ -38,7 +38,7 @@ export class FreonGenerateEditor extends FreonGeneratePartAction {
             } else {
                 editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
             }
-            if (notNullOrUndefined(editor)) {
+            if (notNullOrUndefined(editor)) { // should never be the case, a default is generated
                 // add default values for everything that is not present in the editor definition
                 DefaultEditorGenerator.addDefaults(editor);
                 this.editorGenerator.generate(editor);

@@ -17,7 +17,7 @@ export class ScoperDefTemplate {
 
         return `// TEMPLATE: ScoperDefTemplate.generateScoperDef(...)
             ${imports.makeImports(language)}
-            import { freonConfiguration } from "${relativePath}${customsFolder}${Names.configuration}.js";
+            import { freonConfiguration } from "${relativePath}/${customsFolder}/${Names.configuration}.js";
             import { ${Names.scoper(language)} } from "./${Names.scoper(language)}.js";
 
             /**

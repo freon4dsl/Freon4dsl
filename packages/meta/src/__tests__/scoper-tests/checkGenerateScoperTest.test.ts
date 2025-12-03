@@ -31,7 +31,7 @@ describe("Checking the scoper generator", () => {
     });
 
     afterAll(() => {
-        FileUtil.deleteDirAndContent(outputDir + "scoper/gen/");
+        FileUtil.deleteDirAndContent(outputDir + "scoper/");
         FileUtil.deleteDirAndContent(outputDir + "scoper/");
         FileUtil.deleteDirAndContent(outputDir);
     });
@@ -52,9 +52,9 @@ describe("Checking the scoper generator", () => {
             expect(scopeDef).not.toBeUndefined();
             // a change to make git commit this file again
             generator.language = language;
-            generator.outputfolder = outputDir;
+            generator.outputFolder = outputDir;
             generator.generate(scopeDef!);
-            const outputFile = outputDir + "scoper/gen/ScoperModelScoper.ts";
+            const outputFile = outputDir + "scoper/ScoperModelScoper.ts";
             const isPresent: boolean = FileUtil.exists(outputFile);
             expect(isPresent).toBe(true);
             if (isPresent) {

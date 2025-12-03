@@ -11,7 +11,7 @@ import {
     DemoPlusExpression,
     DemoDivideExpression,
     DemoExpression,
-} from "../freon/language/gen/index.js";
+} from "../freon/language/index.js";
 
 export function makeLiteralExp(incoming: any): DemoExpression | null {
     let mine: DemoExpression | null;

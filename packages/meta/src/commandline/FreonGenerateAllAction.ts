@@ -19,7 +19,7 @@ import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator.js";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator.js";
 import { TyperDef } from "../typerdef/metalanguage/index.js";
 import { FreTyperMerger } from "../typerdef/parser/index.js";
-import { FileWatcher, notNullOrUndefined } from '../utils/file-utils/index.js';
+import { FileWatcher, notNullOrUndefined } from "../utils/file-utils/index.js";
 import { Imports } from "../utils/on-lang/index.js";
 import { LOG2USER } from "../utils/basic-dependencies/index.js";
 import { DiagramGenerator } from "../diagramgen/DiagramGenerator.js";
@@ -140,8 +140,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 typer = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
             }
             this.typerGenerator.language = this.language;
-            this.typerGenerator.outputfolder = this.outputFolder;
-            this.typerGenerator.customsfolder = this.customsFolder;
+            this.typerGenerator.outputFolder = this.outputFolder;
+            this.typerGenerator.customsFolder = this.customsFolder;
             this.typerGenerator.generate(typer);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -166,8 +166,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         }
         try {
             this.interpreterGenerator.language = this.language;
-            this.interpreterGenerator.outputfolder = this.outputFolder;
-            this.interpreterGenerator.customsfolder = this.customsFolder;
+            this.interpreterGenerator.outputFolder = this.outputFolder;
+            this.interpreterGenerator.customsFolder = this.customsFolder;
             this.interpreterGenerator.generate(interpreterDef);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -188,8 +188,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 scoper = new ScoperParser(this.language).parseMulti(this.scopeFiles);
             }
             this.scoperGenerator.language = this.language;
-            this.scoperGenerator.outputfolder = this.outputFolder;
-            this.scoperGenerator.customsfolder = this.customsFolder;
+            this.scoperGenerator.outputFolder = this.outputFolder;
+            this.scoperGenerator.customsFolder = this.customsFolder;
             this.scoperGenerator.generate(scoper);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -210,8 +210,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 validator = new ValidatorParser(this.language).parseMulti(this.validFiles);
             }
             this.validatorGenerator.language = this.language;
-            this.validatorGenerator.outputfolder = this.outputFolder;
-            this.validatorGenerator.customsfolder = this.customsFolder;
+            this.validatorGenerator.outputFolder = this.outputFolder;
+            this.validatorGenerator.customsFolder = this.customsFolder;
             this.validatorGenerator.generate(validator);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -267,8 +267,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             throw new Error("Language could not be parsed, exiting.");
         }
         Imports.initialize(this.language)
-        this.languageGenerator.outputfolder = this.outputFolder;
-        this.languageGenerator.customsfolder = this.customsFolder;
+        this.languageGenerator.outputFolder = this.outputFolder;
+        this.languageGenerator.customsFolder = this.customsFolder;
         this.languageGenerator.generate(this.language!);
     };
 
@@ -276,7 +276,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         if (this.language !== undefined && this.language !== null) {
             // generate the diagrams
             LOG2USER.info("Generating language diagrams");
-            this.diagramGenerator.outputfolder = this.outputFolder;
+            this.diagramGenerator.outputFolder = this.outputFolder;
             this.diagramGenerator.language = this.language;
             this.diagramGenerator.fileNames = this.languageFiles;
             this.diagramGenerator.generate();

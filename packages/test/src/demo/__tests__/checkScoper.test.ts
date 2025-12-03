@@ -1,10 +1,10 @@
-import { DemoEnvironment } from "../freon/config/gen/DemoEnvironment.js";
-import { DemoModel, Demo } from '../freon/language/gen';
+import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
+import { DemoModel, Demo } from '../freon/language/index.js';
 import { DemoModelCreator } from "./DemoModelCreator.js";
-import { describe, test, expect, beforeEach } from "vitest";
+import { describe, test, expect } from "vitest";
 import { FreCompositeScoper } from '@freon4dsl/core';
 import { isInScope, getVisibleNames } from '../../utils/HelperFunctions.js';
-import { initializeScoperDef } from '../scoper/gen';
+
 
 describe("testing Scoper", () => {
     describe("Scoper.getVisibleNodes from DemoModel Instance", () => {

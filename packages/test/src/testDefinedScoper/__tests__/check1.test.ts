@@ -1,10 +1,10 @@
-import { DSmodel } from "../freon/language/gen";
-import { SimpleModelCreator } from "./ModelCreator";
-import { DSmodelEnvironment } from "../freon/config/gen/DSmodelEnvironment";
+import { DSmodel } from "../freon/language/index.js";
+import { SimpleModelCreator } from "./ModelCreator.js";
+import { DSmodelEnvironment } from "../freon/config/DSmodelEnvironment.js";
 import { describe, test, expect } from "vitest";
-import { getVisibleNames } from '../../utils/HelperFunctions';
+import { getVisibleNames } from '../../utils/HelperFunctions.js';
 import { AST, FreNodeReference } from '@freon4dsl/core';
-import { DSref, DSunit } from '../../testDefaultScoper/freon/language/gen';
+import { DSref, DSunit } from '../../testDefaultScoper/freon/language/index.js';
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";

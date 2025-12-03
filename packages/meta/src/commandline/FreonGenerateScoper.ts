@@ -28,8 +28,8 @@ export class FreonGenerateScoper extends FreonGeneratePartAction {
             return;
         }
         this.scoperGenerator.language = this.language;
-        this.scoperGenerator.outputfolder = this.outputFolder;
-        this.scoperGenerator.customsfolder = this.customsFolder;
+        this.scoperGenerator.outputFolder = this.outputFolder;
+        this.scoperGenerator.customsFolder = this.customsFolder;
         try {
             if (this.scopeFiles.length > 0) {
                 const scoper: ScopeDef | undefined = new ScoperParser(this.language).parseMulti(this.scopeFiles);

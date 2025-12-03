@@ -11,9 +11,9 @@ import {
     FreNodeBaseImpl,
     FreModelUnit,
 } from "../../../ast/index.js";
-import { UndoPart } from "./UndoPart";
+import { UndoPart } from "./UndoPart.js";
 import { FreUtils } from "../../../util/index.js";
-import { FreLogger } from "../../../logging";
+import { FreLogger } from "../../../logging/index.js";
 
 const LOGGER = new FreLogger("UndoUnit");
 

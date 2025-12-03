@@ -45,7 +45,7 @@ export class InterpreterBaseTemplate {
         return `// TEMPLATE: InterpreterBaseTemplate.interpreterClass(...)
         // Generated once, will NEVER be overwritten.
         ${imports.makeImports(language)}
-        import { ${baseName} } from "${relativePath}${INTERPRETER_FOLDER}/gen/${baseName}.js";
+        import { ${baseName} } from "${relativePath}/${INTERPRETER_FOLDER}/${baseName}.js";
 
         let main: IMainInterpreter;
 
@@ -68,7 +68,7 @@ export class InterpreterBaseTemplate {
         return `
         // TEMPLATE: InterpreterBaseTemplate.interpreterInit(...)
         import { type IMainInterpreter } from "@freon4dsl/core";
-        import { ${interpreter} } from "${relativePath}${customsFolder}/${interpreter}.js";
+        import { ${interpreter} } from "${relativePath}/${customsFolder}/${interpreter}.js";
 
         /**
          * The class that registers all interpreter function with the main interpreter.

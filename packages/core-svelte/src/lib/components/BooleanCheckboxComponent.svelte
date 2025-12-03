@@ -2,7 +2,7 @@
     /**
      * This component shows a boolean value as checkbox.
      */
-    import { BooleanControlBox, FreLanguage, isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
+    import { type BooleanControlBox, FreLanguage, isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
     import { componentId } from '../index.js';
     import { onMount } from 'svelte';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';

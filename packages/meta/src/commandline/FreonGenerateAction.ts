@@ -11,7 +11,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
     private outputFolderArg: CommandLineStringParameter;
     private customsFolderArg: CommandLineStringParameter;
     protected outputFolder: string = "";
-    protected customsFolder: string = "./src/custom/";
+    protected customsFolder: string = "./src/custom";
 
     protected defFolder: CommandLineStringParameter;
     protected languageFiles: string[] = [];
@@ -25,7 +25,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
         super(options);
         this.defFolder = this.defineStringParameter({
             argumentName: "DEFINITIONS_DIR",
-            defaultValue: "defs",
+            defaultValue: "src/defs",
             parameterLongName: "--definitions",
             parameterShortName: "-d",
             description: "Folder where your language definition files can be found",
@@ -40,7 +40,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
         });
         this.customsFolderArg = this.defineStringParameter({
             argumentName: "CUSTOM_DIR",
-            defaultValue: "../custom/",
+            defaultValue: "../custom",
             parameterLongName: "--custom",
             parameterShortName: "-c",
             description: "The directory where the custom code is located - relative to OUTPUT_DIR",
@@ -51,13 +51,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
     protected onExecute(): Promise<void> {
         const self = this;
         self.outputFolder = this.outputFolderArg.value ? this.outputFolderArg.value : "";
-        if (self.outputFolder.charAt(self.outputFolder.length - 1) !== "/") {
-            self.outputFolder += "/";
-        }
         self.customsFolder = this.customsFolderArg.value ? this.customsFolderArg.value : "";
-        if (self.customsFolder.charAt(self.customsFolder.length - 1) !== "/") {
-            self.customsFolder += "/";
-        }
         // @ts-ignore
         // error TS6133: 'resolve' is declared but its value is never read.
         // error TS6133: 'reject' is declared but its value is never read.

@@ -1,6 +1,6 @@
 import {
     Names,
-    VALIDATOR_GEN_FOLDER,
+    VALIDATOR_FOLDER,
     Imports
 } from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage } from "../../metalanguage/index.js";
@@ -20,7 +20,7 @@ export class ConfigurationTemplate {
             import { ${Names.customTyper(language)} } from "./${Names.customTyper(language)}.js";
             import { ${Names.customValidator(language)} } from "./${Names.customValidator(language)}.js";
             import { ${Names.customStdlib(language)} } from "./${Names.customStdlib(language)}.js";
-            import { type ${workerName} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/index.js";
+            import { type ${workerName} } from "${relativePath}/${VALIDATOR_FOLDER}/index.js";
 
             /**
              * Class ${configurationName} is the place where you can add all your customizations.

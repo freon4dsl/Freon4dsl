@@ -1,5 +1,5 @@
 import { FreNodeReference, FreError, AST, FreNode, isNullOrUndefined } from "@freon4dsl/core";
-import { DemoEnvironment } from "../freon/config/gen/DemoEnvironment.js";
+import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import {
     DemoModel,
     DemoAttributeType,
@@ -11,8 +11,8 @@ import {
     DemoFunction,
     DemoVariable,
     Demo,
-} from "../freon/language/gen/index.js";
-import { DemoValidator } from "../freon/validator/gen/index.js";
+} from "../freon/language/index.js";
+import { DemoValidator } from "../freon/validator/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.js";
 import { describe, test, expect, beforeEach } from "vitest";

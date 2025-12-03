@@ -8,7 +8,7 @@ import {
     PlusExpression,
 } from "./reference-change-model/internal.js";
 import { AST } from "../../change-manager/index.js";
-import { FreNodeReference } from "../../ast"
+import { FreNodeReference } from "../../ast/index.js"
 
 export class ModelCreator {
 

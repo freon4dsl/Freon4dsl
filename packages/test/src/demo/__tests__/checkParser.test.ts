@@ -1,7 +1,7 @@
 import { AST } from "@freon4dsl/core";
 import { DemoModelCreator } from "./DemoModelCreator.js";
-import { DemoEnvironment } from "../freon/config/gen/DemoEnvironment.js";
-import { Demo, DemoModel } from "../freon/language/gen/index.js";
+import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
+import { Demo, DemoModel } from "../freon/language/index.js";
 import { FileHandler } from "../../utils/FileHandler.js";
 import { describe, test, expect, beforeEach } from "vitest";
 

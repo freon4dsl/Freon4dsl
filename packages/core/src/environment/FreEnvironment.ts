@@ -6,7 +6,7 @@ import type { FreCompositeTyper } from "../typer/index.js";
 import type { FreWriter } from "../writer/index.js";
 import type { FreReader } from "../reader/index.js";
 import type { FreModel } from "../ast/index.js";
-import type { FreStdlib } from '../stdlib';
+import type { FreStdlib } from '../stdlib/index.js';
 
 export type FreEnvironment = {
     /**

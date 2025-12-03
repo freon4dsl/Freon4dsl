@@ -1,6 +1,6 @@
 import { AST, FreModelSerializer, FreError, FreModelUnit, ast2string } from "@freon4dsl/core";
-import { XXunit, XX } from "../freon/language/gen/index.js";
-import { XXEnvironment } from "../freon/config/gen/XXEnvironment.js";
+import { XXunit, XX } from "../freon/language/index.js";
+import { XXEnvironment } from "../freon/config/XXEnvironment.js";
 import { FileHandler } from "../../utils/FileHandler.js";
 import { describe, test, expect, beforeEach } from "vitest";
 

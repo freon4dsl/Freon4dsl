@@ -2,7 +2,7 @@ import {
     type Box,
     type FreNamedNode,
     type FreNode, HorizontalListBox,
-    LabelBox, ListBox, ListDirection, TableBox, TableBoxColumnOriented,
+    LabelBox, type ListBox, ListDirection, type TableBox, TableBoxColumnOriented,
     TableBoxRowOriented,
     TableCellBox,
     TableDirection,

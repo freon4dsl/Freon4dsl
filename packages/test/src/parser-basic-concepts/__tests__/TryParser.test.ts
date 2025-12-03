@@ -1,7 +1,7 @@
 import { AST, FreUtils } from "@freon4dsl/core";
-import { FileHandler } from "../../utils/FileHandler";
-import { TestConceptsModelEnvironment } from "../freon/config/gen/TestConceptsModelEnvironment";
-import { ExpressionTest, TestConceptsModel } from "../freon/language/gen";
+import { FileHandler } from "../../utils/FileHandler.js";
+import { TestConceptsModelEnvironment } from "../freon/config/TestConceptsModelEnvironment.js";
+import { ExpressionTest, TestConceptsModel } from "../freon/language/index.js";
 import { describe, it, test, expect, beforeEach } from "vitest";
 
 describe("Parser concepts of type", () => {

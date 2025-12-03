@@ -1,8 +1,8 @@
 import { AST, FreModelUnit, FreNode, FreSearcher } from "@freon4dsl/core";
-import { AssociationEnd, Attribute, OctopusModel, UmlPart } from "../freon/language/gen";
-import { OctopusModelEnvironment } from "../freon/config/gen/OctopusModelEnvironment";
-import { FileHandler } from "../../utils/FileHandler";
-import { describe, it, test, expect } from "vitest";
+import { OctopusModel } from "../freon/language/index.js";
+import { OctopusModelEnvironment } from "../freon/config/OctopusModelEnvironment.js";
+import { FileHandler } from "../../utils/FileHandler.js";
+import { describe, test, expect } from "vitest";
 
 const writer = OctopusModelEnvironment.getInstance().writer;
 const reader = OctopusModelEnvironment.getInstance().reader;

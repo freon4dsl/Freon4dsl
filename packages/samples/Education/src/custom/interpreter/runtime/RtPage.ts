@@ -1,5 +1,5 @@
 import { RtBoolean, RtObject } from "@freon4dsl/core";
-import { Page } from "../../../freon/language/gen/index.js";
+import { Page } from "../../../freon/language/index.js";
 
 export class RtPage extends RtObject {
     readonly _type: string = "RtPage";
