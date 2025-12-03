@@ -47,6 +47,7 @@ Let’s build something great together!
 
 ## Releases
 
+- **November, 2025: Version 2.0.0 released**
 - **August 1, 2025: Version 2.0.0-beta.2 released**
 - **May 13, 2025: Version 1.1.0-beta.3 released**
   - Updated to Svelte 5 (was Svelte 4).
@@ -58,7 +59,8 @@ Let’s build something great together!
 
 ## What is Freon?
 
-Freon is a **TypeScript/JavaScript framework** for creating and implementing projectional editors for DSLs that run natively in the browser.  
+Freon is a **TypeScript/JavaScript framework** for creating and implementing domain
+specific languages with projectional editors for DSLs that run natively in the browser.  
 Beyond the core framework, Freon includes generators for many parts of a DSL’s working environment.
 
 ---
@@ -143,10 +145,9 @@ The codebase is organized into multiple packages:
   - `typerdef` → generates code from `*.type` files (typing rules)
   - `validatordef` → generates code from `*.valid` files (validators)
 - **packages/samples** – example DSLs
-- **packages/server** – minimal demo model server
-- **packages/weblib-*`** – shared web libraries
+- **packages/server** – minimal development model server
+- **packages/weblib-flowbite`** – shared web libraries for demo web app
 - **packages/webapp-flowbite** – current demo web app using [Flowbite-Svelte](https://flowbite-svelte.com/)
-- **packages/webapp-smui** – older demo web app using [Svelte Material UI (SMUI)](https://sveltematerialui.com/)
 - **developer-documentation** – technical information for contributors and maintainers
   - Explains architecture, build setup, generators, and API internals
 

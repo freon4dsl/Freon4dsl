@@ -9,13 +9,14 @@ import {
     type FreInterpreter,
     FreCompositeScoper,
     FreLanguageEnvironment,
-    FreProjectionHandler,
-} from "@freon4dsl/core";
+    FreProjectionHandler, type FreStdlib
+} from '@freon4dsl/core';
 import { SvelteTestActions, initializeEditorDef, initializeProjections } from "../../editor/gen/index.js";
 import { initializeScoperDef } from "../../scoper/gen/index.js";
 import { initializeTypers } from "../../typer/gen/index.js";
 import { SvelteTestValidator } from "../../validator/gen/index.js";
 import { SvelteTest, SvelteTestUnit, initializeLanguage } from "../../language/gen/index.js";
+
 
 /**
  * Class SvelteTestEnvironment provides the link between all parts of the language environment.
@@ -32,7 +33,6 @@ export class SvelteTestEnvironment implements FreEnvironment {
      */
     public static getInstance(): FreEnvironment {
         if (this.environment === undefined || this.environment === null) {
-            // @ts-ignore
             this.environment = new SvelteTestEnvironment();
             FreLanguageEnvironment.setInstance(this.environment);
         }
@@ -58,6 +58,7 @@ export class SvelteTestEnvironment implements FreEnvironment {
 
     writer!: FreWriter;
     reader!: FreReader;
+    stdlib!: FreStdlib;
 
     /**
      * Returns a new model with name 'modelName'.
@@ -78,6 +79,7 @@ export class SvelteTestEnvironment implements FreEnvironment {
     // writer: FreWriter = new SvelteTestModelUnitWriter();
     // reader: FreReader = new SvelteTestModelUnitReader();
     // interpreter: FreInterpreter = new MainSvelteTestInterpreter();
+    // stdlib: FreStdlib = SvelteTestStdlib.getInstance();
     projectionHandler: FreProjectionHandler;
     languageName: string = "SvelteTest";
     fileExtensions: Map<string, string> = new Map([["SvelteTestUnit", "sve"]]);

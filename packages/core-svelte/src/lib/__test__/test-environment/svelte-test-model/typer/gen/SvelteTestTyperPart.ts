@@ -2,23 +2,22 @@
 import {type FreNode, type FreType, type FreTyper, FreCompositeTyper } from "@freon4dsl/core";
 
 export class SvelteTestTyperPart implements FreTyper {
-    mainTyper!: FreCompositeTyper;
+    mainTyper!: FreCompositeTyper; //  Setting this property to an instance of SvelteTestTyper is ensured by 'initializeTypers()'
 
     /**
-     * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
-     * @param modelelement
+     * Returns true if 'node' is marked as 'type' in the Typer definition.
+     * @param node
      */
-    // @ts-ignore
-    public isType(modelelement: FreNode): boolean | null {
-        return false;
+    public isType(node: FreNode): boolean | undefined {
+        return undefined;
     }
 
     /**
-     * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
-     * @param modelelement
+     * Returns the type of 'node' according to the type rules in the Typer Definition.
+     * @param node
      */
-    public inferType(modelelement: FreNode): FreType | null {
-        return null;
+    public inferType(node: FreNode): FreType | undefined {
+        return undefined;
     }
 
     /**
@@ -27,8 +26,8 @@ export class SvelteTestTyperPart implements FreTyper {
      * @param type1
      * @param type2
      */
-    public equals(type1: FreType, type2: FreType): boolean | null {
-        return false;
+    public equals(type1: FreType, type2: FreType): boolean | undefined {
+        return undefined;
     }
 
     /**
@@ -36,32 +35,32 @@ export class SvelteTestTyperPart implements FreTyper {
      * @param type1
      * @param type2
      */
-    public conforms(type1: FreType, type2: FreType): boolean | null {
-        return false;
+    public conforms(type1: FreType, type2: FreType): boolean | undefined {
+        return undefined;
     }
 
     /**
-     * Returns true if all types in typelist1 conform to the types in typelist2, in the given order.
+     * Returns true if all types in typelist1 conform to the types in typelist2, pairwise, in the given order.
      * @param typelist1
      * @param typelist2
      */
-    public conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | null {
-        return false;
+    public conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | undefined {
+        return undefined;
     }
 
     /**
      * Returns the common super type of all types in typelist
      * @param typelist
      */
-    public commonSuper(typelist: FreType[]): FreType | null {
-        return null;
+    public commonSuper(typelist: FreType[]): FreType | undefined {
+        return undefined;
     }
 
     /**
      * Returns all super types as defined in the typer definition.
      * @param type
      */
-    public getSuperTypes(type: FreType): FreType[] | null {
-        return [];
+    public getSuperTypes(type: FreType): FreType[] | undefined {
+        return undefined;
     }
 }

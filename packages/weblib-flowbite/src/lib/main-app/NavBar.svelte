@@ -53,25 +53,25 @@
 
 		<!--  Documentation button and tooltip      -->
 		<Button tabindex={-1} id="docu-button" class="{buttonCls} {colorCls} " tag="View Documentation" href="https://www.freon4dsl.dev/" target="_blank">
-			<AnnotationOutline class="{iconCls}" />
+			<AnnotationOutline class={iconCls} />
 		</Button>
 
 		<!--  About button and tooltip      -->
 		<Button tabindex={-1} id="about-button" class="{buttonCls} {colorCls} " name="About" onclick={() => (dialogs.aboutDialogVisible = true)}>
-			<QuestionCircleOutline class="{iconCls}" />
+			<QuestionCircleOutline class={iconCls} />
 		</Button>
 
 <!--		&lt;!&ndash;  Model panel button and tooltip      &ndash;&gt;-->
 <!--		<Button class="{buttonCls} {colorCls} " onclick={() => (drawerHidden.value = false)}>-->
-<!--			<ChevronRightOutline class="{iconCls}" />-->
+<!--			<ChevronRightOutline class={iconCls} />-->
 <!--		</Button>-->
-<!--		<Tooltip placement="bottom" class="{tooltipClass}">Show Model Info</Tooltip>-->
+<!--		<Tooltip placement="bottom" class={tooltipClass}>Show Model Info</Tooltip>-->
 	</ButtonGroup>
 	<!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
-	<Tooltip tabindex={-1} triggeredBy="#dark-mode-button" placement="bottom" class="{tooltipClass}">Dark/Light Mode</Tooltip>
-	<Tooltip tabindex={-1} triggeredBy="#github-button" placement="bottom" class="{tooltipClass}">View on GitHub</Tooltip>
-	<Tooltip tabindex={-1} triggeredBy="#docu-button" placement="bottom" class="{tooltipClass}">Go to Documentation</Tooltip>
-	<Tooltip tabindex={-1} triggeredBy="#about-button" placement="bottom" class="{tooltipClass}">About</Tooltip>
+	<Tooltip tabindex={-1} triggeredBy="#dark-mode-button" placement="bottom" class={tooltipClass}>Dark/Light Mode</Tooltip>
+	<Tooltip tabindex={-1} triggeredBy="#github-button" placement="bottom" class={tooltipClass}>View on GitHub</Tooltip>
+	<Tooltip tabindex={-1} triggeredBy="#docu-button" placement="bottom" class={tooltipClass}>Go to Documentation</Tooltip>
+	<Tooltip tabindex={-1} triggeredBy="#about-button" placement="bottom" class={tooltipClass}>About</Tooltip>
 </Navbar>
 <!--  end::navbar   -->
 </div>

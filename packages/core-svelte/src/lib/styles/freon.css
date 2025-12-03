@@ -34,6 +34,22 @@
     min-height: 0;       /* avoids flex/grid ancestors forcing scrollbars */
     min-width: 0;        /* same for horizontal cases */
     flex: 1 1 auto;      /* if it's inside a flex layout */
+
+    /* Base tokens (non-color) */
+    --freon-radio-size: 18px;
+    --freon-radio-dot-size: 10px;
+    --freon-radio-font-size: 0.95rem;
+    --freon-radio-gap-inline: 0.5rem;
+    --freon-radio-gap-block: 1rem;
+}
+/* Defaults for shared color tokens used by all radio groups. Overwritten in 'freon-light.css' etc. */
+.freon-radio-group {
+    --freon-radio-label-color: #1f1f1f;
+    --freon-radio-border-color: #5f6368;
+    --freon-radio-dot-color: #1f1f1f;
+    --freon-radio-hover-background-color: transparent;
+    --freon-radio-focus-ring-color: rgba(26, 115, 232, 0.3);
+    --freon-radio-shadow-color: rgba(0, 0, 0, 0.2);
 }
 .gutter {
     /*border: 1px solid;*/
@@ -108,60 +124,218 @@
     /*width: 100%;*/
 }
 
-.limited-checkbox-component-group {
-    margin: 2px;
-    padding: 4px 6px 4px 6px;
-    border: none;
-    /* the following three variables determine the manner in which the focus-ring is shown */
-    --md-focus-ring-duration: 0s; /* disabled animation */
-    /*--md-focus-ring-active-width: 0px;*/
-    /*--md-focus-ring-width: 0px;*/
-}
-.limited-checkbox-component-group:hover,
-.limited-checkbox-component-group:focus-within {
-    border-radius: 0.1em;
-}
-.limited-checkbox-component-label {
-    padding: 2px;
-}
-.limited-checkbox-component-single {
-    padding-top: 0.2em;
-    padding-bottom: 0.2em;
-    display: flex;
-}
+/*******************************************************
+ *  LimitedCheckboxComponent
+ *******************************************************/
+/* Default: horizontal layout */
+ .limited-checkbox-component-group {
+     display: flex;
+     flex-wrap: wrap;     /* allows wrapping on small screens */
+     gap: 0.5rem 1rem;    /* row-gap and column-gap */
+     margin: 2px;
+     padding: 4px 6px 4px 6px;
+     border: none;
+ }
+
+/* Vertical layout modifier */
 .limited-checkbox-component-vertical {
-    display: inline-block;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
 }
 
-.limited-radio-component-group {
-    margin: 2px;
-    padding: 4px 6px 4px 6px;
-    border: none;
-    /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
-    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
-    /* the following three variables determine the manner in which the focus-ring is shown */
-    --md-focus-ring-duration: 0.2s; /* disabled animation */
-    --md-focus-ring-active-width: 1px;
-    --md-focus-ring-width: 0px;
-}
-
-.limited-radio-component-group:hover,
-.limited-radio-component-group:focus-within {
-    border-radius: 0.1em;
-}
-.limited-radio-component-single {
-    padding-top: 0.2em;
-    padding-bottom: 0.2em;
+/* Wrapper: align checkbox + label */
+.limited-checkbox-component-single {
     display: flex;
-}
-.limited-radio-component-vertical {
-    display: inline-block;
-}
-.limited-radio-component-label {
-    margin-left: 4px;
-    margin-top: 2px;
+    align-items: center;
+    gap: 0.5rem;
 }
 
+/* Base checkbox styles */
+.limited-checkbox-component-input {
+    /* Reset native checkbox */
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+    cursor: pointer;
+
+    /* Size & shape */
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+
+    /* Border & background */
+    border: 2px solid var(--limited-checkbox-border-color);
+    background-color: var(--limited-checkbox-background-color);
+
+    /* Position for pseudo-elements */
+    position: relative;
+
+    /* Smooth transitions */
+    transition:
+            border-color 0.15s ease-out,
+            background-color 0.15s ease-out,
+            box-shadow 0.15s ease-out;
+}
+
+/* Checked state – filled box */
+.limited-checkbox-component-input:checked {
+    border-color: var(--limited-checkbox-checked-border-color);
+    background-color: var(--limited-checkbox-checked-background-color);
+}
+
+/* Checkmark (the tick) */
+.limited-checkbox-component-input:checked::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: -1px;
+    width: 6px;
+    height: 10px;
+    border: solid var(--limited-checkbox-checkmark-color);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Focus ring (keyboard focus + hover) */
+.limited-checkbox-component-input:focus-visible,
+.limited-checkbox-component-input:hover {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--limited-checkbox-focus-ring-color);
+}
+
+/* Disabled state */
+.limited-checkbox-component-input:disabled {
+    cursor: default;
+    border-color: var(--limited-checkbox-disabled-border-color);
+    background-color: var(--limited-checkbox-disabled-background-color);
+}
+
+.limited-checkbox-component-input:disabled:checked {
+    background-color: var(--limited-checkbox-disabled-checked-background-color);
+    border-color: var(--limited-checkbox-disabled-checked-border-color);
+}
+
+/* Label styling */
+.limited-checkbox-component-label {
+    font-size: 0.875rem;
+    color: var(--limited-checkbox-label-color);
+    user-select: none;
+}
+
+/*******************************************************
+ *  Shared Structure of Radio Groups
+ *******************************************************/
+
+/* Group */
+.freon-radio-group {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--freon-radio-gap-inline) var(--freon-radio-gap-block);
+    align-items: center;
+    padding: 4px 6px;
+    margin: 2px;
+    border: none;
+    box-shadow: none;
+    transition: box-shadow 0.2s ease, border-radius 0.2s ease;
+}
+
+/* Vertical variant */
+.freon-radio-group-vertical {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.freon-radio-item {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+/* Label + text */
+.freon-radio-label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--freon-radio-font-size);
+    cursor: pointer;
+    user-select: none;
+    color: var(--freon-radio-label-color);
+}
+
+/*******************************************************
+ *  LimitedRadioComponent
+ *******************************************************/
+.limited-radio-component-group {
+    --freon-radio-label-color: var(--limited-radio-label-color);
+    --freon-radio-border-color: var(--limited-radio-unchecked-border-color);
+    --freon-radio-dot-color: var(--limited-radio-dot-color);
+    --freon-radio-hover-background-color: var(--limited-radio-hover-background-color);
+    --freon-radio-focus-ring-color: var(--limited-radio-focus-ring-color);
+    --freon-radio-shadow-color: var(--limited-radio-shadow-color);
+}
+/* Hide native input; use label pseudo-elements to draw circle/dot */
+.limited-radio-component-single input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Outer circle */
+.limited-radio-component-label::before {
+    content: "";
+    width: var(--freon-radio-size);
+    height: var(--freon-radio-size);
+    border-radius: 50%;
+    border: 2px solid var(--freon-radio-border-color);
+    background-color: transparent;
+    box-sizing: border-box;
+    display: inline-block;
+    z-index: 1;
+    transition:
+            border-color 0.18s ease-out,
+            background-color 0.18s ease-out,
+            box-shadow 0.18s ease-out;
+}
+
+/* Inner dot */
+.limited-radio-component-label::after {
+    content: "";
+    position: absolute;
+    width: var(--freon-radio-dot-size);
+    height: var(--freon-radio-dot-size);
+    border-radius: 50%;
+    background: var(--freon-radio-dot-color);
+    left: calc((var(--freon-radio-size) - var(--freon-radio-dot-size)) / 2);
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    transition: transform 0.18s ease-out;
+    z-index: 2;
+}
+
+/* Show dot when checked */
+.limited-radio-component-label:has(> .limited-radio-component-input:checked)::after {
+    transform: translateY(-50%) scale(1);
+}
+
+/* Hover halo */
+.limited-radio-component-single:hover .limited-radio-component-label::before,
+.limited-radio-component-single:focus-within .limited-radio-component-label::before {
+    background-color: var(--freon-radio-hover-background-color);
+}
+
+/* Focus */
+.limited-radio-component-single input:focus-visible
++ .limited-radio-component-label::before {
+    box-shadow: 0 0 0 3px var(--freon-radio-focus-ring-color);
+}
+
+/*******************************************************
+ *  ContextMenuComponent
+ *******************************************************/
 .contextmenu {
     border-width: 1px;
     border-style: solid;
@@ -221,72 +395,191 @@
     left: 0px;
 }
 
-/* Button Component */
-
+/*******************************************************
+ *  ButtonComponent
+ *******************************************************/
 .button-component {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 0.875rem; /* Tailwind's text-sm */
-    font-weight: 500; /* Tailwind's font-medium */
-    padding: 10px 20px; /* Approximate px-5 py-2.5 */
-    border-radius: 0.5rem; /* Tailwind's rounded-lg */
-    outline: none;
-    transition: background-color 0.2s ease-in-out;
+    font-size: 0.8rem;
+    font-weight: 500;       /* Tailwind's font-medium */
+    padding: 6px 12px;      /* Compact and aligned with common UI kits */
+    border-radius: 0.5rem;  /* Tailwind's rounded-lg */
+
+    transition:
+            box-shadow 0.2s ease,
+            background-color 0.2s ease,
+            border-color 0.2s ease;
 }
 
-/* Hover effects */
-.button-component:hover {
-    /*background-color: #1e40af; !* Tailwind's hover:bg-primary-800 *!*/
+/* Focus ring */
+.button-component:focus-visible {
+    outline-offset: 2px;
 }
 
 /* Focus-within styles */
 .button-component:focus-within {
-    outline: none;
-    /*box-shadow: 0 0 0 4px #93c5fd; !* Tailwind's focus-within:ring-4 and ring-primary-300 *!*/
+    outline-offset: 2px;
 }
 
-/* Boolean Checkbox */
+/*******************************************************
+ *  BooleanCheckboxComponent
+ *******************************************************/
 .boolean-checkbox-component {
-    padding: 0px;
-    /* the following three variables determine the manner in which the focus-ring is shown */
-    --md-focus-ring-duration: 0s; /* disabled animation */
-    --md-focus-ring-active-width: 0px;
-    --md-focus-ring-width: 0px;
+    /* Reset native checkbox */
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+    cursor: pointer;
+
+    /* Size & shape */
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+
+    /* Border & background */
+    border: 2px solid var(--limited-checkbox-border-color);
+    background-color: var(--limited-checkbox-background-color);
+
+    /* Position for pseudo-elements */
+    position: relative;
+
+    /* Smooth transitions */
+    transition:
+            border-color 0.15s ease-out,
+            background-color 0.15s ease-out,
+            box-shadow 0.15s ease-out;
 }
+
+/* Checked state – filled box */
+.boolean-checkbox-component:checked {
+    border-color: var(--limited-checkbox-checked-border-color);
+    background-color: var(--limited-checkbox-checked-background-color);
+}
+
+/* Checkmark (the tick) */
+.boolean-checkbox-component:checked::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: -1px;
+    width: 6px;
+    height: 10px;
+    border: solid var(--limited-checkbox-checkmark-color);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Focus ring (keyboard focus + hover) */
+.boolean-checkbox-component:focus-visible,
+.boolean-checkbox-component:hover {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--limited-checkbox-focus-ring-color);
+}
+
+/* Disabled state */
+.boolean-checkbox-component:disabled {
+    cursor: default;
+    border-color: var(--limited-checkbox-disabled-border-color);
+    background-color: var(--limited-checkbox-disabled-background-color);
+}
+
+.boolean-checkbox-component:disabled:checked {
+    background-color: var(--limited-checkbox-disabled-checked-background-color);
+    border-color: var(--limited-checkbox-disabled-checked-border-color);
+}
+
 .boolean-checkbox-component:hover,
 .boolean-checkbox-component:focus-within {
     border-radius: 0.1em;
 }
 
+/*******************************************************
+ *  BooleanRadioComponent
+ *******************************************************/
+/* Map BooleanRadio colors into the shared tokens */
 .boolean-radio-component-group {
-    /*margin: 2px;*/
-    padding: 2px 6px 2px 6px;
-    border: none;
-    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
-    /* the following three variables determine the manner in which the focus-ring is shown */
-    /*--md-focus-ring-duration: 0s; !* disabled animation *!*/
-    /*--md-focus-ring-active-width: 0px;*/
-    /*--md-focus-ring-width: 0px;*/
-}
-.boolean-radio-component-group:hover,
-.boolean-radio-component-group:focus-within {
-    border-radius: 0.1em;
-}
-.boolean-radio-component-single {
-    padding-top: 0.2em;
-    padding-bottom: 0.2em;
-    display: flex;
-}
-.boolean-radio-component-vertical {
-    display: inline-block;
-}
-.boolean-radio-component-label {
-    margin-left: 4px;
-    margin-top: 2px;
+    --freon-radio-label-color: var(--boolean-radio-label-color);
+    --freon-radio-border-color: var(--boolean-radio-border-color);
+    --freon-radio-dot-color: var(--boolean-radio-color);
+    --freon-radio-hover-background-color: var(--boolean-radio-hover-ripple);
+    --freon-radio-shadow-color: var(--boolean-radio-shadow-color);
+    --freon-radio-focus-ring-color: var(--boolean-radio-focus-ring-color, rgba(26, 115, 232, 0.3));
 }
 
+/* Use base layout classes; only define circle/dot mechanics here */
+.boolean-radio-component-label input {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    padding: 0;
+
+    width: var(--freon-radio-size);
+    height: var(--freon-radio-size);
+    border-radius: 50%;
+    border: 2px solid var(--freon-radio-border-color);
+    background-color: transparent;
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+
+    transition:
+            border-color 0.18s ease-out,
+            box-shadow 0.18s ease-out,
+            background-color 0.18s ease-out;
+}
+
+/* Inner dot */
+.boolean-radio-component-label input::before {
+    content: "";
+    position: absolute;
+    inset: calc((var(--freon-radio-size) - var(--freon-radio-dot-size)) / 2);
+    border-radius: 50%;
+    background-color: var(--freon-radio-dot-color);
+    transform: scale(0);
+    transition: transform 0.18s ease-out;
+    z-index: 2;
+}
+
+/* Hover halo */
+.boolean-radio-component-label input::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    opacity: 1;
+    transform: scale(0.8);
+    transition:
+            opacity 0.18s ease-out,
+            transform 0.18s ease-out;
+    pointer-events: none;
+    z-index: 0;
+    background-color: color-mix(
+            in srgb,
+            var(--freon-radio-hover-background-color) 12%,
+            transparent
+    );
+}
+
+/* Checked */
+.boolean-radio-component-label input:checked {
+    border-color: var(--freon-radio-dot-color);
+}
+.boolean-radio-component-label input:checked::before {
+    transform: scale(1);
+}
+
+/* Focus */
+.boolean-radio-component-label input:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--freon-radio-focus-ring-color);
+}
+
+/*******************************************************
+ *  TextComponent
+ *******************************************************/
 .text-component-width {
     position: absolute;
     left: -9999px;
@@ -339,21 +632,142 @@
     field-sizing: content;  
 }
 
-.numeric-slider-component {
-    display: flex;
-    margin: 1px;
-    padding: 0px 1px 0px 1px;
-    /* the following three variables determine the manner in which the focus-ring is shown */
-    --md-focus-ring-duration: 0s; /* disabled animation */
-    --md-focus-ring-active-width: 0px;
-    --md-focus-ring-width: 0px;
+/*******************************************************
+ *  NumericSliderComponent
+ *******************************************************/
+ .numeric-slider-component {
+     max-width: 320px;
+     margin-top: 1.5rem;
+     position: relative;
+     flex: 1;
+     display: flex;
+     align-items: center;
+ }
+
+/* Base slider styling */
+.numeric-slider-input {
+    --percent: 40; /* set from TypeScript code */
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: max-content;
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
 }
 
-.numeric-slider-component:hover,
-.numeric-slider-component:focus-within {
-    border-radius: 0.1em;
+/* Remove default rectangular focus outline */
+.numeric-slider-input:focus-visible,
+.numeric-slider-input:focus {
+    outline: none;
 }
 
+/* Track (WebKit) */
+.numeric-slider-input::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 999px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: /* TOP LAYER: mask – transparent left, --numeric-slider-background-color */ linear-gradient(
+            to right,
+            transparent 0,
+            transparent calc(var(--percent) * 1%),
+            var(--numeric-slider-background-color) calc(var(--percent) * 1%),
+            var(--numeric-slider-background-color) 100%
+    ),
+        /* BOTTOM LAYER: full stable gradient --numeric-slider-low-color → --numeric-slider-high-color */ linear-gradient(
+            to right,
+            var(--numeric-slider-low-color) 0%,
+            var(--numeric-slider-high-color) 100%
+    );
+}
+
+/* Track (Firefox) */
+.numeric-slider-input::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(
+            to right,
+            transparent 0,
+            transparent calc(var(--percent) * 1%),
+            var(--numeric-slider-background-color) calc(var(--percent) * 1%),
+            var(--numeric-slider-background-color) 100%
+    ),
+    linear-gradient(
+            to right,
+            var(--numeric-slider-low-color) 0%,
+            var(--numeric-slider-high-color) 100%
+    );
+}
+
+/* Thumb (WebKit) */
+.numeric-slider-input::-webkit-slider-thumb {
+    width: var(--numeric-slider-thumb-size);
+    height: var(--numeric-slider-thumb-size);
+    border-radius: 50%;
+    background: var(--numeric-slider-thumb-background-color);
+    border: 2px solid var(--numeric-slider-thumb-border-color);
+    box-shadow: 0 0 0 2px var(--numeric-slider-thumb-shadow-color);
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: calc(var(--numeric-slider-thumb-size) / -3); /* keep it centered over the track */
+}
+
+/* Thumb (Firefox) */
+.numeric-slider-input::-moz-range-thumb {
+    width: var(--numeric-slider-thumb-size);
+    height: var(--numeric-slider-thumb-size);
+    border-radius: 50%;
+    background: var(--numeric-slider-thumb-background-color);
+    border: 2px solid var(--numeric-slider-thumb-border-color);
+    box-shadow: 0 0 0 2px var(--numeric-slider-thumb-shadow-color);
+    cursor: pointer;
+    margin-top: calc(var(--numeric-slider-thumb-size) / -3); /* keep it centered over the track */
+}
+
+/* Focus style */
+.numeric-slider-input:focus-visible::-webkit-slider-thumb,
+.numeric-slider-input:focus-visible::-moz-range-thumb {
+    box-shadow: 0 0 0 3px var(--numeric-slider-focus-ring-color);
+}
+
+.numeric-slider-tooltip {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    position: absolute;
+    bottom: var(--numeric-slider-tooltip-distance);
+    left: 0; /* JS will overwrite this with a px value */
+    transform: translateX(-50%);
+    padding: 0.15rem 0.4rem;
+    border-radius: 999px;
+    background: var(--numeric-slider-tooltip-background-color);
+    color: var(--numeric-slider-tooltip-text-color);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.numeric-slider-input:focus + .numeric-slider-tooltip,
+.numeric-slider-input:hover + .numeric-slider-tooltip {
+    opacity: 1;
+}
+
+.numeric-slider-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 4px;
+    border-style: solid;
+    border-color: var(--numeric-slider-tooltip-background-color) transparent transparent transparent;
+}
+
+/*******************************************************
+ *  DropdownComponent
+ *******************************************************/
 .dropdown-component {
     border-width: 1px;
     border-style: solid;
@@ -418,7 +832,8 @@
 
 .inner-switch-component button {
     margin: 4px 6px 4px 6px;
-    border: none;
+    border: solid 0.5px var(--inner-switch-border-color);
+    border-radius: 2px;
 }
 
 [role="switch"][aria-checked="true"] :first-child,
@@ -427,10 +842,11 @@
     display: inline-block;
 }
 
-.inner-switch-component button span {
+.inner-switch-component-label {
     user-select: none;
     pointer-events: none;
     margin: 0.25em;
+    padding: 0.1em;
 }
 
 .inner-switch-component button:hover,
@@ -475,50 +891,75 @@
     outline-width: 1px;
 }
 
+/* begin styling boolean switch component */
+/* Optional: component-level defaults */
 .switch-component {
+    /* Layout */
     margin: 2px 6px 4px 6px;
     display: inline-flex;
     width: max-content;
     align-content: baseline;
-}
-.switch-component button {
-    width: 3em;
-    height: 1.6em;
-    position: relative;
-    border: none;
+
+    --switch-border-width: 2px;
+    --switch-knob-offset: 1.25em;
 }
 
+.switch-component button {
+    width: 3em;
+    height: 1.8em;
+    position: relative;
+    padding: 0;
+    cursor: pointer;
+
+    background: var(--switch-background-off);
+    border-radius: 1.5em;
+    border: var(--switch-border-width) solid var(--switch-border-color-off);
+
+    transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+/* Knob */
 .switch-component button::before {
-    /* defines the knob */
     content: "";
     position: absolute;
     width: 1.3em;
     height: 1.3em;
-    top: 0.13em;
-    right: 1.5em;
-    transition: transform 0.3s;
+
+    /* vertical centering */
+    top: 50%;
+    transform: translate(0, -50%);
+
+    /* left padding in OFF state */
+    left: 0.15em;
+
+    background: var(--switch-knob-color);
+    border-radius: 50%;
+    transition: transform 0.3s ease;
 }
 
+/* ON state */
 .switch-component button[aria-checked="true"] {
+    background-color: var(--switch-background-on);
+
+    /* Border follows the accent in ON state */
+    border-color: var(--switch-background-on);
+
 }
 
 .switch-component button[aria-checked="true"]::before {
-    transform: translateX(1.3em);
-    transition: transform 0.3s;
+    transform: translate(var(--switch-knob-offset), -50%);
 }
 
+/* Hover / focus */
 .switch-component button:hover,
 .switch-component button:focus {
-    border-radius: 1.5em;
+    box-shadow: 2px 2px 8px var(--switch-shadow-color);
+    outline: none; /* if you manage focus elsewhere */
 }
-
-.switch-component button {
-    border-radius: 1.5em;
-}
-
-.switch-component button::before {
-    border-radius: 100%;
-}
+/* end styling boolean switch component */
 
 .table-component {
     display: inline-grid;

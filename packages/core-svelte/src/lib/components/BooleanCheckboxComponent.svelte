@@ -1,16 +1,12 @@
 <script lang="ts">
-    import { flushSync, tick } from "svelte"
-    import { CHECKBOX_LOGGER } from './ComponentLoggers.js';
-
     /**
      * This component shows a boolean value as checkbox.
      */
     import { type BooleanControlBox, FreLanguage, isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
     import { componentId } from '../index.js';
     import { onMount } from 'svelte';
-    // import '@material/web/checkbox/checkbox.js';
-    // import { MdCheckbox } from '@material/web/checkbox/checkbox.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
+    import { CHECKBOX_LOGGER } from './ComponentLoggers.js';
 
     // Props
     let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
@@ -47,7 +43,7 @@
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
         isOptional = FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.isOptional || false
-        // LOGGER.log(`EFFECT for '${box.propertyName}', property '${property?.name}' optional '${property?.isOptional} `)
+        // LOGGER.log(`EFFECT for '${box.propertyName}', property '${property?.name}' optional '${property?.isOptional}' `)
         // isOptional = (isNullOrUndefined(property) ? false : property.isOptional)        
     });
 

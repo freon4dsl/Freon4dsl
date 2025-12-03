@@ -135,10 +135,10 @@
             <PenSolid class="{iconCls} "/>
         </Button>
         <Button id="delete-model-button" {disabled} class="{buttonCls} px-3" name="Delete"  onclick={() => {dialogs.deleteModelDialogVisible = true}}>
-            <TrashBinSolid class="{iconCls}"/>
+            <TrashBinSolid class={iconCls}/>
         </Button>
         <Button id="import-unit-button" {disabled} class="{buttonCls} px-3" name="Import Unit(s)..." onclick={() => {dialogs.importDialogVisible = true}}>
-            <ArrowDownToBracketOutline class="{iconCls}"/>
+            <ArrowDownToBracketOutline class={iconCls}/>
         </Button>
     </ButtonGroup>
     <!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->

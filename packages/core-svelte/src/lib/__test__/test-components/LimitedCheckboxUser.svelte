@@ -70,7 +70,8 @@
         'limited checkbox',
         getValues,
         setValues,
-        allValues
+        allValues,
+      {horizontal: true}
     );
 </script>
 

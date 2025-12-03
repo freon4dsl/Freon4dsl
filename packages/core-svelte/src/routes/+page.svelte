@@ -76,40 +76,40 @@
     let buttonBox = new ButtonBox(new SimpleElement(), 'TEXT', 'role');
 
     // for BooleanCheckboxComponent
-    let boolVar: boolean = $state(true);
+    let boolVar: boolean | undefined = $state(true);
     let booleanBox = new BooleanControlBox(
         new SimpleElement(),
         'boolean-role',
         () => {
             return boolVar;
         },
-        (newValue: boolean) => {
+        (newValue: boolean | undefined) => {
             boolVar = newValue;
         }
     );
 
     // for BooleanRadioComponent
-    let boolVar2: boolean = $state(true);
+    let boolVar2: boolean | undefined = $state(true);
     let booleanBox2 = new BooleanControlBox(
         new SimpleElement(),
         'boolean-role',
         () => {
             return boolVar2;
         },
-        (newValue: boolean) => {
+        (newValue: boolean | undefined) => {
             boolVar2 = newValue;
         }
     );
 
     // for BooleanSwitchComponent
-    let boolVar3: boolean = $state(true);
+    let boolVar3: boolean | undefined = $state(true);
     let booleanBox3 = new BooleanControlBox(
         new SimpleElement(),
         'boolean-role',
         () => {
             return boolVar3;
         },
-        (newValue: boolean) => {
+        (newValue: boolean | undefined) => {
             boolVar3 = newValue;
         }
     );
@@ -139,14 +139,14 @@
     let elementBox: ElementBox = new ElementBox(new SimpleElement('id24'), 'element-box-role');
 
     // for InnerSwitchComponent
-    let boolVar4: boolean = $state(true);
+    let boolVar4: boolean | undefined = $state(true);
     let booleanBox4 = new BooleanControlBox(
         new SimpleElement(),
         'boolean-role',
         () => {
             return boolVar4;
         },
-        (newValue: boolean) => {
+        (newValue: boolean | undefined) => {
             boolVar4 = newValue;
         }
     );

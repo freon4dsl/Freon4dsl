@@ -269,7 +269,7 @@
         LOGGER.log(`FreonComponent visibleRect`)
         const rect = await getVisibleRect(freonRootElement);
         if (rect) {
-            LOGGER.log("visible size:", rect.width, rect.height);
+            LOGGER.log("visible size: " + rect.width + ", " + rect.height);
             return rect;
         } else {
             LOGGER.log("freonRootElement was null, skipping");
@@ -335,18 +335,6 @@
     const paneApi: PaneLike = { getVisibleRect, getScrollContainer };
     providePaneContext(paneApi);
 </script>
-
-<!-- TODO This makes us dependent on @material/... do we want that?-->
-<!-- include the material design styling -->
-<svelte:head>
-    <link
-        href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"
-        rel="stylesheet"
-    />
-    <script
-        src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"
-    ></script>
-</svelte:head>
 
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <div
