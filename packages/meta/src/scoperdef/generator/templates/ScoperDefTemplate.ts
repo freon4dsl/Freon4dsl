@@ -1,6 +1,6 @@
-import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Names, FREON_CORE, CONFIGURATION_FOLDER, LangUtil } from "../../../utils/index.js";
+import { FreMetaClassifier, FreMetaLanguage, LangUtil } from "../../../languagedef/metalanguage/index.js";
 import { ScopeDef } from "../../metalanguage/index.js";
+import { CONFIGURATION_FOLDER, Imports, Names } from '../../../utils/on-lang/index.js';
 
 export class ScoperDefTemplate {
     generateScoperDef(language: FreMetaLanguage, scoperDef: ScopeDef, relativePath: string): string {
@@ -12,8 +12,11 @@ export class ScoperDefTemplate {
                 }
             })
         })
+        const imports = new Imports(relativePath)
+        imports.core.add(Names.FreLanguage).add(Names.FreCompositeScoper)
 
-        return `import { ${Names.FreLanguage}, ${Names.FreScoperComposite} } from "${FREON_CORE}";
+        return `// TEMPLATE: ScoperDefTemplate.generateScoperDef(...)
+            ${imports.makeImports(language)}
             import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
             import { ${Names.scoper(language)} } from "./${Names.scoper(language)}.js";
 
@@ -21,7 +24,7 @@ export class ScoperDefTemplate {
              * Adds all known scopers to the main scoper.
              * @param rootScoper
              */
-            export function initializeScopers(rootScoper: ${Names.FreScoperComposite}) {
+            export function initializeScopers(rootScoper: ${Names.FreCompositeScoper}) {
                 for (const p of freonConfiguration.customScopers) {
                     rootScoper.appendScoper(p);
                 }
@@ -31,11 +34,11 @@ export class ScoperDefTemplate {
             /**
              * Adds namespace info to the in-memory representation of the language metamodel.
              */
-             export function initializeScoperDef(rootScoper: FreScoperComposite) {
+             export function initializeScoperDef(rootScoper: ${Names.FreCompositeScoper}) {
                  ${Array.from(concreteNamespaces)
                      .map(
                          (element) =>
-                             `${Names.FreLanguage}.getInstance().classifier("${Names.classifier(element)}").isNamespace = true;`,
+                             `${Names.FreLanguage}.getInstance().classifier("${Names.classifier(element)}")!.isNamespace = true;`,
                      )
                      .join("\n")}
                 initializeScopers(rootScoper);

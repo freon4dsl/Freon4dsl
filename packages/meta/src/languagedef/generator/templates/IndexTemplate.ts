@@ -1,18 +1,15 @@
-import { FreMetaLanguage } from "../../metalanguage/index.js";
-import { Names, GenerationUtil } from "../../../utils/index.js";
+import { FreMetaLanguage, LangUtil } from '../../metalanguage/index.js';
+import { Names, Imports } from "../../../utils/on-lang/index.js"
 
 export class IndexTemplate {
     generateIndex(language: FreMetaLanguage): string {
-        const tmp: string[] = [];
-        tmp.push(Names.classifier(language.modelConcept));
-        language.units.map((c) => tmp.push(Names.classifier(c)));
-        language.concepts.map((c) => tmp.push(Names.concept(c)));
-        language.interfaces.map((c) => tmp.push(Names.interface(c)));
-        // tmp.push(Names.modelunit(language));
-        // tmp.push("ModelUnitMetaType");
-        // tmp.push(Names.allConcepts(language));
-        // tmp.push(Names.metaType(language));
-        tmp.push(Names.initializeLanguage);
+        const imports = new Imports()
+        const modelImports: Set<string> = new Set<string>()
+        modelImports.add(Names.classifier(language.modelConcept));
+        language.units.forEach((c) => modelImports.add(Names.classifier(c)));
+        language.concepts.forEach((c) => modelImports.add(Names.concept(c)));
+        language.interfaces.forEach((c) => modelImports.add(Names.interface(c)));
+        modelImports.add(Names.initializeLanguage);
 
         // the template starts here
         return `
@@ -21,28 +18,23 @@ export class IndexTemplate {
          * (https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de)
          * in order to avoid problem with circular imports.
          */
-
-        export {
-        ${tmp.map((c) => `${c}`).join(",\n")}
-        } from "./internal.js"`;
+        ${imports.makeExportStatements(modelImports)}
+        `
     }
 
     generateInternal(language: FreMetaLanguage): string {
-        const tmp: string[] = [];
-        tmp.push(Names.classifier(language.modelConcept));
-        language.units.map((c) => tmp.push(Names.classifier(c)));
+        const modelImports: Set<string> = new Set<string>()
+        modelImports.add(Names.classifier(language.modelConcept));
+        language.units.forEach((c) => modelImports.add(Names.classifier(c)));
         // The exports need to be sorted such that base concepts/interfaces are exported before the
         // concepts/interfaces that are extending them.
-        GenerationUtil.sortClassifiers(language.interfaces)
+        LangUtil.sortClassifiers(language.interfaces)
             .reverse()
-            .map((c) => tmp.push(Names.classifier(c)));
-        GenerationUtil.sortConceptsOrRefs(language.concepts)
+            .forEach((c) => modelImports.add(Names.classifier(c)));
+        LangUtil.sortConceptsOrRefs(language.concepts)
             .reverse()
-            .map((c) => tmp.push(Names.concept(c)));
-
-        // tmp.push(Names.allConcepts(language));
-        // tmp.push(Names.metaType(language));
-        tmp.push(Names.language(language));
+            .forEach((c) => modelImports.add(Names.concept(c)));
+        modelImports.add(Names.language(language));
 
         // the template starts here
         return `
@@ -55,13 +47,14 @@ export class IndexTemplate {
          * concepts that are extending them.
          */
 
-        ${tmp.map((c) => `export * from "./${c}.js";`).join("\n")}
+        ${modelImports.values().toArray().map((c) => `export * from "./${c}.js";`).join("\n")}
         `;
     }
 
     generateUtilsIndex(language: FreMetaLanguage): string {
         return `export * from "./${Names.workerInterface(language)}.js";
                 export * from "./${Names.walker(language)}.js";
-                export * from "./${Names.defaultWorker(language)}.js";`;
+                export * from "./${Names.defaultWorker(language)}.js";
+                export * from "./${Names.listUtil}.js";`;
     }
 }

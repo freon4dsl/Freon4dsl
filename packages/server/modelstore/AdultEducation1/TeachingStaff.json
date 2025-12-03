@@ -35,7 +35,9 @@
                   "ID-15",
                   "ID-16",
                   "ID-17",
-                  "ID-46"
+                  "ID-46",
+                  "ID-47",
+                  "ID-59"
                ]
             }
          ],
@@ -361,6 +363,116 @@
                      "reference": "ID-7"
                   }
                ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-competence"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-47",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Person"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-name"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-fullName"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-phone"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-availability"
+               },
+               "targets": []
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-competence"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-59",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Person"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-name"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-fullName"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-phone"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-availability"
+               },
+               "targets": []
             },
             {
                "reference": {

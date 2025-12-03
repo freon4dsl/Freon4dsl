@@ -1,7 +1,7 @@
-//{
-//    let creator = require("./FreEditCreators");
-//    let expCreate = require("../../languagedef/parser/ExpressionCreators");
-//}
+{{
+import * as creator from "./FreEditCreators.js"
+import * as expCreate from "../../languagedef/parser/LanguageCreators.js";
+}}
 
 Editor_Definition = group:projectionGroup
 {
@@ -26,7 +26,7 @@ propProjectionEnd       = "}"
 projection_begin        = "["
 projection_end          = "]"
 projection_separator    = "|"
-displayType             = "text" / "checkbox" / "radio" / "switch" / "inner-switch" / "slider"
+displayType             = "text" / "multiline" / "checkbox" / "radio" / "switch" / "inner-switch" / "slider"
 
 singleGlobalProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 {
@@ -81,6 +81,11 @@ singleGlobalProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 listOfExternals = list:var|.., ws "," ws|
 { return list; }
 
+classifierReference = referredName:var
+{
+    return expCreate.createClassifierReference({"name": referredName, "location": location()})
+}
+
 classifierProjection =
             classifier:classifierReference curly_begin ws
                 projections:projectionChoice?
@@ -120,9 +125,9 @@ extraClassifierInfo = trigger:trigger
 {
     return creator.createClassifierInfo({
         "trigger"               : trigger,
-        "referenceShortcutExp"  : !!sub ? sub["referenceShortcut"] : null,
+        "referenceShortCut"     : !!sub ? sub["referenceShortcut"] : null,
         "symbol"                : !!sub ? sub["symbol"] : null,
-        "location"      : location()
+        "location"              : location()
     });
 }
     / symbol:symbol
@@ -130,9 +135,9 @@ extraClassifierInfo = trigger:trigger
 {
     return creator.createClassifierInfo({
         "trigger"               : !!sub ? sub["trigger"] : null,
-        "referenceShortcutExp"  : !!sub ? sub["referenceShortcut"] : null,
+        "referenceShortCut"     : !!sub ? sub["referenceShortcut"] : null,
         "symbol"                : symbol,
-        "location"      : location()
+        "location"              : location()
     });
 }
     / referenceShortcut:referenceShortcut
@@ -140,7 +145,7 @@ extraClassifierInfo = trigger:trigger
 {
     return creator.createClassifierInfo({
         "trigger"               : !!sub ? sub["trigger"] : null,
-        "referenceShortcutExp"  : referenceShortcut,
+        "referenceShortCut"     : referenceShortcut,
         "symbol"                : !!sub ? sub["symbol"] : null,
         "location"      : location()
     });
@@ -301,7 +306,7 @@ singleProperty = propProjectionStart ws
                       propProjectionEnd
 {
     return creator.createSinglePropertyProjection( {
-        "expression"        : creator.createSelfExp(propName),
+        "property"          : creator.createPropertyReference(propName, location()),
         "projectionName"    : projName,
         "displayType"       : kind,
         "boolKeywords"      : kw,
@@ -315,7 +320,7 @@ listProperty = propProjectionStart ws
                       propProjectionEnd
 {
     return creator.createListPropertyProjection( {
-        "expression"        : creator.createSelfExp(propName),
+        "property"          : creator.createPropertyReference(propName, location()),
         "projectionName"    : projName,
         "listInfo"          : l,
         "displayType"       : kind,
@@ -347,11 +352,15 @@ button_projection = projection_begin "button" ws text:("text" equals_separator "
     })
 }
 
-keywordDecl = projection_begin text1:textBut text2:(projection_separator t2:textBut {return t2;})? projection_end
+keywordDecl = projection_begin text1:textBut 
+                               text2:(projection_separator t2:textBut {return t2;})?
+                               text3:(projection_separator t3:textBut {return t3;})?
+              projection_end
 {
     return creator.createBoolKeywords({
         "trueKeyword"   : text1,
         "falseKeyword"  : text2,
+        "undefinedKeyword": text3,
         "location"      : location()
     });
 }
@@ -394,7 +403,7 @@ trigger = "trigger" ws equals_separator ws "\"" triggerValue:string "\"" ws
 
 referenceShortcut = "referenceShortcut" ws equals_separator ws propProjectionStart ws "self."? exp:var propProjectionEnd ws
 {
-    return creator.createSelfExp(exp);
+    return creator.createPropertyReference(exp, location());
 }
 
 symbol = "symbol" ws equals_separator ws "\"" symbolValue:string "\"" ws

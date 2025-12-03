@@ -1,14 +1,16 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils/MetaLogger.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { GenerationStatus, FileUtil, Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils/index.js";
+import { Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils/on-lang/index.js";
+import { FileUtil, GenerationStatus } from '../../utils/file-utils/index.js';
 import { ValidatorDef } from "../metalanguage/index.js";
 import { RulesCheckerTemplate } from "./templates/RulesCheckerTemplate.js";
 import { ValidatorTemplate } from "./templates/ValidatorTemplate.js";
 import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate.js";
 import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate.js";
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate.js";
-import { LOG2USER } from "../../utils/UserLogger.js";
+import { LOG2USER } from "../../utils/basic-dependencies/UserLogger.js";
+import { NamespaceCheckerTemplate } from './templates/NamespaceCheckerTemplate.js';
 
 // TODO use new AstWalker and AstWorker
 
@@ -26,11 +28,11 @@ export class ValidatorGenerator {
         }
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
-        const name = validdef ? validdef.validatorName + " " : "default";
-        LOGGER.log("Generating validator: " + name + "in folder " + this.validatorGenFolder);
+        LOGGER.log("Generating validator in folder " + this.validatorGenFolder);
 
         const validatorTemplate = new ValidatorTemplate();
         const nonOptionalsCheckerTemplate = new NonOptionalsCheckerTemplate();
+        const namespaceCheckerTemplate = new NamespaceCheckerTemplate();
         const referenceCheckerTemplate = new ReferenceCheckerTemplate();
         const checkerTemplate = new RulesCheckerTemplate();
         const reservedWordsTemplate = new ReservedWordsTemplate();
@@ -73,6 +75,17 @@ export class ValidatorGenerator {
             generationStatus,
         );
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.referenceChecker(this.language)}.ts`, checkerFile);
+
+        // generate the default checker on namespaces
+        LOGGER.log(
+          `Generating checker for namespaces: ${this.validatorGenFolder}/${Names.namespaceChecker(this.language)}.ts`,
+        );
+        checkerFile = FileUtil.pretty(
+          namespaceCheckerTemplate.generateChecker(this.language, relativePath),
+          "Namespace Checker Class",
+          generationStatus,
+        );
+        fs.writeFileSync(`${this.validatorGenFolder}/${Names.namespaceChecker(this.language)}.ts`, checkerFile);
 
         //  Generate checker
         if (validdef !== null && validdef !== undefined) {
@@ -127,9 +140,9 @@ export class ValidatorGenerator {
         FileUtil.generateManualFile(`${this.validatorFolder}/index.ts`, indexFile, "Index Class");
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(`Generated validator '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(`Generated validator with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated validator ${name}`);
+            LOGGER.info(`Successfully generated validator`);
         }
     }
 

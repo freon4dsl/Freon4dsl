@@ -1,6 +1,6 @@
 import { FreUtils } from "../../util/index.js";
 import { Box } from "./Box.js";
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 
 export class EmptyLineBox extends Box {
     kind: string = "EmptyLineBox";

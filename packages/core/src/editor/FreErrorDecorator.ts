@@ -1,9 +1,11 @@
 import {FreError} from "../validator/index.js";
-import {FreNode} from "../ast/index.js";
-import {isNullOrUndefined} from "../util/index.js";
-import {Box, ElementBox, isActionBox, isSelectBox, isTextBox} from "./boxes/index.js";
+import type {FreNode} from "../ast/index.js";
+import {isNullOrUndefined, notNullOrUndefined} from "../util/index.js";
+import type {Box} from "./boxes/index.js";
+import {ElementBox, isActionBox, isSelectBox, isTextBox} from "./boxes/index.js";
 import {FreEditor} from "./FreEditor.js";
 import {FreLogger} from "../logging/index.js";
+import {UndefinedRectangle} from "./ClientRectangleTypes.js";
 
 const LOGGER: FreLogger = new FreLogger("FreErrorDecorator").mute();
 
@@ -64,7 +66,7 @@ export class FreErrorDecorator {
             `setErrorOnElement ${node?.freLanguageConcept()} with id ${node?.freId()}, property: [${propertyName}, ${propertyIndex}]`
         );
         let box: Box = this.myEditor.findBoxForNode(node, propertyName, propertyIndex);
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             if (box instanceof ElementBox) {
                 // box is an elementBox, which is not shown, therefore we set the error on its one and only child
                 box = box.children[0];
@@ -87,19 +89,20 @@ export class FreErrorDecorator {
     }
 
     public gatherMessagesForGutter() {
-        if (isNullOrUndefined(this.erroneousBoxes[0]) || isNullOrUndefined(this.erroneousBoxes[0].actualY) || this.erroneousBoxes[0].actualY === -1) {
+        const rectangle = this.erroneousBoxes[0]?.getClientRectangle()
+        if (isNullOrUndefined(this.erroneousBoxes[0]) || rectangle === UndefinedRectangle) {
             // Too early, wait for the rendering to be done
             // console.log("Setting errors: gathering for gutter - TOO EARLY")
             return;
         }
         // Sort the erroneous boxes based on their y-coordinate, because we want to gather all messages on the same 'line'
-        this.erroneousBoxes.sort((a, b: Box) => (a.actualY > b.actualY) ? 1 : -1);
+        this.erroneousBoxes.sort((a, b: Box) => (a.getClientRectangle().y > b.getClientRectangle().y) ? 1 : -1);
         // Group the boxes per 'line'
         let lines: Box[][] = [];
         let lineIndex: number = 0;
         let prevLineEnd: number = 0;
         for (let i: number = 0; i < this.erroneousBoxes.length - 1; i++) {
-            if (this.erroneousBoxes[i].actualY < this.erroneousBoxes[i + 1].actualY - LINE_HEIGHT_MARGIN) { // found line end
+            if (this.erroneousBoxes[i].getClientRectangle().y < this.erroneousBoxes[i + 1].getClientRectangle().y - LINE_HEIGHT_MARGIN) { // found line end
                 lines[lineIndex++] = this.erroneousBoxes.slice(prevLineEnd, i + 1);
                 prevLineEnd = i + 1;
             }
@@ -118,7 +121,7 @@ export class FreErrorDecorator {
         lines.forEach(line => {
             outerIndex++;
             // Sort the boxes in a single line based on their x-coordinate.
-            line.sort((a, b: Box) => (a.actualX > b.actualX) ? 1 : -1);
+            line.sort((a, b: Box) => (a.getClientRectangle().x > b.getClientRectangle().x) ? 1 : -1);
             // Get the left-most box
             let first = line[0];
             for( let i: number = 1; i < line.length; i++ ) {

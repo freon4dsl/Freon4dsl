@@ -1,10 +1,12 @@
-import { FreNode } from "../../../ast/index.js";
+import type { FreNode } from "../../../ast/index.js";
 import { AST } from "../../../change-manager/index.js";
-import {BoxFactory, LimitedControlBox, LimitedDisplay, SelectBox, SelectOption} from "../../boxes/index.js";
-import { FreLanguage, FreLanguageProperty } from "../../../language/index.js";
+import { BoxFactory, LimitedControlBox, LimitedDisplay, SelectBox } from "../../boxes/index.js";
+import type { SelectOption } from "../../boxes/index.js";
+import { FreLanguage } from "../../../language/index.js";
+import type { FreLanguageProperty } from "../../../language/index.js";
 import { UtilCheckers } from "./UtilCheckers.js";
 import { RoleProvider } from "../RoleProvider.js";
-import {FreScoper} from "../../../scoper/index.js";
+import type {FreScoper} from "../../../scoper/index.js";
 import {FreEditor} from "../../FreEditor.js";
 import {BehaviorExecutionResult} from "../../util/index.js";
 
@@ -145,14 +147,14 @@ export class UtilLimitedHelpers {
         result = BoxFactory.select(
             node,
             roleName,
-            `<${propertyName}>`,
+            `+ ${propertyName}`,
             () => {
                 return scoper
-                    .getVisibleNames(node, propType)
-                    .filter((name) => !!name && name !== "")
-                    .map((name) => ({
-                        id: name,
-                        label: name,
+                    .getVisibleNodes(node, propType)
+                    .filter((node) => !!node.name && node.name !== "")
+                    .map((node) => ({
+                        id: node.name,
+                        label: node.name
                     }));
             },
             () => {

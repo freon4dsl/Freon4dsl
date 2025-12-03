@@ -46,7 +46,7 @@ export class SimpleModelCreator {
             }
             model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
         })
-        return model
+        return model!
     }
 
     /**
@@ -57,14 +57,14 @@ export class SimpleModelCreator {
      * @param primary       the index of the unit that has the focus, all other units are represented by their interfaces
      *                      note that the following must be true: primary < nrOfUnits
      */
-    public createModelWithInterfaces(nrOfUnits: number, depth: number, primary: number): DSmodel {
+    public createModelWithInterfaces(nrOfUnits: number, depth: number, primary: number): DSmodel | undefined {
         // reset names
         this.nameNumber = 0;
         this.allNames = [];
         this.numberOfRefs = 0;
         // create a new model
         if (primary >= nrOfUnits) {
-            return null;
+            return undefined;
         }
         const modelUnits: DSunit[] = [];
         let model
@@ -85,7 +85,7 @@ export class SimpleModelCreator {
             }
             model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
         })
-        return model
+        return model!
     }
 
     createUnit(parent: string, depth: number): DSunit {
@@ -181,7 +181,7 @@ export class SimpleModelCreator {
     static IN = "    ";
     public DSmodelToString(model: DSmodel): string {
         let result: string = "";
-        let indent = "";
+        const indent = "";
         for (const unit of model.units) {
             result += "unit: " + unit.name + "\n";
             for (const part of unit.dsPublics) {

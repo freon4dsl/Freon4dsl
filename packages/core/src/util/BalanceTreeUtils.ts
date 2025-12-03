@@ -1,8 +1,8 @@
 import { action, makeObservable } from "mobx";
 import { AST } from "../change-manager/index.js";
 import { FreUtils, isNullOrUndefined } from "./internal.js";
-import { Box, FreEditor } from "../editor/index.js";
-import { FreBinaryExpression, FreNode, FreExpressionNode } from "../ast/index.js";
+import type { Box, FreEditor } from "../editor/index.js";
+import type { FreBinaryExpression, FreNode, FreExpressionNode } from "../ast/index.js";
 import { isFreBinaryExpression, isFreExpression } from "../ast-utils/index.js";
 import { FreLogger } from "../logging/index.js";
 
@@ -27,8 +27,8 @@ export function isExpressionPreOrPost(box: Box) : boolean {
     return isNullOrUndefined(box) ||
         box.role.includes(BEFORE_BINARY_OPERATOR) ||
         box.role.includes(AFTER_BINARY_OPERATOR) ||
-        box.role.includes(LEFT_MOST) 
-        // box.role.includes(RIGHT_MOST);
+        box.role.includes(LEFT_MOST) ||
+        box.role.includes(RIGHT_MOST);
 }
 
 /**

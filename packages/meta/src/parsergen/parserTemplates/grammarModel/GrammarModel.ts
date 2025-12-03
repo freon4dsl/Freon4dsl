@@ -1,16 +1,20 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../utils/index.js";
-import {
-    internalTransformBranch,
-    internalTransformLeaf,
-    internalTransformList,
-    internalTransformNode,
-    internalTransformRefList,
-} from "../ParserGenUtil.js";
+import { Imports, Names } from "../../../utils/on-lang/index.js"
 import { refRuleName } from "./GrammarUtils.js";
 import { GrammarPart } from "./GrammarPart.js";
+import {
+    internalTransformLimitedList,
+    internalTransformPartList,
+    internalTransformPrimList,
+    internalTransformPrimValue,
+    internalTransformRefList, internalTransformTempRef
+} from '../ParserGenUtil.js';
+
+const tempReferenceClassName: string = "ParsedNodeReference";
 
 export class GrammarModel {
+
+    
     constructor(language: FreMetaLanguage) {
         this.language = language;
     }
@@ -44,11 +48,14 @@ skip SINGLE_LINE_COMMENT = "//[^\\\\r\\\\n]*" ;
 skip MULTI_LINE_COMMENT = "/\\\\*[^*]*\\\\*+(?:[^*/][^*]*\\\\*+)*/" ;
 
 // the predefined basic types
-leaf identifier          = "[a-zA-Z_][a-zA-Z0-9_]*" ;
+leaf identifier        = "\\\`[a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\\:;\\\\"'<>,.?/][a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\\:;\\\\"'<>,.?/]*\\\`" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
-leaf stringLiteral       = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
-leaf numberLiteral       = "[0-9]+";
-leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
+leaf optStringLiteral  = "<no-value>" | stringLiteral ;
+leaf stringLiteral     = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
+leaf optNumberLiteral  = "<no-value>" | numberLiteral;
+leaf numberLiteral     = "[0-9]+";
+leaf optBooleanLiteral = "<no-value>" | booleanLiteral;
+leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
 
 }\`; // end of grammar`;
     }
@@ -68,188 +75,174 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         return result.trimEnd();
     }
 
-    toMethod(): string {
+    toMethod(language: FreMetaLanguage, relativePath: string): string {
         const className: string = Names.syntaxAnalyser(this.language);
-        let switchContent: string = "";
+        let handlerRegistration: string = "";
         this.parts.forEach((part) =>
             part.rules.map((rule) => {
-                const name = rule.ruleName;
-                switchContent += `if ('${name}' === brName) {
-                        return this.${this.getPartAnalyserName(part)}.transform${name}(branch);
-                    } else `;
+                const name: string = rule.ruleName;
+                handlerRegistration += `super.registerFor('${name}', (n: SpptDataNodeInfo, c: KtList<object>, s: Sentence) => this.${this.getPartAnalyserName(part)}.transform${name}(n, c, s));`;
             }),
         );
 
-        switchContent += `if ('${refRuleName}' === brName) {
-                        return this.transform${refRuleName}(branch);
-                    } else `;
+        handlerRegistration += `super.registerFor('${refRuleName}', (n: SpptDataNodeInfo, c: KtList<object>, s: Sentence) => this.transform${refRuleName}(n, c, s));`
 
+        const imports = new Imports(relativePath)
+        imports.core = new Set([Names.FreParseLocation, Names.FreNamedNode, Names.FreNode, Names.FreNodeReference, Names.FreOwnerDescriptor])
+        imports.language.add(Names.classifier(language.modelConcept))
         // Template starts here
         return `
-        import {net} from "net.akehurst.language-agl-processor";
-        import SyntaxAnalyser = net.akehurst.language.api.syntaxAnalyser.SyntaxAnalyser;
-        import SharedPackedParseTree = net.akehurst.language.api.sppt.SharedPackedParseTree;
-        import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
-        import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
-        import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
-        import { ${Names.FreNamedNode}, ${Names.FreParseLocation}, ${Names.FreNodeReference} } from "@freon4dsl/core";
+        // TEMPLATE: GrammarModel.toMethod(...)
+        ${imports.makeImports(language)}
+        import {
+            SyntaxAnalyserByMethodRegistrationAbstract,
+            type KtList,
+            type Sentence,
+            type SpptDataNodeInfo,
+            type SpptDataNode
+        } from "net.akehurst.language-agl-processor";
         import { ${this.parts.map((part) => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from "./index.js";
+
+        export enum PrimValueType {
+            "string",
+            "identifier",
+            "boolean",
+            "number"
+        }
+
+        export class ${tempReferenceClassName} implements ${Names.FreNode} {
+            pathname: string[];
+            parseLocation: ${Names.FreParseLocation};
+        
+            constructor(pathname: string[], location: ${Names.FreParseLocation}) {
+                this.pathname = pathname;
+                this.parseLocation = location;
+            }
+        
+            freId(): string {
+                throw new Error("Method not implemented.");
+            }
+            freLanguageConcept(): string {
+                throw new Error("Method not implemented.");
+            }
+            freOwner(): FreNode {
+                throw new Error("Method not implemented.");
+            }
+            freOwnerDescriptor(): FreOwnerDescriptor {
+                throw new Error("Method not implemented.");
+            }
+            freIsModel(): boolean {
+                throw new Error("Method not implemented.");
+            }
+            freIsUnit(): boolean {
+                throw new Error("Method not implemented.");
+            }
+            freIsExpression(): boolean {
+                throw new Error("Method not implemented.");
+            }
+            freIsBinaryExpression(): boolean {
+                throw new Error("Method not implemented.");
+            }
+            copy(): ${Names.FreNode} {
+                throw new Error("Method not implemented.");
+            }
+            match(toBeMatched: Partial<${Names.FreNode}>): boolean {
+                throw new Error("Method not implemented.");
+            }
+        
+            toString() {
+                return \`${tempReferenceClassName}: \${this.pathname} [\${this.parseLocation.line}:\${this.parseLocation.column}]\`;
+            }
+        }
 
         /**
         *   Class ${className} is the main syntax analyser.
         *   The actual work is being done by its parts, one for each model unit,
         *   and one common part that contains the methods used in multiple units.
+        *   Together the syntax analysers transform the parse tree into a FreNode model.
         *
         */
-        export class ${className} implements SyntaxAnalyser {
+        export class ${className} extends SyntaxAnalyserByMethodRegistrationAbstract<${Names.classifier(language.modelConcept)}> {
             sourceName: string = "";
-            locationMap: any;
             ${this.parts.map((part) => `private ${this.getPartAnalyserName(part)}: ${Names.unitAnalyser(this.language, part.unit)} = new ${Names.unitAnalyser(this.language, part.unit)}(this)`).join(";\n")}
 
-            clear(): void {
-                throw new Error("Method not implemented.");
+            registerHandlers() {
+                ${handlerRegistration}
             }
-
-            transform\<T\>(sppt: SharedPackedParseTree): T {
-                if (!!sppt.root) {
-                    return this.${internalTransformNode}(sppt.root) as unknown as T;
-                } else {
-                    return null;
-                }
-            }
-
-            public ${internalTransformNode}(node: SPPTNode): any {
-                if (!!node) {
-                    try {
-                        if (node.isLeaf) {
-                            return this.${internalTransformLeaf}(node);
-                        } else if (node.isBranch) {
-                            return this.${internalTransformBranch}(node as SPPTBranch);
-                        }
-                    } catch (e) {
-                        if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in ${className}")) {
-                            throw e;
-                        } else {
-                            // add more info to the error message
-                            throw new Error(\`Syntax error in "\${this.sourceName} (line: \${node.location.line}, column: \${node.location.column})": \${e.message}\`);
-                        }
-                        // console.log(e.message + e.stack);
-                    }
-                } else {
-                    return null;
-                }
-            }
-
-            private ${internalTransformLeaf}(node: SPPTNode): any {
-                let tmp = ((node as SPPTLeaf)?.nonSkipMatchedText).trim();
-                if (tmp.length > 0) {
-                    if (tmp.startsWith('"')) { // stringLiteral, strip the surrounding quotes
-                        tmp = tmp.slice(1, tmp.length - 1);
-                        return tmp;
-                    } else if (tmp == "${this.falseValue}") { // booleanLiteral
-                        return false;
-                    } else if (tmp == "${this.trueValue}") { // booleanLiteral
-                        return true;
-                    } else if (Number.isInteger(parseInt(tmp, 10))) { // numberLiteral
-                        return parseInt(tmp, 10);
-                    } else { // identifier
-                        return tmp;
-                    }
-                }
-                return null;
-            }
-
-            private ${internalTransformBranch}(branch: SPPTBranch): any {
-                const brName: string = branch.name;
-                ${switchContent}
-                {
-                    throw new Error(\`Error in ${className}: \${brName} not handled for node '\${branch?.matchedText}'\`);
-                }
-            }
-
+            
             /**
-             * Generic method to get the children of a branch. Throws an error if no children can be found.
+             * Generic method to transform lists of primitive values
              */
-            public getChildren(branch: SPPTBranch): any {
-                if (!!branch && !!branch.nonSkipChildren) {
-                    try {
-                        return branch.nonSkipChildren.toArray();
-                    } catch (e) {
-                        throw new Error(\`Cannot follow branch: \${e.message} (\${branch.matchedText.trimEnd()})\`);
-                    }
-                }
-                return null;
-            }
-
-            /**
-             * Generic method to get the optional group of a branch. Throws an error if no group can be found.
-             */
-            public getGroup(branch: SPPTBranch) {
-                // take the first element in the [0..1] optional group or multi branch
-                let group: any = branch;
-                let stop: boolean = false;
-                while (!stop) {
-                    let nextOne: any = null;
-                    try {
-                        nextOne = group.nonSkipChildren?.toArray()[0];
-                    } catch (e) {
-                        throw new Error(\`Cannot follow group: \${e.message} (\${group.matchedText})\`);
-                    }
-                    if (!nextOne || (!nextOne.name.includes("multi") && !nextOne.name.includes("group"))) {
-                        stop = true; // found a branch with actual content, return its parent!
-                    } else {
-                        group = nextOne;
-                    }
-                }
-                return group;
-            }
-
-            public transform${refRuleName}(branch: SPPTBranch){
-                if (branch.name.includes("multi") || branch.name.includes("List")) { // its a path name
-                    return this.${internalTransformList}<string>(branch, "${this.refSeparator}");
-                } else { // its a single name
-                    return this.${internalTransformLeaf}(branch);
-                }
-            }
-
-            /**
-             * Generic method to transform references
-             * ...FreNodeRef = identifier;
-             */
-            public freNodeRef\<T extends ${Names.FreNamedNode}\>(branch: SPPTBranch, typeName: string) : ${Names.FreNodeReference}\<T\> {
-                let referred: string | string[] | T = this.${internalTransformNode}(branch);
-                if (this.getChildren(branch)?.length > 1) {
-                    // its a path name
-                    referred = this.transformSharedPackedParseTreeList<string>(branch, '${this.refSeparator}');
-                }
-                if (referred === null || referred === undefined ) {
-                    // throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
-                    return null;
-                } else if (typeof referred === "string" && (referred as string).length === 0) {
-                    // throw new Error(\`Syntax error in "\${branch?.parent?.matchedText}": cannot create empty reference\`);
-                    return null;
-                } else {
-                    return ${Names.FreNodeReference}.create<T>(referred, typeName);
-                }
-            }
-
-            /**
-             * Generic method to transform lists
-             */
-            public ${internalTransformList}\<T\>(branch: SPPTBranch, separator?: string): T[] {
+            public ${internalTransformPrimList}<T extends string | number | boolean>(
+                list: string[],
+                primType: PrimValueType,
+                separator?: string
+            ): T[] {
+                // console.log("${internalTransformPrimList} called: "  + JSON.stringify(list));             
                 let result: T[] = [];
-                const children = this.getChildren(branch);
-                if (!!children) {
-                    for (const child of children) {
-                        let element: any = this.${internalTransformNode}(child);
-                        if (element !== null && element !== undefined ) {
-                            if (separator === null || separator === undefined) {
-                                result.push(element);
-                            } else {
-                                if (element !== separator) {
-                                    result.push(element);
-                                }
-                            }
+                if (!!list) {
+                    list.forEach((element) => {
+                        if (element !== null && element !== undefined && element !== separator) {
+                            result.push(this.${internalTransformPrimValue}(element, primType) as T);
+                        }
+                    });
+                }
+                return result;
+            }
+        
+            /**
+             * Generic method to transform a primitive value, which is parsed as a string, into the correct type.
+             */
+            public ${internalTransformPrimValue}<T extends string | number | boolean>(
+                element: string,
+                primType: PrimValueType
+            ): T {
+                // console.log("${internalTransformPrimValue} called: " + element + ", " + primType);                
+                switch (primType) {
+                    case PrimValueType.number:
+                        const num = parseFloat(element);
+                        return (isNaN(num) ? 0 : num) as T; // Handle invalid number gracefully.
+                    case PrimValueType.string:
+                        // todo make sure we remove only the outer quotes
+                        return element.replace(/"/g, "") as T;
+                    case PrimValueType.identifier:
+                        // todo make sure we remove only the outer quotes
+                        return element.replace(/\`/g, "") as T;
+                    case PrimValueType.boolean:
+                        return (element.toLowerCase() === "true") as T; // Case-insensitive matching for booleans.
+                    default:
+                        return element as T; // Default case (string)
+                }
+            }
+            
+            /**
+             * Generic method to transform lists of parts.
+             */
+            public ${internalTransformPartList}<T>(list: KtList<T>, separator?: string): T[] {
+                // console.log("${internalTransformPartList} called: " + JSON.stringify(list));
+                let result: T[] = [];
+                if (!!list) {
+                    for (const element of list.asJsReadonlyArrayView()) {
+                        if (element !== null && element !== undefined && element !== separator) {
+                            result.push(element);
+                        }
+                    }
+                }
+                return result;
+            }
+    
+            /**
+             * Generic method to transform lists of references. The input will be a list of ${tempReferenceClassName}s, which
+             * result from transform__fre_reference. However, the input may also contain objects of type String,
+             * which hold the separator between the elements of the reference list, not the 'reference separator' ("${this.refSeparator}").
+             */
+            public ${internalTransformRefList}\<T extends ${Names.FreNamedNode}\>(list: KtList<T>, typeName: string): ${Names.FreNodeReference}\<T\>[] {
+                // console.log("${internalTransformRefList} called: " + JSON.stringify(list));
+                let result: FreNodeReference<T>[] = [];
+                if (!!list) {
+                    for (const child of list.asJsReadonlyArrayView()) {
+                        if (child.constructor.name === '${tempReferenceClassName}') {
+                            result.push(this.${internalTransformTempRef}<T>((child as unknown as ${tempReferenceClassName}), typeName));
                         }
                     }
                 }
@@ -257,33 +250,63 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             }
 
             /**
-             * Generic method to transform lists of references
+             * Generic method to transform a single reference into a temporary object of type ${tempReferenceClassName}.
+             * The actual FreNodeReference object is created when the type of the referred node is known.
+             * The 'reference separator' ("${this.refSeparator}") is removed in the process.
              */
-            public ${internalTransformRefList}\<T extends ${Names.FreNamedNode}\>(branch: SPPTBranch, typeName: string, separator?: string): ${Names.FreNodeReference}\<T\>[] {
-                let result: ${Names.FreNodeReference}\<T\>[] = [];
-                const children = this.getChildren(branch);
-                if (!!children) {
-                    for (const child of children) {
-                        let refName: any = this.${internalTransformNode}(child);
-                        if (refName !== null && refName !== undefined) {
-                            if (separator === null || separator === undefined) {
-                                result.push(${Names.FreNodeReference}.create<T>(refName, typeName));
-                            } else {
-                                if (refName !== separator) {
-                                    result.push(${Names.FreNodeReference}.create<T>(refName, typeName));
-                                }
-                            }
-                        }
+            public transform__fre_reference(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): ${tempReferenceClassName} {
+                let pathname: string[] = [];
+                for (const child of children.asJsReadonlyArrayView()) {
+                    if (child !== null && child !== undefined && (typeof child === 'string' ? child !== '${this.refSeparator}' : false)) {
+                        // todo make sure we remove only the outer quotes
+                        const name = child.toString().replace(/\`/g, "") ;
+                        pathname.push(name);
                     }
                 }
+                return new ${tempReferenceClassName}(pathname, this.location(sentence, nodeInfo.node));
+            }
+    
+            /**
+             * Generic method to transform a ${tempReferenceClassName} into the right ${Names.FreNodeReference}.
+             * 
+             * @param referred
+             * @param freMetaConcept
+             */
+            public ${internalTransformTempRef}<T extends ${Names.FreNamedNode}>(referred: ${tempReferenceClassName}, freMetaConcept: string): ${Names.FreNodeReference}<T> {
+                const result = ${Names.FreNodeReference}.create<T>(referred.pathname, freMetaConcept);
+                result.parseLocation = (referred as ${tempReferenceClassName}).parseLocation;
                 return result;
             }
-
-            public location(branch: SPPTBranch): ${Names.FreParseLocation} {
+            
+            /**
+             * Generic method to transform a list of references to limited objects into the correct list. The input may have
+             * elements of type String, which represent the separators, terminators, etc. These elements are ignored.
+             *
+             * @param list
+             * @private
+             */
+            public ${internalTransformLimitedList}<T extends ${Names.FreNamedNode}>(list: KtList<any>): ${Names.FreNodeReference}<T>[] {
+                let result: ${Names.FreNodeReference}<T>[] = [];
+                list.asJsReadonlyArrayView().forEach(xx => {
+                    if (xx instanceof ${Names.FreNodeReference}) {
+                        result.push(xx);
+                    }
+                });
+                return result;
+            }
+            
+            /**
+             * Generic method to transform location information.
+             *
+             * @param sentence
+             * @param node
+             */
+            public location(sentence: Sentence, node: SpptDataNode): ${Names.FreParseLocation} {              
+                const location = sentence.locationFor(node.startPosition, node.nextInputNoSkip - node.startPosition);
                 return ${Names.FreParseLocation}.create({
                     filename: this.sourceName,
-                    line: branch.location.line,
-                    column: branch.location.column
+                    line: location.line,
+                    column: location.column,
                 });
             }
         }`;

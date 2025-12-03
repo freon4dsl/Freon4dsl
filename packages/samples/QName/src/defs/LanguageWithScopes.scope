@@ -1,0 +1,10 @@
+scoper for language QName
+
+isNamespace { Module, VarReference }
+
+VarReference {
+    alternatives {
+        recursive owner().if(Module);
+        owner().if(ComplexVarReference).module;
+    }
+}

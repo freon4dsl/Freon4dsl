@@ -1,22 +1,26 @@
-import { Names, FREON_CORE } from "../../../utils/index.js";
+import { Names, Imports } from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 
 export class CustomProjectionTemplate {
     generate(language: FreMetaLanguage): string {
+        const imports = new Imports()
+        imports.core.add(Names.FreNode).add(Names.Box).add(Names.FreProjection).add(Names.FreTableDefinition).add(Names.FreProjectionHandler)
         return `
-            import { ${Names.FreNode}, ${Names.Box}, ${Names.FreProjection}, ${Names.FreTableDefinition} } from "${FREON_CORE}";
+            // TEMPLATE: CustomProjectionTemplate.generate(...)
+            ${imports.makeImports(language)}
 
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to
              * define custom build additions to the editor.
              * These are merged with the custom build additions and other definition-based editor parts
-             * in a three-way manner. For each modelelement,
+             * in a three-way manner. For each node,
              * (1) if a custom build creator/behavior is present, this is used,
              * (2) if a creator/behavior based on one of the editor definition is present, this is used,
              * (3) if neither (1) nor (2) yields a result, the default is used.
              */
             export class ${Names.customProjection(language)} implements ${Names.FreProjection} {
                 name: string = "Custom";
+                handler!: FreProjectionHandler;  // will get a value in Environment 
                 nodeTypeToBoxMethod: Map<string, (node: ${Names.FreNode}) => ${Names.Box}> =
                     new Map<string, (node: ${Names.FreNode}) => ${Names.Box}>([
                         // register your custom box methods here
@@ -30,7 +34,12 @@ export class CustomProjectionTemplate {
 
                 // add your custom methods here
 
-                // BOX_FOR_CONCEPT(node: NAME_OF_CONCEPT) : ${Names.Box} { ... }
+                // BOX_FOR_CONCEPT(node: FreNode): ${Names.Box} { ... }
+                // Note: The map type is (node: FreNode) => Box, which means handlers
+                // must accept *any* FreNode. A method with signature (node: NAME_OF_CONCEPT): Box
+                // is not assignable, even though EuroLiteral extends FreNode, because
+                // function parameters are checked contravariantly in TypeScript.
+                // => Fix: declare the handler as (node: FreNode) and cast/narrow inside.
 
                 // TABLE_DEFINITION_FOR_CONCEPT() : ${Names.FreTableDefinition} { ... }
             }

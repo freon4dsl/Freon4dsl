@@ -1,13 +1,12 @@
 import {
     Names,
-    FREON_CORE,
-    LANGUAGE_GEN_FOLDER,
     CONFIGURATION_FOLDER,
-    LANGUAGE_UTILS_GEN_FOLDER,
-    LOG2USER,
-} from "../../../utils/index.js";
-import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+    Imports
+} from "../../../utils/on-lang/index.js"
+import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { TyperDef } from "../../metalanguage/index.js";
+import { LOG2USER } from '../../../utils/basic-dependencies/index.js';
+import { FreTyperGenUtils } from './FreTyperGenUtils.js';
 
 /**
  * This class generates the main typer, the one that hanldes the switch between the generated typer and the custom
@@ -22,20 +21,19 @@ export class FreTyperTemplate {
         // const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
-        const typerInterfaceName: string = Names.FreTyperPart;
-        let rootType: string = "";
+        const typerInterfaceName: string = Names.FreTyper;
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([Names.FreNode, Names.FreType, Names.FreLanguage, typerInterfaceName ])
         if (!!typerdef && !!typerdef.typeRoot()) {
-            rootType = Names.classifier(typerdef.typeRoot() as FreMetaClassifier);
+            FreTyperGenUtils.addTypeToImports(typerdef.typeRoot(), imports)
         }
-
+        imports.utils.add(Names.listUtil)
         // Template starts here
         return `
-        import { ${Names.FreNode}, ${Names.FreType}, ${Names.FreLanguage}, ${typerInterfaceName} } from "${FREON_CORE}";
-
-        ${!!rootType ? `import { ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";` : ``}
+        // TEMPLATE: FreTyperTemplate.generateTyper(...)
+        ${imports.makeImports(language)}
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
         import { ${defaultTyperName} } from "./${defaultTyperName}.js";
-        import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}.js";
 
         /**
          * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
@@ -51,35 +49,35 @@ export class FreTyperTemplate {
             }
 
             /**
-             * Returns true if 'modelelement' is marked as 'isType' in the Typer definition
-             * @param modelelement
+             * Returns true if 'node' is marked as 'isType' in the Typer definition
+             * @param node
              */
-            public isType(modelelement: ${Names.FreNode}): boolean {
+            public isType(node: ${Names.FreNode}): boolean {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: boolean = typer.isType(modelelement);
+                    let result: boolean = typer.isType(node);
                     if (result) {
                         return result;
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return this.generatedTyper.isType(modelelement);
+                return this.generatedTyper.isType(node);
             }
 
             /**
-             * Returns the type of 'modelelement' according to the type rules in the Typer Definition
-             * @param modelelement
+             * Returns the type of 'node' according to the type rules in the Typer Definition
+             * @param node
              */
-            public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} {
+            public inferType(node: ${Names.FreNode}): ${Names.FreType} {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: ${Names.FreType} = typer.inferType(modelelement);
-                    if (result !== null) {
+                    let result: ${Names.FreType} = typer.inferType(node);
+                    if (notNullOrUndefined(result)) {
                         return result;
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return this.generatedTyper.inferType(modelelement);
+                return this.generatedTyper.inferType(node);
             }
 
             /**
@@ -108,7 +106,7 @@ export class FreTyperTemplate {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.equals(type1, type2);
-                    if (result !== null && result !== undefined) {
+                    if (notNullOrUndefined(result) && result !== undefined) {
                         return result;
                     }
                 }
@@ -141,7 +139,7 @@ export class FreTyperTemplate {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.conforms(type1, type2);
-                    if (result !== null) {
+                    if (notNullOrUndefined(result)) {
                         return result;
                     }
                 }
@@ -155,7 +153,7 @@ export class FreTyperTemplate {
              * @param elemlist1
              * @param elemlist2
              */
-            public conformsListType(elemlist1: ${Names.FreNode}[], elemlist2: ${Names.FreNode}[]): boolean {
+            public conformsListType(elemlist1: ${Names.FreNode}[], elemlist2: ${Names.FreNode}[]): boolean | undefined {
                 if (!elemlist1 || !elemlist2) return false;
                 if (elemlist1.length !== elemlist2.length) return false;
 
@@ -172,11 +170,11 @@ export class FreTyperTemplate {
              * @param typelist1
              * @param typelist2
              */
-            public conformsList(typelist1: ${Names.FreType}[], typelist2: ${Names.FreType}[]): boolean {
+            public conformsList(typelist1: ${Names.FreType}[], typelist2: ${Names.FreType}[]): boolean | undefined {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: boolean = typer.conformsList(typelist1, typelist2);
-                    if (result !== null) {
+                    let result: boolean | undefined = typer.conformsList(typelist1, typelist2);
+                    if (notNullOrUndefined(result)) {
                         return result;
                     }
                 }
@@ -188,7 +186,7 @@ export class FreTyperTemplate {
              * Returns the common super type of all elements in elemlist
              * @param elemlist
              */
-            public commonSuperType(elemlist: ${Names.FreNode}[]): ${Names.FreType} {
+            public commonSuperType(elemlist: ${Names.FreNode}[]): ${Names.FreType} | undefined {
                 if (!elemlist ) return null;
                 if (elemlist.length === 0 ) return null;
 
@@ -202,11 +200,11 @@ export class FreTyperTemplate {
              * Returns the common super type of all types in typelist
              * @param typelist
              */
-            public commonSuper(typelist: ${Names.FreType}[]): ${Names.FreType} {
+            public commonSuper(typelist: ${Names.FreType}[]): ${Names.FreType} | undefined {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: ${Names.FreType} = typer.commonSuper(typelist);
-                    if (!!result) {
+                    let result: ${Names.FreType} | undefined = typer.commonSuper(typelist);
+                    if (notNullOrUndefined(result)) {
                         return result;
                     }
                 }
@@ -218,11 +216,11 @@ export class FreTyperTemplate {
              * Returns all super types as defined by the conformance rules in the typer definition.
              * @param type
              */
-            public getSuperTypes(type: ${Names.FreType}): ${Names.FreType}[] {
+            public getSuperTypes(type: ${Names.FreType}): ${Names.FreType}[] | undefined {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: ${Names.FreType}[] = typer.getSuperTypes(type);
-                    if (!!result) {
+                    if (notNullOrUndefined(result)) {
                         return result;
                     }
                 }

@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "../../util/index.js";
-import { FreKey } from "../util/index.js";
+import type { FreKey } from "../util/index.js";
 
 export type FreTriggerType = string | RegExp | FreKey; // the definition, like parameter
 export type FreTriggerUse = string | FreKey; // the use, like argument

@@ -3,41 +3,42 @@ const { isEqual } = pkg;
 
 import { autorun, makeObservable, observable } from "mobx";
 import { AST } from "../change-manager/index.js";
-import { FreEnvironment } from "../environment/index.js";
-import { FreOwnerDescriptor, FreNode, FreNodeReference } from "../ast/index.js";
-import { FreLanguage, FreLanguageClassifier, FreLanguageProperty } from "../language/index.js";
+import type { FreEnvironment } from "../environment/index.js";
+import { FreNodeReference } from "../ast/index.js";
+import type { FreOwnerDescriptor, FreNode } from "../ast/index.js";
+import { FreLanguage } from "../language/index.js";
+import type { FreLanguageClassifier, FreLanguageProperty } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
 import { FreAction } from "./actions/index.js";
+import type { FreCombinedActions } from "./FreCombinedActions.js";
 import {
     Box,
-    FreCombinedActions,
     FreCaret,
     FreProjectionHandler,
-    // wait,
-    isTextBox,
     ElementBox,
-    RoleProvider
-} from "./index.js";
+    RoleProvider,
+    isElementBox,
+    isSelectBox,
+    isActionBox
+} from './index.js';
+import type { ClientRectangle } from "./ClientRectangleTypes.js";
+import { UndefinedRectangle } from "./ClientRectangleTypes.js";
 import { FreError, FreErrorSeverity } from "../validator/index.js";
-import { isExpressionPreOrPost, isNullOrUndefined, LEFT_MOST } from "../util/index.js";
-import {FreErrorDecorator} from "./FreErrorDecorator.js";
+import { isExpressionPreOrPost, isNullOrUndefined, notNullOrUndefined, LEFT_MOST } from "../util/index.js";
+import { FreErrorDecorator } from "./FreErrorDecorator.js";
+
 
 const LOGGER = new FreLogger("FreEditor").mute();
 
 export class FreEditor {
-    private static isOnPreviousLine(ref: Box, other: Box): boolean {
-        const margin = 5;
-        return other.actualY + margin < ref.actualY;
+    private static isAbove(ref: ClientRectangle, other: ClientRectangle): boolean {
+        const margin = 6
+        LOGGER.log(`isBove ${ref.y} < ${other.y}`)
+        return ref.y + margin < other.y
     }
 
-    /**
-     * Returns true when 'other' is on the line below 'ref'.
-     * @param ref
-     * @param other
-     * @private
-     */
-    private static isOnNextLine(ref: Box, other: Box): boolean {
-        return this.isOnPreviousLine(other, ref);
+    private static isBelow(ref: ClientRectangle, other: ClientRectangle): boolean {
+        return FreEditor.isAbove(other, ref)
     }
 
     readonly actions?: FreCombinedActions; // All actions with which this editor is created.
@@ -82,11 +83,18 @@ export class FreEditor {
     // The refresh method from the component that displays this box.
     refreshComponentSelection: (why?: string) => void;
     refreshComponentRootBox: (why?: string) => void;
+    /**
+     * Get the client rectangle of the complete editor in the browser.
+     * This is a callback method to the FreonComponent in the browser.
+     */
+    getClientRectangle: () => ClientRectangle = () => {
+        return UndefinedRectangle
+    }
 
     // Called when the editor selection has changed
     selectionChanged(): void {
         if (this.refreshComponentSelection !== undefined && this.refreshComponentSelection !== null) {
-            LOGGER.log("selectionChanged() for FreEditor");
+            // LOGGER.log("selectionChanged() for FreEditor");
             this.refreshComponentSelection("====== FROM FreEditor");
         } else {
             LOGGER.log("No selectionChanged() for FreEditor");
@@ -105,7 +113,7 @@ export class FreEditor {
     auto = () => {
         LOGGER.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept() + " recalc is " + this.forceRecalculateProjection);
         this.forceRecalculateProjection
-        if (this.rootElement !== null) {
+        if (notNullOrUndefined(this.rootElement)) {
             this._rootBox = this.projection.getBox(this.rootElement);
             this.rootBoxChanged();
         }
@@ -126,8 +134,10 @@ export class FreEditor {
      */
     set rootElement(node: FreNode) {
         this._rootElement = node;
-        // select first editable child
-        this.selectFirstEditableChildBox(node);
+        if (notNullOrUndefined(node)) {
+            // select first editable child
+            this.selectFirstEditableChildBox(node);
+        }
     }
 
     get rootElement(): FreNode {
@@ -170,12 +180,12 @@ export class FreEditor {
      * @param propertyIndex
      * @param caretPosition
      */
-    selectElement(node: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret) {
+    selectElement(node: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret): void {
         LOGGER.log(
             `selectElement ${node?.freLanguageConcept()} with id ${node?.freId()}, property: [${propertyName}, ${propertyIndex}] ${caretPosition}`
         );
         const box: Box = this.findBoxForNode(node, propertyName, propertyIndex);
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             if (box instanceof ElementBox) {
                 this._selectedBox = box;
                 this._selectedProperty = "";
@@ -185,7 +195,7 @@ export class FreEditor {
                 this._selectedProperty = propertyName;
                 this._selectedIndex = propertyIndex;
             }
-            if (!isNullOrUndefined(caretPosition)) {
+            if (notNullOrUndefined(caretPosition)) {
                 LOGGER.log("Set caretPosition to " + caretPosition);
                 this._selectedPosition = caretPosition;
             } else {
@@ -217,10 +227,10 @@ export class FreEditor {
             } else {
                 // try and find the property to be selected
                 let propBox: Box | undefined = undefined;
-                if (!isNullOrUndefined(propertyName)) {
+                if (notNullOrUndefined(propertyName)) {
                     propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
                 }
-                if (!isNullOrUndefined(propBox)) {
+                if (notNullOrUndefined(propBox)) {
                     return propBox;
                 } else {
                     return box;
@@ -252,22 +262,12 @@ export class FreEditor {
      * @param role
      * @param caretPosition
      */
-    selectElementBox(node: FreNode, role: string, caretPosition?: FreCaret) {
-        LOGGER.log(
-            "selectElementBox " +
-                node?.freLanguageConcept() +
-                " with id " +
-                node?.freId() +
-                ", role: [" +
-                role +
-                "]" +
-                " " +
-                caretPosition,
-        );
+    selectElementBox(node: FreNode, role: string, caretPosition?: FreCaret): void {
+        LOGGER.log("selectElementBox " + node?.freLanguageConcept() + " with id " + node?.freId() + ", role: [" + role + "]" + " " + caretPosition)
         if (this.checkParam(node)) {
             const box: ElementBox = this.projection.getBox(node);
             const propBox = box.findBoxWithRole(role);
-            if (!isNullOrUndefined(propBox)) {
+            if (notNullOrUndefined(propBox)) {
                 this._selectedBox = propBox;
                 // this._selectedProperty = propertyName;
                 // this._selectedIndex = propertyIndex;
@@ -278,7 +278,7 @@ export class FreEditor {
                 this._selectedProperty = "";
                 this._selectedIndex = -1;
             }
-            if (!isNullOrUndefined(caretPosition)) {
+            if (notNullOrUndefined(caretPosition)) {
                 LOGGER.log("Set caretPosition to " + caretPosition);
                 this._selectedPosition = caretPosition;
             } else {
@@ -293,13 +293,13 @@ export class FreEditor {
      * Sets 'element' to be the selectedElement, and its first child, which is editable, to the selectedBox.
      * @param element
      */
-    selectFirstEditableChildBox(element: FreNode, skip: boolean = false) {
+    selectFirstEditableChildBox(element: FreNode, skip: boolean = false): void {
         if (this.checkParam(element)) {
             let first = this.projection.getBox(element).firstEditableChild;
             if (skip && first.role === LEFT_MOST) {
-               first = first.nextLeafRight 
+               first = first.nextLeafRight
             }
-            if (!isNullOrUndefined(first)) {
+            if (notNullOrUndefined(first)) {
                 this._selectedBox = first;
                 this._selectedProperty = first.propertyName;
                 this._selectedIndex = first.propertyIndex;
@@ -315,7 +315,7 @@ export class FreEditor {
             return false;
         }
         if (isNullOrUndefined(element)) {
-            LOGGER.error("FreEditor.selectedElement is null !");
+            // LOGGER.error("FreEditor.selectedElement is null !");
             return false;
         }
         return true;
@@ -326,8 +326,8 @@ export class FreEditor {
      * @param box
      * @param caret
      */
-    selectElementForBox(box: Box, caret?: FreCaret) {
-        if (!isNullOrUndefined(box) && box !== this._selectedBox) {
+    selectElementForBox(box: Box, caret?: FreCaret): void {
+        if (notNullOrUndefined(box) && box !== this._selectedBox) {
             // only (re)set the local variables when the box can be found
             this._selectedElement = box.node;
             if (!box.selectable) {
@@ -344,11 +344,18 @@ export class FreEditor {
         }
     }
 
-    selectParent() {
-        this.selectParentForBox(this.selectedBox);
+    selectParent(): void {
+        LOGGER.log(`SELECTION WAS: ${this.selectedBox.kind} node ${this.selectedBox?.node?.freLanguageConcept()} parent box ${this.selectedBox.parent?.kind}`)
+        if (isElementBox(this.selectedBox.parent) || isSelectBox(this.selectedBox.parent) || isActionBox(this.selectedBox.parent)) {
+            LOGGER.log("selectParent: Ignore parent, go up 'parent.parent'")
+            this.selectParentForBox(this.selectedBox.parent)
+        } else {
+            this.selectParentForBox(this.selectedBox)
+        }
+        LOGGER.log(`SELECTION NOW: ${this.selectedBox.kind} node ${this.selectedBox?.node?.freLanguageConcept()}`)
     }
 
-    private selectParentForBox(box: Box) {
+    private selectParentForBox(box: Box): void {
         // private method needed because of recursion
         LOGGER.log("==> selectParent of " + box?.role + " of kind " + box?.kind);
         const parent = box?.parent;
@@ -366,11 +373,11 @@ export class FreEditor {
      * Deletes 'box', and removes the element associated with it from the model.
      * @param box
      */
-    deleteBox(box: Box) {
+    deleteBox(box: Box): void {
         LOGGER.log(`deleteBox  ${box.id} for property ${box.propertyName}`);
         const node: FreNode = box.node;
         if (node.freIsUnit()) {
-            return
+            return;
         }
         const ownerDescriptor: FreOwnerDescriptor = node.freOwnerDescriptor();
         if (ownerDescriptor !== null) {
@@ -386,10 +393,7 @@ export class FreEditor {
                 const length = arrayProperty.length;
                 if (length === 0) {
                     // TODO Maybe we should select the element (or leaf) just before the list.
-                    this.selectElementBox(
-                        parentElement,
-                        role,
-                    );
+                    this.selectElementBox(parentElement, role);
                 } else if (length <= propertyIndex) {
                     this.selectElement(arrayProperty[propertyIndex - 1]);
                 } else {
@@ -406,14 +410,15 @@ export class FreEditor {
                         : role,
                 );
             }
-        }    }
+        }
+    }
 
     /**
      * Deletes the property value in 'box',  from the model.
      * @param box          The box to be removed.
      * @param deleteParent If true, delete the parent node as well, assuming it has only one property
      */
-    deleteTextBox(box: Box, deleteParent: boolean) {
+    deleteTextBox(box: Box, deleteParent: boolean): void {
         this.DELETE_PARENT = deleteParent
         LOGGER.log(`deleteTextBox  ${box.id} for property ${box.propertyName}`);
         const propertyName = box.propertyName
@@ -425,7 +430,7 @@ export class FreEditor {
             LOGGER.log("  no property found")
         } else {
             let changedNode: FreNode | undefined = undefined
-            AST.changeNamed( "delete text box", () => {
+            AST.changeNamed("delete text box", () => {
                 changedNode = this.deletePropertyForNode(node, propertyName, box.propertyIndex, false)
             })
             // this.selectElement(changedNode)
@@ -434,20 +439,21 @@ export class FreEditor {
     }
 
     DELETE_PARENT: boolean = false
-    
+
     private deletePropertyForNode(node: FreNode, propertyName: string, propertyIndex: number, recursive: boolean): FreNode | undefined {
-        LOGGER.log(`deletePropertyForNode  ${node.freLanguageConcept()} for property ${propertyName} at index ${propertyIndex} recursive ${recursive}`);
+        LOGGER.log(`deletePropertyForNode  ${node.freLanguageConcept()} for property ${propertyName} at index ${propertyIndex} recursive ${recursive}`)
         let changedNode: FreNode | undefined = undefined
         const propertyInfo = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)
         const nodeInfo = FreLanguage.getInstance().classifier(node.freLanguageConcept())
-        if (propertyInfo.isList && !isNullOrUndefined(propertyIndex)) {
+        if (propertyInfo.isList && notNullOrUndefined(propertyIndex)) {
             LOGGER.log(`    deletePropertyForNode for list ${propertyName}[${propertyIndex}]`)
             const arrayProperty = node[propertyName] as any[];
             AST.changeNamed("deleteBox", () => {
                 arrayProperty.splice(propertyIndex, 1);
-            })    
+            })
             return node
-        } else if (propertyInfo.isList) { /// & no index goven
+        } else if (propertyInfo.isList) {
+            /// & no index given
             LOGGER.log("    deletePropertyForNode list without index, do nothing")
             return  undefined;
         } else if (propertyInfo.propertyKind === "part") {
@@ -471,7 +477,7 @@ export class FreEditor {
             LOGGER.log(`    deletePropertyForNode delete single reference`)
             const ref = node[propertyName] as FreNodeReference<any>
             LOGGER.log(`    deletePropertyForNode emptying reference ${ref}`)
-            if (!isNullOrUndefined(ref)) {
+            if (notNullOrUndefined(ref)) {
                 AST.changeNamed("deleteBox", () => {
                     ref.name = ""
                 })
@@ -486,12 +492,19 @@ export class FreEditor {
                     LOGGER.log(`    deletePropertyForNode    parent is ${classifierInfo.typeName} propname ${ownerDescriptor.propertyName}`)
                     if (!recursive && this.canBeDeleted(node, nodeInfo, propertyInfo)) {
                         LOGGER.log(`   ... delete parent node, #properties is 1`)
-                        const newChangedNode = this.deletePropertyForNode(ownerDescriptor.owner, ownerDescriptor.propertyName, ownerDescriptor.propertyIndex, true)
+                        const newChangedNode = this.deletePropertyForNode(
+                            ownerDescriptor.owner,
+                            ownerDescriptor.propertyName,
+                            ownerDescriptor.propertyIndex,
+                            true,
+                        )
                         if (newChangedNode !== undefined) {
                             changedNode = newChangedNode
                         }
                     } else {
-                        LOGGER.log(`    deletePropertyForNode    ... parent NOT remove node because it has more than one property: ${Array.from(nodeInfo.properties.keys())}`)
+                        LOGGER.log(
+                            `    deletePropertyForNode    ... parent NOT remove node because it has more than one property: ${Array.from(nodeInfo.properties.keys())}`,
+                        )
                     }
                 }
                 return changedNode
@@ -510,15 +523,17 @@ export class FreEditor {
                 if (ownerDescriptor !== null) {
                     const newChangedNode = this.deletePropertyForNode(ownerDescriptor.owner, ownerDescriptor.propertyName, ownerDescriptor.propertyIndex, true)
                     if (newChangedNode !== undefined) {
-                        changedNode = newChangedNode
+                        changedNode = newChangedNode;
                     }
                 }
             } else {
-                LOGGER.log(`    deletePropertyForNode.primitive NOT remove node because it has more than one property: ${Array.from(nodeInfo.properties.keys())}`)
+                LOGGER.log(
+                    `    deletePropertyForNode.primitive NOT remove node because it has more than one property: ${Array.from(nodeInfo.properties.keys())}`,
+                )
             }
-            return changedNode           
+            return changedNode;
         }
-        return changedNode
+        return changedNode;
     }
 
     /**
@@ -531,48 +546,47 @@ export class FreEditor {
     private canBeDeleted(node: FreNode, classifierInfo: FreLanguageClassifier, propertyInfo: FreLanguageProperty): boolean {
         LOGGER.log(`canBeDeleted node ${node.freLanguageConcept()}  info ${classifierInfo.typeName} property ${propertyInfo.name}`)
         if (!this.DELETE_PARENT) {
-            return false
+            return false;
         }
-        const hasMandatoryProperties = Array.from(classifierInfo.properties.values()).filter(p => !p.isOptional && (p.name !== propertyInfo.name)).length >= 1
+        const hasMandatoryProperties = Array.from(classifierInfo.properties.values()).filter((p) => !p.isOptional && p.name !== propertyInfo.name).length >= 1
         if (hasMandatoryProperties) {
             LOGGER.log("    canBeDeleted HAS mandatory properties")
-            return false
+            return false;
         } else {
             LOGGER.log("    canBeDeleted no mandatory properties")
-            const optionalProperties = Array.from(classifierInfo.properties.values()).filter(p => p.isOptional)
-            for(const prop of optionalProperties) {
+            const optionalProperties = Array.from(classifierInfo.properties.values()).filter((p) => p.isOptional)
+            for (const prop of optionalProperties) {
                 if (!this.isEmptyProperty(node[prop.name])) {
                     LOGGER.log(`    canBeDeleted optional property ${prop.name} is not empty`)
-                    return false
+                    return false;
                 }
             }
         }
-        return true
+        return true;
     }
 
     private isEmptyProperty(value: any): boolean {
-        return isNullOrUndefined(value)
-            || value === ""
-            || (Array.isArray(value) && (value as []).length === 0)
-            || ((value instanceof FreNodeReference) && value.name === "" && isNullOrUndefined(value.referred));
+        return (
+            isNullOrUndefined(value) ||
+            value === "" ||
+            (Array.isArray(value) && (value as []).length === 0) ||
+            (value instanceof FreNodeReference && value.name === "" && isNullOrUndefined(value.referred))
+        )
     }
 
     /**
      * TODO
      * @param freCustomAction
      */
-    addOrReplaceAction(freCustomAction: FreAction) {
+    addOrReplaceAction(freCustomAction: FreAction): void {
         // LOGGER.log("   addOrReplaceAction [" + triggerTypeToString(freCustomAction.trigger) + "] [" + freCustomAction.activeInBoxRoles + "]");
 
         // this.newFreActions.forEach(act => {
         //     LOGGER.log("   Trigger [" + triggerTypeToString(act.trigger) + "] [" + act.activeInBoxRoles + "]");
         // });
         const alreadyThere = this.newFreActions.findIndex((action) => {
-            return (
-                isEqual(action.trigger, freCustomAction.trigger) &&
-                isEqual(action.activeInBoxRoles, freCustomAction.activeInBoxRoles)
-            );
-        });
+            return isEqual(action.trigger, freCustomAction.trigger) && isEqual(action.activeInBoxRoles, freCustomAction.activeInBoxRoles)
+        })
         // console.log("  alreadyThere: " + alreadyThere);
         if (alreadyThere !== -1) {
             // found it
@@ -587,7 +601,7 @@ export class FreEditor {
      * @param actions
      * @private
      */
-    private initializeActions(actions?: FreCombinedActions) {
+    private initializeActions(actions?: FreCombinedActions): void {
         if (actions === undefined || actions === null) {
             return;
         }
@@ -601,24 +615,21 @@ export class FreEditor {
      * @param message       The message.
      * @param severityType  The severity of the message (information, hint, warning, or error).
      */
-    setUserMessage(message: string, severityType?: FreErrorSeverity) {
-        console.error(
-            'This message should be shown elsewhere: "' + message + '", please override this method appropriately.',
-            severityType,
-        );
+    setUserMessage(message: string, severityType?: FreErrorSeverity): void {
+        console.error('This message should be shown elsewhere: "' + message + '", please add an appropriate callback.', severityType)
     }
 
     /**
      * Sets the previous sibling of the currently selected box to be the selected box.
      * TODO what if there is no previous sibling?
      */
-    selectPreviousLeaf(box?: Box) {
+    selectPreviousLeaf(box?: Box): void {
         if (isNullOrUndefined(box)) {
             box = this._selectedBox
         }
         const previous: Box = box?.nextLeafLeft;
         LOGGER.log("Select previous leaf is box " + previous?.role);
-        if (!isNullOrUndefined(previous)) {
+        if (notNullOrUndefined(previous)) {
             if (isExpressionPreOrPost(previous)) {
                 // Special expression prefix or postfix box, don't select it
                 this.selectPreviousLeaf(previous);
@@ -634,14 +645,14 @@ export class FreEditor {
      * TODO what if there is no next sibling?
      * @param box
      */
-    selectNextLeaf(box?: Box) {
+    selectNextLeaf(box?: Box): void {
         if (isNullOrUndefined(box)) {
             box = this._selectedBox
         }
         const next: Box = box?.nextLeafRight;
         LOGGER.log("Select next leaf is box " + next?.role);
-        if (!isNullOrUndefined(next)) {
-            if (isExpressionPreOrPost(next)){
+        if (notNullOrUndefined(next)) {
+            if (isExpressionPreOrPost(next)) {
                 // Special expression prefix or postfix box, don't select it
                 LOGGER.log(`selectNextleaf: skipping ${next.id} ${next.kind}`)
                 this.selectNextLeaf(next);
@@ -651,7 +662,7 @@ export class FreEditor {
         }
     }
 
-    selectPreviousLeafIncludingExpressionPreOrPost(box?: Box) {
+    selectPreviousLeafIncludingExpressionPreOrPost(box?: Box): void {
         if (isNullOrUndefined(box)) {
             box = this._selectedBox
         }
@@ -662,7 +673,7 @@ export class FreEditor {
         }
     }
 
-    selectNextLeafIncludingExpressionPreOrPost(box?: Box) {
+    selectNextLeafIncludingExpressionPreOrPost(box?: Box): void {
         if (isNullOrUndefined(box)) {
             box = this._selectedBox
         }
@@ -676,7 +687,7 @@ export class FreEditor {
     /**
      * Sets the first editable/selectable child of the currently selected box to be the selected box.
      */
-    selectFirstLeafChildBox() {
+    selectFirstLeafChildBox(): void {
         const first = this.selectedBox?.firstLeaf;
         if (!!first) {
             this.selectElementForBox(first);
@@ -685,79 +696,103 @@ export class FreEditor {
 
     /**
      * Returns the box that is visually above `box`.
-     * @param box
+     * @param box The `box` above which we are looking.
+     * @returns   The first box visually above `box`.  If there is no such box, then `box` itself is returned.
      */
     private boxAbove(box: Box): Box {
-        // wait(0);
-        const x = box.actualX + this.scrollX ;
-        const y = box.actualY + this.scrollY;
-        let result: Box = box.nextLeafLeft;
-        let tmpResult = result;
-        LOGGER.log(`boxAbove ${box.role}: ${box.kind} actual (${Math.round(x)}, ${Math.round(y)}) `);
+        LOGGER.log(`boxAbove: start with box ${box.id} !!!`)
+        const rectangle = box.getClientRectangle()
+        let result: Box = box.nextLeafLeftWithoutExpressionPlaceHolders
         while (result !== null) {
-            LOGGER.log(`previous: ${result.role + result.node.freId()} result (${result.actualX}, ${result.actualY}) scroll-relative (${result.actualX + this.scrollX}, ${result.actualY + this.scrollY})`);
-            if (FreEditor.isOnPreviousLine(tmpResult, result) && FreEditor.isOnPreviousLine(box, tmpResult)) {
-                return tmpResult;
-            }
-            if (FreEditor.isOnPreviousLine(box, result)) {
-                if (result.actualX <= x) {
-                    return result;
+            let resultRect = result.getClientRectangle()
+            if (FreEditor.isAbove(resultRect, rectangle)) {
+                let nextResult = result.nextLeafLeftWithoutExpressionPlaceHolders
+                while (nextResult !== null) {
+                    const x_distance = this.distance(resultRect, rectangle)
+                    const nextResultRect = nextResult.getClientRectangle()
+                    if (nextResultRect.y === resultRect.y) {
+                        const x_distanceNext = this.distance(nextResultRect, rectangle)
+                        LOGGER.log(`   distance current ${x_distance} (${result.id}) nect ${x_distanceNext} (${nextResult.id})`)
+                        if (x_distanceNext < x_distance) {
+                            result = nextResult
+                            resultRect = nextResultRect
+                        } else {
+                            return result
+                        }
+                    } else {
+                        // other line, return
+                        return result
+                    }
+                    nextResult = nextResult.nextLeafLeftWithoutExpressionPlaceHolders
                 }
+                return result
             }
-            const next = result.nextLeafLeft;
-            tmpResult = result;
-            result = next;
+            result = result.nextLeafLeftWithoutExpressionPlaceHolders
         }
-        return result;
+        return result ?? box
+    }
+
+    /**
+     * Returns the box that is visually above `box`.
+     * @param box The `box` below which we are looking.
+     * @returns   The first box visually above `box`.  If there is no such box, then `box` itself is returned.
+     */
+    private boxBelow(box: Box): Box {
+        LOGGER.log(`boxBelow: start with box ${box.id} !!!`)
+        const rectangle = box.getClientRectangle()
+        let result: Box = box.nextLeafRightWithoutExpressionPlaceHolders
+        while (result !== null) {
+            let resultRect = result.getClientRectangle()
+            if (FreEditor.isBelow(resultRect, rectangle)) {
+                let nextResult = result.nextLeafRightWithoutExpressionPlaceHolders
+                while (nextResult !== null) {
+                    const x_distance = this.distance(resultRect, rectangle)
+                    const nextResultRect = nextResult.getClientRectangle()
+                    if (nextResultRect.y === resultRect.y) {
+                        const x_distanceNext = this.distance(nextResultRect, rectangle)
+                        LOGGER.log(`   distance current ${x_distance} (${result.id}) nect ${x_distanceNext} (${nextResult.id})`)
+                        if (x_distanceNext < x_distance) {
+                            result = nextResult
+                            resultRect = nextResultRect
+                        } else {
+                            return result
+                        }
+                    } else {
+                        // other line, return
+                        return result
+                    }
+                    nextResult = nextResult.nextLeafRightWithoutExpressionPlaceHolders
+                }
+                return result
+            }
+            result = result.nextLeafRightWithoutExpressionPlaceHolders
+        }
+        return result ?? box
+    }
+
+    /**
+     * Find the distance from `from` rectangle to `to`.
+     * @param from
+     * @param to
+     */
+    distance(from: ClientRectangle, to: ClientRectangle): number {
+        if (from.x < to.x) {
+            return to.x - from.x + from.width
+        } else {
+            return from.x - to.x + to.width
+        }
     }
 
     // TODO rethink the parameter 'box' in all of these methods => should work on currently selected box
-
-    /**
-     * Returns the box that is visually below `box`.
-     * @param box
-     */
-    private boxBelow(box: Box): Box {
-        const x = box.actualX + this.scrollX ;
-        const y = box.actualY + this.scrollY;
-        let result: Box = box.nextLeafRight;
-        let tmpResult = result;
-        LOGGER.log(`boxBelow ${box.role}: ${box.kind} ${Math.round(x)}, ${Math.round(y)} text: ${(isTextBox(box) ? box.getText() : "NotTextBox")}`);
-        while (result !== null) {
-            LOGGER.log(
-                "next : " +
-                    result.role +
-                    "  " +
-                    Math.round(result.actualX + this.scrollX) +
-                    ", " +
-                    Math.round(result.actualY + this.scrollY),
-            );
-            if (FreEditor.isOnNextLine(tmpResult, result) && FreEditor.isOnNextLine(box, tmpResult)) {
-                LOGGER.log("Found box below 1 [" + (!!tmpResult ? tmpResult.role : "null") + "]");
-                return tmpResult;
-            }
-            if (FreEditor.isOnNextLine(box, result)) {
-                if (result.actualX + this.scrollX + result.actualWidth >= x) {
-                    LOGGER.log("Found box below 2 [" + (!!result ? result.role : "null") + "]");
-                    return result;
-                }
-            }
-            const next = result.nextLeafRight;
-            tmpResult = result;
-            result = next;
-        }
-        LOGGER.log("Found box below 3 [ null ]");
-        return result;
-    }
-
-    selectBoxBelow(box: Box) {
+    selectBoxBelow(box: Box): void {
         const down = this.boxBelow(box);
         if (down !== null && down !== undefined) {
             this.selectElementForBox(down);
         }
     }
 
-    selectBoxAbove(box: Box) {
+    selectBoxAbove(box: Box): void {
+        LOGGER.log(`selectBoxAbove: box is ${box.id}`)
         const up = this.boxAbove(box);
         if (up !== null && up !== undefined) {
             this.selectElementForBox(up);
@@ -769,11 +804,7 @@ export class FreEditor {
      * the hasError setter is being called.
      * @param list
      */
-    setErrors(list: FreError[]) {
+    setErrors(list: FreError[]): void {
         this._errorDecorator.setErrors(list);
     }
-    //
-    // gatherErrorsPerLine() {
-    //     this._errorDecorator.gatherMessagesForGutter();
-    // }
 }

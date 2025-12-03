@@ -17,6 +17,6 @@ export class DemoUnitCreator {
             result.models.push(this.serializer.toTypeScriptInstance(unit1Json) as DemoModel);
             result.models.push(this.serializer.toTypeScriptInstance(unit2Json) as DemoModel);
         })
-        return result;
+        return result!;
     }
 }

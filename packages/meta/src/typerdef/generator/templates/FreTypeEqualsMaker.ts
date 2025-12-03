@@ -1,8 +1,8 @@
 import { FretExp, FretWhereExp, TyperDef } from "../../metalanguage/index.js";
-import { Names, GenerationUtil } from "../../../utils/index.js";
+import { Imports, Names } from '../../../utils/on-lang/index.js';
 import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
 import { FretEqualsRule } from "../../metalanguage/FretEqualsRule.js";
-import { FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
+import { LangUtil } from "../../../languagedef/metalanguage/index.js";
 
 /**
  * This class generates the code for the 'equalsto' entries in the .type file.
@@ -14,7 +14,7 @@ export class FreTypeEqualsMaker {
         typerDef: TyperDef,
         leftVarName: string,
         rightVarName: string,
-        imports: FreMetaClassifier[],
+        imports: Imports,
     ): string {
         FreTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
@@ -25,7 +25,7 @@ export class FreTypeEqualsMaker {
             equalsRules.push(...spec.rules.filter((r) => r instanceof FretEqualsRule));
         });
         // sort the types such that any type comes before its super type
-        const sortedTypes = GenerationUtil.sortClassifiers(typerDef.types);
+        const sortedTypes = LangUtil.sortClassifiers(typerDef.types);
         // make sub-entries for each rule defined for an ast-element
         const astSubRules: string[] = [];
         sortedTypes.forEach((type) => {
@@ -66,7 +66,7 @@ export class FreTypeEqualsMaker {
         leftVarName: string,
         rightVarName: string,
         varIsType: boolean,
-        imports: FreMetaClassifier[],
+        imports: Imports,
     ): string {
         if (exp instanceof FretWhereExp) {
             const allConditions: string[] = [];

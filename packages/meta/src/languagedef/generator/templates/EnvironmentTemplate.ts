@@ -1,26 +1,32 @@
 import {
     Names,
-    FREON_CORE,
     TYPER_GEN_FOLDER,
     SCOPER_GEN_FOLDER,
     VALIDATOR_GEN_FOLDER,
-    EDITOR_GEN_FOLDER,
-    LANGUAGE_GEN_FOLDER,
     STDLIB_GEN_FOLDER,
     WRITER_GEN_FOLDER,
     READER_GEN_FOLDER,
-    INTERPRETER_FOLDER,
-} from "../../../utils/index.js";
+    INTERPRETER_FOLDER, Imports
+} from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class EnvironmentTemplate {
     generateEnvironment(language: FreMetaLanguage, relativePath: string): string {
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([
+            Names.FreEditor, Names.FreEnvironment, Names.FreReader,
+            Names.FreCompositeTyper, Names.FreValidator, Names.FreStdlib,
+            Names.FreWriter, Names.FreInterpreter, Names.FreCompositeScoper, Names.FreLanguageEnvironment, Names.FreProjectionHandler
+        ])
+        imports.editor = new Set<string>([
+            Names.actions(language), "initializeEditorDef", "initializeProjections"
+        ])
+        imports.language = new Set<string>([
+            Names.classifier(language.modelConcept), Names.classifier(language.units[0]), Names.initializeLanguage
+        ])
         return `
-        import { ${Names.FreEditor}, ${Names.FreEnvironment}, ${Names.FreReader},
-                    ${Names.FreTyper}, ${Names.FreValidator}, ${Names.FreStdlib},
-                    ${Names.FreWriter}, ${Names.FreInterpreter}, ${Names.FreScoperComposite}, ${Names.LanguageEnvironment}, ${Names.FreProjectionHandler}
-               } from "${FREON_CORE}";
-        import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}/index.js";
+        // TEMPLATE EnvironmentTemplate.generateEnvironment(...)
+        ${imports.makeImports(language)}
         import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/index.js";
         import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}/index.js";
         import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/index.js";
@@ -28,7 +34,6 @@ export class EnvironmentTemplate {
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}.js";
         import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}.js";
         import { ${Names.interpreterName(language)}  } from "${relativePath}${INTERPRETER_FOLDER}/${Names.interpreterName(language)}.js";
-        import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${Names.initializeLanguage} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
 
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.
@@ -46,7 +51,7 @@ export class EnvironmentTemplate {
             public static getInstance(): ${Names.FreEnvironment}  {
                 if (this.environment === undefined || this.environment === null) {
                     this.environment = new ${Names.environment(language)}();
-                    ${Names.LanguageEnvironment}.setInstance(this.environment);
+                    ${Names.FreLanguageEnvironment}.setInstance(this.environment);
                 }
                 return this.environment;
             }
@@ -79,8 +84,8 @@ export class EnvironmentTemplate {
 
             // the parts of the language environment
             editor: ${Names.FreEditor};
-            scoper: ${Names.FreScoperComposite} = new ${Names.FreScoperComposite}("main");
-            typer: ${Names.FreTyper} = new ${Names.FreTyper}("main");
+            scoper: ${Names.FreCompositeScoper} = new ${Names.FreCompositeScoper}();
+            typer: ${Names.FreCompositeTyper} = new ${Names.FreCompositeTyper}("main");
             validator: ${Names.FreValidator} = new ${Names.validator(language)}();
             writer: ${Names.FreWriter} = new ${Names.writer(language)}();
             reader: ${Names.FreReader} = new ${Names.reader(language)}();

@@ -3,9 +3,8 @@ import {
     FreMetaClassifier,
     FreMetaConcept,
     FreMetaInterface,
-    FreMetaLimitedConcept,
-} from "../../languagedef/metalanguage/index.js";
-import { LangUtil } from "../../utils/index.js";
+    FreMetaLimitedConcept, LangUtil
+} from '../../languagedef/metalanguage/index.js';
 import { FreMetaPrimitiveType, FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage.js";
 import { FreAnalyser } from "./LanguageAnalyser.js";
 

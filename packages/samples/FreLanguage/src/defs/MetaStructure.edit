@@ -1,0 +1,129 @@
+editor default
+
+// concept FreModelDescription {
+//    name: identifier;
+//    units: FreUnitDescription[];
+//}
+FreModelDescription {
+    [
+    model ${name} {
+        ${properties vertical terminator [;]}
+    }
+    ]
+}
+
+FreUnitDescription {
+    [
+    modelunit ${name} {
+        ${properties vertical terminator [;]}
+        file-extension = ${fileExtension};
+    }
+    ]
+}
+
+FreStructureDef {
+    [
+    language ${self.name}
+    ${self.modelConcept}
+    ${self.units}
+    ${interfaces}
+    ${concepts}
+    ]
+}
+//================================ other file ??? ===============
+//abstract concept FreClassifier {
+//    name: identifier;
+//    isPublic: boolean;
+//    properties: FreProperty[];
+//}
+
+FreClassifier {
+    [ ${isPublic [public]} ]
+}
+// concept FreInterface base FreClassifier {...}
+FreInterface {
+    [
+    [=> FreClassifier] interface ${name} [?base ${base horizontal separator [, ]}] {
+        ${properties vertical terminator [;]}
+    }
+    ]
+}
+// concept FreConcept base FreClassifier {...}
+FreConcept {
+    [
+    [=> FreClassifier] ${isAbstract [abstract]} concept ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+        ${properties vertical terminator [;]}
+    }
+    ]
+}
+// concept FreExpressionConcept base FreConcept {...}
+FreExpressionConcept {
+    [
+    [=> FreClassifier] ${isAbstract [abstract]} expression ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+        ${properties vertical terminator [;]}
+    }
+    ]
+}
+// concept FreBinaryExpressionConcept base FreExpressionConcept {...}
+FreBinaryExpressionConcept {
+    [
+    [=> FreClassifier] ${isAbstract [abstract]} binary expression ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+        ${properties vertical terminator [;]}
+        [?priority = ${priority};]
+    }
+    ]
+}
+// concept FreLimitedConcept base FreConcept {...}
+FreLimitedConcept {
+    [
+    [=> FreClassifier] ${isAbstract [abstract]} limited ${name} [?base ${base}] [?implements ${interfaces horizontal separator [, ]}] {
+        [?${properties vertical terminator [;]}]
+        ${instances vertical }
+    }
+    ]
+}
+// the following two could be using the abstract box definition of FreProperty, but they are not
+FreConceptProperty {
+    [${isPublic [public]} ${isPart [reference]} ${name} ${isOptional [ ?]} : ${type} ${isList [\[\]]}]
+}
+FrePrimitiveProperty {
+    [${isPublic [public]} ${name} ${isOptional [ ?]} : ${type} ${isList [\[\]]}]
+}
+
+FreInstance {
+    [
+    ${name} [?
+    = {
+        ${propertyDefs vertical separator [,]}
+    }
+    ] ;
+    ]
+}
+FrePropertyInstance {
+    [${property} : ${value}]
+}
+FreStringValue {
+ [${value}]
+}
+FreNumberValue {
+ [${value}]
+}
+FreBooleanValue {
+ [${value}]
+}
+// expressions
+FreLangSimpleExp {
+    [${value}[?${self.appliedFeature}]]
+}
+FreLangSelfExp {
+    [self[?${self.appliedFeature}]]
+}
+FreLangAppliedFeatureExp {
+    [.${self.referredElement}]
+}
+FreInstanceExp {
+    [${sourceName}:${instanceName}]
+}
+FreLangConceptExp {
+    [${sourceName}[?${self.appliedFeature}]]
+}

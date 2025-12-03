@@ -1,7 +1,8 @@
 import { BehaviorExecutionResult } from "../util/index.js";
-import { FreEditor } from "../internal.js";
-import { AbstractChoiceBox, SelectOption, Box } from "./internal.js";
-import { FreNode } from "../../ast/index.js";
+import { type FreEditor } from "../internal.js";
+import { AbstractChoiceBox, type Box } from "./internal.js";
+import type { SelectOption } from "./internal.js";
+import type { FreNode } from "../../ast/index.js";
 
 // TODO can we rename this one? It is confusing to distinguish between the selectedBox in the editor and SelectBox instances.
 export class SelectBox extends AbstractChoiceBox {

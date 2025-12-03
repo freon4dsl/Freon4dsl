@@ -1,18 +1,22 @@
-import { FreLanguageConcept, FreLanguage, FreLanguageProperty, FreLanguageClassifier } from "../../language/index.js";
+import { FreLanguage, } from "../../language/index.js";
+import type { FreLanguageConcept, FreLanguageProperty, FreLanguageClassifier } from "../../language/index.js";
 import { BehaviorExecutionResult, executeSingleBehavior } from "../util/index.js";
-import {FreCreatePartAction, FreCustomAction, FreTriggerType, isRegExp} from "../actions/index.js";
+import {FreCreatePartAction, FreCustomAction, isRegExp} from "../actions/index.js";
+import type { FreTriggerType } from "../actions/index.js";
 import { triggerTypeToString, FreEditor, isProKey } from "../internal.js";
-import { Box, AbstractChoiceBox, SelectOption } from "./internal.js";
-import { FreNode, FreNodeReference } from "../../ast/index.js";
+import { Box, AbstractChoiceBox } from "./internal.js";
+import type { SelectOption } from "./internal.js";
+import type { FreNode } from "../../ast/index.js";
+import { FreNodeReference } from "../../ast/index.js";
 import { runInAction } from "mobx";
 import { FreLogger } from "../../logging/index.js";
-import { FreUtils, isNullOrUndefined } from "../../util/index.js";
+import { FreUtils, MatchUtil, notNullOrUndefined } from '../../util/index.js';
 
 const LOGGER: FreLogger = new FreLogger("ActionBox");
 
 export class ActionBox extends AbstractChoiceBox {
     readonly kind: string = "ActionBox";
-    placeholder: string;
+
     /**
      * Filled with the name of the concept, in case this is used to create new concept instance.
      */
@@ -36,7 +40,7 @@ export class ActionBox extends AbstractChoiceBox {
     getOptions(editor: FreEditor): SelectOption[] {
         LOGGER.log("getOptions for " + this.$id + "- " + this.conceptName + "." + this.propertyName);
         const result: SelectOption[] = [];
-        if (!isNullOrUndefined(this.propertyName) && !isNullOrUndefined(this.conceptName)) {
+        if (notNullOrUndefined(this.propertyName) && notNullOrUndefined(this.conceptName)) {
             LOGGER.log(`  has property ${this.propertyName} and concept ${this.conceptName}`);
             // If the action box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
@@ -49,8 +53,8 @@ export class ActionBox extends AbstractChoiceBox {
             clsOtIntf.subConceptNames.concat(this.conceptName).forEach((creatableConceptname: string) => {
                 const creatableConcept: FreLanguageConcept = FreLanguage.getInstance().concept(creatableConceptname);
                 LOGGER.log(`creatableConcept: ${creatableConcept?.typeName}`);
-                if (!isNullOrUndefined(creatableConcept) && !creatableConcept.isAbstract) {
-                    if (!isNullOrUndefined(creatableConcept.referenceShortcut)) {
+                if (notNullOrUndefined(creatableConcept) && !creatableConcept.isAbstract) {
+                    if (notNullOrUndefined(creatableConcept.referenceShortcut)) {
                         this.addReferenceShortcuts(creatableConcept as FreLanguageConcept, result, editor);
                     } else {
                         result.push(
@@ -63,7 +67,7 @@ export class ActionBox extends AbstractChoiceBox {
                     }
                 }
             });
-        } else if (!isNullOrUndefined(this.propertyName)) {
+        } else if (notNullOrUndefined(this.propertyName)) {
             // Only has a propertyname, so it is a reference property
             const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(
                 this.node.freLanguageConcept(),
@@ -129,11 +133,11 @@ export class ActionBox extends AbstractChoiceBox {
             newElement["$$owner"] = this.node;
             result.push(
                 ...editor.environment.scoper
-                    .getVisibleNames(newElement, concept.referenceShortcut.conceptName)
-                    .filter((name) => !!name && name !== "")
-                    .map((name) => ({
-                        id: concept.trigger + "-" + name,
-                        label: name,
+                    .getVisibleNodes(newElement, concept.referenceShortcut.conceptName)
+                    .filter((node) => !!node.name && node.name !== "")
+                    .map((node) => ({
+                        id: concept.trigger + "-" + node.name,
+                        label: node.name,
                         description: "create " + concept.referenceShortcut.conceptName,
                         action: new FreCreatePartAction({
                             referenceShortcut: {
@@ -174,17 +178,17 @@ export class ActionBox extends AbstractChoiceBox {
             // newElement["$$owner"] = this.element;
             result.push(
                 ...editor.environment.scoper
-                    .getVisibleNames(parentNode, propType)
-                    .filter((name) => !!name && name !== "")
-                    .map((name) => ({
-                        id: parentNode.freLanguageConcept() + "-" + name,
-                        label: name,
+                    .getVisibleNodes(parentNode, propType)
+                    .filter((node) => !!node.name && node.name !== "")
+                    .map((node) => ({
+                        id: parentNode.freLanguageConcept() + "-" + node.name,
+                        label: node.name,
                         description: "create ref to " + propType,
                         action: FreCustomAction.create({
                             activeInBoxRoles: [],
                             // @ts-ignore
                             action: (box: Box, trigger: FreTriggerType, ed: FreEditor): FreNode | null => {
-                                parentNode[property.name].push(FreNodeReference.create(name, null));
+                                parentNode[property.name].push(FreNodeReference.create(node.name, null));
                                 return null;
                             },
                             boxRoleToSelect: "REFERENCE"
@@ -194,10 +198,10 @@ export class ActionBox extends AbstractChoiceBox {
         });
     }
 
-    triggerKeyPressEvent = (key: string) => {
-        // TODO rename this one, e.g. to triggerKeyEvent
-        LOGGER.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
-    };
+    // triggerKeyPressEvent = (key: string) => {
+    //     // TODO rename this one, e.g. to triggerKeyEvent
+    //     LOGGER.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
+    // };
 
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
         LOGGER.log("ActionBox executeOption " + JSON.stringify(option));
@@ -205,6 +209,7 @@ export class ActionBox extends AbstractChoiceBox {
         if (!!option.action) {
             return executeSingleBehavior(option.action, this, option.label, editor);
         }
+        LOGGER.log("<== ActionBox executeOption " );
         return BehaviorExecutionResult.NULL;
     }
 
@@ -212,8 +217,8 @@ export class ActionBox extends AbstractChoiceBox {
         LOGGER.log(`ActionBox ${this.id} tryToExecute [${key}]`);
         let result: BehaviorExecutionResult;
         // Try if key fits one of the options, and execute the action that is associated with it
-        const filteredOptions: SelectOption[] = this.getOptions(editor).filter(o => o.label.startsWith(key));
-        if (filteredOptions.length === 1 && filteredOptions[0].label === key ) {
+        const filteredOptions: SelectOption[] = MatchUtil.partiallyMatchingOptions(key, this.getOptions(editor));
+        if (filteredOptions.length === 1 && MatchUtil.isFullMatchWithTrigger(key, filteredOptions[0].label)) {
             result = this.executeOption(editor, filteredOptions[0]);
         } else {
             // Try if key matches a regular expression, and execute the action that is associated with it
@@ -244,7 +249,7 @@ export class ActionBox extends AbstractChoiceBox {
             return false;
         })
         // If there is a match, execute it.
-        if (!isNullOrUndefined(matchingAction)) {
+        if (notNullOrUndefined(matchingAction)) {
             LOGGER.log(`Found match to regexp: ${triggerTypeToString(matchingAction.trigger)}`);
             if (!!matchingAction) {
                 return executeSingleBehavior(matchingAction, this, text, editor);

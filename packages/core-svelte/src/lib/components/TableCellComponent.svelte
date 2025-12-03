@@ -1,6 +1,5 @@
-<svelte:options immutable={true}/>
 <script lang="ts">
-    import { TABLECELL_LOGGER } from "$lib/components/ComponentLoggers.js";
+    import { TABLECELL_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component show a single cell in a TableComponent. It supports drag and drop,
@@ -10,64 +9,72 @@
      * handles the drop.
      */
     import {
-        isMetaKey,
         ENTER,
-        type FreEditor,
-        FreLogger,
         TableCellBox,
         FreLanguage,
         TableDirection,
-        Box,
+        type Box,
         isActionBox,
         ListElementInfo,
         MenuOptionsType,
         FreUtils,
         isTableRowBox,
-        TableRowBox, FreCreatePartAction, MetaKey, AST, TableBox, isTableBox, isElementBox, ElementBox
+        TableRowBox,
+        FreCreatePartAction,
+        MetaKey,
+        AST,
+        type TableBox,
+        isTableBox,
+        isElementBox,
+        ElementBox,
+        notNullOrUndefined,
+        isFreNodeReference,
+        isFreNode,
+        MenuItem
     } from "@freon4dsl/core";
-    import { onMount, createEventDispatcher, afterUpdate } from "svelte";
-    import RenderComponent from "./RenderComponent.svelte";
-    import { componentId } from "$lib/index.js";
+    import { onMount } from "svelte";
+    import RenderComponent from './RenderComponent.svelte';
+    import { componentId, rememberDraggedNode } from '../index.js';
     import {
         activeElem,
         activeIn,
         draggedElem,
-        draggedFrom,
+        contextMenu,
+        contextMenuVisible,
         selectedBoxes
-    } from "$lib/index.js";
-    import { contextMenu, contextMenuVisible } from "$lib/index.js";
+    } from './stores/AllStores.svelte.js';
+    import type { TableCellProps } from './svelte-utils/FreComponentProps.js';
+    import DragHandle from "./images/DragHandle.svelte";
 
-    // properties
-    export let box: TableCellBox;
-    export let editor: FreEditor;
-    export let parentComponentId: string;
-    export let parentOrientation: string;
-    // the type of the elements in the cell, this speeds up the check whether an element may be dropped here
-    export let myMetaType: string;
+    // Props
+    let {
+        editor,
+        box,
+        parentComponentId,
+        parentOrientation,
+        ondropOnCell
+    }: TableCellProps<TableCellBox> = $props();
 
-    type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
+    type BoxTypeName = 'gridcellNeutral' | 'gridcellOdd' | 'gridcellEven';
 
     // local variables
-    const LOGGER = TABLECELL_LOGGER
-    const dispatcher = createEventDispatcher();
-    let id: string = !!box ? `cell-${componentId(box)}` : 'table-cell-for-unknown-box';
+    const LOGGER = TABLECELL_LOGGER;
+    let id: string = notNullOrUndefined(box)
+        ? `cell-${componentId(box)}`
+        : 'table-cell-for-unknown-box';
 
-    let row: number;
-    let column: number;
-    let orientation: BoxTypeName = "gridcellNeutral";
-    let childBox: Box;
+    let row: number = $state(0);
+    let column: number = $state(0);
+    let orientation: BoxTypeName = 'gridcellNeutral';
+    let childBox: Box = $state()!;
     let htmlElement: HTMLElement;
-    let isHeader = "noheader";
-    let cssStyle: string = "";
-    let cssClass: string = "";
-
-    // the drag ghost image, preload  it, otherwise it will not be shown on the first drag
-    const img = new Image();
-    // img.src = "img/freonlogo.png"; // todo provide better drag image
+    let isHeader = $state('');
+    let cssStyle: string = '';
+    let cssClass: string = $state('');
 
     const refresh = (why?: string) => {
-        LOGGER.log("TableCellComponent refresh, why: " + why);
-        if (!!box) {
+        LOGGER.log('TableCellComponent refresh, why: ' + why);
+        if (notNullOrUndefined(box)) {
             if (parentOrientation === TableDirection.HORIZONTAL) {
                 row = box.row;
                 column = box.column;
@@ -76,10 +83,11 @@
                 column = box.row;
             }
             childBox = box.content;
-            myMetaType = box.conceptName;
+            box.conceptName = box.conceptName;
+            isHeader = (box.parent as TableRowBox).isHeader ? 'table-header' : '';
         }
-        LOGGER.log("    refresh row, col = " + row + ", " + column);
-    }
+        LOGGER.log('    refresh row, col = ' + row + ', ' + column);
+    };
 
     /**
      * This function sets the focus on this element programmatically.
@@ -92,19 +100,28 @@
     }
 
     onMount(() => {
-        box.refreshComponent = refresh;
-        box.setFocus = setFocus;
-        row = box.row;
-        column = box.column;
+        refresh('from onMount');
     });
 
-    afterUpdate(() => {
+    // Note that this component is never part of a RenderComponent, therefore we must handle being selected here
+    let selectedCls: string = $state(''); // css class name for when the node is selected
+
+    $effect(() => {
+        // runs after the initial onMount
         box.refreshComponent = refresh;
         box.setFocus = setFocus;
         // selection is handled here because TableCells are not included in the RenderComponent
-        let isSelected: boolean = $selectedBoxes.includes(box);
-        cssClass = (isSelected ? "table-cell-component-selected" : "table-cell-component-unselected");
+        let isSelectedBox: boolean = selectedBoxes.value.includes(box);
+        cssClass = isSelectedBox ? 'table-cell-component-selected' : 'table-cell-component-unselected';
+
+        let isSelected: boolean = box.content.selectable
+            ? selectedBoxes.value.includes(box) || selectedBoxes.value.includes(box.content)
+            : false;
+        selectedCls = isSelected ? 'render-component-selected' : 'render-component-unselected';
+        // Evaluated and re-evaluated when the box changes.
+        refresh('New TableCellComponent created for ' + box?.id); //+ " element name: " + box?.element["name"]);
     });
+
 
     const onKeydown = (event: KeyboardEvent) => {
         LOGGER.log("GridCellComponent onKeyDown");
@@ -127,122 +144,139 @@
                 boxRoleToSelect: undefined,
             })
             let execresult: () => void;
-            const selectedIndex = (tableBox.hasHeaders ? row -1 : row) 
+            const selectedIndex = (tableBox.hasHeaders ? row -1 : row)
             AST.changeNamed("ListComponent.Enter", () => {
                 execresult = action.execute(tableBox, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, selectedIndex)
             })
+            // @ts-ignore
             if (!!execresult) {
                 execresult();
             }
         }
     };
 
-    $: { // Evaluated and re-evaluated when the box changes.
-        refresh('New TableCellComponent created for ' + box?.id );//+ " element name: " + box?.element["name"]);
-    }
-
     const drop = (event: DragEvent) => {
-        LOGGER.log("drop, dispatching");
-        dispatcher("dropOnCell", { row: row, column: column });
+        console.log('drop, dispatching');
+        event.stopPropagation();
+        ondropOnCell({ row: row, column: column });
     };
 
     const dragstart = (event: DragEvent) => {
-        LOGGER.log("dragStart");
+        console.log(`dragStart ${box.node.freId()} ${box.node.freLanguageConcept()} ${box.node.freOwner()?.freLanguageConcept()}`);
+        event.stopPropagation();
         // close any context menu
-        $contextMenuVisible = false;
+        contextMenuVisible.value = false;
 
-        // give the drag an effect
-        event.dataTransfer.effectAllowed = "move";
-        event.dataTransfer.dropEffect = "move";
+        if (notNullOrUndefined(event.dataTransfer)) {
+            // give the drag an effect
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.dropEffect = 'move';
+        }
 
-        // select the complete element
-        editor.selectElementForBox(box);
-
-        // give the drag an image
-        event.dataTransfer.setDragImage(img, 0, 0);
-        // And Chrome seems to require the image to be in the dom: document.body.append(img), which should be hidden with some css
-
-        // create the data to be transferred and notify the store that something is being dragged
         // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
-        $draggedElem = new ListElementInfo(box.node, parentComponentId);
-        $draggedFrom = parentComponentId;
+        // Create the data to be transferred and notify the store that something is being dragged.
+        const parentTableBox: TableBox | undefined = box.getParentTableBox()
+        if (notNullOrUndefined(parentTableBox)) {
+            rememberDraggedNode(parentTableBox.id, box.getParentTableBox()!, box);
+            // console.log(`dragstart: ${draggedElem.value?.element.freLanguageConcept()}`)
+        }
     };
 
     const dragenter = (event: DragEvent): boolean => {
-        // only show this item as active when the type of the element to be dropped is the right one
-        if (FreLanguage.getInstance().metaConformsToType($draggedElem.element, myMetaType)) {
-            $activeElem = { row: row, column: column };
-            $activeIn = parentComponentId;
+        let data: ListElementInfo | null = draggedElem.value;
+        if (!!data) {
+            if (isFreNodeReference(data.element)) {
+                LOGGER.log(`dragEnter item [${data.element.name}] from [${data.componentId}] in table [${id}] on position [${row},${column}]`);
+            } else if (isFreNode(data.element)) {
+                LOGGER.log(`dragEnter item [${data.element.freId()}] from [${data.componentId}] in table [${id}] on position [${row},${column}]`);
+            }
+            event.stopPropagation();
+            event.preventDefault();
+            let myMetaType = {
+                type: box.conceptName,
+                isRef: FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.propertyKind === 'reference'
+            }
+            // only show this item as active when the type of the element to be dropped is the right one
+            if (FreLanguage.getInstance().dragMetaConformsToType(data.elementType, myMetaType)) {
+                activeElem.value = {row: row, column: column};
+                activeIn.value = parentComponentId;
+                return true;
+            }
         }
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
 
-    const mouseout = (): boolean => {
-        $activeElem = null;
-        $activeIn = "";
+    const mouseout = (event: MouseEvent): boolean => {
+        event.stopPropagation();
+        activeElem.value = undefined;
+        activeIn.value = '';
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
 
-    function showContextMenu(event) {
-        // determine the contents of the menu based on box
-        // if the selected box is the placeholder or a title/header => show different menu items
-        let index: number;
+    function showContextMenu(event: MouseEvent) {
+        event.stopPropagation();
+        event.preventDefault();
+
         FreUtils.CHECK(isTableRowBox(box.parent));
         let parent: TableRowBox = box.parent as TableRowBox;
-        if (isActionBox(box.content)) {
-            $contextMenu.items = box.options(MenuOptionsType.placeholder);
-            index = Number.MAX_VALUE;
-        } else if (parent.isHeader) {
-            $contextMenu.items = box.options(MenuOptionsType.header);
-            index = -1;
-        } else {
-            $contextMenu.items = box.options(MenuOptionsType.normal);
-            // console.log(`showContextMenu row: ${row}, column: ${column}, box.propertyIndex: ${box.propertyIndex}, box.propertyName: ${box.propertyName}`);
-            index = box.propertyIndex;
-        }
         // set the selected box
         if (editor.selectedBox !== box) {
             if (isActionBox(box.content) || parent.isHeader) {
-                $selectedBoxes = [...parent.children];
+                selectedBoxes.value = [...parent.children];
             } else {
                 editor.selectElementForBox(box);
             }
         }
-        $contextMenu.show(event, index); // this function sets $contextMenuVisible to true
+        // open the context menu
+        if (notNullOrUndefined(contextMenu.instance)) {
+            let index: number;
+            // determine the contents of the menu based on box
+            // if the selected box is the placeholder or a title/header => show different menu items
+            let items: MenuItem[] = [];
+            if (isActionBox(box.content)) {
+                items = box.options(MenuOptionsType.placeholder);
+                index = Number.MAX_VALUE;
+            } else if (parent.isHeader) {
+                items = box.options(MenuOptionsType.header);
+                index = -1;
+            } else {
+                items = box.options(MenuOptionsType.normal);
+                // console.log(`showContextMenu row: ${row}, column: ${column}, box.propertyIndex: ${box.propertyIndex}, box.propertyName: ${box.propertyName}`);
+                index = box.propertyIndex;
+            }
+            contextMenu.instance.show(event, index, items); // this function sets contextMenu.instanceVisible to true
+        }
     }
-
-    // Note that this component is never part of a RenderComponent, therefore we must handle being selected here
-    let isSelected: boolean;
-    $: isSelected = box.content.selectable ? ($selectedBoxes.includes(box) || $selectedBoxes.includes(box.content)) : false;
 </script>
 
-
-<!-- on:focus is here to avoid a known bug in svelte 3.4*: "A11y: on:mouseover must be accompanied by on:focus with Svelte v3.40 #285" -->
-<!-- Likewise on:blur is needed for on:mouseout -->
+<!-- on:blur is needed for on:mouseout -->
 <!-- Apparently, we cannot combine multiple inline style directives, as in -->
 <!--  style="grid-row: '{row}' grid-column: '{column}' {cssStyle}"-->
-
 <span
-        id="{id}"
-        role="cell"
-        class="table-cell-component {orientation} {isHeader} {cssClass} "
-        style:grid-row="{row}"
-        style:grid-column="{column}"
-        style="{cssStyle}"
-        draggable=true
-        on:keydown={onKeydown}
-        on:dragstart|stopPropagation={event => dragstart(event)}
-        on:drop|stopPropagation={event => drop(event)}
-
-        on:dragenter|stopPropagation={(event) => dragenter(event)}
-        on:mouseout|stopPropagation={mouseout}
-        on:focus={() => {}}
-        on:blur={() => {}}
-        on:keydown={onKeydown}
-        on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event)}
-        bind:this={htmlElement}
+    {id}
+    role="cell"
+    class="table-cell-component {orientation} {isHeader} {cssClass} {selectedCls} {box.cssClass}"
+    style:grid-row={row}
+    style:grid-column={column}
+    style={cssStyle}
+    onkeydown={onKeydown}
+    ondrop={(event) => drop(event)}
+    ondragenter={(event) => dragenter(event)}
+    ondragover={(event) => {
+                event.preventDefault();
+            }}
+    onmouseout={(event) => mouseout(event)}
+    onblur={() => {}}
+    oncontextmenu={(event) => showContextMenu(event)}
+    bind:this={htmlElement}
+    tabindex={-1}
 >
-    <RenderComponent box={childBox} editor={editor}/>
+    {#if isHeader.length === 0 && box.isFirstInElementBox()}
+                <span class="drag-handle"
+                      draggable="true"
+                      ondragstart={(event) => dragstart(event)}
+                      role="listitem"><DragHandle/></span>
+    {/if}
+    <RenderComponent box={childBox} {editor} />
 </span>
-

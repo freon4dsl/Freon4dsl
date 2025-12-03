@@ -1,5 +1,5 @@
 import { jsonAsString } from "../util/index.js";
-import { ConceptFunction, OwningPropertyFunction } from "./IMainInterpreter.js";
+import type { ConceptFunction, OwningPropertyFunction } from "./IMainInterpreter.js";
 import { InterpreterContext } from "./InterpreterContext.js";
 import { RtObject } from "./runtime/index.js";
 
@@ -9,7 +9,7 @@ const INDENT_INDIRECT = "|   ";
 /**
  * A map of trace objects where we can find the value based on the element is enough.
  */
-class TraceNode {
+export class TraceNode {
     tracer: InterpreterTracer;
     value: RtObject;
     node: Object;
@@ -56,6 +56,22 @@ class TraceNode {
             }
             result += child.toIndentedString(baseIndent + INDENT_DIRECT, index === this.children.length - 1);
         });
+        return result;
+    }
+
+    /**
+     * Return the value and other information on this TraceNode in a single string.
+     * NB the children are not taken into account.
+     */
+    toResultString(): string {
+        let result: string;
+        if (this.node === undefined) {
+            // The root, no output string here
+            result = "";
+        } else {
+            result =
+                `${this.tracer.property(this.node)}: ${this.tracer.concept(this.node)} = ${this.value.toString()} ${(this.idValid(this.ctx) ? " Context: " + this.ctx.toString() : "")}`;
+        }
         return result;
     }
 

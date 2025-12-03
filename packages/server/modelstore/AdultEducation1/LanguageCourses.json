@@ -1,6 +1,11 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-CourseSchedule",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-14",

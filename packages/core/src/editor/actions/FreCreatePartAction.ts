@@ -1,10 +1,12 @@
-import { FreBinaryExpression, FreNode } from "../../ast/index.js";
+import type { FreBinaryExpression, FreNode } from "../../ast/index.js";
 import { FreLanguage } from "../../language/index.js";
 import { BTREE, FreUtils } from "../../util/index.js";
 import { Box } from "../boxes/index.js";
 import { FreEditor } from "../FreEditor.js";
-import { ACTION_LOGGER, EMPTY_POST_ACTION, FreAction, FrePostAction } from "./FreAction.js";
-import { FreTriggerUse, isString, triggerTypeToString } from "./FreTriggers.js";
+import { ACTION_LOGGER, EMPTY_POST_ACTION, FreAction } from "./FreAction.js";
+import { isString, triggerTypeToString } from "./FreTriggers.js";
+import type { FreTriggerUse } from "./FreTriggers.js";
+import type { FrePostAction } from "./FreAction.js";
 
 // import { FreLogger } from "../../logging";
 // const LOGGER = new FreLogger("FreCreateElementAction");
@@ -52,7 +54,7 @@ export class FreCreatePartAction extends FreAction {
         const propName: string = this.propertyName;
         const theModelElement = box.node[propName];
 
-        const newElement: FreNode = FreLanguage.getInstance().classifier(this.conceptName)?.creator({});
+        const newElement: FreNode = FreLanguage.getInstance().concept(this.conceptName)?.creator({});
         if (newElement === undefined || newElement === null) {
             // TODO Find out why this happens sometimes
             ACTION_LOGGER.error("ActionBox action: Unexpected new element undefined");

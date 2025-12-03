@@ -1,14 +1,15 @@
 import { FreMetaPrimitiveProperty, FreMetaPrimitiveType } from "../../../../languagedef/metalanguage/index.js";
 import {
+    DisplayType,
     ForType,
     FreEditBoolKeywords,
     FreEditGlobalProjection,
     FreEditListInfo,
     FreEditProjectionDirection,
     FreEditProjectionGroup,
-    FreEditPropertyProjection,
-} from "../../../metalanguage/index.js";
-import { ListUtil, Roles } from "../../../../utils/index.js";
+    FreEditPropertyProjection
+} from '../../../metalanguage/index.js';
+import { Roles } from "../../../../utils/on-lang/index.js";
 import { DisplayTypeHelper } from "./DisplayTypeHelper.js";
 import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 import { ExternalBoxesHelper } from "./ExternalBoxesHelper.js";
@@ -25,6 +26,7 @@ export class PrimitivePropertyBoxesHelper {
     // The values for the boolean keywords are set on initialization (by a call to 'setGlobalBooleanKeywords').
     private trueKeyword: string = "true";
     private falseKeyword: string = "false";
+    private undefinedKeyword: string = "unknown";
     private stdBoolDisplayType: string = "text";
     private stdNumberDisplayType: string = "text";
 
@@ -97,8 +99,7 @@ export class PrimitivePropertyBoxesHelper {
             direction = "horizontalList";
             roleDirection = "hList";
         }
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxFactory");
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "Box");
+        this._myTemplate.imports.core.add("BoxFactory").add("Box");
         // TODO Create Action for the role to actually add an element.
         return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-${roleDirection}", "${property.name}",
                             (${element}.${property.name}.map( (item, index)  =>
@@ -115,10 +116,14 @@ export class PrimitivePropertyBoxesHelper {
         displayType?: string,
         boolKeywords?: FreEditBoolKeywords,
     ): string {
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
+        this._myTemplate.imports.core.add("BoxUtil");
         const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type) {
             case FreMetaPrimitiveType.string:
+                if (!!displayType && displayType === DisplayType.Multiline) {
+                    return `BoxUtil.multiLineTextBox(${element}, "${property.name}"${listAddition})`;
+                }
+                return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
             case FreMetaPrimitiveType.identifier:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
             case FreMetaPrimitiveType.number:
@@ -129,23 +134,25 @@ export class PrimitivePropertyBoxesHelper {
                 if (!!displayType) {
                     displayTypeToUse1 = DisplayTypeHelper.getTypeScriptForDisplayType(displayType);
                 }
-                ListUtil.addIfNotPresent(this._myTemplate.coreImports, "NumberDisplay");
+                this._myTemplate.imports.core.add("NumberDisplay");
                 return `BoxUtil.numberBox(${element}, "${property.name}"${listAddition}, NumberDisplay.${displayTypeToUse1})`;
             case FreMetaPrimitiveType.boolean:
                 // get the right keywords
                 let trueKeyword: string = this.trueKeyword;
                 let falseKeyword: string = this.falseKeyword;
+                let undefinedKeyword: string = this.undefinedKeyword;
                 if (!!boolKeywords) {
                     trueKeyword = boolKeywords.trueKeyword;
                     falseKeyword = boolKeywords.falseKeyword ? boolKeywords.falseKeyword : "undefined";
+                    undefinedKeyword = boolKeywords.undefinedKeyword ? boolKeywords.undefinedKeyword : "undefined-undefined";
                 }
                 // get the right displayType
                 let displayTypeToUse2: string = DisplayTypeHelper.getTypeScriptForDisplayType(this.stdBoolDisplayType);
                 if (!!displayType) {
                     displayTypeToUse2 = DisplayTypeHelper.getTypeScriptForDisplayType(displayType);
                 }
-                ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoolDisplay");
-                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, BoolDisplay.${displayTypeToUse2})`;
+                this._myTemplate.imports.core.add("BoolDisplay");
+                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}", unknown:"${undefinedKeyword}"}${listAddition}, BoolDisplay.${displayTypeToUse2})`;
             default:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
         }

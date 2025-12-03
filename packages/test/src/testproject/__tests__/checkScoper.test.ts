@@ -1,9 +1,9 @@
 import { AST, FreLanguage } from "@freon4dsl/core";
 import { TestStartEnvironment } from "../config/gen/TestStartEnvironment";
 import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../language/gen";
-import { TestStartScoper } from "../scoper/gen";
 import { TestStartStdlib } from "../stdlib/gen/TestStartStdlib";
 import { describe, test, expect, beforeEach } from "vitest";
+import { getVisibleNames } from '../../utils/HelperFunctions';
 
 describe("Checking stdlib for Demo", () => {
     TestStartEnvironment.getInstance();
@@ -27,10 +27,10 @@ describe("Checking stdlib for Demo", () => {
         expect(stdlib.find("XXinstance3")).toBe(XX.XXinstance3);
         expect(stdlib.find("CC1")).toBe(KK.CC1);
         expect(stdlib.find("CC2")).toBe(KK.CC2);
-        expect(stdlib.find("String")).toBeNull();
-        expect(stdlib.find("Integer")).toBeNull();
-        expect(stdlib.find("Boolean")).toBeNull();
-        expect(stdlib.find("ANY")).toBeNull();
+        expect(stdlib.find("String")).toBeUndefined();
+        expect(stdlib.find("Integer")).toBeUndefined();
+        expect(stdlib.find("Boolean")).toBeUndefined();
+        expect(stdlib.find("ANY")).toBeUndefined();
     });
 
     test("all predefined instances can be found including check on metatype", () => {
@@ -42,18 +42,18 @@ describe("Checking stdlib for Demo", () => {
         expect(stdlib.find("XXinstance3", "XX")).toBe(XX.XXinstance3);
         expect(stdlib.find("CC1", "KK")).toBe(KK.CC1);
         expect(stdlib.find("CC2", "KK")).toBe(KK.CC2);
-        expect(stdlib.find("String", "TestLimited")).toBeNull();
-        expect(stdlib.find("Integer", "TestLimited")).toBeNull();
-        expect(stdlib.find("Boolean", "TestLimited")).toBeNull();
-        expect(stdlib.find("ANY", "TestLimited")).toBeNull();
-        expect(stdlib.find("ONWAAR", "ZZ")).toBeNull();
-        expect(stdlib.find("WAAR", "XX")).toBeNull();
-        expect(stdlib.find("ZZinstance1", "KK")).toBeNull();
-        expect(stdlib.find("XXinstance1", "TestLimited")).toBeNull();
-        expect(stdlib.find("XXinstance2", "ZZ")).toBeNull();
-        expect(stdlib.find("XXinstance3", "KK")).toBeNull();
-        expect(stdlib.find("CC1", "XX")).toBeNull();
-        expect(stdlib.find("CC2", "TestLimited")).toBeNull();
+        expect(stdlib.find("String", "TestLimited")).toBeUndefined();
+        expect(stdlib.find("Integer", "TestLimited")).toBeUndefined();
+        expect(stdlib.find("Boolean", "TestLimited")).toBeUndefined();
+        expect(stdlib.find("ANY", "TestLimited")).toBeUndefined();
+        expect(stdlib.find("ONWAAR", "ZZ")).toBeUndefined();
+        expect(stdlib.find("WAAR", "XX")).toBeUndefined();
+        expect(stdlib.find("ZZinstance1", "KK")).toBeUndefined();
+        expect(stdlib.find("XXinstance1", "TestLimited")).toBeUndefined();
+        expect(stdlib.find("XXinstance2", "ZZ")).toBeUndefined();
+        expect(stdlib.find("XXinstance3", "KK")).toBeUndefined();
+        expect(stdlib.find("CC1", "XX")).toBeUndefined();
+        expect(stdlib.find("CC2", "TestLimited")).toBeUndefined();
     });
 });
 
@@ -87,8 +87,8 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super1);
             model.supers.push(super2);
         })
-        let scoper = new TestStartScoper();
-        let vi = scoper.getVisibleNames(model);
+        let scoper = TestStartEnvironment.getInstance().scoper;
+        let vi = getVisibleNames(scoper.getVisibleNodes(model));
         expect(vi).toContain("super1");
         expect(vi).toContain("super2");
         expect(vi).toContain("myCC1");
@@ -100,8 +100,8 @@ describe("Checking scoper for testproject", () => {
         AST.change( () => {
             model.supers.push(super2);
         })
-        let scoper = new TestStartScoper();
-        let vi = scoper.getVisibleNames(model);
+        let scoper = TestStartEnvironment.getInstance().scoper;
+        let vi = getVisibleNames(scoper.getVisibleNodes(model));
         // expect(vi).toContain("super1");
         expect(vi).toContain("super2");
         // expect(vi).toContain("myCC1");
@@ -113,8 +113,8 @@ describe("Checking scoper for testproject", () => {
         AST.change( () => {
             model.supers.push(super1);
         })
-        let scoper = new TestStartScoper();
-        let vi = scoper.getVisibleNames(model);
+        let scoper = TestStartEnvironment.getInstance().scoper;
+        let vi = getVisibleNames(scoper.getVisibleNodes(model));
         expect(vi).toContain("super1");
         // expect(vi).toContain("super2");
         expect(vi).toContain("myCC1");
@@ -127,8 +127,8 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super1);
             model.supers.push(super2);
         })
-        let scoper = new TestStartScoper();
-        let vi = scoper.getVisibleElements(model);
+        let scoper = TestStartEnvironment.getInstance().scoper;
+        let vi = scoper.getVisibleNodes(model);
         expect(vi).toContain(super1);
         expect(vi).toContain(super2);
         expect(vi).toContain(super1.AAprop21); // myCC1
@@ -140,8 +140,8 @@ describe("Checking scoper for testproject", () => {
         AST.change( () => {
             model.supers.push(super2);
         })
-        let scoper = new TestStartScoper();
-        let vi = scoper.getVisibleElements(model);
+        let scoper = TestStartEnvironment.getInstance().scoper;
+        let vi = scoper.getVisibleNodes(model);
         expect(vi).not.toContain(super1);
         expect(vi).toContain(super2);
         expect(vi).not.toContain(super1.AAprop21); // myCC1
@@ -153,8 +153,8 @@ describe("Checking scoper for testproject", () => {
         AST.change( () => {
             model.supers.push(super1);
         })
-        let scoper = new TestStartScoper();
-        let vi = scoper.getVisibleElements(model);
+        let scoper = TestStartEnvironment.getInstance().scoper;
+        let vi = scoper.getVisibleNodes(model);
         expect(vi).toContain(super1);
         expect(vi).not.toContain(super2);
         expect(vi).toContain(super1.AAprop21); // myCC1

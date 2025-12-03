@@ -9,3 +9,5 @@ export * from "./FreLangCheckerPhase2.js";
 export * from "./FreLangExpressionChecker.js";
 export * from "./common-super/CommonSuperTypeUtil.js";
 export * from "./CommonChecker.js";
+export * from "./ClassifierChecker.js";
+export * from "./FreLangChecker.js";

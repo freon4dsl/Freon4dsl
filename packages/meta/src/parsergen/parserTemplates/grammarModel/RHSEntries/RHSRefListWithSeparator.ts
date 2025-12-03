@@ -1,8 +1,9 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
-import { GenerationUtil, Names } from "../../../../utils/index.js";
+import { Names } from "../../../../utils/on-lang/index.js";
 import { internalTransformRefList, ParserGenUtil } from "../../ParserGenUtil.js";
 import { makeIndent, refRuleName } from "../GrammarUtils.js";
+import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
 
 export class RHSRefListWithSeparator extends RHSPropPartWithSeparator {
     constructor(prop: FreMetaProperty, separatorText: string) {
@@ -18,7 +19,7 @@ export class RHSRefListWithSeparator extends RHSPropPartWithSeparator {
         const propType: string = Names.classifier(this.property.type);
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
         return `${ParserGenUtil.internalName(this.property.name)} =
-                        this.${mainAnalyserName}.${internalTransformRefList}<${baseType}>(${nodeName}[${index}], '${propType}', '${this.separatorText}'); // RHSRefListWithSeparator\n`;
+                        this.${mainAnalyserName}.${internalTransformRefList}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}] as KtList<${baseType}>, '${propType}'); // RHSRefListWithSeparator\n`;
     }
 
     toString(depth: number): string {

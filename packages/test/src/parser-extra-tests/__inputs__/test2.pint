@@ -1,0 +1,12 @@
+PartsInitiatorTest `identifier` {
+	 value WithDirectParts {
+             	 partList ## PartConcept {
+                          	 content "stringLiteralABC"
+
+                         	 }
+                          ## PartConcept {
+                          	 content "stringLiteralXYZ"
+                          	 }
+             	 `SECOND`
+             	 }
+	 }

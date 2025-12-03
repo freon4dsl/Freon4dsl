@@ -1,6 +1,11 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-ExternalTester",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-5",
@@ -28,6 +33,18 @@
                },
                "children": [
                   "ID-13"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-ExternalUnit-toBeReferenced"
+               },
+               "children": [
+                  "ID-16",
+                  "ID-21",
+                  "ID-28"
                ]
             }
          ],
@@ -65,7 +82,7 @@
                   "version": "2023.1",
                   "key": "-key-AA-numberProp"
                },
-               "value": "0"
+               "value": "951"
             },
             {
                "property": {
@@ -73,7 +90,7 @@
                   "version": "2023.1",
                   "key": "-key-AA-booleanProp"
                },
-               "value": "true"
+               "value": "false"
             }
          ],
          "containments": [
@@ -109,9 +126,35 @@
                "reference": {
                   "language": "-key-ExternalTester",
                   "version": "2023.1",
+                  "key": "-key-AA-referenceProp"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "cc-1",
+                     "reference": "ID-16"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
                   "key": "-key-AA-referenceList"
                },
-               "targets": []
+               "targets": [
+                  {
+                     "resolveInfo": "cc-1",
+                     "reference": "ID-16"
+                  },
+                  {
+                     "resolveInfo": "cc2",
+                     "reference": "ID-21"
+                  },
+                  {
+                     "resolveInfo": "cc56",
+                     "reference": "ID-28"
+                  }
+               ]
             },
             {
                "reference": {
@@ -139,7 +182,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-name"
                },
-               "value": ""
+               "value": "NAAM"
             },
             {
                "property": {
@@ -155,7 +198,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-numberProp"
                },
-               "value": "0"
+               "value": "50"
             },
             {
                "property": {
@@ -171,11 +214,19 @@
                "containment": {
                   "language": "-key-ExternalTester",
                   "version": "2023.1",
-                  "key": "-key-BB-conceptList"
+                  "key": "-key-BB-conceptProp"
                },
                "children": [
-                  "ID-6"
+                  "ID-54"
                ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-BB-conceptList"
+               },
+               "children": []
             },
             {
                "containment": {
@@ -195,19 +246,43 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "nameOfReferedNode",
+                     "resolveInfo": "TWEEDENAAM",
+                     "reference": "ID-33"
+                  },
+                  {
+                     "resolveInfo": "cc-1",
+                     "reference": "ID-16"
+                  },
+                  {
+                     "resolveInfo": "firstCC",
+                     "reference": "ID-19"
+                  },
+                  {
+                     "resolveInfo": "cc56",
+                     "reference": "ID-28"
+                  },
+                  {
+                     "resolveInfo": "jGHJEHGWEGH;",
+                     "reference": "ID-24"
+                  },
+                  {
+                     "resolveInfo": "cc56",
+                     "reference": "ID-28"
+                  },
+                  {
+                     "resolveInfo": "new element",
+                     "reference": "ID-25"
+                  },
+                  {
+                     "resolveInfo": "nameOfReferedNode8",
                      "reference": null
                   },
                   {
-                     "resolveInfo": "nameOfReferedNode",
-                     "reference": null
+                     "resolveInfo": "cc-1",
+                     "reference": "ID-16"
                   },
                   {
-                     "resolveInfo": "nameOfReferedNode",
-                     "reference": null
-                  },
-                  {
-                     "resolveInfo": "nameOfReferedNode",
+                     "resolveInfo": "nameOfReferedNode6",
                      "reference": null
                   }
                ]
@@ -233,7 +308,7 @@
          "parent": "ID-13"
       },
       {
-         "id": "ID-6",
+         "id": "ID-54",
          "classifier": {
             "language": "-key-ExternalTester",
             "version": "2023.1",
@@ -246,7 +321,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-name"
                },
-               "value": "new element"
+               "value": "BBKINGGGGGGGGG"
             },
             {
                "property": {
@@ -262,7 +337,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-numberProp"
                },
-               "value": "100"
+               "value": "1111111"
             },
             {
                "property": {
@@ -270,7 +345,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-booleanProp"
                },
-               "value": "true"
+               "value": "false"
             }
          ],
          "containments": [
@@ -319,6 +394,96 @@
          ],
          "annotations": [],
          "parent": "ID-14"
+      },
+      {
+         "id": "ID-16",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-CC"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-name"
+               },
+               "value": "cc-1"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-numberProp"
+               },
+               "value": "22"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-5"
+      },
+      {
+         "id": "ID-21",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-CC"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-name"
+               },
+               "value": "cc2"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-numberProp"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-5"
+      },
+      {
+         "id": "ID-28",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-CC"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-name"
+               },
+               "value": "cc56"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-numberProp"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-5"
       }
    ]
 }

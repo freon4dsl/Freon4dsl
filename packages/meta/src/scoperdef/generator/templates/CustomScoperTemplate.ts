@@ -1,44 +1,54 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Names, FREON_CORE } from "../../../utils/index.js";
+import { Names, Imports } from "../../../utils/on-lang/index.js"
 
 export class CustomScoperTemplate {
     generateCustomScoperPart(language: FreMetaLanguage): string {
-        const scoperInterfaceName: string = Names.FrScoperPart;
-        const generatedClassName: string = Names.customScoper(language);
+        const imports = new Imports()
+        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FreNodeReference, Names.FreNamespaceInfo, Names.FreScoperPart, Names.FreCompositeScoper])
 
         // Template starts here
         return `
-        import { ${Names.FreNode}, ${Names.FreNamedNode}, ${Names.FrScoperPart}, ${Names.FreScoperComposite}  } from "${FREON_CORE}";
+        ${imports.makeImports(language)}
 
         /**
-         * Class '${generatedClassName}' is meant to be a convenient place to add any
+         * Class '${Names.customScoper(language)}' is meant to be a convenient place to add any
          * custom code for scoping.
          */
-        export class ${generatedClassName} implements ${scoperInterfaceName} {
-            mainScoper: ${Names.FreScoperComposite};
+        export class ${Names.customScoper(language)} implements ${Names.FreScoperPart} {
+            mainScoper!: ${Names.FreCompositeScoper};
 
-            resolvePathName(modelelement: ${Names.FreNode}, doNotSearch: string, pathname: string[], metatype?: string): ${Names.FreNamedNode} {
-                return undefined;
+            /**
+             *   Returns all elements that are visible in the namespace containing '_node'. Note that '_node' can 
+             *   be any node in the AST, not only namespaces!
+             *
+             *   When parameter '_metaType' is present, it returns all elements that are an instance of '_metaType'.
+             *   There is no default setting for this parameter.
+             *
+             * @param _node
+             * @param _metaType
+             */
+            getVisibleNodes(_node: ${Names.FreNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>, _metaType?: string): ${Names.FreNamedNode}[] {
+                return [];
             }
 
-            isInScope(modelElement: ${Names.FreNode}, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
-                return undefined;
+            /**
+             * Returns all nodes and/or node references that represent namespaces which should be added to the namespace
+             * represented by '_node'.
+             *
+             * @param _node
+             */
+            importedNamespaces(_node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[] {
+                return [];
             }
 
-            getVisibleElements(modelelement: ${Names.FreNode}, metatype?: string, excludeSurrounding?: boolean): ${Names.FreNamedNode}[] {
-                return undefined;
-            }
-
-            getFromVisibleElements(modelelement: ${Names.FreNode}, name: string, metatype?: string, excludeSurrounding?: boolean): ${Names.FreNamedNode} {
-                return undefined;
-            }
-
-            getVisibleNames(modelelement: ${Names.FreNode}, metatype?: string, excludeSurrounding?: boolean): string[] {
-                return undefined;
-            }
-
-            additionalNamespaces(element: ${Names.FreNode}): ${Names.FreNode}[] {
-                return undefined;
+            /**
+             * Returns all nodes and/or node references that represent namespaces which should be used to replace
+             * the parent namespace of the namespace represented by '_node'.
+             * 
+             * @param _node
+             */
+            alternativeNamespaces(_node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[]  {
+                return [];
             }
         }`;
     }

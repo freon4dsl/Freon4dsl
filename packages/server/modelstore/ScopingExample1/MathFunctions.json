@@ -1,0 +1,960 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-ScopingExample",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-12",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Module"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Module-name"
+               },
+               "value": "MathFunctions"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Module-globals"
+               },
+               "children": [
+                  "ID-13",
+                  "ID-18"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Module-blocks"
+               },
+               "children": [
+                  "ID-36",
+                  "ID-57",
+                  "ID-86",
+                  "ID-23"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-13",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "ZERO"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-18",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-36",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Block"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-name"
+               },
+               "value": "SimpleNumerics"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-blockVariables"
+               },
+               "children": [
+                  "ID-16"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-functions"
+               },
+               "children": [
+                  "ID-47",
+                  "ID-50"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-imports"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-16",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "B"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-36"
+      },
+      {
+         "id": "ID-47",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Function"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-name"
+               },
+               "value": "add"
+            },
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-comment"
+               },
+               "value": "addition, like 2 + 3 = 5"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-parameters"
+               },
+               "children": [
+                  "ID-48",
+                  "ID-49",
+                  "ID-17"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-36"
+      },
+      {
+         "id": "ID-48",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "left"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-47"
+      },
+      {
+         "id": "ID-49",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "right"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-47"
+      },
+      {
+         "id": "ID-17",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-47"
+      },
+      {
+         "id": "ID-50",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Function"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-name"
+               },
+               "value": "divide"
+            },
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-comment"
+               },
+               "value": "division, like 4 / 2 = 2"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-parameters"
+               },
+               "children": [
+                  "ID-51",
+                  "ID-52",
+                  "ID-14"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-36"
+      },
+      {
+         "id": "ID-51",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "divisor"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-50"
+      },
+      {
+         "id": "ID-52",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "denominator"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-50"
+      },
+      {
+         "id": "ID-14",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-50"
+      },
+      {
+         "id": "ID-57",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Block"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-name"
+               },
+               "value": "Advanced"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-blockVariables"
+               },
+               "children": [
+                  "ID-78",
+                  "ID-19"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-functions"
+               },
+               "children": [
+                  "ID-58",
+                  "ID-63",
+                  "ID-70"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-imports"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-78",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "pi"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-57"
+      },
+      {
+         "id": "ID-19",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "blockVar"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-57"
+      },
+      {
+         "id": "ID-58",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Function"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-name"
+               },
+               "value": "absolute"
+            },
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-comment"
+               },
+               "value": "absolute number, like | -5 | = 5"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-parameters"
+               },
+               "children": [
+                  "ID-59"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-57"
+      },
+      {
+         "id": "ID-59",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "number"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-58"
+      },
+      {
+         "id": "ID-63",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Function"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-name"
+               },
+               "value": "log"
+            },
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-comment"
+               },
+               "value": "logarithm, like log(10, 1000) = 3"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-parameters"
+               },
+               "children": [
+                  "ID-64",
+                  "ID-15"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-57"
+      },
+      {
+         "id": "ID-64",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "base"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-63"
+      },
+      {
+         "id": "ID-15",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "anti-logarithm"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-63"
+      },
+      {
+         "id": "ID-70",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Function"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-name"
+               },
+               "value": "circumference"
+            },
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-comment"
+               },
+               "value": "circumference of a circle, like circ(4) = 2 * pi * 4"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-parameters"
+               },
+               "children": [
+                  "ID-71"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-57"
+      },
+      {
+         "id": "ID-71",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "radius"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-70"
+      },
+      {
+         "id": "ID-86",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Block"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-name"
+               },
+               "value": "Percentages"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-blockVariables"
+               },
+               "children": [
+                  "ID-37",
+                  "ID-20"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-functions"
+               },
+               "children": [
+                  "ID-84"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-imports"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-37",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "HUNDRED"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-86"
+      },
+      {
+         "id": "ID-20",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "blockVar"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-86"
+      },
+      {
+         "id": "ID-84",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Function"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-name"
+               },
+               "value": "toPercentage"
+            },
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-comment"
+               },
+               "value": "makes a percentage out of a number, like perc(20) = 0,20"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Function-parameters"
+               },
+               "children": [
+                  "ID-85"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-86"
+      },
+      {
+         "id": "ID-85",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Variable-name"
+               },
+               "value": "number"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-84"
+      },
+      {
+         "id": "ID-23",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-Block"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-name"
+               },
+               "value": "WithImports"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-blockVariables"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-functions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-check"
+               },
+               "children": [
+                  "ID-22"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-Block-imports"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Advanced",
+                     "reference": "ID-57"
+                  },
+                  {
+                     "resolveInfo": "Percentages",
+                     "reference": "ID-86"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-22",
+         "classifier": {
+            "language": "-key-ScopingExample",
+            "version": "2023.1",
+            "key": "-key-SimpleVarRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-ScopingExample",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarRef-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "blockVar",
+                     "reference": "ID-19"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-23"
+      }
+   ]
+}

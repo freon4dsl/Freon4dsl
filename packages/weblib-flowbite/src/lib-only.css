@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+@import './theme-colors.css';
+
+@source "../../../node_modules/flowbite-svelte/dist";
+@source "../../../node_modules/flowbite-svelte-icons/dist";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+    /* disable chrome cancel button */
+    input[type="search"]::-webkit-search-cancel-button {
+        display: none;
+    }
+}
+
+@layer components {
+    /* overwrite runeswebkit.css using !important */
+    .dark_bg_theme {
+        @apply dark:bg-stone-900;
+    }
+}
+
+/**
+ This class is missing the "overflow"  property when using bare tailwind, we therefore define it over here.
+ */
+.text-ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/**
+  I can't do this using tailwind, so I use my own class here.
+ */
+.my-nav-bar {
+    padding: 1px;
+    margin: 1px;
+    margin-inline: 1px;
+}
+
+/**
+  Flowbite uses mx-auto inside the NavBar (cannot change this code) and then it gets a very big padding.
+  Does not look nice, so I redefined this.
+ */
+.mx-auto {
+    margin: 1px;
+    margin-inline: 1px;
+ }
+
+/**
+    Add background, so it is even in all places.
+ */
+.my-background  {
+    background-color: var(--color-light-base-100)
+}

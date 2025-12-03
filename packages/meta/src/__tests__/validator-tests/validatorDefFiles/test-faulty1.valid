@@ -1,0 +1,42 @@
+validator for language test1
+
+AAAAAA {
+    // error: string does not comply to number
+    self.AAprop1 >= 10; // : string;
+    self.AAprop3 >= 10; // : number;
+    // error: boolean does not comply to number
+    10 < self.AAprop5; // : boolean;
+    // properties with concept as type
+    // error: AAprop7 is not a list
+    in self.AAprop7 isunique name;  // : BB;
+    // error: wrong is not a property of BB
+    // warning: 'self' refers to list elements
+    in self.AAprop8 isunique self.wrong; // : BB[];
+    // properties with interface as type
+    notEmpty self.AAprop2; // : string[];
+    // error: AAprop9 is not a list
+    notEmpty self.AAprop9; // : CC; // reference
+    notEmpty self.AAprop10; // : CC[]; // reference
+    // error: AAprop11 is not a list
+    in self.AAprop11 isunique self.DDprop4; // : DD;
+    // warning: 'self' refers to list elements
+    in self.AAprop12 isunique self.DDprop4; // : DD[];
+    // self.AAprop13; // : FF; // reference
+    // self.AAprop14; // : FF[]; // reference
+    validIdentifier; // default is 'name'
+    // error: type is not 'identifier'
+    validIdentifier self.AAprop1;
+}
+
+DD {
+    typecheck equalsType( self.DDprop7.BBprop15, #ZZ:ZZinstance1 );
+    // error: cannot find 'left' nor 'right'
+    typecheck conformsTo( self.left, self.right );
+}
+
+// error: cannot find 'UNKNOWN'
+UNKNOWN {
+    self.DDprop3 >= 10;
+    validIdentifier self.DDprop4;
+}
+

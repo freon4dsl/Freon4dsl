@@ -1,5 +1,5 @@
 import { Box } from "./Box.js";
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
 // todo factor out the methods common with GridBox and ListBox
 
@@ -31,7 +31,7 @@ export abstract class TableBox extends Box {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         if (!!children) {
-            children.forEach((b) => this.addChild(b));
+            this.addChildren(children);
         }
         this.hasHeaders = hasHeaders;
         this.propertyName = propertyName;
@@ -102,7 +102,10 @@ export abstract class TableBox extends Box {
 
     addChildren(children?: Box[]): TableBox {
         if (!!children) {
-            children.forEach((child) => this.addChild(child));
+            children.forEach((child) => {
+                this._children.push(child);
+                child.parent = this;
+            });
             // console.log("TableBox addChildren dirty")
             this.isDirty();
         }

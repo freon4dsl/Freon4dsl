@@ -1,7 +1,9 @@
-import { FreLanguage, FreLanguageProperty } from "../language/index.js";
+import { FreLanguage, } from "../language/index.js";
+import type { FreLanguageProperty } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
-import { AstWorker } from "./AstWorker.js";
-import { FreNode } from "../ast/index.js";
+import type { AstWorker } from "./AstWorker.js";
+import type { FreNode } from "../ast/index.js";
+import { isNullOrUndefined } from "../util/index.js"
 
 const LOGGER = new FreLogger("AstWalker");
 
@@ -27,6 +29,7 @@ export class AstWalker {
      * @param includeNode tests every child of 'modelelement', if true, it will also be visited
      */
     public walk(node: FreNode, includeNode?: (elem: FreNode) => boolean) {
+        if (isNullOrUndefined(node)) return;
         if (this.myWorkers.length > 0) {
             let stopWalkingThisNode: boolean = false;
             for (const worker of this.myWorkers) {

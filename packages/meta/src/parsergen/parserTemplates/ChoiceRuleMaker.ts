@@ -1,5 +1,5 @@
 import { FreMetaClassifier, FreMetaConcept } from "../../languagedef/metalanguage/index.js";
-import { Names } from "../../utils/index.js";
+import { Names } from "../../utils/on-lang/index.js";
 import { GrammarRule } from "./grammarModel/GrammarRule.js";
 import { ChoiceRule } from "./grammarModel/ChoiceRule.js";
 import { SuperChoiceRule } from "./grammarModel/SuperChoiceRule.js";
@@ -11,7 +11,7 @@ export class ChoiceRuleMaker {
 
     // for interfaces and abstract concepts we create a parse rule that is a choice between all classifiers
     // that either implement or extend the concept
-    // because limited concepts can only be used as reference, these are excluded for this choice
+    // because limited concepts can only be used as reference, these are excluded from this choice
     generateChoiceRules(interfacesAndAbstractsUsed: Map<FreMetaClassifier, FreMetaClassifier[]>): GrammarRule[] {
         const rules: GrammarRule[] = [];
         for (const [freClassifier, subs] of interfacesAndAbstractsUsed) {

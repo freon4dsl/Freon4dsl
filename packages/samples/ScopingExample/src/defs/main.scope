@@ -1,0 +1,8 @@
+/* Scope file for Step 3 of the demo: showing imports */
+scoper for language ScopingExample
+
+isNamespace { Module, Block, Function }
+
+Block {
+    imports { self.imports; }
+}

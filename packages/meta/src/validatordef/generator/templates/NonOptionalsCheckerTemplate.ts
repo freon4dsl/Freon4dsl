@@ -1,14 +1,15 @@
-import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils/index.js";
+import { Names, Imports } from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage, FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
 import { ValidationUtils } from "../ValidationUtils.js";
 
+const paramName: string = "node";
 const commentBefore = `/**
-                        * Checks 'modelelement' before checking its children.
+                        * Checks '${paramName}' before checking its children.
                         * Found errors are pushed onto 'errorlist'.
-                        * If an error is found, it is considered 'fatal', which means that no other checks on
-                        * 'modelelement' are performed.
+                        * If an error is found, it is NOT considered 'fatal', which means that other checks on
+                        * '${paramName}' are performed.
                         *
-                        * @param modelelement
+                        * @param ${paramName}
                         */`;
 
 export class NonOptionalsCheckerTemplate {
@@ -38,36 +39,29 @@ export class NonOptionalsCheckerTemplate {
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
             // 'myWriter' is used to provide error messages on the nodes in the model tree
-            myWriter: ${writerInterfaceName} = ${Names.LanguageEnvironment}.getInstance().writer;
+            myWriter: ${writerInterfaceName} = ${Names.FreLanguageEnvironment}.getInstance().writer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
         ${classifiersToDo.map((concept) => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}
         }`;
 
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([errorClassName, errorSeverityName, writerInterfaceName, Names.FreLanguageEnvironment, Names.isNullOrUndefined])
+        imports.language = new Set<string>(this.done.map(cls => Names.classifier(cls)) )
+        imports.utils.add(defaultWorkerName)
+        
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.done.map((cls) => Names.classifier(cls)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js";
-        import { ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
+        // TEMPLATE: NonOptionalsCheckerTemplate.generateChecker(...)
+        ${imports.makeImports(language)}
+        import { type ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
         
         ${result}`;
     }
 
-    // private createImports(language: FreMetaLanguage): string {
-    //     return language.units?.map(unit => `
-    //             ${Names.classifier(unit)}`).concat(
-    //                 language.concepts?.map(concept => `
-    //             ${Names.concept(concept)}`).concat(
-    //         language.interfaces?.map(intf => `
-    //             ${Names.interface(intf)}`))).concat(
-    //                 Names.classifier(language.modelConcept)
-    //     ).join(", ");
-    // }
-
     private createChecksOnNonOptionalParts(concept: FreMetaClassifier): string {
         let result: string = "";
-        const locationdescription = ValidationUtils.findLocationDescription(concept);
+        const locationdescription = ValidationUtils.findLocationDescription(concept, paramName);
 
         concept.allProperties().forEach((prop) => {
             // the following is added only for non-list properties
@@ -80,11 +74,11 @@ export class NonOptionalsCheckerTemplate {
                     prop.isPrimitive &&
                     (prop.type === FreMetaPrimitiveType.string || prop.type === FreMetaPrimitiveType.identifier)
                 ) {
-                    additionalStringCheck = `|| modelelement.${prop.name}?.length === 0`;
+                    additionalStringCheck = `|| ${paramName}.${prop.name}?.length === 0`;
                 }
 
-                result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ${additionalStringCheck}) {
-                    this.errorList.push(new ${Names.FreError}("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, '${prop.name}', ${Names.FreErrorSeverity}.Error));
+                result += `if (${Names.isNullOrUndefined}(${paramName}.${prop.name}) ${additionalStringCheck}) {
+                    this.errorList.push(new ${Names.FreError}("Property '${prop.name}' must have a value", ${paramName}, ${locationdescription}, '${prop.name}', ${Names.FreErrorSeverity}.Error));
                 }
                 `;
             }
@@ -93,7 +87,7 @@ export class NonOptionalsCheckerTemplate {
         if (result.length > 0) {
             this.done.push(concept);
             return `${commentBefore}
-                public execBefore${Names.classifier(concept)}(modelelement: ${Names.classifier(concept)}): boolean {
+                public execBefore${Names.classifier(concept)}(${paramName}: ${Names.classifier(concept)}): boolean {
                     ${result}
                     return false;
                 }`;

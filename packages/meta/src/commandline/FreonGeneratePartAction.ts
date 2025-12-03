@@ -1,7 +1,8 @@
 import { ICommandLineActionOptions } from "@rushstack/ts-command-line";
 import { LanguageParser } from "../languagedef/parser/LanguageParser.js";
+import { Imports } from "../utils/on-lang/index.js"
 import { FreonGenerateAction } from "./FreonGenerateAction.js";
-import { FreMetaLanguage } from "../languagedef/metalanguage/FreMetaLanguage.js";
+import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 
 /**
  * Generic generator action for generating part of the language, e.g. only the typer.
@@ -20,8 +21,9 @@ export class FreonGeneratePartAction extends FreonGenerateAction {
         // we only read the .ast files, no need to generate.
         // the actual generation, when needed, is done by subclasses.
         this.language = new LanguageParser(this.idFile).parseMulti(this.languageFiles);
-        if (this.language === null) {
+        if (this.language === null || this.language === undefined) {
             throw new Error("Language could not be parsed, exiting.");
         }
+        Imports.initialize(this.language)
     }
 }

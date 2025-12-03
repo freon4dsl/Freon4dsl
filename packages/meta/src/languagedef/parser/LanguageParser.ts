@@ -1,13 +1,12 @@
 import fs from "fs";
 import { FreMetaLanguage } from "../metalanguage/index.js";
-import { FreGenericParser, LOG2USER } from "../../utils/index.js";
+import { FreGenericParser } from "../../utils/basic-dependencies/index.js";
 import { parseIds } from "./IdParser.js";
-import { parser } from "./LanguageGrammar.js";
-
+import { parse } from "./LanguageGrammar.js";
 import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName, setIdMap } from "./LanguageCreators.js";
-import { FreLangChecker } from "../checking/FreLangChecker.js";
+import { FreLangChecker } from "../checking/index.js";
+import { notNullOrUndefined } from '../../utils/file-utils/index.js';
 
-// const LOGGER = new MetaLogger("LanguageParser").mute();
 
 export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     idFile: string | undefined;
@@ -15,13 +14,13 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     constructor(idFile?: string) {
         super();
         this.idFile = idFile ? idFile : undefined;
-        this.parser = parser;
+        this.parseFunction = parse;
         this.checker = new FreLangChecker(undefined);
     }
 
     parse(definitionFile: string): FreMetaLanguage | undefined {
-        LOG2USER.log("ParseFile: " + definitionFile);
-        if (this.idFile !== undefined && this.idFile !== null && this.idFile.length > 0) {
+        // LOG2USER.log("ParseFile: " + definitionFile);
+        if (notNullOrUndefined(this.idFile) && this.idFile.length > 0) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);
             const idMap = parseIds(idJson);
@@ -31,7 +30,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     }
 
     parseMulti(filePaths: string[]): FreMetaLanguage | undefined {
-        if (this.idFile !== undefined && this.idFile !== null) {
+        if (notNullOrUndefined(this.idFile)) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);
             const idMap = parseIds(idJson);

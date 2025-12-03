@@ -1,0 +1,20 @@
+editor qualifiednames precedence 1
+
+Module {[
+    ${self.name} {
+        var ${self.varDefinitions horizontal separator[,]}
+        ref ${self.varReferences}
+    }
+]}
+
+ComplexVarReference {[
+    ${module}.${target}
+]
+referenceShortcut = ${module}
+}
+
+SimpleVarReference {[
+    ${target}
+]
+referenceShortcut = ${target}
+}

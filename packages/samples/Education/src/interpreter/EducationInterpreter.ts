@@ -10,8 +10,8 @@ import {
     RtString,
     isRtError,
     isRtBoolean,
-    isNullOrUndefined, astToString,
-} from "@freon4dsl/core";
+    isNullOrUndefined, astToString, notNullOrUndefined
+} from '@freon4dsl/core';
 import {
     AndExpression,
     Answer,
@@ -23,13 +23,13 @@ import {
     LessThenExpression,
     NrOfCorrectAnswers,
     NumberLiteralExpression,
-    OrExpression, Page,
+    OrExpression, Page, PageTransition,
     QuestionReference,
     Scenario,
     SimpleNumber,
     Step,
     Test, TestFlow, Theory, Video, WorkSheet
-} from "../language/gen/index.js";
+} from '../language/gen/index.js';
 import { RtFraction } from "./runtime/RtFraction.js";
 import { RtFlow } from "./runtime/RtFlow.js"
 import { RtGrade } from "./runtime/RtGrade.js";
@@ -83,14 +83,18 @@ export class EducationInterpreter extends EducationInterpreterBase {
 
     override evalTestFlow(node: TestFlow, ctx: InterpreterContext): RtObject {
         console.log("Evaluating Test Flow " + node.freId() + "  steps " + node.steps?.length)
-        let previousPage: RtPage = undefined
-        let previousStep: Step
+        let previousPage: RtPage | undefined = undefined
+        let previousStep: Step | undefined = undefined
         let first: boolean = true      // indicates whether there is a calculated value for 'previous'
         for (const step of node.steps) {
             // Compare the fromPage with the previous stepResult
-            if (!first && previousPage.page !== step.$fromPage) {
+            if (!first && previousPage?.page !== step.$fromPage) {
                 // There was an error. Based on the given answers, we should not be on 'fromPage'.
-                return new RtError(`Next page of step ${EducationEnvironment.getInstance().writer.writeToLines(previousStep)} should be ${previousPage.page.name}, not ${step.$fromPage.name}.`)
+                if (notNullOrUndefined(previousStep)) {
+                    return new RtError(`Next page of step ${EducationEnvironment.getInstance().writer.writeToLines(previousStep)} should be ${previousPage?.page.name}, not ${step.$fromPage?.name}.`);
+                } else {
+                    return new RtError(`Next page of the first step should be ${previousPage?.page.name}, not ${step.$fromPage?.name}.`);
+                }
             }
             const stepResult = main.evaluate(step, ctx)
             if (isRtPage(stepResult) ) {
@@ -116,38 +120,49 @@ export class EducationInterpreter extends EducationInterpreterBase {
         let nrOfCorrectAnswers = 0
         for (const answer of node.answerSeries) {
             const actualAnswer = main.evaluate(answer.value, newCtx)
-            // Store the actual answer with the question.
-            newCtx.set(answer.$question, actualAnswer)
-            const expectedAnswer = main.evaluate(answer.$question.correctAnswer, newCtx)
-            if (actualAnswer.equals(expectedAnswer)) {
-                nrOfCorrectAnswers++
+            if (notNullOrUndefined(answer.$question)) {
+                // Store the actual answer with the question.
+                newCtx.set(answer.$question, actualAnswer);
+                const expectedAnswer = main.evaluate(answer.$question.correctAnswer, newCtx);
+                if (actualAnswer.equals(expectedAnswer)) {
+                    nrOfCorrectAnswers++;
+                }
             }
         }
         newCtx.set("NR_OF_CORRECT_ANSWERS", new RtNumber(nrOfCorrectAnswers))
 
         // Find the grade for the given answers
-        const grade = main.evaluate(currentPage, newCtx) as RtGrade
+        if (notNullOrUndefined(currentPage)) {
+            const grade = main.evaluate(currentPage, newCtx) as RtGrade
 
-        //  Find rule for current page
-        const currentFlow = ctx.find("CURRENT_FLOW") as RtFlow
-        if (isNullOrUndefined(currentFlow)) {
-            return new RtError(`No flow found for page ${currentPage.name}`)
+            //  Find rule for current page
+            const currentFlow = ctx.find("CURRENT_FLOW") as RtFlow
+            if (isNullOrUndefined(currentFlow)) {
+                return new RtError(`No flow found for page ${currentPage.name}`)
+            }
+
+            const pageRule: FlowRule | undefined = currentFlow.flow.rules.find((rule: FlowRule) => rule.$page === currentPage)
+            if (isNullOrUndefined(pageRule)) {
+                return new RtError(`No rules found for page ${currentPage.name} in ${currentFlow.flow.name}`)
+            }
+
+            // Find the page to which the application should switch based on the calculated grade,
+            // and return it as the result of evaluating this step
+            const transition = pageRule.transitions.find((trans: PageTransition) => trans.$condition === (grade as RtGrade).grade)
+            if (isNullOrUndefined(transition)) {
+                return new RtError(`No transition found for grade ${grade.grade} on page ${currentPage.name} in ${currentFlow.flow.name}`)
+            }
+
+
+            console.log(`Evaluating Step ${EducationEnvironment.getInstance().writer.writeToLines(node)} returning grade: ${transition.$condition?.name}, page: ${transition.toPage.name}`)
+            if (notNullOrUndefined(transition.$toPage)) {
+                return new RtPage(transition.$toPage)
+            } else {
+                return new RtError(`No 'to'-page found in transition for page ${currentPage.name} in ${currentFlow.flow.name}`)
+            }
+        } else {
+            return new RtError(`No 'current'-page found`)
         }
-
-        const pageRule: FlowRule = currentFlow.flow.rules.find((rule) => rule.$page === currentPage)
-        if (isNullOrUndefined(pageRule)) {
-            return new RtError(`No rules found for page ${currentPage.name} in ${currentFlow.flow.name}`)
-        }
-
-        // Find the page to which the application should switch based on the calculated grade,
-        // and return it as the result of evaluating this step
-        const transition = pageRule.transitions.find((trans) => trans.$condition === (grade as RtGrade).grade)
-        if (isNullOrUndefined(transition)) {
-            return new RtError(`No transition found for grade ${grade.grade} on page ${currentPage.name} in ${currentFlow.flow.name}`)
-        }
-
-        console.log(`Evaluating Step ${EducationEnvironment.getInstance().writer.writeToLines(node)} returning grade: ${transition.$condition.name}, page: ${transition.toPage.name}`)
-        return new RtPage(transition.$toPage)
     }
 
     static evalPage(node: Page, ctx: InterpreterContext): RtObject {
@@ -156,7 +171,7 @@ export class EducationInterpreter extends EducationInterpreterBase {
         for (const score of node.grading) {
             const scoreValue = main.evaluate(score.expr, ctx)
             if (isRtBoolean(scoreValue)) {
-                if (scoreValue.asBoolean()) {
+                if (scoreValue.asBoolean() && notNullOrUndefined(score.$grade)) {
                     console.log(`Evaluating Page returning ${score.$grade?.name}`)
                     return new RtGrade(score.$grade)
                 }
@@ -200,7 +215,7 @@ export class EducationInterpreter extends EducationInterpreterBase {
     }
 
     override evalAnswer(node: Answer, ctx: InterpreterContext): RtObject {
-        console.log(`evalAnswer.node ${node?.$question.content}`)
+        console.log(`evalAnswer.node ${node?.$question?.content}`)
         const actualAnswer = main.evaluate(node.value, ctx)
         if (node.question.referred !== undefined && node.question.referred !== null) {
             const expectedAnswer = main.evaluate(node.question.referred.correctAnswer, ctx)

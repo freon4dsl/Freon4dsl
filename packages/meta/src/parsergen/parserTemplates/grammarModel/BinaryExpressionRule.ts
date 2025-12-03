@@ -1,7 +1,6 @@
 import { GrammarRule } from "./GrammarRule.js";
 import { FreMetaClassifier, FreMetaExpressionConcept } from "../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../utils/index.js";
-import { internalTransformNode } from "../ParserGenUtil.js";
+import { Names } from "../../../utils/on-lang/index.js";
 import { getTypeCall } from "./GrammarUtils.js";
 
 export class BinaryExpressionRule extends GrammarRule {
@@ -26,10 +25,9 @@ export class BinaryExpressionRule extends GrammarRule {
     toMethod(mainAnalyserName: string): string {
         const cases: string[] = [];
         for (const [key, value] of this.symbolToConcept) {
-            // TODO add parse location: $parseLocation: this.mainAnalyser.location(branch)
             cases.push(`
                 case '${value}': {
-                    combined = ${Names.classifier(key)}.create({left: first, right: second, parseLocation: this.${mainAnalyserName}.location(branch)});
+                    combined = ${Names.classifier(key)}.create({left: first, right: second, parseLocation: this.${mainAnalyserName}.location(sentence, nodeInfo.node)});
                     break;
                 }`);
         }
@@ -45,15 +43,15 @@ export class BinaryExpressionRule extends GrammarRule {
          * @param branch
          * @private
          */
-        public transform${this.ruleName}(branch: SPPTBranch) : ${Names.concept(this.expressionBase)} {
-            // console.log('transform${this.ruleName} called: ' + branch.name);
-            const children = branch.nonSkipChildren.toArray();
+        public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<any>, sentence: Sentence) : ${Names.concept(this.expressionBase)} {
+            // console.log('transform${this.ruleName} called: ' + children.toString());
             let index = 0;
-            let first = this.${mainAnalyserName}.${internalTransformNode}(children[index++]);
-            while (index < children.length) {
-                let operator = this.${mainAnalyserName}.${internalTransformNode}(children[index++]);
-                let second = this.${mainAnalyserName}.${internalTransformNode}(children[index++]);
-                let combined: ${Names.concept(this.expressionBase)} = null;
+            let list = children.asJsReadonlyArrayView()
+            let first = list[index++];
+            while (index < list.length) {
+                let operator = list[index++];
+                let second = list[index++];
+                let combined: ${Names.concept(this.expressionBase)} | null = null;
                 switch (operator) {
                 ${cases.map((c) => `${c}`).join("")}
                     default: {

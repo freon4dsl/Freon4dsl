@@ -1,5 +1,5 @@
-import { Box, BoxFactory, ElementBox, ExternalPartListBox, HorizontalListBox, VerticalListBox } from "../../boxes/index.js";
-import { FreNode } from "../../../ast/index.js";
+import { Box, BoxFactory, ElementBox, PartListReplacerBox, HorizontalListBox, VerticalListBox } from "../../boxes/index.js";
+import type { FreNode } from "../../../ast/index.js";
 import { RoleProvider } from "../RoleProvider.js";
 import { FreLanguage } from "../../../language/index.js";
 import { FreBoxProvider, FreProjectionHandler } from "../../projections/index.js";
@@ -47,14 +47,14 @@ export class UtilPartHelpers {
         return result;
     }
 
-    public static externalPartListBox(
+    public static partListReplacerBox(
         node: FreNode,
         list: FreNode[],
         propertyName: string,
         externalComponentName: string,
         boxProviderCache: FreProjectionHandler,
-        initializer?: Partial<ExternalPartListBox>,
-    ): ExternalPartListBox {
+        initializer?: Partial<PartListReplacerBox>,
+    ): PartListReplacerBox {
         // make the boxes for the children
         let children: Box[] = this.makePartItems(node, list, propertyName, boxProviderCache);
         // determine the role
@@ -68,7 +68,7 @@ export class UtilPartHelpers {
             BoxFactory.action(
                 element,
                 RoleProvider.property(element.freLanguageConcept(), propertyName, "new-list-item"),
-                `<+ ${propertyName}>`,
+                `+ ${propertyName}`,
                 {
                     propertyName: `${propertyName}`,
                     conceptName: FreLanguage.getInstance().classifierProperty(
@@ -85,7 +85,7 @@ export class UtilPartHelpers {
         property: FreNode[],
         propertyName: string,
         boxProviderCache: FreProjectionHandler,
-        listJoin?: FreListInfo,
+        listJoin: FreListInfo = FreListInfo.NullListInfo,
     ): Box[] {
         const result: Box[] = [];
         const numberOfItems: number = property.length;
@@ -98,7 +98,7 @@ export class UtilPartHelpers {
                 index,
             );
             let innerBox: ElementBox = myProvider.box;
-            if (listJoin !== null && listJoin !== undefined) {
+            if (listJoin !== FreListInfo.NullListInfo) {
                 result.push(...UtilCommon.addListJoin(listJoin, index, numberOfItems, element, roleName, propertyName, innerBox));
             } else {
                 result.push(innerBox);

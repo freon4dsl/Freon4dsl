@@ -1,5 +1,5 @@
-import { FreWriter } from "../writer/index.js";
-import { FreNode } from "../ast/index.js";
+import type { FreNode } from "../ast/index.js";
+import type { FreWriter } from "../writer/index.js";
 
 export interface FreType {
     /**
@@ -9,9 +9,9 @@ export interface FreType {
 
     /**
      * If this type corresponds with an element from the AST, then the corresponding element is returned.
-     * Otherwise, the result is null.
+     * Otherwise, the result is undefined.
      */
-    toAstElement(): FreNode;
+    toAstElement(): FreNode | undefined;
 
     /**
      * Returns a human-readable rendering of this type.

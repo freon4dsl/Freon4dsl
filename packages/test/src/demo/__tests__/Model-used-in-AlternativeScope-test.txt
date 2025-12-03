@@ -1,0 +1,130 @@
+model DemoModel_1 {
+main:
+types:
+
+entities:
+    DemoEntity Person {
+        baseInterface_attr 0
+        simpleprop "simple"
+        x "xxx"
+        attributes
+            age : Integer
+            name : String
+        entAttributes
+            DemoAttributeWithEntityType attrFromPerson {
+                declaredType Company2
+            }
+        functions
+            DemoFunction first {
+                expression 5 + 24
+                parameters
+                    Resultvar : Person
+                declaredType Person
+            }
+        int_attrs
+
+        int_functions
+
+    }
+    DemoEntity Company2 {
+        baseInterface_attr 0
+        simpleprop "simple"
+        x "xxx"
+        attributes
+            name : String
+            VAT_Number : Integer
+        entAttributes
+            DemoAttributeWithEntityType attrFromCompany {
+                declaredType Person
+            }
+        functions
+            DemoFunction another {
+                expression ' "Yes" ' or ' "No" ' == NOOT or ' "Hello World" ' < ' "Hello Universe" ' and ' "x" ' < 122 + 1 + 2 *
+                parameters
+                    NOOT : Company2
+                declaredType Person
+            }
+        int_attrs
+
+        int_functions
+
+    }
+    DemoEntity Company {
+        baseInterface_attr 0
+        simpleprop "simple"
+        x "xxx"
+        attributes
+            name : String
+            VAT_Number : Integer
+        entAttributes
+
+        functions
+            DemoFunction doClean {
+                expression 5 + 24
+                parameters
+                    at : Company
+                declaredType Integer
+            }
+        int_attrs
+
+        int_functions
+
+    }
+    DemoEntity School {
+        baseInterface_attr 0
+        simpleprop "simple"
+        x "xxx"
+        attributes
+            foundedIn : Integer
+            name : String
+        entAttributes
+
+        functions
+            DemoFunction requestClean {
+                expression 5 + 24
+                parameters
+                    cleaningCompany : Company
+                declaredType Integer
+            }
+        int_attrs
+
+        int_functions
+
+    }
+model wide functions:
+    DemoFunction length {
+        expression Variable1
+        parameters
+            Variable1 : Person
+            VariableNumber2 : Person
+        declaredType Company2
+    } DemoFunction determine {
+          expression ' "Hello Demo" ' + ' "Goodbye" '
+          parameters
+              AAP : Person
+          declaredType Person
+      } DemoFunction last {
+            expression 5 + ' "woord" '
+            parameters
+
+            declaredType Person
+        } DemoFunction manyParams {
+              expression if ( 2 < 5 ) then
+                                   1
+                         else
+                            5
+                         endif + 1 / 2 * ' "Person" '
+              parameters
+                  Var0 : Company
+                  Var1 : School
+                  Var2 : Company
+                  Var3 : School
+                  Var4 : Company
+                  Var5 : School
+                  Var6 : Company
+                  Var7 : School
+                  Var8 : Company
+                  Var9 : School
+              declaredType Integer
+          }
+}

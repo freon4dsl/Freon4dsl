@@ -1,10 +1,11 @@
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { MetaLogger } from "../../utils/index.js";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { describe, test, expect } from "vitest";
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking language parser on syntax errors", () => {
     const parser = new LanguageParser();
-    const testdir = "src/__tests__/language-tests/faultyDefFiles/syntax-errors/";
+    const testdir: string = resolveTestDir(import.meta.url, "faultyDefFiles/syntax-errors/");
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 

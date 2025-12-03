@@ -1,4 +1,4 @@
-import { AST, FreLanguage, jsonAsString } from "@freon4dsl/core";
+import { AST, FreLanguage } from "@freon4dsl/core";
 import { KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestStartEnvironment } from "../config/gen/TestStartEnvironment";
 import { TestStartStdlib } from "../stdlib/gen/TestStartStdlib";
@@ -29,10 +29,10 @@ describe("Checking stdlib for Demo", () => {
         expect(stdlib.find("XXinstance3")).toBe(XX.XXinstance3);
         expect(stdlib.find("CC1")).toBe(KK.CC1);
         expect(stdlib.find("CC2")).toBe(KK.CC2);
-        expect(stdlib.find("String")).toBeNull();
-        expect(stdlib.find("Integer")).toBeNull();
-        expect(stdlib.find("Boolean")).toBeNull();
-        expect(stdlib.find("ANY")).toBeNull();
+        expect(stdlib.find("String")).toBeUndefined();
+        expect(stdlib.find("Integer")).toBeUndefined();
+        expect(stdlib.find("Boolean")).toBeUndefined();
+        expect(stdlib.find("ANY")).toBeUndefined();
     });
 
     test("all predefined instances can be found including check on metatype", () => {
@@ -44,24 +44,24 @@ describe("Checking stdlib for Demo", () => {
         expect(stdlib.find("XXinstance3", "XX")).toBe(XX.XXinstance3);
         expect(stdlib.find("CC1", "KK")).toBe(KK.CC1);
         expect(stdlib.find("CC2", "KK")).toBe(KK.CC2);
-        expect(stdlib.find("String", "TestLimited")).toBeNull();
-        expect(stdlib.find("Integer", "TestLimited")).toBeNull();
-        expect(stdlib.find("Boolean", "TestLimited")).toBeNull();
-        expect(stdlib.find("ANY", "TestLimited")).toBeNull();
-        expect(stdlib.find("ONWAAR", "ZZ")).toBeNull();
-        expect(stdlib.find("WAAR", "XX")).toBeNull();
-        expect(stdlib.find("ZZinstance1", "KK")).toBeNull();
-        expect(stdlib.find("XXinstance1", "TestLimited")).toBeNull();
-        expect(stdlib.find("XXinstance2", "ZZ")).toBeNull();
-        expect(stdlib.find("XXinstance3", "KK")).toBeNull();
-        expect(stdlib.find("CC1", "XX")).toBeNull();
-        expect(stdlib.find("CC2", "TestLimited")).toBeNull();
+        expect(stdlib.find("String", "TestLimited")).toBeUndefined();
+        expect(stdlib.find("Integer", "TestLimited")).toBeUndefined();
+        expect(stdlib.find("Boolean", "TestLimited")).toBeUndefined();
+        expect(stdlib.find("ANY", "TestLimited")).toBeUndefined();
+        expect(stdlib.find("ONWAAR", "ZZ")).toBeUndefined();
+        expect(stdlib.find("WAAR", "XX")).toBeUndefined();
+        expect(stdlib.find("ZZinstance1", "KK")).toBeUndefined();
+        expect(stdlib.find("XXinstance1", "TestLimited")).toBeUndefined();
+        expect(stdlib.find("XXinstance2", "ZZ")).toBeUndefined();
+        expect(stdlib.find("XXinstance3", "KK")).toBeUndefined();
+        expect(stdlib.find("CC1", "XX")).toBeUndefined();
+        expect(stdlib.find("CC2", "TestLimited")).toBeUndefined();
     });
 
     test("all custom additions to the stdlib can be found", () => {
-        expect(stdlib.find("EXTRA1", "AA")).not.toBeNull();
-        expect(stdlib.find("EXTRA2", "AA")).not.toBeNull();
-        expect(stdlib.find("EXTRA1", "BB")).not.toBeNull();
-        expect(stdlib.find("EXTRA2", "BB")).not.toBeNull();
+        expect(stdlib.find("EXTRA1", "AA")).not.toBeUndefined();
+        expect(stdlib.find("EXTRA2", "AA")).not.toBeUndefined();
+        expect(stdlib.find("EXTRA1", "BB")).not.toBeUndefined();
+        expect(stdlib.find("EXTRA2", "BB")).not.toBeUndefined();
     });
 });

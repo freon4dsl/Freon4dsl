@@ -1,9 +1,10 @@
 import { autorun } from "mobx"
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
-import { BehaviorExecutionResult, FreCaret, FreKey } from "../util/index.js";
-import { BoxFactory, FreEditor } from "../internal.js";
-import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal.js";
+import { BehaviorExecutionResult, type FreCaret } from "../util/index.js";
+import { BoxFactory, type FreEditor } from "../internal.js";
+import { Box, ChoiceTextHelper, type TextBox } from "./internal.js";
+import type { SelectOption } from "./internal.js";
 
 export abstract class AbstractChoiceBox extends Box {
     kind: string = "AbstractChoiceBox";
@@ -136,16 +137,16 @@ export abstract class AbstractChoiceBox extends Box {
     /** @internal
      * Simulate a KeyBoard event
      */
-    triggerKeyPressEvent: (key: string) => void = () => {
-        /* To be overwritten by `AbstractChoiceComponent` */
-    };
+    // triggerKeyPressEvent: (key: string) => void = () => {
+    //     /* To be overwritten by `AbstractChoiceComponent` */
+    // };
 
     /** @internal
      * Simulate a KeyBoard event
      */
-    triggerKeyDownEvent: (key: FreKey) => void = () => {
-        /* To be overwritten by `AbstractChoiceComponent` */
-    };
+    // triggerKeyDownEvent: (key: FreKey) => void = () => {
+    //     /* To be overwritten by `AbstractChoiceComponent` */
+    // };
 
     isEditable(): boolean {
         return true;

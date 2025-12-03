@@ -1,62 +1,76 @@
-// This is a partial grammar file
-// Needs to be concatenated with the Basic and Expression grammars
-// The necessary require statements for all grammars should be defined here
-//{
-//    let create = require("./ScoperCreators");
-//    let expCreate = require("../../languagedef/parser/ExpressionCreators");
-//}
+// This is a partial grammar file.
+// Needs to be concatenated with the Basic and Expression grammars.
+// The necessary import statements for all grammars should be defined here:
+{{
+import * as create from "./ScoperCreators.js";
+import * as expCreate from "../../langexpressions/parser/ExpressionCreators.js";
+}}
 
 Scoper_Definition
-  = ws "scoper" ws scoperName:var ws "for" ws "language" ws languageName:var ws ns:namespaces defs:conceptDefinition*
+  = ws "scoper" ws "for" ws "language" ws languageName:var ws ns:namespaces defs:conceptDefinition*
     {
         return create.createScopeDef({
-            "scoperName": scoperName,
-            "languageName": languageName,
-            "namespaces": ns,
-            "scopeConceptDefs": defs,
-            "location": location()
+            "languageName"      :languageName,
+            "namespaceRefs"     :ns,
+            "scopeConceptDefs"  :defs,
+            "location"          :location()
         });
     } 
-
-isnamespaceKey          = "isnamespace" rws
-additionKey             = "namespace_addition" rws
-alternativeScopeKey     = "scope" rws
 
 namespaces = isnamespaceKey curly_begin conceptRefs:(
                                               head:classifierReference
                                               tail:(comma_separator v:classifierReference { return v; })*
                                               { return [head].concat(tail); }
                                             ) ws curly_end
-    { 
+    {
         return conceptRefs;
     }
 
-conceptDefinition = name:classifierReference curly_begin nsDef:namespaceAddition? alternativeScope:alternativeScope? curly_end
+conceptDefinition = name:classifierReference curly_begin nsAddition:namespaceImports nsReplacement:namespaceAlternatives? curly_end
     {
         return create.createScoperConceptDef({
-            "conceptRef":name,
-            "namespaceAdditions": nsDef,
-            "alternativeScope": alternativeScope,
-            "location":location()
+            "classifierRef"         :name,
+            "namespaceAlternatives"  :nsReplacement,
+            "namespaceImports"     :nsAddition,
+            "location"              :location()
+        });
+    }
+/ name:classifierReference curly_begin nsReplacement:namespaceAlternatives nsAddition:namespaceImports? curly_end
+    {
+        return create.createScoperConceptDef({
+            "classifierRef"         :name,
+            "namespaceAlternatives"  :nsReplacement,
+            "namespaceImports"     :nsAddition,
+            "location"              :location()
         });
     }
 
-namespaceAddition = additionKey equals_separator list:expressionlist semicolon_separator
+namespaceImports = additionKey curly_begin list:singleNamespaceExpression+ curly_end
     {
-        return create.createNamespaceDef({ "expressions": list, "location":location() });
-    }
-
-expressionlist =
-      head:langExpression
-      tail:(plus_separator v:langExpression { return v; })*
-      { return [head].concat(tail); }
-
-alternativeScope = alternativeScopeKey equals_separator exp:langExpression semicolon_separator
-    {
-        return create.createAlternativeScope({
-            "expression": exp,
-            "location": location()
+        return create.createNamespaceImport({
+            "nsInfoList"   :list,
+            "location"      :location()
         });
     }
 
+namespaceAlternatives = replacementNamespaceKey curly_begin list:singleNamespaceExpression+ curly_end
+    {
+        return create.createNamespaceAlternative({
+            "nsInfoList"   :list,
+            "location"      :location()
+        });
+    }
 
+singleNamespaceExpression = recursive:recursiveKey? exp:langExpression semicolon_separator
+    {
+        return create.createNamespaceExpression({
+            "expression"    :exp,
+            "recursive"     :(recursive?true:false),
+            "location"      :location()
+        });
+    }
+
+isnamespaceKey          = "isNamespace" rws
+additionKey             = "imports" rws
+replacementNamespaceKey = "alternatives" rws
+recursiveKey            = "recursive" ws

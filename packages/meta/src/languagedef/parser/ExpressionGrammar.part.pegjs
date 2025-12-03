@@ -17,7 +17,7 @@ langExpression = functionExpression:functionExpression  { return functionExpress
                / expression:expression                  { return expression; }
                / simpleExpression:simpleExpression      { return simpleExpression; }
 
-instanceExpression = conceptName:var ':' instance:var
+instanceExpression = '#'conceptName:var ':' instance:var
     {
         return expCreate.createInstanceExp ({
             "sourceName": conceptName,

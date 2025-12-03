@@ -19,7 +19,9 @@ import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator.js";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator.js";
 import { TyperDef } from "../typerdef/metalanguage/index.js";
 import { FreTyperMerger } from "../typerdef/parser/index.js";
-import { FileWatcher, LOG2USER } from "../utils/index.js";
+import { FileWatcher } from "../utils/file-utils/index.js";
+import { Imports } from "../utils/on-lang/index.js";
+import { LOG2USER } from "../utils/basic-dependencies/index.js";
 import { DiagramGenerator } from "../diagramgen/DiagramGenerator.js";
 
 export class FreonGenerateAllAction extends FreonGenerateAction {
@@ -254,6 +256,10 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         // generate the language
         LOG2USER.info("Generating language structure");
         this.language = new LanguageParser(this.idFile).parseMulti(this.languageFiles);
+        if (this.language === null || this.language === undefined) {
+            throw new Error("Language could not be parsed, exiting.");
+        }
+        Imports.initialize(this.language)
         this.languageGenerator.outputfolder = this.outputFolder;
         this.languageGenerator.generate(this.language!);
     };

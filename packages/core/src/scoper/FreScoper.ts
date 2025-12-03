@@ -1,90 +1,39 @@
-import { FreNode, FreNamedNode } from "../ast/index.js";
-import { FreScoperComposite } from "./FreScoperComposite.js";
+import type { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
+import type { FreCompositeScoper } from "./FreCompositeScoper.js";
+import type { FreNamespaceInfo } from './FreNamespaceInfo.js';
 
 // Part of the Freon Framework
 
 export interface FreScoper {
-    mainScoper: FreScoperComposite;
+    mainScoper: FreCompositeScoper;
 
     /**
-     * Returns the element to which the 'pathname' refers. If the element cannot be found, or if the element is
-     * not visible (private) from the location of 'modelelement', then null is returned.
-     * If present, then the search is limited to elements which type is 'metatype'.
-     * If this scoper does not handle the scope for 'modelelement' 'undefined' is returned.
+     *   Returns all elements that are visible in the namespace containing 'node'. Note that 'node' can 
+     *   be any node in the AST, not only namespaces!
      *
-     * @param node: the containing element, where 'pathname' should be visible
-     * @param doNotSearch: the role or property name of the element that we are searching for
-     * @param pathname: the name or series of names of the element that we are searching for
-     * @param metatype: the metatype of the element that we are searching for
-     */
-    resolvePathName(node: FreNode, doNotSearch: string, pathname: string[], metatype?: string): FreNamedNode;
-
-    /**
-     *   Returns true if 'name' is known in the namespace containing 'node' or one
-     *   of its surrounding namespaces.
-     *   If this scoper does not handle the scope for 'node' 'undefined' is returned.     *
-     *
-     *   When parameter 'metatype' is present, it returns true if the element named 'name'
-     *   is an instance of 'metatype'. There is no default setting for this parameter.
-     *
-     *   When parameter 'excludeSurrounding' is present, it returns true if the element named 'name'
-     *   is known in the namespace containing 'modelelement', without looking in surrounding namespaces.
-     *
-     * @param node
-     * @param name
-     * @param metatype
-     * @param excludeSurrounding
-     */
-    isInScope(node: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): boolean;
-
-    /**
-     *   Returns all elements that are visible in the namespace containing 'node' or one
-     *   of its surrounding namespaces.
-     *
-     *   When parameter 'metatype' is present, it returns all elements that are an instance of 'metatype'.
+     *   When parameter 'metaType' is present, it returns all elements that are an instance of 'metaType'.
      *   There is no default setting for this parameter.
      *
-     *   When parameter 'excludeSurrounding' is present, it returns all elements that are visible in
-     *   the namespace containing 'node', without looking in surrounding namespaces. Elements in
-     *   surrounding namespaces are normally shadowed by elements with the same name in an inner namespace.
-     *
      * @param node
-     * @param metatype
-     * @param excludeSurrounding
+     * @param metaType
      */
-    getVisibleElements(node: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[];
+    getVisibleNodes(node: FreNode | FreNodeReference<FreNamedNode>, metaType?: string): FreNamedNode[];
 
     /**
-     *   Returns the element named 'name' which is visible in the namespace containing 'node' or one
-     *   of its surrounding namespaces.
-     *
-     *   When parameter 'metatype' is present, it returns the element that is an instance of 'metatype'.
-     *   There is no default setting for this parameter.
-     *
-     *   When parameter 'excludeSurrounding' is present, it returns the element that is visible in
-     *   the namespace containing 'node', without looking in surrounding namespaces. Elements in
-     *   surrounding namespaces are normally shadowed by elements with the same name in an inner namespace.
+     * Returns all nodes and/or node references that represent namespaces which should be added to the namespace
+     * represented by 'node'. Combined with every element is a property called 'recursive', which indicates whether
+     * to include the imported namespaces from imported namespaces.
      *
      * @param node
-     * @param name
-     * @param metatype
-     * @param excludeSurrounding
      */
-    getFromVisibleElements(node: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): FreNamedNode;
+    importedNamespaces(node: FreNode): FreNamespaceInfo[];
 
     /**
-     *   Does the same as getVisibleElements, only it does not return the elements,
-     *   but the names of the elements.
+     * Returns all nodes and/or node references that represent namespaces which should be used to replace
+     * the parent namespace of the namespace represented by 'node'. Combined with every element is a property
+     * called 'recursive', which indicates whether to include the imported namespaces from alternative namespaces.
      *
      * @param node
-     * @param metatype
-     * @param excludeSurrounding
      */
-    getVisibleNames(node: FreNode, metatype?: string, excludeSurrounding?: boolean): string[];
-
-    /**
-     * Returns all FreNodes that are defined as additional namespaces for `node'.
-     * @param node
-     */
-    additionalNamespaces(node: FreNode): FreNode[];
+    alternativeNamespaces(node: FreNode): FreNamespaceInfo[];
 }

@@ -1,104 +1,104 @@
-RefsTest myName {
+RefsTest `myName` {
 	directRefs WithDirectRefs {
-                  	ref someName.x34565
-                  	optRef nameA
+                  	ref `someName`.`x34565`
+                  	optRef `nameABCDEFGHI`
                   	refList
-                        name1.d45fgh
-                        name2
-                        name3
-                        name4
-                    optRefList nameZ
-                    nameY.sdfsgargh.HERA
-                    nameX
+                        `name1`.`d45fgh`
+                        `name2`
+                        `name3`
+                        `name4`
+                    optRefList `nameZ`
+                    `nameY`.`sdfsgargh`.`HERA`
+                    `nameX`
     }
     indirectRefs WithSubSubRefs {
                  	part WithDirectRefs {
-                                           	ref someName
-                                           	optRef nameA
+                                           	ref `someName`
+                                           	optRef `nameABCDEFGH`
                                            	refList
-                                                 name1.WREQWR.gag
-                                                 name2
-                                                 name3.fghy
-                                                 name4
+                                                 `name1`.`WREQWR`.`gag`
+                                                 `name2`
+                                                 `name3`.`fghy`
+                                                 `name4`
                                              optRefList
-                                                 nameZ
-                                                 nameY.h56
-                                                 nameX
+                                                 `nameZ`
+                                                 `nameY`.`h56`
+                                                 `nameX`
                  	    }
                  	optPart WithDirectRefs {
-                                              	ref someName
-                                              	optRef nameA
+                                              	ref `someName`
+                                              	optRef `nameABCDEFG`
                                               	refList
-                                                    name1
-                                                    name2
-                                                    name3
-                                                    name4
-                                                optRefList nameZ
-                                                nameY
-                                                nameX
+                                                    `name1`
+                                                    `name2`
+                                                    `name3`
+                                                    `name4`
+                                                optRefList `nameZ`
+                                                `nameY`
+                                                `nameX`
                             }
                  	partList
                         WithDirectRefs {
-                                            ref someName
-                                            optRef nameA
+                                            ref `someName`
+                                            optRef `nameABCDEF`
                                             refList
-                                                name1
-                                                name2
-                                                name3
-                                                name4
-                                            optRefList nameZ
-                                            nameY
-                                            nameX
+                                                `name1`
+                                                `name2`
+                                                `name3`
+                                                `name4`
+                                            optRefList `nameZ`
+                                            `nameY`
+                                            `nameX`
                         }
                         WithDirectRefs {
-                                            ref someName
-                                            optRef nameA
+                                            ref `someName`
+                                            optRef `nameABCDE`
                                             refList
-                                                name1
-                                                name2
-                                                name3
-                                                name4
-                                            optRefList nameZ
-                                            nameY
-                                            nameX
+                                                `name1`
+                                                `name2`
+                                                `name3`
+                                                `name4`
+                                            optRefList `nameZ`
+                                            `nameY`
+                                            `nameX`
                  	    }
                  	optList
                         WithDirectRefs {
-                                            ref someName
-                                            optRef nameA
+                                            ref `someName`
+                                            optRef `nameABCD`
                                             refList
-                                                name1
-                                                name2
-                                                name3
-                                                name4
-                                            optRefList nameZ
-                                            nameY
-                                            nameX
+                                                `name1`
+                                                `name2`
+                                                `name3`
+                                                `name4`
+                                            optRefList `nameZ`
+                                            `nameY`
+                                            `nameX`
                         }
     }
 withSeparator
                         WithDirectRefs {
-                                            ref someName
-                                            optRef nameA
+                                            ref `someName`
+                                            optRef `nameABC`
                                             refList
-                                                name1
-                                                name2
-                                                name3
-                                                name4
-                                            optRefList nameZ
-                                            nameY
-                                            nameX
+                                                `name1`
+                                                `name2`
+                                                `name3`
+                                                `name4`
+                                            optRefList `nameZ`
+                                            `nameY`
+                                            `nameX`
                         } !!
                         WithDirectRefs {
-                                            ref someName
-                                            optRef nameA
+                                            ref `someName`
+                                            optRef `nameAB`
                                             refList
-                                                name1
-                                                name2
-                                                name3
-                                                name4
-                                            optRefList nameZ
-                                            nameY
-                                            nameX
+                                                `name1`
+                                                `name2`
+                                                `name3`
+                                                `name4`
+                                            optRefList `nameZ`
+                                            `nameY`
+                                            `nameX`
                         }
 }

@@ -1,150 +1,195 @@
 // Note that the following import cannot be from "@freon4dsl/core", because
 // this leads to a load error
 // import { FreErrorSeverity } from "@freon4dsl/core";
+import { GenerationUtil, Imports, Names } from '../../../utils/on-lang/index.js';
 import {
-    GenerationUtil,
-    LANGUAGE_GEN_FOLDER,
-    LANGUAGE_UTILS_GEN_FOLDER,
-    Names,
-    FreErrorSeverity,
-    FREON_CORE,
-} from "../../../utils/index.js";
-import { FreMetaLanguage, FreMetaPrimitiveProperty, FreMetaProperty } from "../../../languagedef/metalanguage/index.js";
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaInterface,
+    FreMetaLanguage, FreMetaPrimitiveType,
+    FreMetaProperty,
+    LangUtil,
+    MetaElementReference
+} from '../../../languagedef/metalanguage/index.js';
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
-    ConceptRuleSet,
+    ClassifierRuleSet,
     ExpressionRule,
     IsUniqueRule,
     NotEmptyRule,
-    ValidatorDef,
     ValidationMessage,
-    ValidationMessageReference,
     ValidationMessageText,
     ValidationRule,
-    ValidNameRule,
-} from "../../metalanguage/index.js";
-import { ValidationUtils } from "../ValidationUtils.js";
+    ValidatorDef,
+    ValidNameRule
+} from '../../metalanguage/index.js';
+import { ValidationUtils } from '../ValidationUtils.js';
+import { FreErrorSeverity } from '../../../utils/no-dependencies/index.js';
+import { ExpressionGenerationUtil } from '../../../langexpressions/generator/ExpressionGenerationUtil.js';
+import { FreVarExp } from '../../../langexpressions/metalanguage/index.js';
+import { isNullOrUndefined } from '../../../utils/file-utils/index.js';
+
+const paramName: string = "node";
 
 export class RulesCheckerTemplate {
+    needIsValidNameMethod: boolean = false;
+    
+    isValidNameMethod: string = `/**
+         * Returns true if 'name' is a valid identifier
+         * @param name
+         */
+        private isValidName(name: string): boolean {
+            if (isNullOrUndefined(name)) return false;
+            // cannot start with number
+            if (/[0-9]/.test( name[0]) ) return false;
+            // may contain letters, numbers, '$', and '_', but no other characters
+            if (/[.|,!?@~%^&*|-|=+(){}"':;<>]/.test( name ) ) return false;
+            if (/\\\\/.test(name)) return false;
+            // may not contain whitespaces
+            if (/[\\t\\n\\r ]/.test(name)) return false;
+            // may not be a Typescript keyword
+            return !reservedWordsInTypescript.includes(name);
+        }`;
+
     generateRulesChecker(language: FreMetaLanguage, validdef: ValidatorDef, relativePath: string): string {
-        const defaultWorkerName: string = Names.defaultWorker(language);
-        const errorClassName: string = Names.FreError;
+        this.distributeInheritedRules(validdef);
+        this.removeInterfaceSets(validdef);
         const checkerClassName: string = Names.rulesChecker(language);
-        const typerInterfaceName: string = Names.FreTyper;
-        const writerInterfaceName: string = Names.FreWriter;
         const checkerInterfaceName: string = Names.checkerInterface(language);
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([
+            Names.FreError, Names.FreErrorSeverity, Names.FreCompositeTyper, Names.FreWriter, Names.FreLanguageEnvironment
+        ])
+        imports.utils.add(Names.defaultWorker(language))
         const commentBefore: string = `/**
-                                * Checks 'modelelement' before checking its children.
-                                * Found errors are pushed onto 'errorlist'.
-                                * @param modelelement
+                                * Checks '${paramName}' before checking its children.
+                                * Found errors are pushed onto 'errorList'.
+                                * @param ${paramName}
                                 */`;
-        // the template starts here
-        return `
-        import { ${errorClassName}, ${Names.FreErrorSeverity}, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.FreNamedNode}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js";
-        import { ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
-        import { reservedWordsInTypescript } from "./ReservedWords.js";
+
+        // the template starts here, but most imports are added later, because they are determined during the creation of the output.
+        const outputStr: string = `    
+        import { type ${checkerInterfaceName} } from "./${Names.validator(language)}.js";   
 
         /**
          * Class ${checkerClassName} is the part of validator that is generated from, if present,
          * the validator definition. As the other checkers, it uses the visitor pattern.
-         * Class ${defaultWorkerName} implements the traversal of the model tree. This class implements
+         * Class ${Names.defaultWorker(language)} implements the traversal of the model tree. This class implements
          * the actual checking of each node in the tree.
          */
-        export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
+        export class ${checkerClassName} extends ${Names.defaultWorker(language)} implements ${checkerInterfaceName} {
             // 'myWriter' is used to provide error messages on the nodes in the model tree
-            myWriter: ${writerInterfaceName} = ${Names.LanguageEnvironment}.getInstance().writer;
+            myWriter: ${Names.FreWriter} = ${Names.FreLanguageEnvironment}.getInstance().writer;
             // 'typer' is used to implement the 'typecheck' rules in the validator definition
-            typer: ${typerInterfaceName} = ${Names.LanguageEnvironment}.getInstance().typer;
+            typer: ${Names.FreCompositeTyper} = ${Names.FreLanguageEnvironment}.getInstance().typer;
             // 'errorList' holds the errors found while traversing the model tree
-            errorList: ${errorClassName}[] = [];
+            errorList: ${Names.FreError}[] = [];
 
-        ${validdef.conceptRules
+        ${validdef.classifierRules
             .map(
                 (ruleSet) =>
                     `${commentBefore}
-            public execBefore${Names.concept(ruleSet.conceptRef?.referred)}(modelelement: ${Names.concept(ruleSet.conceptRef?.referred)}): boolean {
+            public execBefore${Names.classifier(ruleSet.classifier)}(${paramName}: ${Names.classifier(ruleSet.classifier)}): boolean {
                 let hasFatalError: boolean = false;
-                ${this.createRules(ruleSet)}
+                ${this.createRules(ruleSet, imports)}
                 return hasFatalError;
             }`,
             )
             .join("\n\n")}
 
-        /**
-         * Returns true if 'name' is a valid identifier
-         * @param name
-         */
-        private isValidName(name: string): boolean {
-            if (!(!!name)) return false;
-            // cannot start with number
-            if (/[0-9]/.test( name[0]) ) return false;
-            // may contain letters, numbers, '$', and '_', but no other characters
-            if (/[.|,|!|?|@|~|%|^|&|*|-|=|+|(|)|{|}|"|'|:|;|<|>|?]/.test( name ) ) return false;
-            if (/\\\\/.test(name)) return false;
-            if (/[\/|\[|\]]/.test(name)) return false;
-            // may not contain whitespaces
-            if (/[\\t|\\n|\\r| ]/.test(name)) return false;
-            // may not be a Typescript keyword
-            return !reservedWordsInTypescript.includes(name);
-            }
+        ${this.needIsValidNameMethod ? this.isValidNameMethod : ``}
+        }`;
+
+        if (this.needIsValidNameMethod) {
+            imports.core.add('isNullOrUndefined');
         }
-        `;
+        return `
+        // TEMPLATE: RulesCheckerTemplate.generateRulesChecker(...)
+        ${imports.makeImports(language)}
+        ${this.needIsValidNameMethod ? `import { reservedWordsInTypescript } from "./ReservedWords.js";` : ``}     
+        ${outputStr}
+        `
     }
 
-    private createImports(language: FreMetaLanguage): string {
-        return `${language.concepts
-            ?.map(
-                (concept) => `
-                ${Names.concept(concept)}`,
-            )
-            .concat(
-                language.interfaces
-                    ?.map(
-                        (intf) => `
-                ${Names.interface(intf)}`,
-                    )
-                    .concat(
-                        language.units
-                            ?.map(
-                                (intf) => `
-                ${Names.classifier(intf)}`,
-                            )
-                            .join(", "),
-                    ),
-            )}`;
+    /**
+     * This method takes all validation rules for super concepts and interfaces and
+     * copies them to every concept that implements or inherits from them.
+     *
+     * @param validdef
+     * @private
+     */
+    private distributeInheritedRules(validdef: ValidatorDef) {
+        // add rules of super types to each concept
+        const newConceptRules: ClassifierRuleSet[] = [];
+        validdef.classifierRules.forEach(rule => {
+            const ruleClassifier: FreMetaClassifier | undefined = rule.classifier;
+            if (!!ruleClassifier) {
+                const implementors: FreMetaClassifier[] = LangUtil.findAllImplementorsAndSubs(ruleClassifier);
+                implementors.forEach(implementor => {
+                    if (implementor !== ruleClassifier && implementor instanceof FreMetaConcept) {
+                        // see if there is a ClassifierRuleSet for the implementor
+                        let implementorRule: ClassifierRuleSet | undefined = validdef.classifierRules.find(rule2 =>
+                          rule2.classifier === implementor
+                        );
+                        if (implementorRule === undefined) {
+                            // create new conceptRule
+                            implementorRule = new ClassifierRuleSet();
+                            implementorRule.classifierRef = MetaElementReference.create<FreMetaConcept>(implementor);
+                            newConceptRules.push(implementorRule);
+                        }
+                        implementorRule.rules.push(...rule.rules);
+                    }
+                });
+            }
+        });
+        validdef.classifierRules.push(...newConceptRules);
     }
 
-    private createRules(ruleSet: ConceptRuleSet): string {
+    /**
+     * This method removes all rule sets that are defined for interfaces, because they are not
+     * present in the model, only the concepts that implement them are.
+     *
+     * @param validdef
+     * @private
+     */
+    private removeInterfaceSets(validdef: ValidatorDef) {
+        validdef.classifierRules = validdef.classifierRules.filter(rule => !(rule.classifier instanceof FreMetaInterface));
+    }
+
+    private createRules(ruleSet: ClassifierRuleSet, imports: Imports): string {
         let result: string = "";
-        // find the property that indicates the location in human terms
-        const locationdescription: string = ValidationUtils.findLocationDescription(ruleSet.conceptRef?.referred);
+        // find the string that indicates the location in human terms
+        const locationdescription: string = ValidationUtils.findLocationDescription(ruleSet.classifier, paramName);
 
+        // add import to the classifier of this set
+        imports.language.add(ruleSet.classifier!.name);
+
+        // add all rules for this classifier
         ruleSet.rules.forEach((r, index) => {
             // find the severity for the rule
             const severity: string = this.makeSeverity(r);
 
             // if this rule has a message defined by the language engineer then use it
-            const message: string | undefined = !!r.message ? this.makeMessage(r.message) : undefined;
+            const message: string | undefined = !!r.message ? this.makeMessage(r.message, imports) : undefined;
 
             // add a comment to the result
-            result += `// ${r.toFreString()}\n`;
+            result += `\n// ${r.toFreString()}\n`;
 
             // create the text for the rule
             if (r instanceof CheckEqualsTypeRule) {
-                result += this.makeEqualsTypeRule(r, locationdescription, severity, index, message);
+                result += this.makeEqualsTypeRule(r, locationdescription, severity, index, imports, message);
             } else if (r instanceof CheckConformsRule) {
-                result += this.makeConformsRule(r, locationdescription, severity, message);
+                result += this.makeConformsRule(r, locationdescription, severity, imports, message);
             } else if (r instanceof NotEmptyRule) {
-                result += this.makeNotEmptyRule(r, locationdescription, severity, message);
+                result += this.makeNotEmptyRule(r, locationdescription, severity, imports, message);
             } else if (r instanceof ValidNameRule) {
-                result += this.makeValidNameRule(r, locationdescription, severity, message);
+                this.needIsValidNameMethod = true;
+                result += this.makeValidNameRule(r, locationdescription, severity, imports, message);
             } else if (r instanceof ExpressionRule) {
-                result += this.makeExpressionRule(r, locationdescription, severity, message);
+                result += this.makeExpressionRule(r, locationdescription, severity, imports, message);
             } else if (r instanceof IsUniqueRule) {
-                result += this.makeIsuniqueRule(r, locationdescription, severity, message);
+                result += this.makeIsuniqueRule(r, locationdescription, severity, imports, message);
             }
         });
         return result;
@@ -154,13 +199,26 @@ export class RulesCheckerTemplate {
         // this method makes sure that we do not depend on the name of the severity to be the same as its value
         // e.g. FreErrorSeverity.NONE = "none",
         let result: string = `${Names.FreErrorSeverity}.`;
+
         switch (r.severity.severity) {
             case FreErrorSeverity.Error: {
                 result += `Error`;
                 break;
             }
+            case FreErrorSeverity.Warning: {
+                result += `Warning`;
+                break;
+            }
+            case FreErrorSeverity.Hint: {
+                result += `Hint`;
+                break;
+            }
             case FreErrorSeverity.Improvement: {
                 result += `Improvement`;
+                break;
+            }
+            case FreErrorSeverity.ToDo: {
+                result += `ToDo`;
                 break;
             }
             case FreErrorSeverity.Info: {
@@ -171,21 +229,20 @@ export class RulesCheckerTemplate {
                 result += `NONE`;
                 break;
             }
-            case FreErrorSeverity.ToDo: {
+            default: {
                 result += `ToDo`;
-                break;
             }
         }
         return result;
     }
 
-    private makeExpressionRule(r: ExpressionRule, locationdescription: string, severity: string, message?: string) {
+    private makeExpressionRule(r: ExpressionRule, locationdescription: string, severity: string, imports: Imports, message?: string) {
         if (!message || message.length === 0) {
             message = `"'${r.toFreString()}' is false"`;
         }
         if (!!r.exp1 && !!r.exp2) {
-            return `if (!(${GenerationUtil.langExpToTypeScript(r.exp1)} ${r.comparator} ${GenerationUtil.langExpToTypeScript(r.exp2)})) {
-                    this.errorList.push( new ${Names.FreError}( ${message}, modelelement, ${locationdescription}, ${severity} ));
+            return `if (!(${ExpressionGenerationUtil.langExpToTypeScript(r.exp1, paramName, imports)} ${ValidationUtils.freComparatorToTypeScript(r.comparator)} ${ExpressionGenerationUtil.langExpToTypeScript(r.exp2, paramName, imports)})) {
+                    this.errorList.push( new ${Names.FreError}( ${message}, ${paramName}, ${locationdescription}, ${severity} ));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
@@ -197,14 +254,15 @@ export class RulesCheckerTemplate {
         r: ValidNameRule,
         locationdescription: string,
         severity: string,
+        imports: Imports,
         message?: string,
     ): string {
         if (!!r.property) {
             if (!message || message.length === 0) {
-                message = `"'" + ${GenerationUtil.langExpToTypeScript(r.property)} + "' is not a valid identifier"`;
+                message = `"'" + ${ExpressionGenerationUtil.langExpToTypeScript(r.property, paramName, imports)} + "' is not a valid identifier"`;
             }
-            return `if (!this.isValidName(${GenerationUtil.langExpToTypeScript(r.property)})) {
-                    this.errorList.push( new ${Names.FreError}( ${message}, modelelement, ${locationdescription}, ${severity} ));
+            return `if (!this.isValidName(${ExpressionGenerationUtil.langExpToTypeScript(r.property, paramName, imports)})) {
+                    this.errorList.push( new ${Names.FreError}( ${message}, ${paramName}, ${locationdescription}, ${severity} ));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
@@ -212,13 +270,13 @@ export class RulesCheckerTemplate {
         }
     }
 
-    private makeNotEmptyRule(r: NotEmptyRule, locationdescription: string, severity: string, message?: string): string {
+    private makeNotEmptyRule(r: NotEmptyRule, locationdescription: string, severity: string, imports: Imports, message?: string): string {
         if (!!r.property) {
             if (!message || message.length === 0) {
                 message = `"List '${r.property.toFreString()}' may not be empty"`;
             }
-            return `if (${GenerationUtil.langExpToTypeScript(r.property)}.length === 0) {
-                    this.errorList.push(new ${Names.FreError}(${message}, modelelement, ${locationdescription}, "${r.property.toFreString()}", ${severity}));
+            return `if (${ExpressionGenerationUtil.langExpToTypeScript(r.property, paramName, imports)}.length === 0) {
+                    this.errorList.push(new ${Names.FreError}(${message}, ${paramName}, ${locationdescription}, "${r.property.toFreString()}", ${severity}));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
@@ -230,15 +288,16 @@ export class RulesCheckerTemplate {
         r: CheckConformsRule,
         locationdescription: string,
         severity: string,
+        imports: Imports,
         message?: string,
     ): string {
-        if (!!r.type1 && !!r.type2) {
+        if (!!r.type1Exp && !!r.type2Exp) {
             if (!message || message.length === 0) {
-                message = `"Type " + this.typer.inferType(${GenerationUtil.langExpToTypeScript(r.type1)})?.toFreString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type1)}) +
-                         "] does not conform to " + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type2)})`;
+                message = `"Type " + this.typer.inferType(${ExpressionGenerationUtil.langExpToTypeScript(r.type1Exp, paramName, imports)})?.toFreString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${ExpressionGenerationUtil.langExpToTypeScript(r.type1Exp, paramName, imports)}) +
+                         "] does not conform to " + this.myWriter.writeNameOnly(${ExpressionGenerationUtil.langExpToTypeScript(r.type2Exp, paramName, imports)})`;
             }
-            return `if (!this.typer.conformsType(${GenerationUtil.langExpToTypeScript(r.type1)}, ${GenerationUtil.langExpToTypeScript(r.type2)})) {
-                    this.errorList.push(new ${Names.FreError}(${message}, ${GenerationUtil.langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
+            return `if (!this.typer.conformsType(${ExpressionGenerationUtil.langExpToTypeScript(r.type1Exp, paramName, imports)}, ${ExpressionGenerationUtil.langExpToTypeScript(r.type2Exp, paramName, imports)})) {
+                    this.errorList.push(new ${Names.FreError}(${message}, ${ExpressionGenerationUtil.langExpToTypeScript(r.type1Exp, paramName, imports)}, ${locationdescription}, ${severity}));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                  }`;
         } else {
@@ -251,24 +310,29 @@ export class RulesCheckerTemplate {
         locationdescription: string,
         severity: string,
         index: number,
+        imports: Imports,
         message?: string,
     ): string {
         // TODO change other methods similar to this one, i.e. first determine the types then call typer on types
         // TODO make sure alle errors message use the same format
-        if (!!r.type1 && !!r.type2) {
-            const leftElement: string = GenerationUtil.langExpToTypeScript(r.type1);
-            const rightElement: string = GenerationUtil.langExpToTypeScript(r.type2);
+        if (!!r.type1Exp && !!r.type2Exp) {
+            let leftElement: string = ExpressionGenerationUtil.langExpToTypeScript(r.type1Exp, paramName, imports);
+            let rightElement: string = ExpressionGenerationUtil.langExpToTypeScript(r.type2Exp, paramName, imports);
+
             if (!message || message.length === 0) {
-                message = `"Type of '"+ this.myWriter.writeNameOnly(${leftElement})
-                        + "' (" + leftType${index}?.toFreString(this.myWriter) + ") should equal the type of '"
+                message = `"Type of "+ this.myWriter.writeNameOnly(${leftElement})
+                        + " (" + leftType${index}?.toFreString(this.myWriter) + ") should equal the type of "
                         + this.myWriter.writeNameOnly(${rightElement})
-                        + "' (" + rightType${index}?.toFreString(this.myWriter) + ")"`;
+                        + " (" + rightType${index}?.toFreString(this.myWriter) + ")"`;
             }
+            imports.core.add('notNullOrUndefined');
             return `const leftType${index} = this.typer.inferType(${leftElement});
             const rightType${index} = this.typer.inferType(${rightElement});
-            if (!this.typer.equals(leftType${index}, rightType${index})) {
-                this.errorList.push(new ${Names.FreError}(${message}, ${leftElement}, ${locationdescription}, ${severity}));
-                ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
+            if (notNullOrUndefined(leftType0) && notNullOrUndefined(rightType0)) {
+                if (!this.typer.equals(leftType${index}, rightType${index})) {
+                    this.errorList.push(new ${Names.FreError}(${message}, ${leftElement}, ${locationdescription}, ${severity}));
+                    ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
+                }
             }`;
         } else {
             return "<error in makeEqualsTypeRule>";
@@ -279,46 +343,78 @@ export class RulesCheckerTemplate {
         rule: IsUniqueRule,
         locationdescription: string,
         severity: string,
+        imports: Imports,
         message?: string,
     ): string {
-        if (!!rule.listproperty && !!rule.list) {
-            const listpropertyName: string = rule.listproperty.appliedfeature.toFreString();
-            const listName: string = rule.list.appliedfeature.toFreString();
+        if (!!rule.listpropertyExp && !!rule.listExp) {
+            // find the objects that the expressions refer to
+            const lastPropExp = rule.listpropertyExp.getLastExpression();
+            const lastListExp = rule.listExp.getLastExpression();
+            if (!(lastPropExp instanceof FreVarExp) || !(lastListExp instanceof FreVarExp)) { // should be the case, checked by the checker!
+                return '';
+            }
+
+            // create the name of the variable that will hold the properties that need be unique
+            const listpropertyName: string = lastPropExp.name;
+            const listName: string = lastListExp.name;
             const uniquelistName: string = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
-            const referredListproperty: FreMetaProperty | undefined = rule.listproperty.findRefOfLastAppliedFeature();
+
+            // generate code for the type of the list, and the list property expression
+            const referredListproperty: FreMetaProperty | undefined = lastPropExp.referredProperty;
             let listpropertyTypeName: string = "";
             let listpropertyTypescript: string = "";
-            if (!!referredListproperty) {
+            if (!isNullOrUndefined(referredListproperty)) {
                 listpropertyTypeName = GenerationUtil.getBaseTypeAsString(referredListproperty);
-                listpropertyTypescript = GenerationUtil.langExpToTypeScript(rule.listproperty.appliedfeature);
+                listpropertyTypescript = ExpressionGenerationUtil.langExpToTypeScript(rule.listpropertyExp, 'elem', imports);
             }
-            //
+
+            // determine the type of the list elements
+            const referredList: FreMetaProperty | undefined = lastListExp.referredProperty;
+            let listElementTypeName: string = "";
+            if (!isNullOrUndefined(referredList)) {
+                listElementTypeName = GenerationUtil.getBaseTypeAsString(referredList);
+            }
+
+            // determine how the name of an erroneous element will be exposed, based on whether the list elements are references or not
             let refAddition: string = "";
-            let howToWriteName: string = "this.myWriter.writeNameOnly(elem)";
-            if (!!rule.list.findRefOfLastAppliedFeature() && !rule.list.findRefOfLastAppliedFeature()!.isPart) {
-                // the elements in the list are all FreElementReferences
+            let howToWriteName: string = `this.myWriter.writeNameOnly(elem)`;
+            if (!!rule.listExp.getLastExpression() && !rule.listExp.getIsPart()) {
+                // the elements in the list are all FreNodeReferences
                 refAddition += ".referred";
-                howToWriteName = "elem.name"; // if the list element is a reference there is no need to call the writer
+                howToWriteName = `elem.name`; // if the list element is a reference there is no need to call the writer
             }
-            //
+
+            // create an error message
             if (!message || message.length === 0) {
                 message = `\`The value of property '${listpropertyName}' (\"\${${howToWriteName}}\") is not unique in list '${listName}'\``;
             }
+
+            // add imports
+            imports.core.add('isNullOrUndefined').add('notNullOrUndefined');
+            // ... but do not add the primitive types
+            if (listpropertyTypeName !== 'number' && listpropertyTypeName !== 'string' && listpropertyTypeName !== 'boolean') {
+                imports.language.add(listpropertyTypeName);
+            }
+            if (listElementTypeName !== 'number' && listElementTypeName !== 'string' && listElementTypeName !== 'boolean') {
+                imports.language.add(listElementTypeName);
+            }
+
+            // return the template string
             return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
-        ${GenerationUtil.langExpToTypeScript(rule.list)}.forEach((elem, index) => {
-            if ((elem === undefined) || (elem === null)) {
+        ${ExpressionGenerationUtil.langExpToTypeScript(rule.listExp, paramName, imports)}.forEach((elem: ${listElementTypeName}, index: number) => {
+            if (isNullOrUndefined(elem)) {
                 this.errorList.push(new ${Names.FreError}(\`Element[\$\{index\}] of property '${listName}' has no value\`,
-                 ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
+                 ${ExpressionGenerationUtil.langExpToTypeScript(rule.listExp, paramName, imports)}[index]${refAddition},
                  ${locationdescription},
                  "${listpropertyName}",
                  ${severity}));
                     ${rule.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
             } else {
-                if (!${uniquelistName}.includes(elem.${listpropertyTypescript})){
-                    ${uniquelistName}.push(elem.${listpropertyTypescript});
+                if (notNullOrUndefined(${listpropertyTypescript}) && !${uniquelistName}.includes(${listpropertyTypescript})){
+                    ${uniquelistName}.push(${listpropertyTypescript});
                 } else {
                     this.errorList.push(new ${Names.FreError}(${message},
-                     ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
+                     ${ExpressionGenerationUtil.langExpToTypeScript(rule.listExp, paramName, imports)}[index]${refAddition},
                      ${locationdescription},
                      "${listpropertyName}",
                      ${severity}));                }
@@ -330,7 +426,7 @@ export class RulesCheckerTemplate {
         }
     }
 
-    private makeMessage(message: ValidationMessage): string {
+    private makeMessage(message: ValidationMessage, imports: Imports): string {
         let result: string = "";
         if (!!message) {
             const numberOfparts = message.content.length;
@@ -338,12 +434,12 @@ export class RulesCheckerTemplate {
                 if (cont instanceof ValidationMessageText) {
                     // console.log("FOUND message text: '" + cont.value + "'");
                     result += `${cont.value}`;
-                } else if (cont instanceof ValidationMessageReference && !!cont.expression) {
-                    if (cont.expression.findRefOfLastAppliedFeature() instanceof FreMetaPrimitiveProperty) {
-                        result += `\${${GenerationUtil.langExpToTypeScript(cont.expression)}}`;
+                } else if (!!cont.expression) {
+                    if (cont.expression.getResultingClassifier() instanceof FreMetaPrimitiveType) {
+                        result += `\${${ExpressionGenerationUtil.langExpToTypeScript(cont.expression, paramName, imports)}}`;
                     } else {
                         // console.log("FOUND message expression: '" + cont.expression.toFreString() + "'");
-                        result += `\${this.myWriter.writeToString(${GenerationUtil.langExpToTypeScript(cont.expression)})}`;
+                        result += `\${this.myWriter.writeToString(${ExpressionGenerationUtil.langExpToTypeScript(cont.expression, paramName, imports)})}`;
                     }
                 }
                 if (index < numberOfparts - 1) {
@@ -356,4 +452,5 @@ export class RulesCheckerTemplate {
         }
         return result;
     }
+
 }

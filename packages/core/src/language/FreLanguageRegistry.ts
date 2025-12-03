@@ -1,12 +1,4 @@
-import {
-    FreLanguageClassifier,
-    FreLanguage,
-    FreLanguageConcept,
-    FreLanguageInterface,
-    FreLanguageProperty,
-    FreLanguageModel,
-    FreLanguageModelUnit,
-} from "./FreLanguage.js";
+import type { FreLanguageClassifier, FreLanguage, FreLanguageConcept, FreLanguageInterface, FreLanguageProperty, FreLanguageModel, FreLanguageModelUnit } from "./FreLanguage.js";
 
 /**
  * Registry for all languages used.

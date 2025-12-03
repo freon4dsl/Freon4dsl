@@ -18,11 +18,11 @@ hastype { Exp, TypeUsage }
 
 // What are the top and bottom types?
 anytype {
-    conformsto PredefinedType:ANY; // PredefinedType:ANY is the least specific type
+    conformsto #PredefinedType:ANY; // #PredefinedType:ANY is the least specific type
 }
 
 PredefinedType {
-    PredefinedType:NULL conformsto anytype; // PredefinedType:NULL is the most specific type
+    #PredefinedType:NULL conformsto anytype; // #PredefinedType:NULL is the most specific type
 }
 
 // Which type does an expression have?
@@ -50,15 +50,15 @@ UnitOfMeasurement {
 }
 
 NumberLiteral {
-    infertype PredefinedType:NUMBER;
+    infertype #PredefinedType:NUMBER;
 }
 
 StringLiteral {
-    infertype PredefinedType:STRING;
+    infertype #PredefinedType:STRING;
 }
 
 BooleanLiteral {
-    infertype PredefinedType:BOOLEAN;
+    infertype #PredefinedType:BOOLEAN;
 }
 
 NamedExp {
@@ -81,7 +81,7 @@ GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype TT_GenericType {
         base: typeof(self.content),
-        kind: GenericKind:Collection
+        kind: #GenericKind:Collection
     };
 }
 

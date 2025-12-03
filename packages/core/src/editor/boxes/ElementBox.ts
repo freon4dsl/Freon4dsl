@@ -1,6 +1,7 @@
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
-import { Box } from "./Box.js";
+import { Box } from "./Box.js"
+import type { ClientRectangle } from "../ClientRectangleTypes.js";
 
 export class ElementBox extends Box {
     kind: string = "ElementBox";
@@ -40,20 +41,8 @@ export class ElementBox extends Box {
         }
     }
 
-    get actualX(): number {
-        return this.content.actualX;
-    }
-
-    get actualY(): number {
-        return this.content.actualY;
-    }
-
-    get actualWidth(): number {
-        return this.content.actualWidth;
-    }
-
-    get actualHeight(): number {
-        return this.content.actualHeight;
+    getClientRectangle = (): ClientRectangle => {
+        return this.content.getClientRectangle();
     }
 }
 

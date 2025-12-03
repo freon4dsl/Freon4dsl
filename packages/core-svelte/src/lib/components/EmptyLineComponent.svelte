@@ -2,14 +2,16 @@
     /**
      * This component shows an empty line in the projection.
      */
-    import type { EmptyLineBox } from "@freon4dsl/core";
-    import { componentId } from "./svelte-utils/index.js";
+    import { componentId } from '../index.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
+    import type { EmptyLineBox } from '@freon4dsl/core';
+    import { isNullOrUndefined } from '@freon4dsl/core';
 
-    export let box: EmptyLineBox;
-    let id: string = !!box ? componentId(box) : 'emptyline-for-unknown-box';
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    let { editor, box }: FreComponentProps<EmptyLineBox> = $props();
+    let id: string = isNullOrUndefined(box) ? componentId(box) : 'empty-line-for-unknown-box';
 </script>
 
-<span id="{id}" >
-    <br>
+<span {id} class="{box.cssClass}">
+    <br />
 </span>
-

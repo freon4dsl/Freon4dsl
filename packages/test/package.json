@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@freon4dsl/test",
-  "version": "1.0.2",
+  "version": "2.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,29 +13,27 @@
   "scripts": {
     "clean": "rm -rf node_modules/ && rm -rf dist/",
     "cleanup": "bash ../../scripts/cleanup.sh",
-    "meta-it": "bash ../../scripts/freon-test-dev.sh -v meta-it -l src/demo/defs/LanguageDefinition.ast -o src/demo",
-    "scope-it": "bash ../../scripts/freon-test-dev.sh -v scope-it -l src/demo/defs/LanguageDefinition.ast -s src/demo/defs/LanguageDefinition.scope -o src/demo",
-    "edit-it": "bash ../../scripts/freon-test-dev.sh -v edit-it -l src/demo/defs/LanguageDefinition.ast -e src/demo/defs/LanguageDefinition.edit -o src/demo",
-    "validate-it": "bash ../../scripts/freon-test-dev.sh -v validate-it -l src/demo/defs/LanguageDefinition.ast -c src/demo/defs/LanguageDefinition.valid -o src/demo",
-    "type-it": "bash ../../scripts/freon-test-dev.sh -v type-it -l src/demo/defs/LanguageDefinition.ast -t src/demo/defs/LanguageDefinition.type -o src/demo",
     "demo": "bash ../../scripts/freon-test-dev.sh all -d src/demo/defs -o src/demo",
     "octopus": "bash ../../scripts/freon-test-dev.sh all -d src/octopus-small/defs -o src/octopus-small",
     "parser-conc": "bash ../../scripts/freon-test-dev.sh all -d src/parser-basic-concepts/defs -o src/parser-basic-concepts",
     "basic-props": "bash ../../scripts/freon-test-dev.sh all -d src/parser-basic-properties/defs -o src/parser-basic-properties",
     "parsergen": "bash ../../scripts/freon-test-dev.sh all -d src/parser_gen/defs -o src/parser_gen",
+    "parser-extra": "bash ../../scripts/freon-test-dev.sh all -d src/parser-extra-tests/defs -o src/parser-extra-tests",
     "imports": "bash ../../scripts/freon-test-dev.sh all -d src/testCircularImports/def -o src/testCircularImports",
     "defaultscoper": "bash ../../scripts/freon-test-dev.sh all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
     "definedscoper": "cp src/testDefaultScoper/defs/Language.ast src/testDefinedScoper/defs/Language.ast && cp src/testDefaultScoper/__tests__/SimpleModelCreator.ts src/testDefinedScoper/__tests__/ModelCreator.ts && bash ../../scripts/freon-test-dev.sh all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
+    "qualified-name": "bash ../../scripts/freon-test-dev.sh all -d src/qualifiedNameScoper/defs -o src/qualifiedNameScoper",
+    "scoper-test": "bash ../../scripts/freon-test-dev.sh all -d src/scoperTest/defs -o src/scoperTest",
     "langconstr": "bash ../../scripts/freon-test-dev.sh all -d src/testLangConstructs/defs -o src/testLangConstructs",
-    "noparser1": "bash ../../scripts/freon-test-dev.sh validate-it -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
     "noparser": "bash ../../scripts/freon-test-dev.sh all -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
     "prim-gen": "bash ../../scripts/freon-test-dev.sh all -d src/testPrimPropsGeneration/defs -o src/testPrimPropsGeneration",
     "storage": "bash ../../scripts/freon-test-dev.sh all -d src/storage/defs -o src/storage",
     "testproject": "bash ../../scripts/freon-test-dev.sh all -d src/testproject/defs -o src/testproject",
     "typer-test8": "bash ../../scripts/freon-test-dev.sh all -d src/typer-test8/defs -o src/typer-test8",
     "undo-tester": "bash ../../scripts/freon-test-dev.sh all -d src/UndoTester/defs -o src/UndoTester",
+    "valid-test": "bash ../../scripts/freon-test-dev.sh all -d src/ValidTest/defs -o src/ValidTest",
     "vehicles": "bash ../../scripts/freon-test-dev.sh all -d src/vehicles/defs -o src/vehicles",
-    "build": "npm run demo && npm run storage && npm run octopus && npm run parser-conc && npm run basic-props && npm run parsergen && npm run imports && npm run defaultscoper && npm run definedscoper && npm run langconstr && npm run noparser && npm run prim-gen && npm run testproject && npm run typer-test8 && npm run undo-tester && npm run vehicles && tsc",
+    "build": "npm run demo && npm run storage && npm run octopus && npm run parser-conc && npm run basic-props && npm run parsergen && npm run parser-extra && npm run imports && npm run defaultscoper && npm run definedscoper && npm run langconstr && npm run noparser && npm run prim-gen && npm run testproject && npm run typer-test8 && npm run undo-tester && npm run vehicles && npm run qualified-name && npm run valid-test && npm run scoper-test && tsc",
     "clean-config": "rm */*/config/FreonConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-parser": "rm -r */*/*parse*",
@@ -54,25 +52,29 @@
     "clean-testproject": "bash ../../scripts/freon-test-dev.sh clean-it -f -d src/testproject/defs -o src/testproject",
     "clean-typer-test8": "bash ../../scripts/freon-test-dev.sh clean-it -d src/typer-test8/defs -o src/typer-test8",
     "clean-undo-tester": "bash ../../scripts/freon-test-dev.sh clean-it -d src/UndoTester/defs -o src/UndoTester",
+    "clean-valid-test": "bash ../../scripts/freon-test-dev.sh clean-it -f -d src/ValidTest/defs -o src/ValidTest",
     "clean-vehicles": "bash ../../scripts/freon-test-dev.sh clean-it -f -d src/vehicles/defs -o src/vehicles",
-    "clean-all-projects": "npm run clean-demo && npm run clean-octopus && npm run clean-parser-conc && npm run clean-basic-props && npm run clean-parsergen && npm run clean-imports && npm run clean-defaultscoper && npm run clean-definedscoper && npm run clean-langconstr && npm run clean-noparser && npm run clean-prim-gen && npm run clean-testproject && npm run clean-typer-test8 && npm run clean-vehicles",
+    "clean-qualified-name": "bash ../../scripts/freon-test-dev.sh clean-it -f -d src/qualifiedNameScoper/defs -o src/qualifiedNameScoper",
+    "clean-all-projects": "npm run clean-demo && npm run clean-octopus && npm run clean-parser-conc && npm run clean-basic-props && npm run clean-parsergen && npm run clean-imports && npm run clean-defaultscoper && npm run clean-definedscoper && npm run clean-langconstr && npm run clean-noparser && npm run clean-prim-gen && npm run clean-testproject && npm run clean-typer-test8 && npm run clean-vehicles && npm run clean-qualified-name && npm run clean-valid-test",
     "test": "vitest run"
   },
   "devDependencies": {
-    "vitest": "^2.1.0",
-    "@vitest/ui": "^2.1.0"
+    "vitest": "3.2.4",
+    "@vitest/ui": "3.2.4"
   },
   "dependencies": {
-    "@freon4dsl/core": "~1.0.2",
-    "@freon4dsl/meta": "~1.0.2",
+    "@freon4dsl/core": "~2.0.1",
+    "@freon4dsl/meta": "~2.0.1",
+    "@freon4dsl/test-helpers": "~2.0.1",
     "@lionweb/validation": "^0.6.3",
+    "protobufjs": "7.5.4",
     "global": "^4.4.0",
     "kotlin": "^1.5.21",
     "mobx": "^6.12.3",
-    "net.akehurst.language-agl-processor": "4.0.0-rc.5",
+    "net.akehurst.language-agl-processor": "4.2.1-20-RC2",
     "tslib": "^2.6.3"
   },
   "publishConfig": {
-    "access": "private"
+    "access": "restricted"
   }
 }

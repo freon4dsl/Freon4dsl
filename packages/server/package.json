@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/server",
-  "version": "1.0.2",
+  "version": "2.0.1",
   "publishConfig": {
     "access": "public"
   },
@@ -17,28 +17,28 @@
     "clean": "rm -rf node_modules/ && rm -rf dist/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "start": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec node ./dist/server/server-starter.js",
+    "start9090": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec node ./dist/server/server-starter.js --port 9090",
     "build": "tsc --build",
     "build-dev": "tsc --build",
     "build-verbose": "tsc --build --verbose --listFiles --listEmittedFiles",
     "build-release": "npm run build",
-    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "release": "npm publish",
-    "publish-local": "npm publish --registry http://localhost:4873",
+    "release-beta": "npm publish --tag beta",
+    "publish-local": "npm publish --registry http://localhost:4873 --tag local",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local",
     "test": "vitest run"
   },
   "devDependencies": {
-    "vitest": "^2.1.0",
-    "@vitest/ui": "^2.1.0"
+    "vitest": "3.2.4",
+    "@vitest/ui": "3.2.4"
   },
   "dependencies": {
-    "@types/koa": "^2.13.4",
+    "@types/koa": "3.0.1",
     "@lionweb/validation": "^0.6.3",
-    "koa": "2.13.1",
-    "koa-bodyparser": "4.3.0",
-    "koa-router": "10.0.0",
-    "koa2-cors": "2.0.6",
+    "koa": "3.1.1",
+    "koa-bodyparser": "4.4.1",
+    "@koa/router": "14.0.0",
+    "@koa/cors": "5.0.0",
     "supertest": "^7.0.0",
     "tslib": "^2.6.3"
   }

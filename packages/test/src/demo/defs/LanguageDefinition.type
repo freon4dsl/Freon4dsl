@@ -9,8 +9,8 @@ hastype { DemoExpression, DemoAttribute, DemoFunction, DemoVariable, DemoAttribu
 anytype {
     // conformsto self.base
     //conformsto self.implements
-    conformsto DemoAttributeType:ANY;
-    equalsto DemoAttributeType:ANY;
+    conformsto #DemoAttributeType:ANY;
+    equalsto #DemoAttributeType:ANY;
 }
 
 DemoEntity {
@@ -25,13 +25,13 @@ DemoFunction {
     infertype self.declaredType;
 }
 DemoStringLiteralExpression {
-    infertype DemoAttributeType:String;
+    infertype #DemoAttributeType:String;
 }
 DemoNumberLiteralExpression {
-    infertype DemoAttributeType:Integer;
+    infertype #DemoAttributeType:Integer;
 }
 DemoBooleanLiteralExpression {
-    infertype DemoAttributeType:Boolean;
+    infertype #DemoAttributeType:Boolean;
 }
 DemoAbsExpression {
     infertype self.expr;
@@ -46,7 +46,7 @@ DemoDivideExpression {
     infertype self.left;
 }
 DemoComparisonExpression {
-    infertype DemoAttributeType:Boolean;
+    infertype #DemoAttributeType:Boolean;
 }
 DemoFunctionCallExpression {
     infertype self.functionDefinition;
@@ -64,9 +64,9 @@ DemoAttributeRef   {
     infertype self.attribute.declaredType;
 }
 DemoAndExpression {
-    infertype DemoAttributeType:Boolean;
+    infertype #DemoAttributeType:Boolean;
 }
 DemoOrExpression {
-    infertype DemoAttributeType:Boolean;
+    infertype #DemoAttributeType:Boolean;
 }
 

@@ -1,11 +1,9 @@
 import { FreLanguage } from "@freon4dsl/core";
-import { DSmodel, DSunit } from "../language/gen";
 import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
 import { describe, test, expect } from "vitest";
 
 describe("Testing Defined Scoper, namespaces for implemented interfaces", () => {
     const environment = DSmodelEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
-    const scoper = environment.scoper;
 
     /**
      * Test all kinds of direct and indirect namespace inheritance,

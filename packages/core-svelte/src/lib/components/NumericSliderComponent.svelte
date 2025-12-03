@@ -1,37 +1,39 @@
 <script lang="ts">
     import '@material/web/slider/slider.js';
-    import { NUMERICSLIDER_LOGGER } from "$lib/components/ComponentLoggers.js";
-    import {MdSlider} from "@material/web/slider/slider.js";
-    import {FreEditor, NumberControlBox} from "@freon4dsl/core";
-    import {afterUpdate, onMount} from "svelte";
+    import { NUMERICSLIDER_LOGGER } from './ComponentLoggers.js';
+    import type { MdSlider } from '@material/web/slider/slider.js';
+    import { notNullOrUndefined } from '@freon4dsl/core';
+    import type { NumberControlBox } from '@freon4dsl/core';
+    import { onMount } from 'svelte';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    const LOGGER = NUMERICSLIDER_LOGGER
+    const LOGGER = NUMERICSLIDER_LOGGER;
 
-    export let editor: FreEditor;
-    export let box: NumberControlBox;
+    // Props
+    let { editor, box }: FreComponentProps<NumberControlBox> = $props();
 
     // Variables set from the box.
     // box.displayInfo is completely set, it is done in NumberControlBox constructor
     let id: string = box.id;
-    let value: number = box.getNumber();
-    let min: number = box.displayInfo.min;
-    let max: number = box.displayInfo.max;
-    let step: number = box.displayInfo.step;
-    let showMarks: boolean = box.displayInfo.showMarks;
-    // let discrete: boolean = box.displayInfo.discrete;
+    let value: number = $state(box.getNumber());
+    let min: number = $state(box.displayInfo!.min)!;
+    let max: number = $state(box.displayInfo!.max)!;
+    let step: number = $state(box.displayInfo!.step)!;
+    let showMarks: boolean = $state(box.displayInfo!.showMarks)!;
 
-    //
     let sliderElement: MdSlider;
 
     const onChange = (event: Event) => {
-        LOGGER.log("NumericSliderComponent.onChange for box " + box.role + ", value:" + sliderElement.value);
-        value = (sliderElement.value !== null && sliderElement.value !== undefined) ? sliderElement.value : 0;
+        LOGGER.log(
+            'NumericSliderComponent.onChange for box ' + box.role + ', value:' + sliderElement.value
+        );
+        value = notNullOrUndefined(sliderElement.value) ? sliderElement.value : 0;
         box.setNumber(value);
         if (box.selectable) {
             editor.selectElementForBox(box);
         }
         event.stopPropagation();
-    }
+    };
 
     /**
      * This function sets the focus on this element programmatically.
@@ -43,17 +45,20 @@
         sliderElement.focus();
     }
     const refresh = (why?: string): void => {
-        LOGGER.log("REFRESH NumberControlBox: " + why);
+        LOGGER.log('REFRESH NumberControlBox: ' + why);
         value = box.getNumber();
     };
+
     onMount(() => {
         value = box.getNumber();
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
     });
-    afterUpdate(() => {
+
+    $effect(() => {
+        // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        // Evaluated and re-evaluated when the box changes.
+        refresh('Refresh numeric slider box changed ' + box?.id);
     });
 
     /**
@@ -61,25 +66,26 @@
      * that supports drag and drop.
      * @param event
      */
-    const dragStart = (event: MouseEvent & {currentTarget: EventTarget & HTMLInputElement; }) => {
+    const dragStart = (event: MouseEvent & { currentTarget: EventTarget & HTMLInputElement }) => {
         event.preventDefault();
-    }
+    };
 </script>
 
-<span class="numeric-slider-component" id="{id}">
-    <md-slider labeled
-               ticks="{showMarks}"
-               min={min}
-               max={max}
-               step={step}
-               value={value}
-               draggable={true}
-               on:dragstart={dragStart}
-               role="slider"
-               aria-valuenow="{value}"
-               tabindex={0}
-               on:change={onChange}
-               bind:this={sliderElement}>
+<span class="numeric-slider-component {box.cssClass}" {id}>
+    <md-slider
+        labeled
+        ticks={showMarks}
+        {min}
+        {max}
+        {step}
+        {value}
+        draggable={true}
+        ondragstart={dragStart}
+        role="slider"
+        aria-valuenow={value}
+        tabindex={0}
+        onchange={onChange}
+        bind:this={sliderElement}
+    >
     </md-slider>
 </span>
-

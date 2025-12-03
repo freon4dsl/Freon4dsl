@@ -1,17 +1,19 @@
-import { FreNamedNode } from "./FreNamedNode.js";
+import { qualifiedName } from './FreNamedNode.js';
+import type { FreNamedNode } from './FreNamedNode.js';
 import { computed, observable, makeObservable } from "mobx";
 import { FreLanguageEnvironment } from "../environment/index.js";
 import { FreLogger } from "../logging/index.js";
 import { MobxModelElementImpl } from "./decorators/index.js";
+import { FreParseLocation } from '../reader/index.js';
 
-const LOGGER = new FreLogger("FreElementReference").mute();
+const LOGGER = new FreLogger("FreNodeReference").mute();
 /**
- * Class FreElementReference provides the implementation for a (named) reference in Freon.
+ * Class FreNodeReference provides the implementation for a (named) reference in Freon.
  * References can be set with either a referred object, or with a name.
  */
 export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementImpl {
     /**
-     * Returns a new instance which refers to an node named 'name' of type T, or
+     * Returns a new instance which refers to a node named 'name' of type T, or
      * to the node 'name' itself.
      * Param 'typeName' should be equal to T.constructor.name.
      * @param name
@@ -30,7 +32,6 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         return result;
     }
 
-    // tslint:disable-next-line:no-shadowed-variable
     public copy<T extends FreNamedNode>(): FreNodeReference<T> {
         return FreNodeReference.create<T>(this._FRE_pathname, this.typeName);
     }
@@ -40,6 +41,8 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
 
     // Needed for the scoper to work
     public typeName: string = "";
+
+    public parseLocation: FreParseLocation; // if relevant, the location of this element within the source from which it is parsed
 
     /**
      * The constructor is private, use the create() method
@@ -97,7 +100,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
 
     get referred(): T {
         LOGGER.log(
-            "FreElementReference " +
+            "FreNodeReference " +
                 this._FRE_pathname +
                 " property " +
                 this.freOwnerDescriptor().propertyName +
@@ -107,18 +110,14 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         if (!!this._FRE_referred) {
             return this._FRE_referred;
         } else {
-            return FreLanguageEnvironment.getInstance().scoper.resolvePathName(
-                this.freOwnerDescriptor().owner,
-                this.freOwnerDescriptor().propertyName,
-                this._FRE_pathname,
-                this.typeName,
-            ) as T;
+            return FreLanguageEnvironment.getInstance().scoper.resolvePathName(this) as T;
         }
     }
 
     set referred(referredElement) {
         if (!!referredElement) {
-            this._FRE_pathname.push(referredElement.name);
+            // this._FRE_pathname.push(referredElement.name);
+            this._FRE_pathname = qualifiedName(referredElement);
         }
         this._FRE_referred = referredElement;
     }
@@ -130,4 +129,8 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
     match(toBeMatched: Partial<FreNodeReference<T>>): boolean {
         return toBeMatched.name === this.name;
     }
+}
+
+export function isFreNodeReference(n: any): n is FreNodeReference<FreNamedNode> {
+    return n instanceof FreNodeReference 
 }

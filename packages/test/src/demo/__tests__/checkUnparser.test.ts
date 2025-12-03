@@ -14,8 +14,8 @@ import { DemoModelCreator } from "./DemoModelCreator.js";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.js";
 import { DemoValidator } from "../validator/gen/index.js";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
-// import { FileHandler } from "../../utils/FileHandler";
-import { describe, it, test, expect, beforeEach } from "vitest";
+import { FileHandler } from "../../utils/FileHandler";
+import { describe, test, expect } from "vitest";
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
@@ -77,9 +77,15 @@ describe("Testing Unparser", () => {
 
                 const divideExpression = MakePlusExp("1", "2");
                 const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
+
+                // add the variable and the expression to a namespace
+                const xx = DemoFunction.create({ name: "TEST2" });
+                xx.parameters.push(variable);
+                xx.expression = multiplyExpression;
+
                 result = unparser.writeToString(multiplyExpression, 0, false);
                 result = result.replace(new RegExp("\\s+", "gm"), " ");
-                expect(result).toBe("1 + 2 * Person");
+                expect(result).toBe("1 + 2 * `Person`");
             })
         });
 
@@ -98,7 +104,7 @@ describe("Testing Unparser", () => {
                 // determine(AAP: TEST1) : TEST2 = "Hello Demo" + "Goodbye" has been created
                 // unparse using a short notation
                 result = unparser.writeToString(determine, 0, true);
-                expect(result).toBe("DemoFunction determine {");
+                expect(result).toBe("DemoFunction `determine` {");
                 // unparse using a long notation
                 result = unparser.writeToString(determine);
                 expect(result).toMatchSnapshot();
@@ -127,21 +133,21 @@ describe("Testing Unparser", () => {
                 result = unparser.writeToString(personEnt, 0, false);
                 // console.log(result)
                 expect(result).toBe(
-                    "DemoEntity Person {\n" +
+                    "DemoEntity `Person` {\n" +
                     "    baseInterface_attr 0\n" +
                     '    simpleprop ""\n' +
                     '    x ""\n' +
                     "    attributes\n" +
-                    "        age : Boolean\n" +
-                    "        name : String\n" +
+                    "        `age` : `Boolean`\n" +
+                    "        `name` : `String`\n" +
                     "    entAttributes\n" +
                     "\n" +
                     "    functions\n" +
-                    "        DemoFunction first {\n" +
+                    "        DemoFunction `first` {\n" +
                     "            expression 5 + 24\n" +
                     "            parameters\n" +
-                    "                Resultvar : someOtherEntity\n" +
-                    "            declaredType Boolean\n" +
+                    "                `Resultvar` : `someOtherEntity`\n" +
+                    "            declaredType `Boolean`\n" +
                     "        }\n" +
                     "    int_attrs\n" +
                     "\n" +
@@ -156,7 +162,7 @@ describe("Testing Unparser", () => {
             AST.change( () => {
                 let result: string = "";
                 const testmodel = new DemoModelCreator().createModelWithMultipleUnits();
-                // const fileHandler = new FileHandler();
+                expect(testmodel.models.length).not.toBe(0);
 
                 const validator = new DemoValidator();
                 const errors = validator.validate(testmodel, true);
@@ -168,8 +174,8 @@ describe("Testing Unparser", () => {
 
                 for (const unit of testmodel.models) {
                     result = unparser.writeToString(unit, 0, false);
-                    // fileHandler.stringToFile(`src/demo/__tests__/unparsed${unit.name}.txt`, result);
-
+                    // new FileHandler().stringToFile(`src/demo/__tests__/unparsed${unit.name}.txt`, result);
+                    //
                     // console.log(result);
                     expect(result).toMatchSnapshot();
                 }

@@ -1,12 +1,14 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger } from "../../utils";
-import { FreEditParser } from "../../editordef/parser/FreEditParser";
-import { FreEditUnit } from "../../editordef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
+import { Checker } from "../../utils/basic-dependencies/index.js";
+import { FreEditParser } from "../../editordef/parser/FreEditParser.js";
+import { FreEditUnit } from "../../editordef/metalanguage/index.js";
 import { describe, test, expect, beforeEach } from "vitest";
+import { resolveAstFile, resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking editor definition ", () => {
-    const testdir = "src/__tests__/editor-tests/faultyDefFiles/checking-errors/";
+    const testdir: string = resolveTestDir(import.meta.url, "faultyDefFiles/checking-errors/");
     let parser: FreEditParser;
     let language: FreMetaLanguage | undefined;
     let checker: Checker<FreEditUnit>;
@@ -15,14 +17,15 @@ describe("Checking editor definition ", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
+            const astPath: string = resolveAstFile(import.meta.url, "../commonAstFiles", "test-language.ast");
+            language = new LanguageParser().parse(astPath);
             if (!!language) {
                 parser = new FreEditParser(language);
                 checker = parser.checker;
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
-                console.log("Language could not be read");
+                console.log("Language could not be read", e.message);
             }
         }
     });
@@ -73,12 +76,12 @@ describe("Checking editor definition ", () => {
                 expect(e.message).toBe(`checking errors (5).`);
                 expect(
                     checker.errors.includes(
-                        "Trigger ee of EE is not unique (found 1 similar ones) [file: test3.edit:42:5].",
+                        "Trigger ee of EE is not unique (found 1 similar one/ones) [file: test3.edit:42:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "Trigger ee of FF is not unique (found 1 similar ones) [file: test3.edit:50:5].",
+                        "Trigger ee of FF is not unique (found 1 similar one/ones) [file: test3.edit:50:5].",
                     ),
                 ).toBeTruthy();
                 expect(
@@ -110,22 +113,22 @@ describe("Checking editor definition ", () => {
                 expect(e.message).toBe(`checking errors (4).`);
                 expect(
                     checker.errors.includes(
-                        "trigger for classifier AAAAAA is already defined: [file: test4a.edit:21:4] and [file: test4a.edit:11:4].",
+                        "Trigger for classifier AAAAAA is already defined: [file: test4a.edit:21:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "trigger for classifier AAAAAA is already defined: [file: test4b.edit:11:4] and [file: test4a.edit:11:4].",
+                        "Trigger for classifier AAAAAA is already defined: [file: test4b.edit:11:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "symbol for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
+                        "Symbol for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "trigger for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
+                        "Trigger for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
             }
@@ -188,11 +191,21 @@ describe("Checking editor definition ", () => {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-                expect(e.message).toBe(`checking errors (2).`);
+                expect(e.message).toBe(`checking errors (4).`);
                 expect(
-                    checker.errors.includes(
-                        "A limited concept cannot have a projection, it can only be used as reference [file: test7.edit:3:5].",
-                    ),
+                  checker.errors.includes(
+                    "A limited concept cannot have a projection, it can only be used as reference [file: test7.edit:3:5].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.errors.includes(
+                    "Cannot find property 'ZZprop8' in classifier 'ZZ' [file: test7.edit:4:8].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.errors.includes(
+                    "Cannot find property 'ZZprop11' in classifier 'ZZ' [file: test7.edit:6:9].",
+                  ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
@@ -268,7 +281,7 @@ describe("Checking editor definition ", () => {
         }
     });
 
-    test("on standard displays for primitives and limiteds", () => {
+    test("on standard displays for primitives and limiteds in test10.edit", () => {
         try {
             parser.parse(testdir + "test10.edit");
         } catch (e: unknown) {
@@ -305,13 +318,13 @@ describe("Checking editor definition ", () => {
         }
     });
 
-    test("on display types for limiteds", () => {
+    test("on display types for limiteds in test11.edit", () => {
         try {
             parser.parse(testdir + "test11.edit");
         } catch (e: unknown) {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);
-                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                console.log(checker.errors.map(err => `"${err}"`).join("\n"));
                 expect(e.message).toBe(`checking errors (11).`);
                 expect(
                     checker.errors.includes(
@@ -320,7 +333,7 @@ describe("Checking editor definition ", () => {
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type 'number[]' [file: test11.edit:11:5].",
+                        "A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]', found type 'number[]' [file: test11.edit:11:5].",
                     ),
                 ).toBeTruthy();
                 expect(
@@ -330,22 +343,22 @@ describe("Checking editor definition ", () => {
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type 'boolean[]' [file: test11.edit:19:5].",
+                        "A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]', found type 'boolean[]' [file: test11.edit:19:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]' [file: test11.edit:21:5].",
+                        "A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]' [file: test11.edit:21:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type 'BB[]' [file: test11.edit:22:5].",
+                        "A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]', found type 'BB[]' [file: test11.edit:22:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]' [file: test11.edit:23:5].",
+                        "A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]' [file: test11.edit:23:5].",
                     ),
                 ).toBeTruthy();
                 expect(
@@ -372,7 +385,7 @@ describe("Checking editor definition ", () => {
         }
     });
 
-    test("on multiple standard definitions", () => {
+    test("on multiple standard definitions in test11.edit and test12.edit", () => {
         try {
             parser.parseMulti([testdir + "test11.edit", testdir + "test12.edit"]);
         } catch (e: unknown) {
@@ -459,11 +472,11 @@ describe("Checking editor definition ", () => {
         try {
             parser.parse(testdir + "test14.edit");
         } catch (e: unknown) {
-            console.log("in test14: " + e);
-            console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            console.log(
-                "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
-            );
+            // console.log("in test14: " + e);
+            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // console.log(
+            //     "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
+            // );
             if (e instanceof Error) {
                 expect(e.message).toBe(`checking errors (8).`);
                 expect(
@@ -529,11 +542,11 @@ describe("Checking editor definition ", () => {
         try {
             parser.parse(testdir + "test15.edit");
         } catch (e: unknown) {
-            console.log("in test15: " + e);
-            console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            console.log(
-                "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
-            );
+            // console.log("in test15: " + e);
+            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // console.log(
+            //     "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
+            // );
             if (e instanceof Error) {
                 expect(e.message).toBe(`checking errors (1).`);
                 expect(
@@ -552,6 +565,48 @@ describe("Checking editor definition ", () => {
                     checker.warnings.includes(
                         "Fragment 'yy' is defined, but not used [file: test15.edit:9:1].",
                     ),
+                ).toBeTruthy();
+            }
+        }
+    });
+
+    test("on fragment definitions in multiple projection sets", () => {
+        try {
+            parser.parseMulti([testdir + "test15.edit", testdir + "test15-non-default.edit"]);
+        } catch (e: unknown) {
+            // console.log("in test15 plus test15-non-default: " + e);
+            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // console.log(
+            //     "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
+            // );
+            if (e instanceof Error) {
+                expect(e.message).toBe(`checking errors (3).`);
+                expect(
+                  checker.errors.includes(
+                    "No empty projections allowed [file: test15.edit:3:5].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.errors.includes(
+                    "Fragment 'xx' has already been defined for BB [file: test15-non-default.edit:3:5].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.errors.includes(
+                    "Fragment 'zz' has already been defined for BB [file: test15-non-default.edit:3:5].",
+                  ),
+                ).toBeTruthy();
+                expect(checker.hasWarnings()).toBeTruthy;
+                expect(checker.warnings.length).toBe(2);
+                expect(
+                  checker.warnings.includes(
+                    "Fragment 'xx' is defined, but not used [file: test15.edit:5:1].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.warnings.includes(
+                    "Fragment 'yy' is defined, but not used [file: test15.edit:9:1].",
+                  ),
                 ).toBeTruthy();
             }
         }

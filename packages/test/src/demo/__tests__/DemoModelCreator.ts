@@ -1,4 +1,4 @@
-import { AST, FreNodeReference } from "@freon4dsl/core";
+import { AST, FreNodeReference, type FreNode, FreLanguage, notNullOrUndefined } from '@freon4dsl/core';
 import { runInAction } from "mobx";
 import {
     Demo,
@@ -34,12 +34,12 @@ export class DemoModelCreator {
             model.models.push(this.createInheritanceUnit());
             model.models.push(this.createCorrectUnit());
         })
-        return model;
+        return model!;
     }
 
     public createModelWithIsUniqueError(): Demo {
         let result = this.createCorrectModel();
-        let unit: DemoModel = result.models.find((m) => m.name === "CorrectUnit");
+        let unit: DemoModel | undefined = result.models.find((m) => m.name === "CorrectUnit");
 
         AST.change( () => {
             const companyEnt = DemoEntity.create({ name: "Company", x: "xxx", simpleprop: "simple" }); // another one with the same unitName
@@ -53,9 +53,9 @@ export class DemoModelCreator {
             });
             companyEnt.attributes.push(VAT_Number2);
             companyEnt.attributes.push(VAT_Number);
-            unit.entities.push(companyEnt);
+            if (notNullOrUndefined(unit)) unit.entities.push(companyEnt);
             const ifFunction = this.makeIfFunction2();
-            companyEnt.functions.push(ifFunction);
+            if (notNullOrUndefined(ifFunction)) companyEnt.functions.push(ifFunction);
 
             const double = DemoFunction.create({
                 name: "compare",
@@ -74,12 +74,12 @@ export class DemoModelCreator {
             double.expression = MakePlusExp("24", "2020");
             // compare(Extra, Extra) = "24" + "2020"
 
-            unit.functions.push(double);
+            if (notNullOrUndefined(unit)) unit.functions.push(double);
         })
         return result;
     }
 
-    private makeIfFunction(name: string) {
+    private makeIfFunction(name: string): DemoFunction {
         let ifFunction
         AST.change( () => {
             ifFunction = DemoFunction.create({
@@ -92,12 +92,12 @@ export class DemoModelCreator {
             );
             const ifExpression = new DemoIfExpression();
             ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
-            ifExpression.whenTrue = makeLiteralExp("87");
-            ifExpression.whenFalse = makeLiteralExp("1345");
+            ifExpression.whenTrue = makeLiteralExp("87")!;
+            ifExpression.whenFalse = makeLiteralExp("1345")!;
             // const divideExpression = MakeDivideExp("678", "9990");
             ifFunction.expression = ifExpression;
         })
-        return ifFunction;
+        return ifFunction!;
     }
 
     private makeIfFunction2() {
@@ -113,8 +113,8 @@ export class DemoModelCreator {
             );
             const ifExpression = new DemoIfExpression();
             ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
-            ifExpression.whenTrue = makeLiteralExp("87");
-            ifExpression.whenFalse = makeLiteralExp("1345");
+            ifExpression.whenTrue = makeLiteralExp("87")!;
+            ifExpression.whenFalse = makeLiteralExp("1345")!;
             // const divideExpression = MakeDivideExp("678", "9990");
             ifFunction.expression = ifExpression;
         })
@@ -123,46 +123,50 @@ export class DemoModelCreator {
 
     public createModelWithAppliedfeature(): Demo {
         let result = this.createIncorrectModel();
-        let unit: DemoModel = result.models.find((m) => m.name === "DemoModel_1");
+        let unit: DemoModel | undefined = result.models.find((m) => m.name === "DemoModel_1");
         // add new attribute to Person entity
         AST.change( () => {
-            let personent = unit.entities[0]; // Person
-            let personattr = new DemoAttributeWithEntityType();
-            personattr.name = "attrFromPerson";
-            personattr.declaredType = FreNodeReference.create<DemoEntity>(unit.entities[1], "DemoEntity"); // Company
-            personent.entAttributes.push(personattr);
+            if (notNullOrUndefined(unit)) {
+                let personent = unit.entities[0]; // Person
+                let personattr = new DemoAttributeWithEntityType();
+                personattr.name = "attrFromPerson";
+                personattr.declaredType = FreNodeReference.create<DemoEntity>(unit.entities[1], "DemoEntity"); // Company
+                personent.entAttributes.push(personattr);
 
-            // add new attribute to Company entity
-            let companyent = unit.entities[1]; // Company
-            let compattr = new DemoAttributeWithEntityType();
-            compattr.name = "attrFromCompany";
-            compattr.declaredType = FreNodeReference.create<DemoEntity>(unit.entities[0], "DemoEntity"); // Person
-            companyent.entAttributes.push(compattr);
 
-            // find the function to be changed
-            let length = unit.functions[0];
+                // add new attribute to Company entity
+                let companyent = unit.entities[1]; // Company
+                let compattr = new DemoAttributeWithEntityType();
+                compattr.name = "attrFromCompany";
+                compattr.declaredType = FreNodeReference.create<DemoEntity>(unit.entities[0], "DemoEntity"); // Person
+                companyent.entAttributes.push(compattr);
 
-            // create an expression that includes applied features
-            let expression: DemoVariableRef = new DemoVariableRef();
-            expression.variable = FreNodeReference.create<DemoVariable>(length.parameters[0], "DemoVariable"); // Variable1: Person
-            // add an applied feature to the variable reference
-            let firstFeature: DemoAttributeRef = new DemoAttributeRef();
-            firstFeature.attribute = FreNodeReference.create<DemoAttributeWithEntityType>(
-                personattr,
-                "DemoAttributeWithEntityType",
-            ); // Person.attrFromPerson: Company
-            expression.appliedfeature = firstFeature;
-            // add a second applied feature to the attribute reference
-            let secondFeature: DemoAttributeRef = new DemoAttributeRef();
-            secondFeature.attribute = FreNodeReference.create<DemoAttributeWithEntityType>(
-                compattr,
-                "DemoAttributeWithEntityType",
-            ); // Company.attrFromCompany: Person
-            firstFeature.appliedfeature = secondFeature;
 
-            // change the expression of function model.length to the newly created expression
+                // find the function to be changed
+                let length = unit.functions[0];
 
-            length.expression = expression;
+                // create an expression that includes applied features
+                let expression: DemoVariableRef = new DemoVariableRef();
+                expression.variable = FreNodeReference.create<DemoVariable>(length.parameters[0], "DemoVariable"); // Variable1: Person
+                // add an applied feature to the variable reference
+                let firstFeature: DemoAttributeRef = new DemoAttributeRef();
+                firstFeature.attribute = FreNodeReference.create<DemoAttributeWithEntityType>(
+                  personattr,
+                  "DemoAttributeWithEntityType",
+                ); // Person.attrFromPerson: Company
+                expression.appliedfeature = firstFeature;
+                // add a second applied feature to the attribute reference
+                let secondFeature: DemoAttributeRef = new DemoAttributeRef();
+                secondFeature.attribute = FreNodeReference.create<DemoAttributeWithEntityType>(
+                  compattr,
+                  "DemoAttributeWithEntityType",
+                ); // Company.attrFromCompany: Person
+                firstFeature.appliedfeature = secondFeature;
+
+                // change the expression of function model.length to the newly created expression
+
+                length.expression = expression;
+            }
         })
         return result;
     }
@@ -172,9 +176,9 @@ export class DemoModelCreator {
         AST.change( () => {
             model = Demo.create({ name: "ModelWithInheritance" });
             let inheritanceModel = this.createInheritanceUnit();
-            model.models.push(inheritanceModel);
+            if (notNullOrUndefined(inheritanceModel)) model.models.push(inheritanceModel);
         })
-        return model;
+        return model!;
     }
 
     private createInheritanceUnit() {
@@ -248,7 +252,7 @@ export class DemoModelCreator {
             bikeEnt.functions.push(this.makeIfFunction("SOME_BIKE"));
             racebikeEnt.functions.push(this.makeIfFunction("SOME_RACEBIKE"));
         })
-        return inheritanceModel;
+        return inheritanceModel!;
     }
 
     public createInheritanceWithLoop(): Demo {
@@ -256,7 +260,9 @@ export class DemoModelCreator {
         AST.change( () => {
             let unit = model.models.find((m) => m.name === "DemoModel_with_inheritance");
             // let Vehicle inherit from RaceBike
-            unit.entities[0].baseEntity = FreNodeReference.create<DemoEntity>(unit.entities[3], "DemoEntity");
+            if (notNullOrUndefined(unit)) {
+                unit.entities[0].baseEntity = FreNodeReference.create<DemoEntity>(unit.entities[3], "DemoEntity");
+            }
         })
         return model;
     }
@@ -371,7 +377,7 @@ export class DemoModelCreator {
                 NOOT,
             );
         })
-        return model;
+        return model!;
     }
 
     public createCorrectModel(): Demo {
@@ -381,7 +387,7 @@ export class DemoModelCreator {
             let unit = this.createCorrectUnit();
             model.models.push(unit);
         })
-        return model;
+        return model!;
     }
 
     private createCorrectUnit() {
@@ -395,8 +401,8 @@ export class DemoModelCreator {
             );
             const ifExpression = new DemoIfExpression();
             ifExpression.condition = MakeLessThenExp("2", "5"); //("<")
-            ifExpression.whenTrue = makeLiteralExp("1");
-            ifExpression.whenFalse = makeLiteralExp("5");
+            ifExpression.whenTrue = makeLiteralExp("1")!;
+            ifExpression.whenFalse = makeLiteralExp("5")!;
             // const divideExpression = MakeDivideExp("1", "2");
             ifFunction.expression = ifExpression;
             // compare(Variable1, Variable2): IF (2 < 5) THEN 1 ELSE 5 ENDIF
@@ -406,7 +412,7 @@ export class DemoModelCreator {
                 DemoAttributeType.String,
                 "DemoAttributeType",
             );
-            helloFunction.expression = makeLiteralExp("Hello Demo");
+            helloFunction.expression = makeLiteralExp("Hello Demo")!;
             // helloString() = "Hello Demo"
 
             unit.functions.push(ifFunction);
@@ -462,7 +468,7 @@ export class DemoModelCreator {
             unit.entities.push(schoolEntity);
             unit.entities.push(companyEnt);
         })
-        return unit;
+        return unit!;
     }
 
     private makeSchoolEntity(companyEnt: DemoEntity) {
@@ -491,7 +497,7 @@ export class DemoModelCreator {
             schoolEntity.functions.push(clean);
             // School { foundedIn: Integer, unitName: String, requestClean(cleaningCompany: Company) = 5 + 24 }
         })
-        return schoolEntity;
+        return schoolEntity!;
     }
 
     private makeCompanyEntity() {
@@ -520,7 +526,7 @@ export class DemoModelCreator {
             companyEnt.functions.push(work);
             // Company { VAT_Number: Integer, unitName: String, doClean(at: School) = 5 + 24 }
         })
-        return companyEnt;
+        return companyEnt!;
     }
 
     private addSimpleTypes(
@@ -606,13 +612,13 @@ export class DemoModelCreator {
         AST.change( () => {
             const ifExpression = new DemoIfExpression();
             ifExpression.condition = MakeLessThenExp("2", "5"); //("<")
-            ifExpression.whenTrue = makeLiteralExp("1");
-            ifExpression.whenFalse = makeLiteralExp("5");
+            ifExpression.whenTrue = makeLiteralExp("1")!;
+            ifExpression.whenFalse = makeLiteralExp("5")!;
             const divideExpression = MakeDivideExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(divideExpression, "Person");
             plusExp = MakePlusExp(ifExpression, multiplyExpression);
         })
-        return plusExp
+        return plusExp!
     }
 
     private addComplexExpression2(attr: DemoVariable): DemoExpression {
@@ -629,7 +635,7 @@ export class DemoModelCreator {
 
             const leftOr = new DemoOrExpression();
             leftOr.right = equals;
-            leftOr.left = makeLiteralExp("Yes");
+            leftOr.left = makeLiteralExp("Yes")!;
             // leftOr : ("Yes" or ("No" = Variable1))
 
             const rightAnd: DemoBinaryExpression = MakeLessThenExp("x", "122");
@@ -658,6 +664,62 @@ export class DemoModelCreator {
 
             plusExp = MakePlusExp(thenExpression, multiplyExpression);
         })
-        return plusExp
+        return plusExp!
+    }
+}
+
+
+/**
+ * Generate a string with graphviz dot code representing the tree for which `node` is the root.
+ * @param node
+ */
+export function ast2dot(node: FreNode): string {
+    return `
+digraph {
+    ${ast2dotRecursive(node)}
+}`
+}
+
+/**
+ * Generate a string with graphviz dot code representing the tree for which `node` is the root.
+ * @param node
+ */
+function ast2dotRecursive(node: FreNode): string {
+    if (node === null) {
+        return ""
+    }
+    const metaConcept = FreLanguage.getInstance().classifier(node.freLanguageConcept())
+    if (notNullOrUndefined(metaConcept)) {
+        const isNS: boolean = metaConcept.isNamespace;
+        let index = 1;
+        const hasNameProp = Array.from(metaConcept
+          .properties).filter(prop => prop[1].propertyKind === 'primitive' && prop[1].name === 'name').length > 0;
+        // @ts-ignore
+        const name = (hasNameProp ? node['name'] : node.freId());
+        return `    "${node.freId()}" ${(isNS ? ` [peripheries=2, label="${name}\n${node.freLanguageConcept()}"]` : `[label="${name}\n${node.freLanguageConcept()}"]`)}
+      ${children(node).map(ch => `"${node?.freId()}" -> "${ch?.freId()}" [minlen=${index++}]`).join('\n')}
+      ${children(node).map(ch => `${ast2dotRecursive(ch)}`).join('\n')}
+    `;
+    } else {
+        return '';
+    }
+}
+
+/**
+ * Fund all children of `node`.
+ * Needs to use the language info in FreLanguage, as there is no _children()_ getter in FreNode.
+ * @param node
+ */
+function children(node: FreNode): FreNode[] {
+    const metaConcept = FreLanguage.getInstance().classifier(node.freLanguageConcept())
+    if (notNullOrUndefined(metaConcept)) {
+        const partProperties =
+          Array.from(metaConcept
+            .properties).filter(prop => prop[1].propertyKind === "part")
+            .map(p => p[1])
+        // @ts-ignore
+        return partProperties.flatMap(pp => node[pp.name])
+    } else  {
+        return [];
     }
 }

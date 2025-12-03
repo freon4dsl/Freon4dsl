@@ -1,0 +1,45 @@
+UnitType1 `unit1_2` {
+    content
+        NamedPart `A` {
+            subParts
+
+        }
+        NamedPart `B` {
+            subParts
+                NamedPart `B_A` {
+                    subParts
+                        NamedPart `B_A_A` {
+                            subParts
+
+                        }
+                }
+                NamedPart `B_B` {
+                    subParts
+                        NamedPart `B_B_A` {
+                            subParts
+
+                        }
+                }
+        }
+        NamedPart `C` {
+            subParts
+
+        }
+        NamedPart `D` {
+            subParts
+
+        }
+        NamedPart `E` {
+            subParts
+
+        }
+        NamedPart `F` {
+            subParts
+
+        }
+        NamedPart `G` {
+            subParts
+
+        }
+                imports
+}

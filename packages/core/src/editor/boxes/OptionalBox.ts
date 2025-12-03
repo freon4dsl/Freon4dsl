@@ -1,5 +1,5 @@
 import { autorun } from "mobx";
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { Box, ActionBox, BoxFactory } from "./internal.js";
 
 export type BoolFunctie = () => boolean;

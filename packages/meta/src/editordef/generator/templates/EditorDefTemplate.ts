@@ -5,16 +5,10 @@ import {
     FreMetaLimitedConcept,
     FreMetaProperty,
 } from "../../../languagedef/metalanguage/index.js";
-import {
-    CONFIGURATION_FOLDER,
-    EDITOR_GEN_FOLDER,
-    isNullOrUndefined,
-    LANGUAGE_GEN_FOLDER,
-    ListUtil,
-    Names,
-    FREON_CORE,
-    LOG2USER,
-} from "../../../utils/index.js";
+import { CONFIGURATION_FOLDER, Names, Imports } from "../../../utils/on-lang/index.js";
+import { LOG2USER } from "../../../utils/basic-dependencies/index.js";
+import { isNullOrUndefined } from "../../../utils/file-utils/index.js";
+import { NamesForEditor } from "../../../utils/on-lang-and-editor/index.js";
 import {
     FreEditExtraClassifierInfo,
     FreEditClassifierProjection,
@@ -36,9 +30,10 @@ export class EditorDefTemplate {
 
         const conceptsWithTrigger: ConceptTriggerElement[] = [];
         const conceptsWithRefShortcut: ConceptShortCutElement[] = [];
-        const languageImports: string[] = [];
-        const editorImports: string[] = [];
-        const coreImports: string[] = [`${Names.FreLanguage}`, "FreProjectionHandler", "FreBoxProvider"];
+        const imports = new Imports(relativePath)
+        // const languageImports: string[] = [];
+        // const editorImports: string[] = [];
+        imports.core.add(Names.FreLanguage).add("FreProjectionHandler").add("FreBoxProvider").add("FreLanguageConcept");
 
         language.concepts
             .filter((c) => !(c instanceof FreMetaLimitedConcept || c.isAbstract))
@@ -57,7 +52,7 @@ export class EditorDefTemplate {
                     if (!!referenceShortCut) {
                         conceptsWithRefShortcut.push(new ConceptShortCutElement(concept, referenceShortCut));
                     }
-                    languageImports.push(Names.concept(concept));
+                    imports.language.add(Names.concept(concept));
                 }
             });
 
@@ -67,23 +62,23 @@ export class EditorDefTemplate {
         language.concepts.forEach((concept) => {
             if (!(concept instanceof FreMetaLimitedConcept) && !concept.isAbstract) {
                 constructors.push(`["${Names.concept(concept)}", () => {
-                        return new ${Names.boxProvider(concept)}(${handlerVarName})
+                        return new ${NamesForEditor.boxProvider(concept)}(${handlerVarName})
                     }]`);
-                ListUtil.addIfNotPresent(editorImports, Names.boxProvider(concept));
+                imports.editor.add(NamesForEditor.boxProvider(concept));
             }
         });
         language.units.forEach((unit) => {
             constructors.push(`["${Names.classifier(unit)}", () => {
-                        return new ${Names.boxProvider(unit)}(${handlerVarName})
+                        return new ${NamesForEditor.boxProvider(unit)}(${handlerVarName})
                     }]`);
-            ListUtil.addIfNotPresent(editorImports, Names.boxProvider(unit));
+            imports.editor.add(NamesForEditor.boxProvider(unit));
         });
 
         // get all the table header info
         const tableHeaderInfo: string[] = [];
         language.concepts.forEach((concept) => {
             editorDef.findTableProjectionsForType(concept).map((proj) => {
-                const entry = this.generateHeaderInfo(proj, coreImports);
+                const entry = this.generateHeaderInfo(proj, imports);
                 if (!!entry && entry.length > 0) {
                     tableHeaderInfo.push(entry);
                 }
@@ -180,10 +175,9 @@ export class EditorDefTemplate {
         // todo In what order do we add the projections?  Maybe custom should be last in stead of first?
 
         // template starts here
-        return `import { ${coreImports.join(", ")} } from "${FREON_CORE}";
+        return `    // TEMPLATE: EditorDefTemplate.generateEditorDef(...)
+            ${imports.makeImports(language)}
             import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
-            import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-            import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}/index.js";
 
             const map = ${conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyProjection)};
 
@@ -195,7 +189,7 @@ export class EditorDefTemplate {
                 ${hasBinExps ? `${handlerVarName}.addProjection("${Names.brackets}");` : ``}
                 ${editorDef
                     .getAllNonDefaultProjectiongroups()
-                    .map((group) => `${handlerVarName}.addProjection("${Names.projection(group)}")`)
+                    .map((group) => `${handlerVarName}.addProjection("${NamesForEditor.projection(group)}")`)
                     .join(";\n")}
                 for (const p of freonConfiguration.customProjection) {
                     ${handlerVarName}.addCustomProjection(p);
@@ -210,6 +204,19 @@ export class EditorDefTemplate {
                     ${tableHeaderInfo.map((constr) => constr).join(",\n")}
                 ]);
             }
+            
+            /**
+             * Helper function to ensure that the meta information for typeName can be found.
+             * @param typeName
+             */
+            export function conceptRequired(typeName: string): FreLanguageConcept {
+                const c = ${Names.FreLanguage}.getInstance().concept(typeName);
+                if (!c) {
+                    throw new Error(\`Concept '\${typeName}' not found in language.\`);
+                }
+                return c;
+            }
+
 
             /**
              * Adds trigger and reference shortcut info to the in-memory representation of structure of the language metamodel.
@@ -218,13 +225,13 @@ export class EditorDefTemplate {
                  ${conceptsWithTrigger
                      .map(
                          (element) =>
-                             `${Names.FreLanguage}.getInstance().concept("${Names.concept(element.concept)}").trigger = "${element.trigger}";`,
+                             `conceptRequired("${Names.concept(element.concept)}").trigger = "${element.trigger}";`,
                      )
                      .join("\n")}
                  ${conceptsWithRefShortcut
                      .map(
                          (element) =>
-                             `${Names.FreLanguage}.getInstance().concept("${Names.concept(element.concept)}").referenceShortcut =
+                             `conceptRequired("${Names.concept(element.concept)}").referenceShortcut =
                     {
                         propertyName: "${element.property.name}",
                         conceptName: "${element.property.type.name}"
@@ -237,10 +244,9 @@ export class EditorDefTemplate {
             }`;
     }
 
-    private generateHeaderInfo(projection: FreEditTableProjection, coreImports: string[]): string {
+    private generateHeaderInfo(projection: FreEditTableProjection, imports: Imports): string {
         if (!!projection && !!projection.headers && projection.headers.length > 0 && !!projection.classifier) {
-            ListUtil.addIfNotPresent(coreImports, "BoxUtil");
-            ListUtil.addIfNotPresent(coreImports, "FreTableHeaderInfo");
+            imports.core.add("BoxUtil").add("FreTableHeaderInfo");
             return `new FreTableHeaderInfo("${projection.classifier.name}", "${projection.name}", [${projection.headers
                 .map((head) => `"${head}"`)
                 .join(",\n")}])`;

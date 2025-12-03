@@ -1,10 +1,16 @@
+import { ast2string, FreLionwebSerializer, FreModelSerializer, FreModelUnit, FreUtils } from "@freon4dsl/core";
+import { FileHandler } from "../../utils/FileHandler";
 import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
 import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions";
 import { OctopusModel } from "../language/gen";
-import { describe, it, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 const writer = OctopusModelEnvironment.getInstance().writer;
 const reader = OctopusModelEnvironment.getInstance().reader;
+
+// const serial: FreLionwebSerializer = new FreLionwebSerializer();
+const serial: FreModelSerializer = new FreModelSerializer();
+const handler: FileHandler = new FileHandler();
 
 describe("Testing Parser", () => {
     // TODO use snapshots

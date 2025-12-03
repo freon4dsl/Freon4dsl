@@ -18,13 +18,13 @@ export class RHSBooleanWithSingleKeyWord extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string): string {
         return `// RHSBooleanWithSingleKeyWord
-                if (!${nodeName}[${index}].isEmptyMatch) {
+                if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) {
                     ${ParserGenUtil.internalName(this.property.name)} = true;
                 }`;
     }
 
     toString(depth: number): string {
-        const indent = makeIndent(depth);
+        const indent: string = makeIndent(depth);
         return indent + "RHSBooleanWithKeyWord: " + this.property.name + ": " + this.keyword;
     }
 }

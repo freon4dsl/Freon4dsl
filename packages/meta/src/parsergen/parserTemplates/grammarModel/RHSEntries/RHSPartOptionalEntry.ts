@@ -1,8 +1,9 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { getTypeCall, makeIndent } from "../GrammarUtils.js";
-import { GenerationUtil } from "../../../../utils/index.js";
-import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil.js";
+
+import { ParserGenUtil } from "../../ParserGenUtil.js";
+import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
 
 export class RHSPartOptionalEntry extends RHSPropEntry {
     private readonly projectionName: string = "";
@@ -17,13 +18,11 @@ export class RHSPartOptionalEntry extends RHSPropEntry {
         return `${getTypeCall(this.property.type, this.projectionName)}?` + this.doNewline();
     }
 
-    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+    toMethod(index: number, nodeName: string): string {
         GenerationUtil.getBaseTypeAsString(this.property);
         return `// RHSPartOptionalEntry
-            if (!${nodeName}[${index}].isEmptyMatch) {
-                // take the first element of the group that represents the optional part
-                const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]).nonSkipChildren.toArray()[0];
-                ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformNode}(subNode);
+            if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) {
+                ${ParserGenUtil.internalName(this.property.name)} = ${nodeName}.asJsReadonlyArrayView()[${index}];
             }`;
     }
 

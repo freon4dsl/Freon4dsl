@@ -1,21 +1,19 @@
 import * as fs from "fs";
-import { MetaLogger } from "../utils/index.js";
 import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 import {
-    GenerationStatus,
-    FileUtil,
     Names,
     READER_FOLDER,
     READER_GEN_FOLDER,
     WRITER_FOLDER,
     WRITER_GEN_FOLDER,
-} from "../utils/index.js";
+} from "../utils/on-lang/index.js";
 import { FreEditUnit } from "../editordef/metalanguage/index.js";
 import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates/index.js";
-// import net from "net.akehurst.language-agl-processor";
-// var Agl = net.net.akehurst.language.agl.processor.Agl;
 import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser.js";
-import { GrammarModel } from "./parserTemplates/grammarModel/GrammarModel.js";
+import { GrammarModel } from './parserTemplates/grammarModel/index.js';
+import { MetaLogger } from '../utils/no-dependencies/index.js';
+import { FileUtil, GenerationStatus } from '../utils/file-utils/index.js';
+
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
 
@@ -81,9 +79,8 @@ export class ReaderWriterGenerator {
 
         // Write the grammar to file
         generatedContent = grammarModel.toGrammar();
-        // TODO Testing grammar is slow pon large models, so it is turned off.
-        //      Need to turn it on again with the new AGL parser.
         // test the generated grammar, if not ok error will be thrown
+        // TODO Turn this on again after examining the reason why this is slow.
         // this.testGrammar(generatedContent, generationStatus);
         // write the grammar to file
         generatedFilePath = `${this.readerGenFolder}/${Names.grammar(this.language)}.ts`;
@@ -93,7 +90,7 @@ export class ReaderWriterGenerator {
         // Write the main syntax analyser to file
         generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(this.language)}.ts`;
         indexContent += `export * from "./${Names.syntaxAnalyser(this.language)}.js";\n`;
-        const mainContent = grammarModel.toMethod();
+        const mainContent = grammarModel.toMethod(this.language!, relativePath);
         this.makeFile(`main syntax analyser`, generatedFilePath, mainContent, generationStatus);
 
         // Write the syntax analysers for each unit to file
@@ -101,7 +98,7 @@ export class ReaderWriterGenerator {
             generatedFilePath = `${this.readerGenFolder}/${Names.unitAnalyser(this.language!, grammarPart.unit)}.ts`;
             indexContent += `export * from "./${Names.unitAnalyser(this.language!, grammarPart.unit)}.js";\n`;
             const analyserContent: string = grammarPart.toMethod(this.language!, relativePath);
-            let message: string = "";
+            let message: string;
             if (!!grammarPart.unit) {
                 message = `syntax analyser for unit ${grammarPart.unit?.name}`;
             } else {
@@ -137,17 +134,18 @@ export class ReaderWriterGenerator {
                 `Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`,
             );
         } else {
-            LOGGER.info(`Succesfully generated reader and writer.`);
+            LOGGER.info(`Successfully generated reader and writer.`);
         }
     }
 
+    // TODO Turn this on again after examining the reason why this is slow.
     // private testGrammar(generatedContent: string, generationStatus: GenerationStatus) {
     //     try {
     //         // strip generated content of stuff around the grammar
     //         let testContent = generatedContent.replace("export const", "// export const ");
     //         testContent = testContent.replace("}`; // end of grammar", "}");
     //         testContent = testContent.replace(new RegExp("\\\\\\\\", "gm"), "\\");
-    //         Agl.processorFromString(testContent, null, null, null);
+    //         Agl.getInstance().processorFromString(testContent, null);
     //     } catch (e: unknown) {
     //         if (e instanceof Error) {
     //             generationStatus.numberOfErrors += 1;

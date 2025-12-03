@@ -71,32 +71,32 @@ describe("Checking stdlib for Lang Constructs", () => {
     });
 
     test("finding predefined instances with wrong metatype should return null", () => {
-        expect(stdlib.find("FIRST", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("SECOND", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("THIRD", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("FOURTH", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("eersteB", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("tweedeB", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("derdeB", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("FOURTH", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("TREE1", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("TREE2", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("THIRD", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("limIntf1", "LimitedWithInheritanceTree")).toBeNull();
-        expect(stdlib.find("limIntf2", "LimitedConcept1")).toBeNull();
+        expect(stdlib.find("FIRST", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("SECOND", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("THIRD", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("FOURTH", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("eersteB", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("tweedeB", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("derdeB", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("FOURTH", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("TREE1", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("TREE2", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("THIRD", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("limIntf1", "LimitedWithInheritanceTree")).toBeUndefined();
+        expect(stdlib.find("limIntf2", "LimitedConcept1")).toBeUndefined();
     });
 
     test("all predefined instances with base metatype should not be found", () => {
-        expect(stdlib.find("FIRST", "LimitedWithBase")).toBeNull;
-        expect(stdlib.find("SECOND", "LimitedWithBase")).toBeNull;
-        expect(stdlib.find("THIRD", "LimitedWithBase")).toBeNull;
-        expect(stdlib.find("FOURTH", "LimitedWithBase")).toBeNull;
-        expect(stdlib.find("eersteB", "LimitedWithInheritanceTree")).toBeNull();
-        expect(stdlib.find("tweedeB", "LimitedWithInheritanceTree")).toBeNull();
-        expect(stdlib.find("derdeB", "LimitedWithInheritanceTree")).toBeNull();
-        expect(stdlib.find("FIFTH", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("TREE1", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("TREE2", "LimitedWithInterface")).toBeNull();
-        expect(stdlib.find("SIXTH", "LimitedWithInterface")).toBeNull();
+        expect(stdlib.find("FIRST", "LimitedWithBase")).toBeUndefined;
+        expect(stdlib.find("SECOND", "LimitedWithBase")).toBeUndefined;
+        expect(stdlib.find("THIRD", "LimitedWithBase")).toBeUndefined;
+        expect(stdlib.find("FOURTH", "LimitedWithBase")).toBeUndefined;
+        expect(stdlib.find("eersteB", "LimitedWithInheritanceTree")).toBeUndefined();
+        expect(stdlib.find("tweedeB", "LimitedWithInheritanceTree")).toBeUndefined();
+        expect(stdlib.find("derdeB", "LimitedWithInheritanceTree")).toBeUndefined();
+        expect(stdlib.find("FIFTH", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("TREE1", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("TREE2", "LimitedWithInterface")).toBeUndefined();
+        expect(stdlib.find("SIXTH", "LimitedWithInterface")).toBeUndefined();
     });
 });

@@ -1,21 +1,24 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../utils/index.js";
+import { Imports, Names } from "../../../utils/on-lang/index.js"
 
 export class InterpreterMainTemplate {
     /**
      * The base class containing all interpreter functions that should be defined.
      * @param language
-     * @param interpreterDef
      */
     public interpreterMain(language: FreMetaLanguage): string {
-        return `// Will be overwritten with every generation.
-        import {
-            ConceptFunction, ${Names.FreInterpreter},
-            IMainInterpreter,
-            InterpreterContext,
-            InterpreterTracer,
-            MainInterpreter, OwningPropertyFunction, ${Names.FreNode}, RtObject, RtError
-        } from "@freon4dsl/core";
+        const imports = new Imports("../../")
+        imports.core = new Set<string>([
+            "ConceptFunction", Names.FreInterpreter,
+            "IMainInterpreter",
+            "InterpreterContext",
+            "InterpreterTracer",
+            "MainInterpreter", "OwningPropertyFunction", Names.FreNode, "RtObject", "RtError"
+        ])
+
+        return `// TEMPLATE: InterpreterBaseTemplate.interpreterInit(...)
+        // Will be overwritten with every generation.
+        ${imports.makeImports(language)}
         import {  ${Names.interpreterInitname(language)} } from "./gen/${Names.interpreterInitname(language)}.js";
 
         const getPropertyFunction: OwningPropertyFunction = (node: Object) => {
@@ -40,20 +43,22 @@ export class InterpreterMainTemplate {
          * Ensures all internal interpreter state is cleaned when creating a new instance.
          */
         export class ${Names.interpreterName(language)} implements ${Names.FreInterpreter}{
-            private static  main: IMainInterpreter = null;
-
+            private static main: IMainInterpreter | null = null;
+         
             constructor() {
-                if(${Names.interpreterName(language)}.main === null) {
-                    ${Names.interpreterName(language)}.main = MainInterpreter.instance(${Names.interpreterInitname(language)}, getConceptFunction, getPropertyFunction);
-                }
+                ${Names.interpreterName(language)}.getMain();
+            }
+        
+            private static getMain(): IMainInterpreter {
+                return this.main ??= MainInterpreter.instance(${Names.interpreterInitname(language)}, getConceptFunction, getPropertyFunction);
             }
 
             setTracing(value: boolean) {
-                ${Names.interpreterName(language)}.main.setTracing(value);
+                ${Names.interpreterName(language)}.getMain().setTracing(value);
             }
 
             getTrace(): InterpreterTracer {
-                return ${Names.interpreterName(language)}.main.getTrace()
+                return ${Names.interpreterName(language)}.getMain().getTrace()
             }
 
             evaluate(node: Object): RtObject {
@@ -61,9 +66,9 @@ export class InterpreterMainTemplate {
             }
             
             evaluateWithContext(node: Object, ctx: InterpreterContext): RtObject {
-                ${Names.interpreterName(language)}.main.reset();
+                ${Names.interpreterName(language)}.getMain().reset();
                 try {
-                    return ${Names.interpreterName(language)}.main.evaluate(node, ctx);
+                    return ${Names.interpreterName(language)}.getMain().evaluate(node, ctx);
                 } catch (e: any) {
                     return new RtError(e.message);
                 }

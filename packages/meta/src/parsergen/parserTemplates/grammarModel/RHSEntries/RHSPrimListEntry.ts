@@ -1,8 +1,9 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaPrimitiveProperty } from "../../../../languagedef/metalanguage/index.js";
 import { getPrimCall, makeIndent } from "../GrammarUtils.js";
-import { GenerationUtil } from "../../../../utils/index.js";
-import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil.js";
+
+import { internalTransformPrimList, ParserGenUtil } from "../../ParserGenUtil.js";
+import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
 
 export class RHSPrimListEntry extends RHSPropEntry {
     constructor(prop: FreMetaPrimitiveProperty) {
@@ -15,8 +16,10 @@ export class RHSPrimListEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(${nodeName}[${index}]); // RHSPrimListEntry\n`;
+        const tsBaseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        const freonBaseType: string = GenerationUtil.getFreonBaseTypeAsString(this.property);
+        return `${ParserGenUtil.internalName(this.property.name)} = 
+            this.${mainAnalyserName}.${internalTransformPrimList}<${tsBaseType}>(${nodeName}.asJsReadonlyArrayView()[${index}].asJsReadonlyArrayView(), PrimValueType.${freonBaseType}); // RHSPrimListEntry\n`;
     }
 
     toString(depth: number): string {

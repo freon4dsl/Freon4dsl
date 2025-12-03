@@ -5,7 +5,7 @@ import {
     FreEditPropertyProjection,
     ListJoinType,
 } from "../../../metalanguage/index.js";
-import { ListUtil, Names } from "../../../../utils/index.js";
+import { Names } from "../../../../utils/on-lang/index.js";
 import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class ListPropertyBoxHelper {
@@ -16,24 +16,26 @@ export class ListPropertyBoxHelper {
     }
 
     public generateReferenceAsList(
+        // @ts-ignore
         language: FreMetaLanguage,
         listJoin: FreEditListInfo,
         reference: FreMetaConceptProperty,
         element: string
     ): string {
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
-        ListUtil.addIfNotPresent(this._myTemplate.configImports, Names.environment(language));
+        this._myTemplate.imports.core.add("BoxUtil");
+        this._myTemplate.imports.root.add(Names.LanguageEnvironment);
         const joinEntry = this.getJoinEntry(listJoin);
         if (listJoin.direction === FreEditProjectionDirection.Vertical) {
-            return `BoxUtil.verticalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${joinEntry})`;
+            return `BoxUtil.verticalReferenceListBox(${element}, "${reference.name}", ${Names.LanguageEnvironment}.getInstance().scoper, ${joinEntry})`;
         } // else
-        return `BoxUtil.horizontalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${joinEntry})`;
+        return `BoxUtil.horizontalReferenceListBox(${element}, "${reference.name}", ${Names.LanguageEnvironment}.getInstance().scoper, ${joinEntry})`;
     }
 
     public getJoinEntry(listJoin: FreEditListInfo): string {
         let joinEntry: string = `{ text:"${listJoin.joinText}", type:"${listJoin.joinType}" }`;
         if (listJoin.joinType === ListJoinType.NONE || !(listJoin.joinText?.length > 0)) {
-            joinEntry = "null";
+            this._myTemplate.imports.core.add("FreListInfo");
+            joinEntry = "FreListInfo.NullListInfo";
         }
         return joinEntry;
     }
@@ -52,7 +54,7 @@ export class ListPropertyBoxHelper {
         elementVarName: string,
     ): string {
         if (!!item.listInfo && !!item.property) {
-            ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
+            this._myTemplate.imports.core.add("BoxUtil");
             const joinEntry: string = this.getJoinEntry(item.listInfo);
             if (item.listInfo.direction === FreEditProjectionDirection.Vertical) {
                 return `BoxUtil.verticalPartListBox(${elementVarName}, ${elementVarName}.${propertyConcept.name}, "${propertyConcept.name}", ${joinEntry}, this.mainHandler)`;

@@ -1,31 +1,31 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Testing Unparser > Unparse DemoModel Instance > 'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"' 1`] = `
-"DemoFunction determine {
+"DemoFunction \`determine\` {
     expression ' "Hello Demo" ' + ' "Goodbye" '
     parameters
-        AAP : TEST1
-    declaredType TEST2
+        \`AAP\` : \`TEST1\`
+    declaredType \`TEST2\`
 }"
 `;
 
 exports[`Testing Unparser > Unparse DemoModel Instance > complete example model with simple attribute types 1`] = `
-"model DemoModel_with_inheritance {
+"model \`DemoModel_with_inheritance\` {
 main:
 types:
 
 entities:
-    DemoEntity Vehicle {
+    DemoEntity \`Vehicle\` {
         baseInterface_attr 0
         simpleprop "simple"
         x "xxx"
         attributes
-            brand : String
-            type : String
+            \`brand\` : \`String\`
+            \`type\` : \`String\`
         entAttributes
 
         functions
-            DemoFunction SOME_VEHICLE {
+            DemoFunction \`SOME_VEHICLE\` {
                 expression if ( 4 < 80 ) then
                                      87
                            else
@@ -33,24 +33,24 @@ entities:
                            endif
                 parameters
 
-                declaredType Integer
+                declaredType \`Integer\`
             }
         int_attrs
 
         int_functions
 
     }
-    DemoEntity Car {
+    DemoEntity \`Car\` {
         baseInterface_attr 0
         simpleprop "simple"
         x "xxx"
         attributes
-            numberplate : Integer
-            make : String
+            \`numberplate\` : \`Integer\`
+            \`make\` : \`String\`
         entAttributes
 
         functions
-            DemoFunction SOME_CAR {
+            DemoFunction \`SOME_CAR\` {
                 expression if ( 4 < 80 ) then
                                      87
                            else
@@ -58,25 +58,25 @@ entities:
                            endif
                 parameters
 
-                declaredType Integer
+                declaredType \`Integer\`
             }
         int_attrs
 
         int_functions
 
-        baseEntity Vehicle
+        baseEntity \`Vehicle\`
     }
-    DemoEntity Bike {
+    DemoEntity \`Bike\` {
         baseInterface_attr 0
         simpleprop "simple"
         x "xxx"
         attributes
-            backseat : Boolean
-            gears : Integer
+            \`backseat\` : \`Boolean\`
+            \`gears\` : \`Integer\`
         entAttributes
 
         functions
-            DemoFunction SOME_BIKE {
+            DemoFunction \`SOME_BIKE\` {
                 expression if ( 4 < 80 ) then
                                      87
                            else
@@ -84,25 +84,25 @@ entities:
                            endif
                 parameters
 
-                declaredType Integer
+                declaredType \`Integer\`
             }
         int_attrs
 
         int_functions
 
-        baseEntity Vehicle
+        baseEntity \`Vehicle\`
     }
-    DemoEntity RaceBike {
+    DemoEntity \`RaceBike\` {
         baseInterface_attr 0
         simpleprop "simple"
         x "xxx"
         attributes
-            color : String
-            wheelsize : Integer
+            \`color\` : \`String\`
+            \`wheelsize\` : \`Integer\`
         entAttributes
 
         functions
-            DemoFunction SOME_RACEBIKE {
+            DemoFunction \`SOME_RACEBIKE\` {
                 expression if ( 4 < 80 ) then
                                      87
                            else
@@ -110,16 +110,16 @@ entities:
                            endif
                 parameters
 
-                declaredType Integer
+                declaredType \`Integer\`
             }
         int_attrs
 
         int_functions
 
-        baseEntity Bike
+        baseEntity \`Bike\`
     }
 model wide functions:
-    DemoFunction SOME_MODEL {
+    DemoFunction \`SOME_MODEL\` {
         expression if ( 4 < 80 ) then
                              87
                    else
@@ -127,53 +127,53 @@ model wide functions:
                    endif
         parameters
 
-        declaredType Integer
+        declaredType \`Integer\`
     }
 }"
 `;
 
 exports[`Testing Unparser > Unparse DemoModel Instance > complete example model with simple attribute types 2`] = `
-"model CorrectUnit {
+"model \`CorrectUnit\` {
 main:
 types:
 
 entities:
-    DemoEntity School {
+    DemoEntity \`School\` {
         baseInterface_attr 0
         simpleprop "simple"
         x "xxx"
         attributes
-            foundedIn : Integer
-            name : String
+            \`foundedIn\` : \`Integer\`
+            \`name\` : \`String\`
         entAttributes
 
         functions
-            DemoFunction requestClean {
+            DemoFunction \`requestClean\` {
                 expression 5 + 24
                 parameters
-                    cleaningCompany : Company
-                declaredType Integer
+                    \`cleaningCompany\` : \`Company\`
+                declaredType \`Integer\`
             }
         int_attrs
 
         int_functions
 
     }
-    DemoEntity Company {
+    DemoEntity \`Company\` {
         baseInterface_attr 0
         simpleprop "simple"
         x "xxx"
         attributes
-            name : String
-            VAT_Number : Integer
+            \`name\` : \`String\`
+            \`VAT_Number\` : \`Integer\`
         entAttributes
 
         functions
-            DemoFunction doClean {
+            DemoFunction \`doClean\` {
                 expression 5 + 24
                 parameters
-                    at : Company
-                declaredType Integer
+                    \`at\` : \`Company\`
+                declaredType \`Integer\`
             }
         int_attrs
 
@@ -181,7 +181,7 @@ entities:
 
     }
 model wide functions:
-    DemoFunction compare {
+    DemoFunction \`compare\` {
         expression if ( 2 < 5 ) then
                              1
                    else
@@ -189,12 +189,12 @@ model wide functions:
                    endif
         parameters
 
-        declaredType Integer
-    } DemoFunction helloString {
+        declaredType \`Integer\`
+    } DemoFunction \`helloString\` {
           expression ' "Hello Demo" '
           parameters
 
-          declaredType String
+          declaredType \`String\`
       }
 }"
 `;

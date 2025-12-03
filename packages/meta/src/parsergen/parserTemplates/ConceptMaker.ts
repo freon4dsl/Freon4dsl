@@ -27,7 +27,6 @@ import {
     RHSOptionalGroup,
     RHSBooleanWithSingleKeyWord,
     RHSPrimEntry,
-    RHSPrimOptionalEntry,
     RHSPrimListEntry,
     RHSPrimListEntryWithSeparator,
     RHSPartEntry,
@@ -53,15 +52,20 @@ import {
     RHSBinExpListWithSeparator,
     RHSBinExpListWithTerminator,
 } from "./grammarModel/index.js";
-import { LOG2USER, ListUtil } from "../../utils/index.js";
+import { ListUtil } from "../../utils/no-dependencies/index.js";
 import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWithTerminator.js";
+import {RHSRefListWithInitiator} from "./grammarModel/RHSEntries/RHSRefListWithInitiator.js";
+import { LOG2USER } from '../../utils/basic-dependencies/index.js';
+import { RHSPrimOptionalEntry } from './grammarModel/RHSEntries/RHSPrimOptionalEntry.js';
 
 export class ConceptMaker {
     imports: FreMetaClassifier[] = [];
+    importParsedNodeReference: boolean = false;
     private currentProjectionGroup: FreEditProjectionGroup | undefined = undefined;
     // namedProjections is the list of projections with a different name than the current projection group
     // this list is filled during the build of the template and should alwyas be the last to added
     private namedProjections: FreEditNormalProjection[] = [];
+
 
     generateClassifiers(projectionGroup: FreEditProjectionGroup, conceptsUsed: FreMetaClassifier[]): GrammarRule[] {
         this.currentProjectionGroup = projectionGroup;
@@ -256,10 +260,11 @@ export class ConceptMaker {
                     result = new RHSRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
                 } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
                     const sub1 = new RHSRefEntry(prop);
-                    // TODO create a RHSRefListWithInitiator class
-                    result = new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
+                    this.importParsedNodeReference = true;
+                    result = new RHSRefListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
                 } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                     const sub1 = new RHSRefEntry(prop);
+                    this.importParsedNodeReference = true;
                     result = new RHSRefListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName "joinText")*`
                 }
             }
@@ -279,6 +284,7 @@ export class ConceptMaker {
             result = new RHSPartOptionalEntry(prop, myProjName); // `${propTypeName} `;
         } else if (!prop.isPart && (!prop.isOptional || inOptionalGroup)) {
             result = new RHSRefEntry(prop); // `${propTypeName} `;
+            this.importParsedNodeReference = true;
         } else if (!prop.isPart && prop.isOptional && !inOptionalGroup) {
             result = new RHSRefOptionalEntry(prop); // `${propTypeName} `;
         }
@@ -327,6 +333,7 @@ export class ConceptMaker {
             if (!prop.isOptional || inOptionalGroup) {
                 return new RHSPrimEntry(prop);
             } else {
+                // console.error('Found optional primitive property during parser generation! Primitives should not be optional.')
                 return new RHSPrimOptionalEntry(prop);
             }
         } else {

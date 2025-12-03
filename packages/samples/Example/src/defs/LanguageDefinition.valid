@@ -1,4 +1,4 @@
-validator ExampleValidator for language Example
+validator for language Example
 
 ExampleUnit {
     notEmpty self.entities;
@@ -37,32 +37,32 @@ Parameter {
 }
 
 OrExpression {
-    typecheck equalsType( self.left, PrimitiveType:Boolean );
-    typecheck equalsType( self.right, PrimitiveType:Boolean );
+    typecheck equalsType( self.left, #PrimitiveType:Boolean );
+    typecheck equalsType( self.right, #PrimitiveType:Boolean );
 }
 AbsExpression {
-    typecheck equalsType( self.expr, PrimitiveType:Integer );
+    typecheck equalsType( self.expr, #PrimitiveType:Integer );
 }
 
 MultiplyExpression {
-    typecheck equalsType( self.left, PrimitiveType:Integer );
-    typecheck equalsType( self.right, PrimitiveType:Integer );
+    typecheck equalsType( self.left, #PrimitiveType:Integer );
+    typecheck equalsType( self.right, #PrimitiveType:Integer );
 }
 
 PlusExpression {
-    typecheck equalsType( self.left, PrimitiveType:Integer );
-    typecheck equalsType( self.right, PrimitiveType:Integer );
+    typecheck equalsType( self.left, #PrimitiveType:Integer );
+    typecheck equalsType( self.right, #PrimitiveType:Integer );
     typecheck conformsTo( self.left, self.right );
 }
 
 DivideExpression {
-    typecheck equalsType( self.left, PrimitiveType:Integer );
-    typecheck equalsType( self.right, PrimitiveType:Integer );
+    typecheck equalsType( self.left, #PrimitiveType:Integer );
+    typecheck equalsType( self.right, #PrimitiveType:Integer );
 }
 
 AndExpression {
-    typecheck equalsType( self.left, PrimitiveType:Boolean );
-    typecheck equalsType( self.right, PrimitiveType:Boolean );
+    typecheck equalsType( self.left, #PrimitiveType:Boolean );
+    typecheck equalsType( self.right, #PrimitiveType:Boolean );
 }
 
 ComparisonExpression {
@@ -70,7 +70,7 @@ ComparisonExpression {
 }
 
 IfExpression {
-    typecheck equalsType( self.condition, PrimitiveType:Boolean );
+    typecheck equalsType( self.condition, #PrimitiveType:Boolean );
     typecheck conformsTo( self.whenTrue, self.whenFalse );
 }
 

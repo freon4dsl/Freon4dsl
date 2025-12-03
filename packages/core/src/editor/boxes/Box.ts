@@ -1,44 +1,22 @@
-import { FreNode } from "../../ast/index.js";
-import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT } from "../../util/index.js";
+import type { FreNode } from "../../ast/index.js";
+import {
+    notNullOrUndefined,
+    FreUtils,
+    FRE_BINARY_EXPRESSION_LEFT,
+    FRE_BINARY_EXPRESSION_RIGHT,
+    isExpressionPreOrPost, isNullOrUndefined
+} from "../../util/index.js"
 import { FreLogger } from "../../logging/index.js";
+import type { ClientRectangle } from "../ClientRectangleTypes.js";
+import { UndefinedRectangle } from "../ClientRectangleTypes.js";
 
 const LOGGER = new FreLogger("Box");
+
 
 /**
  * The root of the Box class hierarchy, contains all generic properties and a number of navigation/search functions.
  */
 export abstract class Box {
-    get actualX(): number {
-        return this._actualX;
-    }
-
-    set actualX(value: number) {
-        this._actualX = value;
-    }
-
-    get actualY(): number {
-        return this._actualY;
-    }
-
-    set actualY(value: number) {
-        this._actualY = value;
-    }
-
-    get actualWidth(): number {
-        return this._actualWidth;
-    }
-
-    set actualWidth(value: number) {
-        this._actualWidth = value;
-    }
-
-    get actualHeight(): number {
-        return this._actualHeight;
-    }
-
-    set actualHeight(value: number) {
-        this._actualHeight = value;
-    }
     $id: string;
     kind: string = "";
     role: string = "";
@@ -65,6 +43,11 @@ export abstract class Box {
     protected _errorMessages: string[] = [];
 
     refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
+    /**
+     * Get the client rectangle of this box in the browser.
+     * This is a callback method to the corresponding component in the browser.
+     */
+    getClientRectangle: () => ClientRectangle = () => { return UndefinedRectangle }
 
     /**
      *  Called when the box is dirty, refreshes the corresponding component.
@@ -123,15 +106,7 @@ export abstract class Box {
         this.isDirty();
     }
 
-    // Never set these manually, these properties are set after rendering to get the
-    // actual coordinates as rendered in the browser,
-    // TODO see whether these can be set on demand and whether this is useful ??? Probably yes.
-    
-    private _actualX: number = -1;
-    private _actualY: number = -1;
-    private _actualWidth: number = -1;
-    private _actualHeight: number = -1;
-
+    i: number = 0
     protected constructor(node: FreNode, role: string) {
         FreUtils.CHECK(!!node, "Element cannot be empty in Box constructor");
         this.node = node;
@@ -140,8 +115,8 @@ export abstract class Box {
     }
 
     get id(): string {
-        if (!!this.node) {
-            return this.node.freId() + (this.role === null ? "" : "-" + this.role);
+        if (notNullOrUndefined(this.node)) {
+            return this.node.freId() + (isNullOrUndefined(this.role) ? `-${this.i++}` : "-" + this.role);
         } else {
             return "unknown-element-" + this.role;
         }
@@ -233,6 +208,42 @@ export abstract class Box {
         return this.parent.nextLeafRight;
     }
 
+    /**
+     * Get the left (previous) leaf box, but ignore the expression placeholders at the start and end of an expression
+     * and the placeholders arounf binary symbols.
+     * Used when tabbing through an expression.
+     */
+    get nextLeafLeftWithoutExpressionPlaceHolders(): Box {
+        const boxLeft: Box = this.nextLeafLeft;
+        if (notNullOrUndefined(boxLeft)) {
+            if (isExpressionPreOrPost(boxLeft)) {
+                // Special expression prefix or postfix box, don't return it
+                return boxLeft.nextLeafLeftWithoutExpressionPlaceHolders;
+            } else {
+                return boxLeft;
+            }
+        }
+        return null
+    }
+
+    /**
+     * Get the right (next) leaf box, but ignore the expression placeholders at the start and end of an expression
+     * and the placeholders arounf binary symbols.
+     * Used when tabbing through an expression.
+     */
+    get nextLeafRightWithoutExpressionPlaceHolders(): Box {
+        const boxRight: Box = this.nextLeafRight;
+        if (notNullOrUndefined(boxRight)) {
+            if (isExpressionPreOrPost(boxRight)) {
+                // Special expression prefix or postfix box, don't return it
+                return boxRight.nextLeafRightWithoutExpressionPlaceHolders;
+            } else {
+                return boxRight;
+            }
+        }
+        return null
+    }
+
     // TODO change name into nextSelectableLeafLeft or something similar?
     /**
      * Return the next selectable leaf in the tree.
@@ -302,9 +313,9 @@ export abstract class Box {
      * @param propertyName
      */
     // findBox(elementId: string, propertyName?: string, propertyIndex?: number): Box {
-    //     if (!isNullOrUndefined(this.element) && this.element.freId() === elementId) {
-    //         if (!isNullOrUndefined(propertyName)) {
-    //             if (!isNullOrUndefined(propertyIndex)) {
+    //     if (notNullOrUndefined(this.element) && this.element.freId() === elementId) {
+    //         if (notNullOrUndefined(propertyName)) {
+    //             if (notNullOrUndefined(propertyIndex)) {
     //                 if (this.propertyName === propertyName && this.propertyIndex === propertyIndex) {
     //                     return this;
     //                 }
@@ -337,18 +348,16 @@ export abstract class Box {
      */
     findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box | null {
         // if (propertyName === "value" && propertyIndex === undefined) {
-        LOGGER.log("findChildBoxForProperty " + this.role + "[" + propertyName + ", " + propertyIndex + "]");
+        LOGGER.log(`findChildBoxForProperty ${this.kind}  ` + this.role + "[" + propertyName + ", " + propertyIndex + "]");
         // }
         for (const child of this.children) {
-            // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")
             if (!isNullOrUndefined(propertyName)) {
                 if (!isNullOrUndefined(propertyIndex)) {
-                    if (child.propertyName === propertyName && child.propertyIndex === propertyIndex) {
+                    if (child.propertyName === propertyName && (child.propertyIndex === propertyIndex || child.propertyIndex === undefined)) {
                         return child;
                     }
                 } else {
                     if (child.propertyName === propertyName) {
-                        // console.log('returning child box ' + child.role);
                         return child;
                     }
                 }
@@ -356,11 +365,10 @@ export abstract class Box {
                 return child;
             }
             const result: Box = child.findChildBoxForProperty(propertyName, propertyIndex);
-            if (!isNullOrUndefined(result) && result.node === this.node) {
+            if (notNullOrUndefined(result) && result.node === this.node) {
                 return result;
             }
         }
-        // console.log('not found!!!');
         return null;
     }
 

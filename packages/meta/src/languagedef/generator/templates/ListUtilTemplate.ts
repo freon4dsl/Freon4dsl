@@ -1,4 +1,4 @@
-import { Names } from "../../../utils/index.js";
+import { Names } from "../../../utils/on-lang/index.js";
 
 export class ListUtilTemplate {
     generateListUtil(): string {

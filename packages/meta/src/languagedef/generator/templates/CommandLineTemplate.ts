@@ -1,21 +1,20 @@
 import { FreMetaLanguage } from "../../metalanguage/index.js";
-import { Names, CONFIGURATION_GEN_FOLDER } from "../../../utils/index.js";
+import { Imports, Names } from "../../../utils/on-lang/index.js"
 
 export class CommandLineTemplate {
     generateCommandLine(): string {
-        return `import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";
+        return `// TEMPLATE: CommandLineTemplate.generateCommandLine() 
+            import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";
 
             export class FreonCommandLine extends CommandLineParser {
-                private verboseArg: CommandLineFlagParameter;
+                private verboseArg!: CommandLineFlagParameter;
             
                 public constructor() {
                     super({
                         toolFilename: "lionweb",
                         toolDescription: "Freon toolset for playing with LionWeb."
                     });
-                }
-            
-                protected onDefineParameters(): void {
+
                     this.verboseArg = this.defineFlagParameter({
                         parameterLongName: "--verbose",
                         parameterShortName: "-v",
@@ -23,13 +22,14 @@ export class CommandLineTemplate {
                     });
                 }
             
-                protected onExecute(): Promise<void> {
+                protected async onExecute(): Promise<void> {
                     try {
-                        return super.onExecute();
-                    } catch (e) {
-                        console.error("Exception in onExecute: " + e.message + "\\n" + e.stack);
+                        await super.onExecute();
+                    } catch (e: unknown) {
+                        const err = e instanceof Error ? e : new Error(String(e));
+                        console.error(\`Exception in onExecute: \${err.message}\\n\${err.stack ?? ""}\`);
+                        throw err;
                     }
-                    return null;
                 }
             }`;
     }
@@ -38,7 +38,7 @@ export class CommandLineTemplate {
         return `import { CommandLineAction, CommandLineStringParameter } from "@rushstack/ts-command-line";
             
             export class DummyAction extends CommandLineAction {
-                dummyParameter: CommandLineStringParameter;
+                dummyParameter!: CommandLineStringParameter;
             
                 constructor() {
                     super({
@@ -47,9 +47,7 @@ export class CommandLineTemplate {
                         documentation:
                             "More description"
                     });
-                }
-            
-                protected onDefineParameters(): void {
+
                     this.dummyParameter = this.defineStringParameter({
                         argumentName: "DUMMY_PARAMETER",
                         defaultValue: "dummy.value",
@@ -73,21 +71,19 @@ export class CommandLineTemplate {
             }`;
     }
 
+    // @ts-ignore
     generateCommandLineRunner(language: FreMetaLanguage): string {
-        const configImports = [];
-        configImports.push(Names.environment(language));
+        const imports = new Imports("../")
+        imports.root.add(Names.LanguageEnvironment);
 
-        return `// Run this as the main program.
-            ${
-                configImports.length > 0
-                    ? configImports.map((c) => `import { ${c} } from "../${CONFIGURATION_GEN_FOLDER}/${c}.js";`)
-                    : ``
-            }
-            import { FreonCommandLine } from "./FreonCommandLine.js";
-            import { DummyAction } from "./DummyAction.js";
+        return `// TEMPLATE: CommandLineTemplate.generateCommandLineRunner()
+            // Run this as the main program.
+            ${imports.makeImports(language)}
+            import { FreonCommandLine } from "./gen/FreonCommandLine.js";
+            import { DummyAction } from "./gen/DummyAction.js";
             
             // ensure language is initialized
-            const tmp = ${Names.environment(language)}.getInstance();
+            const tmp = ${Names.LanguageEnvironment}.getInstance();
             
             // Create the command line object
             const cli: FreonCommandLine = new FreonCommandLine();
@@ -97,6 +93,6 @@ export class CommandLineTemplate {
             cli.addAction(new DummyAction());
             
             // Run it
-            cli.execute();`;
+            cli.executeAsync();`;
     }
 }

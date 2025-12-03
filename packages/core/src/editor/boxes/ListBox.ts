@@ -1,5 +1,5 @@
 import { Box } from "./Box.js";
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreLanguage } from "../../language/index.js";
 import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util/index.js";
 import { LayoutBox, ListDirection } from "./LayoutBox.js";
@@ -17,8 +17,8 @@ export abstract class ListBox extends LayoutBox {
 
     protected constructor(
         node: FreNode,
-        propertyName: string,
         role: string,
+        propertyName: string,
         children?: Box[],
         initializer?: Partial<ListBox>,
     ) {
@@ -37,8 +37,8 @@ export class HorizontalListBox extends ListBox {
 
     constructor(
         element: FreNode,
-        propertyName: string,
         role: string,
+        propertyName: string,
         children?: (Box | null)[],
         initializer?: Partial<HorizontalListBox>,
     ) {
@@ -52,8 +52,8 @@ export class VerticalListBox extends ListBox {
 
     constructor(
         node: FreNode,
-        propertyName: string,
         role: string,
+        propertyName: string,
         children?: Box[],
         initializer?: Partial<HorizontalListBox>,
     ) {

@@ -1,17 +1,15 @@
 import { FreMetaClassifier, FreMetaLimitedConcept } from "../../languagedef/metalanguage/index.js";
-import { Names } from "../../utils/index.js";
+import { Names } from "../../utils/on-lang/index.js";
 import { GrammarRule } from "./grammarModel/GrammarRule.js";
 import { LimitedRule } from "./grammarModel/LimitedRule.js";
 
 /**
  * Generates the parse rule and syntax analysis method for limited concepts. A
  * projection may be present that consists of a list of keywords. These keywords
- * will be used in stead of the names of the predefined instance of this concept.
+ * will be used instead of the names of the predefined instance of this concept.
  */
 
 export class LimitedMaker {
-    generatedParseRules: string[] = [];
-    branchNames: string[] = [];
     imports: FreMetaClassifier[] = [];
 
     generateLimitedRules(limitedConcepts: FreMetaLimitedConcept[]): GrammarRule[] {

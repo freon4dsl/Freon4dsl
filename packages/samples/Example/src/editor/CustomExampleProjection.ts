@@ -11,8 +11,18 @@ import {
     FreLanguage,
     FRE_BINARY_EXPRESSION_LEFT,
     FRE_BINARY_EXPRESSION_RIGHT,
-    HorizontalListBox, FreProjection, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil, NumberDisplay, TextBox
-} from "@freon4dsl/core";
+    HorizontalListBox,
+    FreProjection,
+    FreTableDefinition,
+    TableRowBox,
+    HorizontalLayoutBox,
+    MultiLineTextBox,
+    BoxFactory,
+    BoxUtil,
+    NumberDisplay,
+    TextBox,
+    FreProjectionHandler, notNullOrUndefined
+} from '@freon4dsl/core';
 import { Documentation, NumberLiteralExpression, OrExpression, SumExpression } from "../language/gen/index.js";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment.js";
 
@@ -32,6 +42,7 @@ const OPERAND_COLUMN = 2;
 
 export class CustomExampleProjection implements FreProjection {
     name: string = "Custom";
+    handler!: FreProjectionHandler;
 
     constructor(name?: string) {
         if (!!name) {
@@ -48,12 +59,12 @@ export class CustomExampleProjection implements FreProjection {
 
     nodeTypeToTableDefinition: Map<string, () => FreTableDefinition> = new Map<string, () => FreTableDefinition>([]);
 
-    getTableHeadersFor(projectionName: string): TableRowBox {
-        return null;
-    }
-
     ////////////////////////////////////////////////////////////////////
-    createNumberLiteralBox(num: NumberLiteralExpression): Box {
+    createNumberLiteralBox(node: FreNode): Box {
+        if (node.freLanguageConcept() !== "NumberLiteralExpression") {
+            throw new Error("createNumberLiteralBox called with non-NumberLiteralExpression node");
+        }
+        const num: NumberLiteralExpression = node as NumberLiteralExpression;
         const numBox: Box = BoxUtil.numberBox(num, "value", NumberDisplay.SELECT)
         if (numBox instanceof TextBox) {
             numBox.deleteWhenEmpty = true
@@ -65,7 +76,11 @@ export class CustomExampleProjection implements FreProjection {
         );
     }
 
-createDocumentation (doc: Documentation): Box {
+    createDocumentation(node: FreNode): Box {
+        if (node.freLanguageConcept() !== "Documentation") {
+            throw new Error("createNumberLiteralBox called with non-Documentation node");
+        }
+        const doc: Documentation = node as Documentation;
         return BoxFactory.horizontalLayout(
             doc,
             "Documentation-hlist-line-0",
@@ -83,7 +98,11 @@ createDocumentation (doc: Documentation): Box {
         );
     }
     
-    createSumBox (sum: SumExpression): Box {
+    createSumBox(node: FreNode): Box {
+        if (node.freLanguageConcept() !== "SumExpression") {
+            throw new Error("createNumberLiteralBox called with non-SumExpression node");
+        }
+        const sum: SumExpression = node as SumExpression;
         const cells: GridCellBox[] = [
             new GridCellBox(sum, "Sum-from-cell", 3, 1,
                 new HorizontalLayoutBox(sum, "Sum-from-part", [
@@ -168,11 +187,14 @@ createDocumentation (doc: Documentation): Box {
     private optionalPartBox(element: FreNode, roleName: string, property: string): Box {
         // const projectionToUse = !!this.rootProjection ? this.rootProjection : this;
         // todo reimplement or rethink this
-        return !!element[property]
-            ? ExampleEnvironment.getInstance().editor.projection.getBox(element[property])
+        // @ts-ignore
+        const node: FreNode = element[property];
+        const myBox: Box | undefined = ExampleEnvironment.getInstance().editor.projection.getBox(node);
+        return notNullOrUndefined(node) && notNullOrUndefined(myBox)
+            ? myBox
             : new ActionBox(element,
                 roleName,
                 "[" + property + "]",
-                { propertyName: property, conceptName: FreLanguage.getInstance().classifier(element.freLanguageConcept()).properties.get(property).type });
+                { propertyName: property, conceptName: FreLanguage.getInstance().classifier(element.freLanguageConcept())?.properties.get(property)?.type });
     }
 }

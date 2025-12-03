@@ -1,6 +1,6 @@
 import { FretInferenceRule, TyperDef } from "../../metalanguage/index.js";
-import { Names, GenerationUtil } from "../../../utils/index.js";
-import { FreMetaClassifier, FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
+import { Imports, Names } from '../../../utils/on-lang/index.js';
+import { FreMetaLimitedConcept, LangUtil } from '../../../languagedef/metalanguage/index.js';
 import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
 import { FretEqualsRule } from "../../metalanguage/FretEqualsRule.js";
 
@@ -12,7 +12,7 @@ export class FreTypeInferMaker {
     typerdef: TyperDef | undefined = undefined;
     // private toBeCopied: FreClassifier[] = [];
 
-    public makeInferType(typerDef: TyperDef, varName: string, imports: FreMetaClassifier[]): string {
+    public makeInferType(typerDef: TyperDef, varName: string, imports: Imports): string {
         FreTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
         const result: string[] = [];
@@ -22,7 +22,7 @@ export class FreTypeInferMaker {
             inferRules.push(...spec.rules.filter((r) => r instanceof FretInferenceRule));
         });
         // sort the types such that any type comes before its super type
-        const sortedTypes = GenerationUtil.sortClassifiers(typerDef.conceptsWithType);
+        const sortedTypes = LangUtil.sortClassifiers(typerDef.conceptsWithType);
         // make an entry for all classifiers that have an infertype rule
         sortedTypes.forEach((type) => {
             // find the equalsRule, if present
@@ -42,7 +42,7 @@ export class FreTypeInferMaker {
         ) as FreMetaLimitedConcept[];
         allLimited.map((lim) =>
             result.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(${varName}, "${Names.classifier(lim)}")) {
-                result = AstType.create({ astElement: modelelement });
+                result = AstType.create({ astElement: ${varName} });
              }`),
         );
         // add an entry for classifiers that do not have an inferType rule

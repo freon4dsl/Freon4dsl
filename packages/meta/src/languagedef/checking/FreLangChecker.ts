@@ -1,4 +1,4 @@
-import { Checker, CheckRunner } from "../../utils/index.js";
+import { Checker, CheckRunner } from "../../utils/basic-dependencies/index.js";
 import { FreMetaLanguage } from "../metalanguage/index.js";
 import { FreLangCheckerPhase2 } from "./FreLangCheckerPhase2.js";
 import { FreLangCheckerPhase1 } from "./FreLangCheckerPhase1.js";

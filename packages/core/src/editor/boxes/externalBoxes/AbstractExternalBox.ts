@@ -1,5 +1,5 @@
 import { Box } from "../Box.js";
-import { FreNode } from "../../../ast/index.js";
+import type { FreNode } from "../../../ast/index.js";
 
 /**
  * This type represents any parameter that may be passed from the .edit file

@@ -1,4 +1,4 @@
-import { IdProvider } from "./IdProvider.js";
+import type { IdProvider } from "./IdProvider.js";
 
 export class SimpleIdProvider implements IdProvider {
     private readonly prefix: string;

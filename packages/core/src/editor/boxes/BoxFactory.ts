@@ -1,7 +1,7 @@
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { BehaviorExecutionResult } from "../util/index.js";
 // import { FreLogger } from "../../logging";
-import { isNullOrUndefined, FreUtils } from "../../util/index.js";
+import { isNullOrUndefined, FreUtils, notNullOrUndefined } from '../../util/index.js';
 import { FreEditor } from "../FreEditor.js";
 import {
     Box,
@@ -10,13 +10,11 @@ import {
     ActionBox,
     LabelBox,
     TextBox,
-    SelectOption,
     SelectBox,
     IndentBox,
     OptionalBox,
     HorizontalListBox,
     VerticalListBox,
-    BoolFunctie,
     GridCellBox,
     HorizontalLayoutBox,
     VerticalLayoutBox,
@@ -26,10 +24,12 @@ import {
     ButtonBox,
     NumberDisplay,
     AbstractExternalBox,
-    ExternalPartListBox,
-    isExternalPartListBox,
-    ReferenceBox,
-} from "./internal.js";
+    PartListReplacerBox,
+    isPartListReplacerBox,
+    ReferenceBox, MultiLineTextBox
+} from './internal.js';
+import type { SelectOption } from "./internal.js";
+import type { BoolFunctie } from "./internal.js";
 
 type RoleCache<T extends Box> = {
     [role: string]: T;
@@ -241,6 +241,28 @@ export class BoxFactory {
         return result;
     }
 
+    static multiline(
+      node: FreNode,
+      role: string,
+      getText: () => string,
+      setText: (text: string) => void,
+      initializer?: Partial<TextBox>,
+    ): MultiLineTextBox {
+        if (cacheTextOff) {
+            return new MultiLineTextBox(node, role, getText, setText, initializer);
+        }
+        // 1. Create the multiline box, or find the one that already exists for this element and role
+        const creator = () => new MultiLineTextBox(node, role, getText, setText);
+        const result: MultiLineTextBox = this.find<MultiLineTextBox>(node, role, creator, textCache);
+
+        // 2. Apply the other arguments in case they have changed
+        result.$getText = getText;
+        result.$setText = setText;
+        FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
     static bool(
         node: FreNode,
         role: string,
@@ -320,7 +342,7 @@ export class BoxFactory {
         // @ts-expect-error
         // todo remove this parameter and adjust the generation in meta
         propertyName: string,
-        children?: (Box | null)[],
+        children?: (Box | undefined)[],
         initializer?: Partial<HorizontalLayoutBox>,
     ): HorizontalLayoutBox {
         if (cacheHorizontalLayoutOff) {
@@ -382,17 +404,17 @@ export class BoxFactory {
     }
 
     static verticalList(
-        element: FreNode,
+        node: FreNode,
         role: string,
         propertyName: string,
         children?: (Box | null)[],
         initializer?: Partial<VerticalListBox>,
     ): VerticalListBox {
         if (cacheVerticalListOff) {
-            return new VerticalListBox(element, role, propertyName, children, initializer);
+            return new VerticalListBox(node, role, propertyName, children, initializer);
         }
-        const creator = () => new VerticalListBox(element, role, propertyName, children);
-        const result: VerticalListBox = this.find<VerticalListBox>(element, role, creator, verticalListCache);
+        const creator = () => new VerticalListBox(node, role, propertyName, children);
+        const result: VerticalListBox = this.find<VerticalListBox>(node, role, creator, verticalListCache);
         // 2. Apply the other arguments in case they have changed
         if (!equals(result.children, children)) {
             result.replaceChildren(children);
@@ -602,18 +624,22 @@ export class BoxFactory {
         externalComponentName: string,
         roleName: string,
         children: Box[],
-        initializer: Partial<ExternalPartListBox>,
-    ): ExternalPartListBox {
+        initializer: Partial<PartListReplacerBox>,
+    ): PartListReplacerBox {
         if (cacheExternalsOff) {
-            return new ExternalPartListBox(externalComponentName, node, roleName, propertyName, children, initializer);
+            return new PartListReplacerBox(externalComponentName, node, roleName, propertyName, children, initializer);
         }
         // 1. Create the Boolean box, or find the one that already exists for this element and role
-        const creator = () => new ExternalPartListBox(externalComponentName, node, roleName, propertyName, children, initializer);
+        const creator = () => new PartListReplacerBox(externalComponentName, node, roleName, propertyName, children, initializer);
         const result: AbstractExternalBox = this.find<AbstractExternalBox>(node, roleName, creator, externalCache);
 
         // 2. Apply the other arguments in case they have changed
         FreUtils.initializeObject(result, initializer);
-        if (isExternalPartListBox(result)) {
+        if (isPartListReplacerBox(result)) {
+            result.propertyName = propertyName
+            if (!equals(result.children, children)) {
+                result.replaceChildren(children);
+            }
             return result;
         } else {
             return creator();
@@ -622,7 +648,7 @@ export class BoxFactory {
 }
 
 const equals = (a, b): boolean | any => {
-    if ((isNullOrUndefined(a) && !isNullOrUndefined(b)) || (!isNullOrUndefined(a) && isNullOrUndefined(b))) {
+    if ((isNullOrUndefined(a) && notNullOrUndefined(b)) || (notNullOrUndefined(a) && isNullOrUndefined(b))) {
         return false;
     }
     if (isNullOrUndefined(a) && isNullOrUndefined(b)) {

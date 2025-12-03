@@ -1,6 +1,7 @@
-import { ReferenceShortcut } from "../editor/index.js";
-import { FreNode, FreModel, FreModelUnit } from "../ast/index.js";
-import { EmptyStdLib, FreStdlib } from "../stdlib/index.js";
+import type { ReferenceShortcut } from "../editor/index.js";
+import type { FreNode, FreModel, FreModelUnit } from "../ast/index.js";
+import { EmptyStdLib } from "../stdlib/index.js";
+import type { FreStdlib } from "../stdlib/index.js";
 import { isNullOrUndefined } from "../util/index.js";
 // import { FreLogger } from "../logging";
 // const LOGGER = new FreLogger("Language");
@@ -20,7 +21,7 @@ export type FreLanguageProperty = {
     language: string;
     propertyKind: PropertyKind;
 };
-export type FreLanguageModel = {
+export type FreLanguageModel<T extends FreModel = FreModel> = { /* '= FreModel' gives a default type argument */
     typeName: string;
     id?: string;
     key?: string; // used for LionWeb
@@ -30,11 +31,11 @@ export type FreLanguageModel = {
     language: string;
     subConceptNames?: string[];
     properties: Map<string, FreLanguageProperty>;
-    constructor: (id?: string) => FreModel;
-    creator: (data: Partial<FreModel>) => FreModel;
+    constructor: (id?: string) => T;
+    creator: (data: Partial<T>) => T;
     referenceShortcut?: ReferenceShortcut;
 };
-export type FreLanguageModelUnit = {
+export type FreLanguageModelUnit<T extends FreModelUnit = FreModelUnit> = { /* '= FreModelUnit' gives a default type argument */
     typeName: string;
     id?: string;
     key?: string; // used for LionWeb
@@ -46,12 +47,12 @@ export type FreLanguageModelUnit = {
     subConceptNames: string[];
     fileExtension: string;
     properties: Map<string, FreLanguageProperty>;
-    constructor: (id?: string) => FreModelUnit;
-    creator: (data: Partial<FreModelUnit>) => FreModelUnit;
+    constructor: (id?: string) => T;
+    creator: (data: Partial<T>) => T;
     trigger: string;
     referenceShortcut?: ReferenceShortcut;
 };
-export type FreLanguageConcept = {
+export type FreLanguageConcept<T extends FreNode = FreNode> = { /* '= FreNode' gives a default type argument */
     typeName: string;
     id?: string;
     key?: string; // used for LionWeb
@@ -62,11 +63,11 @@ export type FreLanguageConcept = {
     isNamespace: boolean;
     isNamedElement?: boolean;
     language: string;
-    baseName: string;
+    baseName: string | undefined; // baseName is not always present
     subConceptNames: string[];
     properties: Map<string, FreLanguageProperty>;
-    constructor: (id?: string) => FreNode;
-    creator: (data: Partial<FreNode>) => FreNode;
+    constructor: (id?: string) => T | undefined; // undefined needed for abstract concepts
+    creator: (data: Partial<T>) => T | undefined;
     // Used by editor, therefore only in Concept
     trigger: string;
     referenceShortcut?: ReferenceShortcut;
@@ -82,8 +83,8 @@ export type FreLanguageInterface = {
     isAbstract?: boolean;
     subConceptNames: string[];
     properties: Map<string, FreLanguageProperty>;
-    constructor?: (id?: string) => FreNode | undefined;
-    creator?: (data: Partial<FreNode>) => FreNode | undefined;
+    // constructor: (id?: string) => T | undefined;
+    // creator: (data: Partial<T>) => T | undefined;
     language: string;
     referenceShortcut?: ReferenceShortcut;
 };
@@ -102,6 +103,7 @@ export class FreLanguage {
 
     private languageName: string;
     private languageId?: string;
+    public languageVersion: string;
     private pmodel: FreLanguageModel;
     private units: Map<string, FreLanguageModelUnit> = new Map<string, FreLanguageModelUnit>();
     private concepts: Map<string, FreLanguageConcept> = new Map<string, FreLanguageConcept>();
@@ -450,11 +452,24 @@ export class FreLanguage {
     /**
      * Returns true if the freLanguageConcept of 'element', i.e. its metatype,
      * is the same as 'requestedType' or is a subtype of 'requestedType'.
+     * Returns false if 'element' is null or undefined.
      * @param element
      * @param requestedType
      */
     public metaConformsToType(element: FreNode, requestedType: string): boolean {
+        if (isNullOrUndefined(element)) return false;
         const metatype = element.freLanguageConcept();
         return metatype === requestedType || FreLanguage.getInstance().subConcepts(requestedType).includes(metatype);
     }
+
+    public dragMetaConformsToType(sourceType: DragAndDropType, requestedType: DragAndDropType): boolean {
+        return sourceType.isRef 
+            === requestedType.isRef &&
+        (sourceType.type === requestedType.type || FreLanguage.getInstance().subConcepts(requestedType.type).includes(sourceType.type));
+    }
 }
+
+export type DragAndDropType = {
+    type: string;
+    isRef: boolean
+} 

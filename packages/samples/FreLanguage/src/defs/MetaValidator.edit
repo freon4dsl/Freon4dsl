@@ -1,0 +1,58 @@
+editor default
+
+// begin validator definition
+FreValidatorDef {[
+    validator ${name} for language ${languageName}
+    ${classifierRules}
+]}
+
+ClassifierRuleSet {[
+    ${classifierRef} {
+        ${rules terminator[;]}
+    }
+]}
+
+ValidationRule {[
+    [? ${customMessage} ]
+]}
+
+ValidationMessage {[
+{
+    message: ${message},
+    severity: ${severity}
+}
+]}
+
+CheckEqualsTypeRule {[
+    typecheck equalsType ( ${type1Exp}, ${type2Exp})
+    [=> ValidationRule ]
+]}
+
+CheckConformsRule {[
+    typecheck conformsTo ( ${type1Exp}, ${type2Exp})
+    [=> ValidationRule ]
+]}
+
+ExpressionRule {[
+    ${exp1} ${comparator} ${exp2}
+]}
+
+IsUniqueRule {[
+    isunique ${listproperty} in ${list}
+    [=> ValidationRule ]
+]}
+
+NotEmptyRule {[
+    notEmpty ${property}
+    [=> ValidationRule ]
+]}
+
+ValidNameRule {[
+    validIdentifier [?${propertyName}]
+    [=> ValidationRule ]
+]}
+
+FreListPropExp {
+    [${propertyName}]
+}
+// end validator definition

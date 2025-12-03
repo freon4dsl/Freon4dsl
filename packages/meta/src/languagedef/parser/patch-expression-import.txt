@@ -1,4 +1,0 @@
-/**
-  * Patch to import in ESM style, because peggy only generates commonjs style
-  */
-import * as expCreate from "./ExpressionCreators.js"

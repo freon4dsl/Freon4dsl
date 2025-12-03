@@ -1,15 +1,15 @@
 import { AST } from "../../change-manager/index.js";
 import {
     Box,
-    HorizontalLayoutBox,
+    type HorizontalLayoutBox,
     isHorizontalBox,
-    SelectOption,
+    type SelectOption,
     FreEditor,
     triggerTypeToString,
     BoxFactory,
-    FreProjectionHandler,
+    type FreProjectionHandler,
 } from "../index.js";
-import { FreBinaryExpression, FreExpressionNode } from "../../ast/index.js";
+import type { FreBinaryExpression, FreExpressionNode } from "../../ast/index.js";
 import { FreLanguage } from "../../language/index.js";
 import {
     FRE_BINARY_EXPRESSION_LEFT,
@@ -126,6 +126,7 @@ export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, s
                         id: e.trigger as string,
                         label: e.trigger as string,
                         description: "empty description for operator",
+                        // TODO icon and hideInList do not adhere to the SelectOption interface. What is happening here?
                         icon: null,
                         hideInList: false,
                     }));

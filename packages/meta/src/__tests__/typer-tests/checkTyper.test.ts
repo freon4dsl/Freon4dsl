@@ -1,12 +1,13 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { MetaLogger } from "../../utils/index.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { TyperDef } from "../../typerdef/metalanguage/index.js";
-import { FreTyperMerger } from "../../typerdef/parser/FreTyperMerger";
+import { FreTyperMerger } from "../../typerdef/parser/FreTyperMerger.js";
 import { describe, test, expect, beforeEach } from "vitest";
+import { resolveTestDir } from '../TestPathHelpers.js';
 
-describe("Checking new typer", () => {
-    const testdir = "src/__tests__/typer-tests/faultyDefFiles/";
+describe("Checking typer", () => {
+    const testdir: string = resolveTestDir(import.meta.url, "faultyDefFiles/");
     let parser: FreTyperMerger;
     let language: FreMetaLanguage | undefined;
     MetaLogger.muteAllLogs();
@@ -43,23 +44,23 @@ describe("Checking new typer", () => {
                 expect(e.message).toBe(`checking errors (8).`);
                 expect(
                     errors.includes(
-                        "Concept or interface 'Type' occurs more than once in this list [file: type-rules1.type:4:10].",
+                        "Concept or interface 'Type' occurs more than once in this list [file: type-rules1.type:4:33].",
                     ),
                 ).toBeTruthy();
                 expect(
                     errors.includes(
-                        "Concept or interface 'Exp' occurs more than once in this list [file: type-rules1.type:7:11].",
+                        "Concept or interface 'Exp' occurs more than once in this list [file: type-rules1.type:7:16].",
                     ),
                 ).toBeTruthy();
                 expect(
-                    errors.includes("Cannot find instance 'Simp' of 'PredefinedType' [file: type-rules1.type:20:30]."),
+                    errors.includes("Cannot find instance 'Simp' of limited concept 'PredefinedType' [file: type-rules1.type:20:31]."),
                 ).toBeTruthy();
                 expect(
                     errors.includes(
                         "Cannot find property 'inn' in classifier 'UnitLiteral' [file: type-rules1.type:38:37].",
                     ),
                 ).toBeTruthy();
-                expect(errors.includes("Cannot find property 'base' [file: type-rules1.type:38:19].")).toBeTruthy();
+                expect(errors.includes("Cannot find property 'base' in classifier 'UnitLiteral' [file: type-rules1.type:38:19].")).toBeTruthy();
                 expect(
                     errors.includes(
                         "Type of 'typeof( self.content )' (FreType) does not conform to TypeDeclaration [file: type-rules1.type:46:9].",
@@ -101,7 +102,7 @@ describe("Checking new typer", () => {
                         "Cannot find property 'inn' in classifier 'UnitLiteral' [file: type-rules2.type:38:37].",
                     ),
                 ).toBeTruthy();
-                expect(errors.includes("Cannot find property 'base' [file: type-rules2.type:38:19].")).toBeTruthy();
+                expect(errors.includes("Cannot find property 'base' in classifier 'UnitLiteral' [file: type-rules2.type:38:19].")).toBeTruthy();
                 expect(
                     errors.includes(
                         "Type of 'typeof( self.content )' (FreType) does not conform to TypeDeclaration [file: type-rules2.type:46:9].",
@@ -157,7 +158,7 @@ describe("Checking new typer", () => {
                 const errors: string[] = parser.checker.errors;
                 // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
                 expect(e.message).toBe(`checking errors (3).`);
-                expect(errors.includes("Cannot find property 'base' [file: type-rules4.type:38:19].")).toBeTruthy();
+                expect(errors.includes("Cannot find property 'base' in classifier 'UnitLiteral' [file: type-rules4.type:38:19].")).toBeTruthy();
                 expect(
                     errors.includes(
                         "Type of 'typeof( self.content )' (FreType) does not conform to TypeDeclaration [file: type-rules4.type:46:9].",

@@ -1,0 +1,25 @@
+scoper for language FreLanguageX
+
+//isNamespace { FretClassifierSpec, FreClassifier, FretLimitedInstanceExp }
+isNamespace { FreClassifier }
+
+//FretPropertyCallExp {
+//    alternatives { type( self.source ); }
+//}
+//
+//FretLimitedInstanceExp {
+//    imports { self.myLimited; }
+//}
+
+//FretLimitedRule { // TODO This addition should be on FretClassifierRule, but that results in a MobX cycle
+//    imports { self.myClassifier; }
+//}
+
+// scope rules for FreStructureDef
+FreConcept {
+    imports { self.interfaces;  self.base; }
+}
+
+FreInterface {
+    imports { self.base; }
+}

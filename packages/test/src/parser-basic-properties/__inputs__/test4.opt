@@ -1,0 +1,28 @@
+OptionalPrimitivesTest `TEST4` {
+	 prims
+	    OptionalPrim <no-value>   `aName`       <no-value>  ""
+	    OptionalPrim true         `aName`       <no-value>  ""
+	    OptionalPrim false        `aName`       <no-value>  ""
+	    OptionalPrim <no-value>   `aName`       234         ""
+	    OptionalPrim true         `aName`       234         ""
+	    OptionalPrim false        `aName`       234         ""
+	    OptionalPrim <no-value>   `aName`       <no-value>  "strLit"
+	    OptionalPrim true         `aName`       <no-value>  "strLit"
+	    OptionalPrim false        `aName`       <no-value>  "strLit"
+	    OptionalPrim <no-value>   `aName`       234         "strLit"
+	    OptionalPrim true         `aName`       234         "strLit"
+	    OptionalPrim false        `aName`       234         "strLit"
+	 primExtras
+	    OptionalPrimsWithExtraText              ident `aName`   str ""
+	    OptionalPrimsWithExtraText bool true    ident `aName`   str ""
+	    OptionalPrimsWithExtraText bool false   ident `aName`   str ""
+	    OptionalPrimsWithExtraText              ident `aName`   num 234  str ""
+	    OptionalPrimsWithExtraText bool true    ident `aName`   num 234  str ""
+	    OptionalPrimsWithExtraText bool false   ident `aName`   num 234  str ""
+	    OptionalPrimsWithExtraText              ident `aName`            str "strLit"
+	    OptionalPrimsWithExtraText bool true    ident `aName`            str "strLit"
+	    OptionalPrimsWithExtraText bool false   ident `aName`            str "strLit"
+	    OptionalPrimsWithExtraText              ident `aName`   num 234  str "strLit"
+	    OptionalPrimsWithExtraText bool true    ident `aName`   num 234  str "strLit"
+	    OptionalPrimsWithExtraText bool false   ident `aName`   num 234  str "strLit"
+	 }

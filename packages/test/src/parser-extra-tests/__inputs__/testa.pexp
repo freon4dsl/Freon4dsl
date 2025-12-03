@@ -1,0 +1,7 @@
+PitExpTest `NAME` {
+  value where {
+	 self == self
+	 anytype == anytype
+	 self == anytype
+  }
+}

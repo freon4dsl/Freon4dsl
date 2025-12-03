@@ -1,6 +1,6 @@
 language Education
 
-model Education /* Computer Aided Learning */ {
+model Education version "2"/* Computer Aided Learning */ {
     name: identifier;
     topic: Topic[];
     flow: Flow[];

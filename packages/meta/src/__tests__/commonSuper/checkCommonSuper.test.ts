@@ -3,8 +3,8 @@ import {
     FreMetaConcept,
     MetaElementReference,
     FreMetaInterface,
-} from "../../languagedef/metalanguage/index.js";
-import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil";
+} from '../../languagedef/metalanguage/index.js';
+import { CommonSuperTypeUtil } from '../../languagedef/checking/common-super/CommonSuperTypeUtil.js';
 import { describe, test, expect } from "vitest";
 
 function concept(name: string): FreMetaConcept {
@@ -21,7 +21,7 @@ function interf(name: string): FreMetaInterface {
 
 function conceptWithBase(name: string, base: FreMetaConcept): FreMetaConcept {
     const result = concept(name);
-    result.base = MetaElementReference.create<FreMetaConcept>(base, "FreClassifier");
+    result.base = MetaElementReference.create<FreMetaConcept>(base);
     result.base.owner = result;
     return result;
 }
@@ -29,7 +29,7 @@ function conceptWithBase(name: string, base: FreMetaConcept): FreMetaConcept {
 function interfWithBases(name: string, base: FreMetaInterface[]): FreMetaInterface {
     const result = interf(name);
     for (const elem of base) {
-        const newBase = MetaElementReference.create<FreMetaInterface>(elem, "FreClassifier");
+        const newBase = MetaElementReference.create<FreMetaInterface>(elem);
         newBase.owner = result;
         result.base.push(newBase);
     }
@@ -38,7 +38,7 @@ function interfWithBases(name: string, base: FreMetaInterface[]): FreMetaInterfa
 
 function addInterfacesToConcept(con: FreMetaConcept, intf: FreMetaInterface[]) {
     for (const elem of intf) {
-        const newBase = MetaElementReference.create<FreMetaInterface>(elem, "FreClassifier");
+        const newBase = MetaElementReference.create<FreMetaInterface>(elem);
         newBase.owner = con;
         con.interfaces.push(newBase);
     }

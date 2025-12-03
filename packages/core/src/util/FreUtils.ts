@@ -1,8 +1,8 @@
 import { AST } from "../change-manager/index.js";
-import { FreEditor } from "../editor/index.js";
-import { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast/index.js";
+import type { FreEditor } from "../editor/index.js";
+import type { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast/index.js";
 import { isFreExpression } from "../ast-utils/index.js";
-import { IdProvider } from "./IdProvider.js";
+import type { IdProvider } from "./IdProvider.js";
 import { SimpleIdProvider } from "./SimpleIdProvider.js";
 
 // export type BooleanCallback = () => boolean;
@@ -59,7 +59,7 @@ export class FreUtils {
 
     static setContainer(exp: FreNode, freOwnerDescriptor: FreOwnerDescriptor | null, editor: FreEditor): void {
         AST.change( () => {
-            if ( !isNullOrUndefined(freOwnerDescriptor)) {
+            if ( notNullOrUndefined(freOwnerDescriptor)) {
                 if (freOwnerDescriptor.propertyIndex === undefined) {
                     freOwnerDescriptor.owner[freOwnerDescriptor.propertyName] = exp;
                 } else {
@@ -89,8 +89,21 @@ export class FreUtils {
 // Initialize the default ID providers
 FreUtils.resetId();
 
-export function isNullOrUndefined(obj: Object | null | undefined): obj is null | undefined {
-    return obj === undefined || obj === null;
+export function isNullOrUndefined<T>(obj: T | null | undefined): obj is null | undefined {
+    return obj == null; // catches both null and undefined
+}
+
+
+export function notNullOrUndefined<T>(obj: T | null | undefined): obj is NonNullable<T> {
+    return obj != null; // catches both null and undefined
+}
+
+/**
+ * Is string `str` empty, meaning null, undefined or the empty string.
+ * @param str
+ */
+export function isEmpty(str: string | null | undefined): str is null | undefined {
+    return str === undefined || str === null || str === "";
 }
 
 export function startWithUpperCase(word: string): string {

@@ -1,4 +1,4 @@
-import { FreMetaDefinitionElement } from "../../../utils/index.js";
+import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
 
 /**
  * An element of a line in a projection definition that holds a (simple) text.

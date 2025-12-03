@@ -1,19 +1,20 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils/index.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import {
-    GenerationStatus,
-    FileUtil,
-    isNullOrUndefined,
     Names,
     SCOPER_FOLDER,
     SCOPER_GEN_FOLDER,
-} from "../../utils/index.js";
+} from "../../utils/on-lang/index.js";
 import { ScopeDef } from "../metalanguage/index.js";
 import { CustomScoperTemplate } from "./templates/CustomScoperTemplate.js";
 import { ScoperDefTemplate } from "./templates/ScoperDefTemplate.js";
 import { ScoperTemplate } from "./templates/ScoperTemplate.js";
-import { MetaElementReference, FreMetaModelDescription } from "../../languagedef/metalanguage/index.js";
+import {
+    GenerationStatus,
+    FileUtil,
+    isNullOrUndefined
+} from '../../utils/file-utils/index.js';
 
 const LOGGER: MetaLogger = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
@@ -31,16 +32,12 @@ export class ScoperGenerator {
         if (isNullOrUndefined(scopedef)) {
             scopedef = new ScopeDef();
             scopedef.languageName = this.language.name;
-            scopedef.namespaces = [];
-            scopedef.namespaces.push(
-                MetaElementReference.create<FreMetaModelDescription>(this.language.modelConcept, "FreModelDescription"),
-            );
+            scopedef.namespaces = [this.language.modelConcept];
         }
 
         const generationStatus: GenerationStatus = new GenerationStatus();
         this.getFolderNames();
-        const name: string = scopedef ? scopedef.scoperName + " " : "";
-        LOGGER.log("Generating scoper " + name + "in folder " + this.scoperGenFolder);
+        LOGGER.log("Generating scoper in folder " + this.scoperGenFolder);
 
         const scoper: ScoperTemplate = new ScoperTemplate();
         const scoperDefTemplate: ScoperDefTemplate = new ScoperDefTemplate();
@@ -98,9 +95,9 @@ export class ScoperGenerator {
         FileUtil.generateManualFile(`${this.scoperFolder}/index.ts`, scoperIndexFile, "Scoper Index");
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(`Generated scoper '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(`Generated scoper with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated scoper ${name}`);
+            LOGGER.info(`Successfully generated scoper`);
         }
     }
 

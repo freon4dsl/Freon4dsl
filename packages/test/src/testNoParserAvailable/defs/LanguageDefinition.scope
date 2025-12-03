@@ -1,19 +1,13 @@
-scoper ExampleScoper for language Example
+scoper for language Example
 
-// isnamespace { Entity,Model }
-
-// isnamespace { Entity, Model }
-
-// 2 isnamespace { Method, Entity }
-
-isnamespace { Method, Entity, ExModel, SumExpression }
+isNamespace { Method, Entity, ExModel, SumExpression, AppliedFeature }
 
 Entity {
-    namespace_addition = self.baseEntity;
+    imports { self.baseEntity; }
 }
 
 AppliedFeature {
-	scope = typeof( container );
+	alternatives { owner().type(); }
 }
 
 

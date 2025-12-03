@@ -1,4 +1,4 @@
-import { FreNode } from "../../ast/index.js";
+import type { FreNamedNode, FreNode } from '../../ast/index.js';
 import {
     BoolDisplay,
     BooleanWrapperBox,
@@ -6,20 +6,21 @@ import {
     BoxFactory,
     ButtonBox,
     EmptyLineBox,
-    ExternalBooleanBox,
-    ExternalNumberBox,
-    ExternalPartBox,
-    ExternalPartListBox,
-    ExternalRefBox,
-    ExternalRefListBox,
-    ExternalStringBox,
+    BooleanReplacerBox,
+    NumberReplacerBox,
+    PartReplacerBox,
+    PartListReplacerBox,
+    RefReplacerBox,
+    RefListReplacerBox,
+    StringReplacerBox,
+    FragmentWrapperBox,
     HorizontalListBox,
     IndentBox,
     LabelBox,
     LimitedControlBox,
     LimitedDisplay,
     NumberDisplay,
-    NumberDisplayInfo,
+    type NumberDisplayInfo,
     NumberWrapperBox,
     PartListWrapperBox,
     PartWrapperBox,
@@ -29,17 +30,18 @@ import {
     SelectBox,
     StringWrapperBox,
     TextBox,
-    VerticalListBox,
-} from "../boxes/index.js";
-import { FreScoper } from "../../scoper/index.js";
+    VerticalListBox, MultiLineTextBox
+} from '../boxes/index.js';
+import type { FreScoper } from "../../scoper/index.js";
 import { RoleProvider } from "./RoleProvider.js";
-import { FreProjectionHandler } from "../projections/index.js";
+import { type FreProjectionHandler } from "../projections/index.js";
 import { UtilPrimHelper } from "./box-util-helpers/UtilPrimHelper.js";
 import { UtilRefHelpers } from "./box-util-helpers/UtilRefHelpers.js";
 import { UtilPartHelpers } from "./box-util-helpers/UtilPartHelpers.js";
 import { UtilLimitedHelpers } from "./box-util-helpers/UtilLimitedHelpers.js";
 
 export class FreListInfo {
+    static NullListInfo: FreListInfo = { text: '', type: ''};
     text: string;
     type: string;
 }
@@ -117,6 +119,18 @@ export class BoxUtil {
     }
 
     /**
+     * Returns a multiline text Box for a property named 'propertyName' within 'node' of type 'string'.
+     * When the property is a list (the type is "string[]"), this method can be
+     * called for each item in the list. In that case an index to the item needs to be provided.
+     * @param node the owning FreNode of the displayed property
+     * @param propertyName the name of the displayed property
+     * @param index the index of the item in the list, if the property is a list
+     */
+    public static multiLineTextBox(node: FreNode, propertyName: string, index?: number): MultiLineTextBox {
+        return UtilPrimHelper.multilineTextBox(node, propertyName, index);
+    }
+
+    /**
      * Returns a textBox for a property named 'propertyName' within 'node' of type 'number'.
      * When the property is a list (the type is "number[]"), this method can be
      * called for each item in the list. In that case an index to the item needs to be provided.
@@ -149,7 +163,7 @@ export class BoxUtil {
     public static booleanBox(
         node: FreNode,
         propertyName: string,
-        labels: { yes: string; no: string } = {
+        labels: { yes: string; no: string, unknown?: string } = {
             yes: "yes",
             no: "no",
         },
@@ -267,7 +281,7 @@ export class BoxUtil {
     public static referenceBox(
         node: FreNode,
         propertyName: string,
-        setFunc: (selected: string) => void,
+        setFunc: (selected: string | FreNamedNode) => void,
         scoper: FreScoper,
         index?: number,
     ): ReferenceBox {
@@ -341,7 +355,7 @@ export class BoxUtil {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName);
         let result: Box = !!property
             ? boxProviderCache.getBoxProvider(property).box
-            : BoxFactory.action(node, roleName, `<${propertyName}>`, {
+            : BoxFactory.action(node, roleName, `+ ${propertyName}`, {
                 propertyName: propertyName,
                 conceptName: conceptName,
             });
@@ -361,14 +375,14 @@ export class BoxUtil {
      * @param scoper
      * @param initializer
      */
-    public static externalReferenceListBox(
+    public static refListReplacerBox(
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
         scoper: FreScoper,
-        initializer?: Partial<ExternalRefListBox>,
-    ): ExternalRefListBox {
-        return UtilRefHelpers.externalReferenceListBox(node, propertyName, externalComponentName, scoper, initializer);
+        initializer?: Partial<RefListReplacerBox>,
+    ): RefListReplacerBox {
+        return UtilRefHelpers.refListReplacerBox(node, propertyName, externalComponentName, scoper, initializer);
     }
 
     /**
@@ -383,15 +397,15 @@ export class BoxUtil {
      * @param boxProviderCache
      * @param initializer
      */
-    public static externalPartListBox(
+    public static partListReplacerBox(
         node: FreNode,
         list: FreNode[],
         propertyName: string,
         externalComponentName: string,
         boxProviderCache: FreProjectionHandler,
-        initializer?: Partial<ExternalPartListBox>,
-    ): ExternalPartListBox {
-        return UtilPartHelpers.externalPartListBox(
+        initializer?: Partial<PartListReplacerBox>,
+    ): PartListReplacerBox {
+        return UtilPartHelpers.partListReplacerBox(
             node,
             list,
             propertyName,
@@ -403,54 +417,54 @@ export class BoxUtil {
 
     // TODO get the role names correct in the following methods
     // TODO use caches for following methods
-    static externalStringBox(
+    static stringReplacerBox(
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        initializer?: Partial<ExternalStringBox>,
-    ): ExternalStringBox {
+        initializer?: Partial<StringReplacerBox>,
+    ): StringReplacerBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
-        return new ExternalStringBox(externalComponentName, node, roleName, propertyName, initializer);
+        return new StringReplacerBox(externalComponentName, node, roleName, propertyName, initializer);
     }
 
-    static externalNumberBox(
+    static numberReplacerBox(
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        initializer?: Partial<ExternalNumberBox>,
-    ): ExternalNumberBox {
+        initializer?: Partial<NumberReplacerBox>,
+    ): NumberReplacerBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
-        return new ExternalNumberBox(externalComponentName, node, roleName, propertyName, initializer);
+        return new NumberReplacerBox(externalComponentName, node, roleName, propertyName, initializer);
     }
 
-    static externalBooleanBox(
+    static booleanReplacerBox(
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        initializer?: Partial<ExternalBooleanBox>,
-    ): ExternalBooleanBox {
+        initializer?: Partial<BooleanReplacerBox>,
+    ): BooleanReplacerBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
-        return new ExternalBooleanBox(externalComponentName, node, roleName, propertyName, initializer);
+        return new BooleanReplacerBox(externalComponentName, node, roleName, propertyName, initializer);
     }
 
-    static externalPartBox(
+    static partReplacerBox(
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        initializer?: Partial<ExternalPartBox>,
-    ): ExternalPartBox {
+        initializer?: Partial<PartReplacerBox>,
+    ): PartReplacerBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
-        return new ExternalPartBox(externalComponentName, node, roleName, propertyName, initializer);
+        return new PartReplacerBox(externalComponentName, node, roleName, propertyName, initializer);
     }
 
-    static externalRefBox(
+    static refReplacerBox(
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        initializer?: Partial<ExternalRefBox>,
-    ): ExternalRefBox {
+        initializer?: Partial<RefReplacerBox>,
+    ): RefReplacerBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
-        return new ExternalRefBox(externalComponentName, node, roleName, propertyName, initializer);
+        return new RefReplacerBox(externalComponentName, node, roleName, propertyName, initializer);
     }
 
     static stringWrapperBox(
@@ -484,6 +498,16 @@ export class BoxUtil {
     ): BooleanWrapperBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
         return new BooleanWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
+    }
+    
+    static fragmentWrapperBox(
+        node: FreNode,
+        externalComponentName: string,
+        childBox: Box,
+        initializer?: Partial<BooleanWrapperBox>,
+    ): FragmentWrapperBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), externalComponentName) + "-wrapper-" + childBox.id;
+        return new FragmentWrapperBox(externalComponentName, node, roleName,childBox, initializer);
     }
 
     static partWrapperBox(

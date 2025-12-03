@@ -110,6 +110,27 @@ limited OtherLimited {
     FIRST; SECOND;
 }
 
+// TEST PRIMITIVES THAT ARE OPTIONAL
+
+modelunit OptionalPrimitivesTest {
+    name: identifier;
+    prims: OptionalPrim[];
+    primExtras: OptionalPrimsWithExtraText[];
+    file-extension = "opt";
+}
+concept OptionalPrim {
+    primIdentifier?: identifier;
+    primNumber?: number;
+    primString?: string;
+    primBoolean?: boolean;
+}
+concept OptionalPrimsWithExtraText {
+    primIdentifierWithExtra: identifier;
+    primNumberWithExtra?: number;
+    primStringWithExtra?: string;
+    primBooleanWithExtra?: boolean;
+}
+
 // TEST PROPERTIES THAT ARE PARTS WHICH HAVE CONCEPT TYPES
 modelunit PartsTest {
     name: identifier;

@@ -1,0 +1,202 @@
+= Language Composition in Freon
+:icons: font
+:toc: preamble auto
+
+== Packaging a Language
+A language should be a reusable component that can be packaged and published separately.
+A Freon project should be able to use packaged languages.
+
+A language package should
+
+- The Freon definitions (.ast, ...)
+- The generated code
+- The custom code
+- The external Svelte components
+
+[[General-Patterns]]
+== General Patterns
+
+We use global registries for information from different languages, 
+using a key that includes the _language_ + _language-version_ + _name-in-language_.
+Each language has an `initializeLanguage()` method that will  register all elements (projections, scopers, 
+metamodel info, etc. etc.) in the corresponding registry.
+
+In some of the registries we need to take care of the fact that we may need to get registry info
+from a super concept  and/or implemented interface instead of the actual concept.
+We might be able to use the Language Registry to fetch the super concepts/implemented interfaces
+to be able to get the correct information from a registry.
+
+We have the following registries:
+
+[[Language-Registry]]
+=== Language Registry
+The language Registry contains information about the meta-model of all available languages.
+Currently, this is class `FreLanguage`.
+
+The `subConceptNames`  property in the language definition may contain concept from other languages,
+we need to deal with this somehow.
+We could probably do this automatiucally during registration of a new language,
+as we know all the information at this moment.
+Alternatively we can postprocess the registry after all languages are registered to add this information.
+This all assumes that we need this info often enough to not calculate it each time we need it.
+We could also use a memoization pattern: only cache when needed.
+
+=== Projection Registry
+The Projection Registry contains all projections defined in all languages.
+Currently we use several Maps in `FreProjectionHandler` as a registry.
+
+Editor/projection names should be unique over multiple languages.
+We can use fully qualified names (_language_ + _version_ + _projection-name_) to distinguish them.
+
+The `initializeProjections()` function generated in `EditorDef.ts` registers all box providers in a map.
+We can call this function for all languages to get a complete map.
+In ProjectionHandler the implementation of adding this map must be changed  to add and not to replace.
+
+Custom projections are handled differently now, we should just handle these as any other projection with a name.
+It should be registered like any other projection.
+The name of a Custom projection must be unique.
+
+=== Scope Registry
+The Scope Registry contains all the scope definitions from all available languages.
+Scopers are complete classes, and in their current state they are not composable.
+Custom scopers use inheritance, which is also not composable.
+
+This needs to be refactored to allow one registry for all languages.
+
+The generated subclasses of the scoper all generate special cases for special metatypes.
+These can be captured in separate functions and put in a global registry,
+but they use function from the BaseScoper, so these should be made available.
+
+NOTE: Redefining BaseScoper funcions like `getVisibleElements(...)` needs to be investigated.
+
+=== Validator Registry
+There is no registry currently.
+
+The Validator Registry could be a Map from concept-key to a set of validation-functions for the conceot.
+This way each language can add additional validation functions to imported concepts.
+
+The main validator can the walk through the model and call the validation functions from the registry
+for each node.
+Something like the following:
+[source,typescript]
+----
+class Validator extends Visitor {
+    visit(node: FreNode) {
+        const validatorFunctions = ValidatorRegistry.get(node.fqn)
+        for(const func of validatorFunctions) {
+            func.apply(node)
+        }
+    }
+}
+----
+Note that the `ValidatorRegistry.get(node.fqn)` may need to get validator functions from
+super cponcepts / inherited ionterfaces of `node.fqn`, as stated in <<General-Patterns>>.
+
+=== Typer Registry
+Typers are complete classes, and in their current state they are not composable.
+Custom typers use inheritance, which is also not composable.
+
+We should refactor to get a registry where the type function for each concept can be registered
+as a separate function.
+
+=== Interpreter Registry
+The interpeter registry is already used, see `IMainInterpreter`.
+
+=== Standard Library Registry
+NOTE: TODO
+
+=== Actions Registry
+NOTE: TODO
+
+=== Reader Registry
+NOTE: TODO
+
+=== Writer Registry
+The writer currently uses a large switch statement for all metatypes, should use a registry instead.
+
+NOTE: TODO
+
+== Inter Language References
+Inside the Freon definition files we have to be able to refer to concepts, properties, 
+and maybe other information from other languages.
+
+=== Ast
+The .ast should be able to refer to .ast files in a packaged language.
+This can be done using an import:
+
+----
+import OtherLanguage
+
+concept MyConcept {
+    other : OtherLanguageConcept;
+}
+----
+
+or by using qualified names:
+
+----
+concept MyConcept {
+    other : OtherLanguage.OtherLanguageConcept;
+}
+----
+
+The advantage of using qualified names is that it always works, even when there are
+cponcepts with identical names in different languages.
+
+NOTE: We might need to add the version in the qualified name as well, in case of 
+language / model migration.
+
+=== Projections
+We need to be able to define new projections for concept from imported languages.
+
+== Packaging Languages and Generated Code
+Use single export instead of exporting all language classes separately:
+
+----
+export * as <LanguageName> from "./internal.js"
+----
+
+The `<name>Language.ts` file containing the language definition should not put
+everything in the global FreLanguage instance.
+Or, maybe it should , as the use of fully-qualified names allows all definitions to be
+distinguishable.
+
+
+
+- `<>Environment.ts` should only create local things and register everything to a global registry.
+
+The generated `$typeName` should have the fully qualified name of the concept, consisting of _language_ + _language-version_ + _concept-name_.
+There should als be separate properties for all three of these.
+Alternatively, the separate properties can be looked up in the <<Language-Registry>> definition using `$typeName` as the key.
+
+Should we use fqn-names in internal generated code?
+This is probably not neccesary.
+
+--
+.Language
+[plantuml, valid-annotation, svg]
+----
+hide empty members
+
+class LanguageRegistry <<C, lightgreen>><<Concept>>  {
+  --
+  addConcept()
+}
+
+class Language <<C, lightgreen>><<Concept>> {
+  --
+  name: String
+  version: String
+  lionWebKey: String
+}
+class Concept <<C, lightgreen>><<Concept>> {
+    name: string
+    language: string
+    version: string
+    fqn: string
+    lionWebKey: string
+}
+
+LanguageRegistry -> Concept: Map<fqn>
+
+----

@@ -1,11 +1,11 @@
-import { FreEditPropertyProjection, FreEditSimpleExternal } from "../../../metalanguage/index.js";
+import { FreEditExternalInfo, FreEditFragmentProjection, FreEditPropertyProjection, FreEditSimpleExternal } from "../../../metalanguage/index.js"
 import {
     FreMetaConceptProperty,
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
     FreMetaProperty,
 } from "../../../../languagedef/metalanguage/index.js";
-import { ListUtil, Names } from "../../../../utils/index.js";
+import { Names } from '../../../../utils/on-lang/index.js';
 import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class ExternalBoxesHelper {
@@ -84,8 +84,8 @@ export class ExternalBoxesHelper {
         if (!!item.params && item.params.length > 0) {
             initializer = `, { params: [${item.params.map((x) => `{key: "${x.key}", value: "${x.value}"}`).join(", ")}] }`;
         }
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "ExternalSimpleBox");
-        return `new ExternalSimpleBox("${item.name}", ${element}, "${myRole}"${initializer})`;
+        this._myTemplate.imports.core.add("SimpleExternalBox");
+        return `new SimpleExternalBox("${item.name}", ${element}, "${myRole}"${initializer})`;
     }
 
     private wrapByExternal(
@@ -109,7 +109,7 @@ export class ExternalBoxesHelper {
                         ${elementVarName},
                         "${property.name}",
                         "${item.externalInfo!.wrapBy}",
-                    ${innerResult},
+                    ${innerResult}
                     ${initializer}
                     )`;
     }
@@ -120,11 +120,11 @@ export class ExternalBoxesHelper {
         elementVarName: string,
     ): string {
         let initializer: string = this.buildInitializer(item);
-        let methodName: string = "externalPartBox";
+        let methodName: string = "partReplacerBox";
         if (!property.isPart) {
-            methodName = "externalRefBox";
+            methodName = "refReplacerBox";
         }
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `BoxUtil`);
+        this._myTemplate.imports.core.add(`BoxUtil`);
         return `BoxUtil.${methodName}(
                         ${elementVarName},
                         "${property.name}",
@@ -137,12 +137,13 @@ export class ExternalBoxesHelper {
         item: FreEditPropertyProjection,
         property: FreMetaConceptProperty,
         elementVarName: string,
+        // @ts-ignore
         language: FreMetaLanguage,
     ) {
         let initializer: string = this.buildInitializer(item);
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `BoxUtil`);
+        this._myTemplate.imports.core.add(`BoxUtil`);
         if (property.isPart) {
-            return `BoxUtil.externalPartListBox(
+            return `BoxUtil.partListReplacerBox(
                         ${elementVarName},
                         ${elementVarName}.${property.name},
                         "${property.name}",
@@ -151,11 +152,11 @@ export class ExternalBoxesHelper {
                         ${initializer}
                     )`;
         } else {
-            return `BoxUtil.externalReferenceListBox(
+            return `BoxUtil.refListReplacerBox(
                         ${elementVarName},
                         "${property.name}",
                         "${item.externalInfo!.replaceBy}",
-                        ${Names.environment(language)}.getInstance().scoper
+                        ${Names.LanguageEnvironment}.getInstance().scoper
                         ${initializer}
                     )`;
         }
@@ -179,7 +180,7 @@ export class ExternalBoxesHelper {
                 break;
             }
         }
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `BoxUtil`);
+        this._myTemplate.imports.core.add(`BoxUtil`);
         return `BoxUtil.${methodName}(
                         ${elementVarName},
                         "${propertyConcept.name}",
@@ -195,27 +196,47 @@ export class ExternalBoxesHelper {
         elementVarName: string,
     ): string {
         let initializer: string = this.buildInitializer(item);
-        let methodName: string = "externalStringBox";
+        let methodName: string = "stringReplacerBox";
         switch (property.type.name) {
             case "boolean": {
-                methodName = "externalBooleanBox";
+                methodName = "booleanReplacerBox";
                 break;
             }
             case "number": {
-                methodName = "externalNumberBox";
+                methodName = "numberReplacerBox";
                 break;
             }
         }
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `BoxUtil`);
+        this._myTemplate.imports.core.add(`BoxUtil`);
         return `BoxUtil.${methodName}(${elementVarName}, "${property.name}", "${item.externalInfo!.replaceBy}" ${initializer})`;
     }
 
     private buildInitializer(item: FreEditPropertyProjection) {
+        return this.buildExternalInitializer(item.externalInfo!)
+    }
+ 
+    private buildFragmentInitializer(item: FreEditFragmentProjection) {
+        return this.buildExternalInitializer(item.wrapperInfo!)
+    }
+
+    private buildExternalInitializer(externalInfo: FreEditExternalInfo) {
         // build the initializer with parameters to the external component
         let initializer: string = "";
-        if (!!item.externalInfo!.params && item.externalInfo!.params.length > 0) {
-            initializer = `, { params: [${item.externalInfo!.params.map((x) => `{key: "${x.key}", value: "${x.value}"}`).join(", ")}] }`;
+        if (!!externalInfo.params && externalInfo.params.length > 0) {
+            initializer = `, { params: [${externalInfo.params.map((x) => `{key: "${x.key}", value: "${x.value}"}`).join(", ")}] }`;
         }
         return initializer;
+    }
+
+    wrapFragmentByExternal(item: FreEditFragmentProjection, elementVarName: string, innerBoxStr: string,): string {
+        let initializer: string = this.buildFragmentInitializer(item);
+        let methodName: string = "fragmentWrapperBox";
+        this._myTemplate.imports.core.add('BoxUtil')
+        return `BoxUtil.${methodName}(
+                        ${elementVarName},
+                        "${item.wrapperInfo!.wrapBy}",
+                        ${innerBoxStr}
+                        ${initializer}
+                    )`;
     }
 }

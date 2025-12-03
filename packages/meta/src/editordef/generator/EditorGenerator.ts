@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { ListUtil, MetaLogger } from "../../utils/index.js";
+import { ListUtil, MetaLogger } from "../../utils/no-dependencies/index.js";
 import {
     FreMetaClassifier,
     FreMetaConcept,
@@ -9,16 +9,19 @@ import {
 import {
     EDITOR_FOLDER,
     EDITOR_GEN_FOLDER,
+    Names
+} from "../../utils/on-lang/index.js";
+import {
     GenerationStatus,
     FileUtil,
-    isNullOrUndefined,
-    Names
-} from "../../utils/index.js";
+    isNullOrUndefined
+} from "../../utils/file-utils/index.js";
 import { FreEditUnit } from "../metalanguage/index.js";
 import { ActionsTemplate, EditorIndexTemplate, BoxProviderTemplate } from "./templates/index.js";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate } from "./templates/index.js";
 import { EditorDefTemplate } from "./templates/index.js";
-import { LOG2USER } from "../../utils/index.js";
+import { LOG2USER } from "../../utils/basic-dependencies/index.js";
+import { NamesForEditor } from '../../utils/on-lang-and-editor/index.js';
 
 const LOGGER = new MetaLogger("EditorGenerator").mute();
 
@@ -69,7 +72,7 @@ export class EditorGenerator {
                     "Box provider " + concept.name,
                     generationStatus,
                 );
-                fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
+                fs.writeFileSync(`${this.editorGenFolder}/${NamesForEditor.boxProvider(concept)}.ts`, projectionfile);
             }
         });
 
@@ -79,7 +82,7 @@ export class EditorGenerator {
                 "Box provider " + concept.name,
                 generationStatus,
             );
-            fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
+            fs.writeFileSync(`${this.editorGenFolder}/${NamesForEditor.boxProvider(concept)}.ts`, projectionfile);
         });
 
         const allExtraClassifiers: FreMetaClassifier[] = []; // remember these in order to add them to the index file
@@ -96,7 +99,7 @@ export class EditorGenerator {
                         "Box provider " + cls.name,
                         generationStatus,
                     );
-                    fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(cls)}.ts`, projectionfile);
+                    fs.writeFileSync(`${this.editorGenFolder}/${NamesForEditor.boxProvider(cls)}.ts`, projectionfile);
                 }
             });
             extraClassifiers = newExtraClassifiers;
@@ -172,7 +175,7 @@ export class EditorGenerator {
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.error(`Generated editor with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated editor`);
+            LOGGER.info(`Successfully generated editor`);
         }
     }
 

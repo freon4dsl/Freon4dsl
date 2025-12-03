@@ -1,10 +1,10 @@
-import { autorun } from "mobx";
-import { AST } from "../../change-manager/index.js";
-import { FreUtils } from "../../util/index.js";
-import { FreCaret, FreCaretPosition } from "../util/index.js";
-import { FreNode } from "../../ast/index.js";
-import { Box } from "./Box.js";
-import { FreLogger } from "../../logging/index.js";
+import { autorun } from 'mobx';
+import { AST } from '../../change-manager/index.js';
+import { FreUtils } from '../../util/index.js';
+import { FreCaret, FreCaretPosition } from '../util/index.js';
+import type { FreNode } from '../../ast/index.js';
+import { Box } from './Box.js';
+import { FreLogger } from '../../logging/index.js';
 
 const LOGGER: FreLogger = new FreLogger("TextBox");
 
@@ -88,8 +88,8 @@ export class TextBox extends Box {
      */
     setCaret: (caret: FreCaret) => void = (caret: FreCaret) => {
         LOGGER.log("setCaret: " + caret.position);
-        /* To be overwritten by `TextComponent` */
-        // TODO The followimng is needed to keep the cursor at the end when creating a nu8mberliteral in example
+        /* Default, to be overwritten by `TextComponent` */
+        // TODO The following is needed to keep the cursor at the end when creating a numberliteral in example
         //     Check in new components whether this is needed.
         switch (caret.position) {
             case FreCaretPosition.RIGHT_MOST:
@@ -107,6 +107,79 @@ export class TextBox extends Box {
                 break;
         }
     };
+
+    getCaret: () => FreCaret = (): FreCaret => {
+        /* Default, to be overwritten by `TextComponent` */
+        console.log('TextBox getCaret', FreCaret.LEFT_MOST.from);
+        return FreCaret.LEFT_MOST;
+    }
+
+    insertAtSelection(insert: string) {
+        let text = this.getText();
+        let caret: FreCaret = this.getCaret();
+        // Read and normalize selection
+        let from = caret.from ?? 0;
+        let to   = caret.to   ?? from;
+        if (from > to) [from, to] = [to, from];
+
+        // Clamp to current text
+        const len = text?.length ?? 0;
+        from = Math.max(0, Math.min(from, len));
+        to   = Math.max(0, Math.min(to,   len));
+
+        // Splice in the new text
+        const before = text.slice(0, from);
+        const after  = text.slice(to);
+        text = before + insert + after;
+
+        // Collapse caret to end of inserted text
+        const pos = from + insert.length;
+        caret.from = caret.to = pos;
+
+        LOGGER.log(`added ${insert} -> new caret at ${pos}`);
+        this.setText(text);
+        this.setFocus();
+        this.setCaret(caret);
+    }
+
+    getSelectedText() : string {
+        let text = this.getText();
+        let caret: FreCaret = this.getCaret();
+
+        // Read and normalize selection
+        let from = caret.from ?? 0;
+        let to   = caret.to   ?? from;
+        if (from > to) [from, to] = [to, from];
+
+        // no selection → return empty
+        if (from === to) {
+            return '';
+        }
+        return text.substring(from, to);
+    }
+
+    deleteSelection(): void {
+        let text: string = this.getText();
+        let caret: FreCaret = this.getCaret();
+
+        // normalize selection range
+        let from: number = caret.from ?? 0;
+        let to: number = caret.to ?? from;
+        if (from > to) [from, to] = [to, from];
+
+        const len = text.length;
+        if (from === to || len === 0) {
+            // nothing selected, or empty text → nothing to delete
+            return;
+        }
+
+        // remove the selection
+        const newText = text.substring(0, from) + text.substring(to);
+        this.setText(newText);
+
+        // collapse caret to the start of the former selection
+        this.setCaret({position: FreCaretPosition.INDEX, from: from, to: from });
+    }
 
     /** @internal
      * This function is called after the text changes in the browser.

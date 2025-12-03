@@ -9,7 +9,7 @@ export class FileHandler {
      */
     public stringFromFile(filepath: string): string {
         // read language file
-        if (!fs.existsSync(filepath)) {
+        if (!FileUtil.exists(filepath)) {
             console.error(this, "File '" + filepath + "' does not exist, exiting.");
             throw new Error(`File '${filepath}' not found.`);
         }
@@ -24,7 +24,7 @@ export class FileHandler {
      * @param output
      */
     public stringToFile(filepath: string, output: string) {
-        if (fs.existsSync(filepath)) {
+        if (FileUtil.exists(filepath)) {
             console.log(this, "FileHandler: file " + filepath + " already exists, overwriting it.");
         }
         fs.writeFileSync(filepath, output);

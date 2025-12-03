@@ -1,12 +1,12 @@
-validator EduValidator for language Education
+validator for language Education
 
 AndExpression {
-    typecheck equalsType( self.left, PrimitiveType:Boolean );
-    typecheck equalsType( self.right, PrimitiveType:Boolean );
+    typecheck equalsType( self.left, #PrimitiveType:Boolean );
+    typecheck equalsType( self.right, #PrimitiveType:Boolean );
 }
 OrExpression {
-    typecheck equalsType( self.left, PrimitiveType:Boolean );
-    typecheck equalsType( self.right, PrimitiveType:Boolean );
+    typecheck equalsType( self.left, #PrimitiveType:Boolean );
+    typecheck equalsType( self.right, #PrimitiveType:Boolean );
 }
 
 //ComparisonExpression {

@@ -1,0 +1,43 @@
+scoper for language test1
+
+// in this test all nsInfoList are correct
+
+isNamespace { DD, EE, FF, AA }
+
+AA {
+    imports {
+        self.AAprop7; // : BB;
+        self.AAprop8; // : BB[];
+        // properties with interface as type
+        self.AAprop11; // : DD;
+        recursive self.AAprop12; // : DD[];
+        self.AAprop13; // : FF; // reference
+        self.AAprop14; // : FF[]; // reference
+    }
+}
+
+BB {
+    imports {
+        self.BBprop11;
+    }
+}
+
+DD {
+    imports {
+        self.DDprop8.type ( );
+        owner().if(BB).type (  );
+    }
+}
+
+EE {
+     alternatives {
+        self.owner();
+     }
+}
+
+FF {
+    alternatives {
+        self.ee.dd.cc.bb.aa;
+    }
+}
+

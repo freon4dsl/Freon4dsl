@@ -3,10 +3,12 @@ import {
     FreMetaClassifier,
     FreMetaLanguage,
     FreMetaLimitedConcept,
-} from "../../languagedef/metalanguage";
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger, Names } from "../../utils";
-import { FreEditParser } from "../../editordef/parser/FreEditParser";
+} from "../../languagedef/metalanguage/index.js";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
+import { Checker, LOG2USER } from "../../utils/basic-dependencies/index.js";
+import { Names } from '../../utils/on-lang/index.js';
+import { FreEditParser } from "../../editordef/parser/FreEditParser.js";
 import {
     ForType,
     FreEditClassifierProjection,
@@ -16,12 +18,13 @@ import {
     FreEditPropertyProjection,
     FreEditUnit,
     ListJoinType,
-} from "../../editordef/metalanguage";
-import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
+} from "../../editordef/metalanguage/index.js";
+import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator.js";
 import { describe, test, expect } from "vitest";
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking FretEditUnit: ", () => {
-    const testdir: string = "src/__tests__/editor-tests/correctDefFiles/";
+    const testdir: string = resolveTestDir(import.meta.url, "correctDefFiles/");
     let parser: FreEditParser;
     let language: FreMetaLanguage | undefined;
     let checker: Checker<FreEditUnit>;
@@ -55,7 +58,7 @@ describe("Checking FretEditUnit: ", () => {
             let defaultGroup: FreEditProjectionGroup | undefined = editor.getDefaultProjectiongroup();
             if (defaultGroup === null || defaultGroup === undefined) {
                 // no default group, create one
-                console.log("Creating new default group");
+                LOG2USER.log("Creating new default group");
                 defaultGroup = new FreEditProjectionGroup();
                 defaultGroup.name = Names.defaultProjectionName;
                 editor.projectiongroups.push(defaultGroup);

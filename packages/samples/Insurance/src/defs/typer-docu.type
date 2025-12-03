@@ -22,10 +22,10 @@ FunctionCallExpression {
     infertype self.funcDefinition;
 }
 InsurancePartRef {
-    infertype InsurancePartType:InsurancePart;
+    infertype #InsurancePartType:InsurancePart;
 }
 RiskAdjustmentRef {
-    infertype PercentageType:Percentage;
+    infertype #PercentageType:Percentage;
 }
 Parameter {
     infertype self.declaredType;
@@ -34,10 +34,10 @@ ParameterRef {
     infertype self.parameter;
 }
 RiskRef {
-    infertype PercentageType:Percentage;
+    infertype #PercentageType:Percentage;
 }
 PayoutRef {
-    infertype EuroType:EUR;
+    infertype #EuroType:EUR;
 }
 PlusExpression {
     infertype commonSuperType(self.left, self.right);
@@ -52,16 +52,16 @@ MultiplyExpression {
     infertype commonSuperType(self.left, self.right);
 }
 EuroLiteral {
-    infertype EuroType:EUR;
+    infertype #EuroType:EUR;
 }
 NumberLiteral {
-    infertype NumberType:Number;
+    infertype #NumberType:Number;
 }
 PercentageLiteral {
-    infertype PercentageType:Percentage;
+    infertype #PercentageType:Percentage;
 }
 BooleanLiteral {
-    infertype BooleanType:Boolean;
+    infertype #BooleanType:Boolean;
 }
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
@@ -105,7 +105,7 @@ GenericType {
 }
 
 GenericKind {
-    Set conformsto Collection;
-    Sequence conformsto Collection;
-    Bag conformsto Collection;
+    Set conformsto #GenericKind:Collection;
+    Sequence conformsto #GenericKind:Collection;
+    Bag conformsto #GenericKind:Collection;
 }

@@ -1,5 +1,5 @@
 import { FreUtils } from "../../util/index.js";
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { Box } from "./Box.js";
 
 export class SvgBox extends Box {

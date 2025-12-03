@@ -1,0 +1,31 @@
+digraph G   {
+    P1 [peripheries=2]
+    ClassA [peripheries=2]
+    ClassB [peripheries=2]
+    ClassC [peripheries=2]
+    A1 [peripheries=2]
+    C3 [peripheries=2] 
+
+    P1 -> ClassA
+    P1 -> ClassB 
+    P1 -> ClassC 
+
+    ClassA -> A1;
+    ClassA -> A2;
+    A1 -> A1_1;
+    A1 -> A1_2;
+    ClassB -> B1;
+    B1 -> B1_1;  
+    B1 -> B1_2;
+    ClassB -> B2;
+    ClassB -> ClassC [color=orange, style=dashed, label="base"]
+
+    ClassC -> C1;
+    ClassC -> C2;
+    ClassC -> C3;
+    C3 -> C3_1
+
+    ClassA -> ClassB [color=orange, style=dashed, label="base"]
+
+    {rank=same; ClassA; ClassB; ClassC}
+}

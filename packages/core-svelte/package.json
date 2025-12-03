@@ -3,73 +3,78 @@
     "access": "public"
   },
   "name": "@freon4dsl/core-svelte",
-  "version": "1.0.2",
+  "version": "2.0.1",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/freon4dsl/Freon4dsl.git"
   },
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "type": "module",
   "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
   "scripts": {
-    "clean": "rm -rf node_modules/ && rm -rf dist/",
     "dev": "vite dev",
-    "build": "tsc --noEmit && vite build && npm run package",
-    "build-dev": "tsc --noEmit && vite build && npm run package",
+    "build": "vite build && npm run prepack",
+    "build-dev": "tsc --noEmit && vite build && npm run prepack",
     "preview": "vite preview",
-    "package": "svelte-kit sync && svelte-package && publint",
-    "prepublishOnly": "npm run package",
+    "prepare": "svelte-kit sync || echo ''",
+    "prepack": "svelte-kit sync && svelte-package && publint",
+
     "check": "svelte-kit sync && svelte-check --tsconfig tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig tsconfig.json --watch",
-    "test": "vitest run",
-    "build-release": "npm run build",
-    "validate": "svelte-check",
+    "clean": "rm -rf node_modules/ && rm -rf dist/",
     "errors-only": "svelte-check --threshold error --tsconfig ./tsconfig.json",
+    "format": "prettier --write .",
+
+    "build-release": "npm run build",
     "install-local": "npm install --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local",
-    "release": "npm publish",
-    "publish-local": "npm publish --registry http://localhost:4873",
+    "release-beta": "npm publish --tag beta",
+    "publish-local": "npm publish --registry http://localhost:4873 --tag local",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
   },
+  "files": [
+    "dist",
+    "!dist/__test__",
+    "src/lib/**/*.ts",
+    "!src/lib/__test__"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
     }
   },
-  "files": [
-    "dist",
-    "!dist/**/*.test.*",
-    "!dist/**/*.spec.*"
-  ],
-  "devDependencies": {
-    "mobx": "^6.12.3",
-    "@testing-library/jest-dom": "^6.4.5",
-    "@testing-library/svelte": "^5.1.0",
-    "@testing-library/user-event": "^14.5.2",
-    "@types/jest": "^29.5.12",
-    "jest-transform-stub": "^2.0.0",
-    "tslib": "^2.6.3",
-    "@sveltejs/adapter-auto": "^3.2.1",
-    "@sveltejs/kit": "^2.5.10",
-    "@sveltejs/package": "^2.3.1",
-    "@sveltejs/vite-plugin-svelte": "^3.1.1",
-    "jsdom": "^24.1.0",
-    "publint": "^0.2.8",
-    "svelte-check": "^3.8.0",
-    "typescript": "^5.4.5",
-    "vite": "^5.2.12",
-    "vitest": "^2.1.0"
+  "peerDependencies": {
+    "svelte": "^5.0.0"
   },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^6.0.1",
+    "@sveltejs/kit": "^2.25.1",
+    "@sveltejs/package": "^2.4.0",
+    "@sveltejs/vite-plugin-svelte": "^6.1.0",
+    "autoprefixer": "^10.4.21",
+    "globals": "^16.3.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-svelte": "^3.4.0",
+    "publint": "^0.3.12",
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.3.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.5",
+    "vitest": "^3.2.4"
+},
   "dependencies": {
-    "@material/web": "^1.5.1",
+    "@material/web": "^2.3.0",
     "@material/slider": "^14.0.0",
     "@material/switch": "^14.0.0",
-    "@smui/ripple": "^7.0.0",
-    "svelte": "< 5.0.0",
-    "@freon4dsl/core": "~1.0.2",
-    "mobx": "^6.12.3"
-  }
+    "@freon4dsl/core": "~2.0.1"
+  },
+  "keywords": [
+    "svelte", "freon", "dsl"
+  ]
 }

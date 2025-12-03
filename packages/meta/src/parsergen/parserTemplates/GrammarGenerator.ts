@@ -12,8 +12,9 @@ import { ConceptMaker } from "./ConceptMaker.js";
 import { GrammarModel } from "./grammarModel/index.js";
 import { LanguageAnalyser, FreAnalyser } from "./LanguageAnalyser.js";
 import { GrammarPart } from "./grammarModel/GrammarPart.js";
-import { LOG2USER, Names } from "../../utils/index.js";
+import { Names } from "../../utils/on-lang/index.js";
 import { ParserGenUtil } from "./ParserGenUtil.js";
+import { LOG2USER } from '../../utils/basic-dependencies/index.js';
 
 export class GrammarGenerator {
     createGrammar(
@@ -110,6 +111,7 @@ export class GrammarGenerator {
         // imports
         grammarPart.addToImports(analyser.classifiersUsed);
         grammarPart.addToImports(conceptMaker.imports);
+        grammarPart.importParsedNodeReference = conceptMaker.importParsedNodeReference;
         grammarPart.addToImports(choiceRuleMaker.imports);
         grammarPart.addToImports(limitedMaker.imports);
         grammarPart.addToImports(binaryExpMaker.imports);

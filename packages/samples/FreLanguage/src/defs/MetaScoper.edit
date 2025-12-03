@@ -1,0 +1,28 @@
+editor default
+
+FreScoperDef {
+[
+scoper
+
+    [?isnamespace { ${self.namespaces horizontal separator[, ]} }]
+
+    ${self.scopeConceptDefs vertical}
+]
+}
+
+ScopeConceptDef {
+[
+${self.classifierRef} {
+    [?${self.namespaceImports}]
+    [?${self.alternativeScope}]
+}
+]
+}
+
+FreNamespaceImport {
+[imports { ${self.expressions horizontal terminator[;]} } ]
+}
+// todo adjust to new structure and concrete syntax
+FreAlternativeScope {
+[alternatives { ${self.expression } }]
+}

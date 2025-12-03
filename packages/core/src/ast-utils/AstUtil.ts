@@ -1,13 +1,14 @@
 import { FreLanguage } from "../language/index.js";
-import {
+import type {
     FreBinaryExpression,
     FreNode,
     FreExpressionNode,
     FreModel,
     FreModelUnit,
     FreNamedNode,
-    FreNodeReference,
 } from "../ast/index.js";
+import { FreNodeReference } from "../ast/index.js";
+import { notNullOrUndefined } from '../util/index.js';
 
 export function isFreModel(node: FreNode): node is FreModel {
     return !!node && node.freIsModel && node.freIsModel();
@@ -96,7 +97,7 @@ export function matchElementList(list: FreNode[], toBeMatched: Partial<FreNode>[
 }
 
 /**
- * matchReferenceList implements the match functionality on a list of FreElementReferences.
+ * matchReferenceList implements the match functionality on a list of FreNodeReferences.
  */
 export function matchReferenceList<T extends FreNamedNode>(
     list: FreNodeReference<T>[],
@@ -155,10 +156,62 @@ const ownerprops: string[] = ["$$owner", "$$propertyName", "$$propertyIndex"];
 
 function skipReferences(key: string, value: Object) {
     if (ownerprops.includes(key)) {
-        return undefined;
-    } else if( value instanceof FreNodeReference) {
-        return "REF => " + value.name;
-    }else {
-        return value;
+        return undefined
+    } else if (value instanceof FreNodeReference) {
+        return "REF => " + value.name
+    } else {
+        return value
     }
+}
+
+const INDENT = "|   "
+
+/**
+ * Convenience method to transform a model into a more or less readable string. Used for debugging purposes.
+ * @param node
+ */
+export function ast2string(node: FreNode): string {
+    return ast2stringIntern(node, "")
+}
+
+function ast2stringIntern(node: FreNode, indent: string): string {
+    let result = ""
+    const classifier = FreLanguage.getInstance().classifier(node.freLanguageConcept())
+    classifier.properties.forEach((prop) => {
+        switch (prop.propertyKind) {
+            case "primitive":
+                result += `   |${indent}${prop.name}: ${node[prop.name]}\n`
+                break
+            case "reference":
+                if (prop.isList) {
+                    const refs: FreNodeReference<FreNamedNode>[] = node[prop.name] as FreNodeReference<FreNamedNode>[]
+                    if (refs.length > 0) {
+                        result += `   |${indent}${prop.name}: ref [${refs.map((ref) => ref.name).join(", ")}]\n`
+                    }
+                } else {
+                    const ref: FreNodeReference<FreNamedNode> = node[prop.name] as FreNodeReference<FreNamedNode>
+                    if (notNullOrUndefined(ref)) {
+                        result += `   |${indent}${prop.name}: ref ${ref.name}\n`
+                    }
+                }
+                break
+            case "part":
+                if (prop.isList) {
+                    const parts: FreNode[] = node[prop.name] as FreNode[]
+                    if (parts.length > 0) {
+                        result += `   |${indent}${prop.name}: ${prop.type} ${classifier.isNamespace ? "*" : ""}\n`
+                        parts.forEach((part) => {
+                            result += ast2stringIntern(part, indent + INDENT)
+                        })
+                    }
+                } else {
+                    const part: FreNode = node[prop.name] as FreNode
+                    if (notNullOrUndefined(part)) {
+                        result += ast2stringIntern(part, indent + INDENT)
+                    }
+                }
+                break
+        }
+    })
+    return result
 }

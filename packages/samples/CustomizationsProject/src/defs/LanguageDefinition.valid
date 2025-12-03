@@ -1,4 +1,4 @@
-validator Entity for language Entity
+validator for language Entity
 
 AttributeType  {
 	self.extra >= 12;
@@ -30,34 +30,34 @@ EntityFunction {
     validIdentifier ;
 }
 AbsExpression {
-    typecheck equalsType( self.expr, AttributeType:Integer );
+    typecheck equalsType( self.expr, #AttributeType:Integer );
 }
 MultiplyExpression {
-    typecheck equalsType( self.left, AttributeType:Integer );
-    typecheck equalsType( self.right, AttributeType:Integer );
+    typecheck equalsType( self.left, #AttributeType:Integer );
+    typecheck equalsType( self.right, #AttributeType:Integer );
     typecheck conformsTo( self.left, self.right );
 }
 PlusExpression {
-    typecheck equalsType( self.left, AttributeType:Integer );
-    typecheck equalsType( self.right, AttributeType:Integer );
+    typecheck equalsType( self.left, #AttributeType:Integer );
+    typecheck equalsType( self.right, #AttributeType:Integer );
     typecheck conformsTo( self.left, self.right );
 }
 DivideExpression {
-    typecheck equalsType( self.left, AttributeType:Integer );
-    typecheck equalsType( self.right, AttributeType:Integer );
+    typecheck equalsType( self.left, #AttributeType:Integer );
+    typecheck equalsType( self.right, #AttributeType:Integer );
 }
 AndExpression {
-    typecheck equalsType( self.left, AttributeType:Boolean );
-    typecheck equalsType( self.right, AttributeType:Boolean );
+    typecheck equalsType( self.left, #AttributeType:Boolean );
+    typecheck equalsType( self.right, #AttributeType:Boolean );
 }
 OrExpression {
-    typecheck equalsType( self.left, AttributeType:Boolean );
-    typecheck equalsType( self.right, AttributeType:Boolean );
+    typecheck equalsType( self.left, #AttributeType:Boolean );
+    typecheck equalsType( self.right, #AttributeType:Boolean );
 }
 ComparisonExpression {
     typecheck equalsType( self.left, self.right );
 }
 IfExpression {
-    typecheck equalsType( self.condition, AttributeType:Boolean );
+    typecheck equalsType( self.condition, #AttributeType:Boolean );
     typecheck conformsTo( self.whenTrue, self.whenFalse );
 }

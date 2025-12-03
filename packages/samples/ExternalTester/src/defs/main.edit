@@ -3,6 +3,9 @@ editor special
 
 
 ExternalUnit {[
+    Some instances of CC, which can be referenced below:
+    ${self.toBeReferenced}
+    -----------
     ${self.content}
     A simple external component:
     [external = simple ]

@@ -1,12 +1,12 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
 import { DemoModel, DemoAttributeType } from "../language/gen/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
-import { describe, it, test, expect, beforeEach } from "vitest";
+import { describe, test, expect } from "vitest";
 
 describe("Testing Typer", () => {
     describe("Typer.isType on DemoModel Instance", () => {
-        let model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
         let typer = DemoEnvironment.getInstance().typer;
+        let model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
 
         test("all entities should be types", () => {
             expect(typer.isType(model)).toBe(false);
@@ -109,7 +109,7 @@ describe("Testing Typer", () => {
             let inheritanceModel: DemoModel = new DemoModelCreator().createInheritanceModel().models[0];
             inheritanceModel.entities.forEach((ent) => {
                 if (!!ent.baseEntity) {
-                    console.log("trying " + ent.name + " found base entity: " + ent.baseEntity?.referred.name);
+                    // console.log("trying " + ent.name + " found base entity: " + ent.baseEntity?.referred.name);
                     expect(typer.conformsType(ent.baseEntity.referred, ent));
                 }
             });

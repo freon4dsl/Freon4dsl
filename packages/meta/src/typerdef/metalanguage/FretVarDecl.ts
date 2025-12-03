@@ -50,7 +50,7 @@ export class FretVarDecl extends FreTyperElement {
 
     set type(newOne: FreMetaClassifier) {
         if (!!newOne) {
-            this.$type = MetaElementReference.create<FreMetaClassifier>(newOne, "FreClassifier");
+            this.$type = MetaElementReference.create<FreMetaClassifier>(newOne);
             this.$type.owner = this;
         }
     }

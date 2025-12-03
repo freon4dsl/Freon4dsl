@@ -1,0 +1,20 @@
+rules
+
+modelunit FreTyperDef {
+    if (!anyTypeRule) {
+        self.anyTypeRule = self.classifierRules.find(rule => rule.myClassifier.name === "anytype")
+    }
+    // typeroot should be set
+}
+
+FretInstanceRef {  // LimitedType:Instance12 or Instance12
+    if (!self.myLimited) {
+        self.myLimited = ancestor(FretLimitedRule).myClassifier;
+    }
+}
+
+FretProperty {
+    if (!self.owningConcept) {
+        self.owningConcept = ancestor(FretClassifierRule).myClassifier;
+    }
+}

@@ -1,6 +1,8 @@
 import * as fs from "fs";
 import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
-import { GenerationStatus, FileUtil, DIAGRAM_FOLDER, MetaLogger, DIAGRAM_GEN_FOLDER } from "../utils/index.js";
+import { MetaLogger } from "../utils/no-dependencies/index.js";
+import { GenerationStatus, FileUtil } from "../utils/file-utils/index.js";
+import { DIAGRAM_FOLDER, DIAGRAM_GEN_FOLDER } from "../utils/on-lang/index.js";
 import { HtmlTemplate } from "./diagramTemplates/HtmlTemplate.js";
 import { MarkDownTemplate } from "./diagramTemplates/MarkDownTemplate.js";
 import { DiagramTemplate } from "./diagramTemplates/DiagramTemplate.js";
@@ -96,7 +98,7 @@ export class DiagramGenerator {
                 `Generated diagrams for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`,
             );
         } else {
-            LOGGER.info(`Succesfully generated diagrams.`);
+            LOGGER.info(`Successfully generated diagrams.`);
         }
     }
 

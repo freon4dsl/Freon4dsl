@@ -1,4 +1,5 @@
-import { FreLanguage, FreLanguageProperty } from "../../../language/index.js";
+import { FreLanguage, } from "../../../language/index.js";
+import type { FreLanguageProperty } from "../../../language/index.js";
 import { FreUtils } from "../../../util/index.js";
 
 export class UtilCheckers {

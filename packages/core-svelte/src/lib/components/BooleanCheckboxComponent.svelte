@@ -1,24 +1,28 @@
 <script lang="ts">
-    import { CHECKBOX_LOGGER } from "$lib/components/ComponentLoggers.js";
+    import { flushSync, tick } from "svelte"
+    import { CHECKBOX_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a boolean value as checkbox.
      */
-    import {FreEditor, BooleanControlBox} from "@freon4dsl/core";
-    import { componentId } from "$lib/index.js";
-    import {afterUpdate, onMount} from "svelte";
-    import '@material/web/checkbox/checkbox.js';
-    import {MdCheckbox} from "@material/web/checkbox/checkbox.js";
+    import { type BooleanControlBox, FreLanguage, isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
+    import { componentId } from '../index.js';
+    import { onMount } from 'svelte';
+    // import '@material/web/checkbox/checkbox.js';
+    // import { MdCheckbox } from '@material/web/checkbox/checkbox.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    export let box: BooleanControlBox;
-    export let editor: FreEditor;			// the editor
+    // Props
+    let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
 
-    const LOGGER = CHECKBOX_LOGGER
+    const LOGGER = CHECKBOX_LOGGER;
 
-    let id: string = !!box ? componentId(box) : 'checkbox-for-unknown-box';
-    let inputElement: MdCheckbox;
-    let value = box.getBoolean();
+    let id: string = notNullOrUndefined(box) ? componentId(box) : 'checkbox-for-unknown-box';
+    let inputElement: HTMLInputElement;
+    let value = $state((box as BooleanControlBox).getBoolean());
 
+    let indeterminate = $state((box as BooleanControlBox).getBoolean() === null || (box as BooleanControlBox).getBoolean() === undefined);
+    let isOptional: boolean = false
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
@@ -28,43 +32,69 @@
     async function setFocus(): Promise<void> {
         inputElement.focus();
     }
+
     const refresh = (why?: string): void => {
-        LOGGER.log("REFRESH BooleanControlBox: " + why);
+        LOGGER.log('REFRESH BooleanCheckBoxComponent: ' + why);
         value = box.getBoolean();
     };
+
     onMount(() => {
         value = box.getBoolean();
+    });
+
+    $effect(() => {
+        // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        isOptional = FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.isOptional || false
+        // LOGGER.log(`EFFECT for '${box.propertyName}', property '${property?.name}' optional '${property?.isOptional} `)
+        // isOptional = (isNullOrUndefined(property) ? false : property.isOptional)        
     });
-    afterUpdate(() => {
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
-    const onClick = (event: MouseEvent) => {
+
+    /**
+     * Deal with three values login ourselves
+     * @param event
+     */
+    const onClick= (event: Event) => {
         event.stopPropagation();
-        LOGGER.log("CheckBoxComponent.onClick for box " + box.role + ", box value: " + box.getBoolean());
-    }
-    const onChange = (event: MouseEvent) => {
-        value = inputElement.checked;
-        box.setBoolean(value);
-        if (box.selectable) {
-            editor.selectElementForBox(box);
+        LOGGER.log(
+            `ONCLICK IN  box for '${box.propertyName}' value: ${box.getBoolean()} indeterminate: ${indeterminate} isOptional: ${isOptional}`
+        );
+        value = box.getBoolean() // inputElement.checked;
+        if (isOptional) {
+            if (isNullOrUndefined(value)) {
+                box.setBoolean(false)
+                indeterminate = false
+            } else if (value === true) {
+                box.setBoolean(undefined)
+                indeterminate = true
+            } else {
+                box.setBoolean(true)
+                indeterminate = false
+            }
+        } else {
+            if (value === true) {
+                box.setBoolean(false)
+            } else {
+                box.setBoolean(true)
+            }
         }
-        event.stopPropagation();
-        LOGGER.log("CheckBoxComponent.onClick for box " + box.role + ", box value: " + box.getBoolean());
+        LOGGER.log(
+            `ONCLICK OUT box value: ${box.getBoolean()} indeterminate: ${indeterminate}`
+        );
     }
 </script>
 
-<span id="{id}" class="boolean-checkbox-component">
-    <md-checkbox
-            aria-label="{id}"
-            on:click={onClick}
-            on:change={onChange}
-            bind:this={inputElement}
-            checked={value}
-    ></md-checkbox>
-</span>
-
-
-
+<!--<span {id} class="boolean-checkbox-component {box.cssClass}">-->
+    <!-- svelte-ignore a11y_click_events_have_key_events   -->
+    <input {id} class="boolean-checkbox-component {box.cssClass}"
+        type="checkbox"
+        aria-label={id}
+        aria-checked="mixed"
+        onclick={onClick}
+        bind:indeterminate
+        bind:this={inputElement}
+        checked={value}
+        tabindex="0"
+    >
+<!--</span>-->

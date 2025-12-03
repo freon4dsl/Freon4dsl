@@ -18,7 +18,8 @@ import {
     MetaElementReference,
     FreMetaEnumValue,
 } from "../metalanguage/index.js";
-import { ParseLocation, ParseLocationUtil } from "../../utils/index.js";
+import { ParseLocationUtil } from "../../utils/basic-dependencies/index.js";
+import { type ParseLocation } from '../../utils/no-dependencies/index.js';
 
 // Functions used to create instances of the language classes from the parsed data objects.
 let currentFileName: string = "SOME_FILENAME";
@@ -100,7 +101,7 @@ function splitProperties(propList: FreMetaProperty[], result: FreMetaClassifier)
 }
 
 export function createModel(data: Partial<FreMetaModelDescription>): FreMetaModelDescription {
-    // console.log("createModel " + data.name);
+    // console.log("createModel " + data?.name);
     const result = new FreMetaModelDescription();
     if (!!data.name) {
         result.name = data.name;
@@ -109,6 +110,10 @@ export function createModel(data: Partial<FreMetaModelDescription>): FreMetaMode
     }
     if (!!data.properties) {
         splitProperties(data.properties, result);
+    }
+    if (!!data.version) {
+        // console.log(`createModel version ${data.version}`)
+        result.version = data.version;
     }
     if (!!data.location) {
         result.location = data.location;
@@ -126,16 +131,7 @@ export function createUnit(data: Partial<FreMetaUnitDescription>): FreMetaUnitDe
         result.name = data.name;
     }
     if (!!data.properties) {
-        for (const prop of data.properties) {
-            if (prop instanceof FreMetaPrimitiveProperty) {
-                result.primProperties.push(prop);
-            } else {
-                result.properties.push(prop);
-            }
-            prop.owningClassifier = result;
-            prop.id = LanguageCreators_idMap.getPropertyId(result.name, prop.name);
-            prop.key = LanguageCreators_idMap.getPropertyKey(result.name, prop.name);
-        }
+        splitProperties(data.properties, result);
     }
     if (!!data.interfaces) {
         result.interfaces = data.interfaces;
@@ -181,7 +177,7 @@ export function createLimitedConcept(data: Partial<FreMetaLimitedConcept>): FreM
     if (!!data.instances) {
         result.instances = data.instances;
         for (const inst of result.instances) {
-            inst.concept = MetaElementReference.create<FreMetaLimitedConcept>(result, "FreLimitedConcept");
+            inst.concept = MetaElementReference.create<FreMetaLimitedConcept>(result);
             inst.concept.owner = inst;
         }
     }
@@ -228,16 +224,7 @@ function createCommonConceptProps(data: Partial<FreMetaExpressionConcept>, resul
         }
     }
     if (!!data.properties) {
-        for (const prop of data.properties) {
-            if (prop instanceof FreMetaPrimitiveProperty) {
-                result.primProperties.push(prop);
-            } else {
-                result.properties.push(prop);
-            }
-            prop.owningClassifier = result;
-            prop.id = LanguageCreators_idMap.getPropertyId(result.name, prop.name);
-            prop.key = LanguageCreators_idMap.getPropertyKey(result.name, prop.name);
-        }
+        splitProperties(data.properties, result);
     }
     if (!!data.location) {
         result.location = data.location;
@@ -293,9 +280,7 @@ export function createPartOrPrimProperty(data: Partial<FreMetaPrimitiveProperty>
     // This list of errors is added to the list of checking errors in the parse functions in FreParser.
     if (!!data.typeReference) {
         // NOTE that the following check can NOT be '.typeReference.referred === FrePrimitiveType.identifier' etc.
-        // '.typeReference.referred' is determined by the scoper, which does not function when not all concepts are known AND
-        // the language attribute of the concepts has been set. The latter is done in 'createLanguage', which is called
-        // after this function is called!!
+        // '.typeReference.referred' is determined by the checker, when all concepts are known.
         const refName = data.typeReference.name;
         if (refName === "string" || refName === "boolean" || refName === "number" || refName === "identifier") {
             const primitiveProperty = new FreMetaPrimitiveProperty();
@@ -347,46 +332,29 @@ export function createReferenceProperty(data: Partial<FreMetaConceptProperty>): 
 
 export function createClassifierReference(
     data: Partial<MetaElementReference<FreMetaClassifier>>,
-): MetaElementReference<FreMetaClassifier> | undefined {
+): MetaElementReference<FreMetaClassifier> {
     // console.log("createClassifierReference " + data.name);
-    let result: MetaElementReference<FreMetaClassifier> | undefined = undefined;
+    // Create a temp object to avoid the return type 'MetaElementReference<FreMetaClassifier> | undefined'
+    let result = MetaElementReference.create<FreMetaClassifier>(data.name ? data.name : "");
     if (!!data.name) {
         const type: string = data.name;
         if (type === "string") {
-            result = MetaElementReference.create<FreMetaPrimitiveType>(FreMetaPrimitiveType.string, "FrePrimitiveType");
+            result = MetaElementReference.create<FreMetaPrimitiveType>(FreMetaPrimitiveType.string);
         } else if (type === "boolean") {
-            result = MetaElementReference.create<FreMetaPrimitiveType>(
-                FreMetaPrimitiveType.boolean,
-                "FrePrimitiveType",
-            );
+            result = MetaElementReference.create<FreMetaPrimitiveType>(FreMetaPrimitiveType.boolean);
         } else if (type === "number") {
-            result = MetaElementReference.create<FreMetaPrimitiveType>(FreMetaPrimitiveType.number, "FrePrimitiveType");
+            result = MetaElementReference.create<FreMetaPrimitiveType>(FreMetaPrimitiveType.number);
         } else if (type === "identifier") {
-            result = MetaElementReference.create<FreMetaPrimitiveType>(
-                FreMetaPrimitiveType.identifier,
-                "FrePrimitiveType",
-            );
+            result = MetaElementReference.create<FreMetaPrimitiveType>(FreMetaPrimitiveType.identifier);
         } else {
-            result = MetaElementReference.create<FreMetaClassifier>(data.name, "FreClassifier");
+            result = MetaElementReference.create<FreMetaClassifier>(data.name);
         }
     }
-    if (!!result && !!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
-    }
-
-    return result;
-}
-
-export function createInterfaceReference(
-    data: Partial<MetaElementReference<FreMetaInterface>>,
-): MetaElementReference<FreMetaInterface> {
-    // console.log("createInterfaceReference " + data.name);
-    const result = MetaElementReference.create<FreMetaInterface>(data.name ? data.name : "", "FreInterface");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    // console.log("createClassifierReference " + result?.name + result?.referred?.name);
     return result;
 }
 
@@ -398,17 +366,17 @@ export function createInstance(data: Partial<FreMetaInstance>): FreMetaInstance 
     if (!!data.props) {
         result.props.push(...data.props);
         for (const p of result.props) {
-            p.owningInstance = MetaElementReference.create<FreMetaInstance>(result, "FreInstance");
+            p.owningInstance = MetaElementReference.create<FreMetaInstance>(result);
         }
     }
     // if the user has not provided a value for the 'name' property,
     // or the instance was defined using the shorthand that simulates enumeration
     // create a value for the 'name' property based on 'data.name'
-    if (!!!data.props || !data.props.some((prop) => prop.name === "name")) {
+    if (!data.props || !data.props.some((prop) => prop.name === "name")) {
         const prop = new FreMetaInstanceProperty();
         prop.name = "name";
         prop.value = data.name ? data.name : "";
-        prop.owningInstance = MetaElementReference.create<FreMetaInstance>(result, "FreInstance");
+        prop.owningInstance = MetaElementReference.create<FreMetaInstance>(result);
         prop.location = data.location
             ? data.location
             : {

@@ -11,7 +11,7 @@ Attribute {
 }
 Entity {
     [
-        ${abstract} entity ${name} [? base ${baseEntity}] [? implements ${baseInterfaces}] {
+        ${abstract [ABSTRACT]} entity ${name} [? base ${baseEntity}] [? implements ${baseInterfaces}] {
             ${attributes }
             ${methods vertical }
         }
@@ -31,7 +31,7 @@ ExampleUnit {
 }
 
 Documentation {
-   [ doc start ${text} end doc ]
+   [ doc start ${text multiline} end doc ]
 }
 
 Method {

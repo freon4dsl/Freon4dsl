@@ -4,10 +4,7 @@
  * @param key
  * @param value
  */
-function runtimeReplacer(key: string, value: any) {
-    if (key === "declaration") {
-        return "REF-" + value?.declaration?.name;
-    }
+function runtimeReplacer(value: any) {
     if (value instanceof Map) {
         return Array.from(value.entries());
     }
@@ -17,16 +14,17 @@ function runtimeReplacer(key: string, value: any) {
 const getCircularReplacer = () => {
     const seen = new WeakSet();
     return (key: string, value: any) => {
-        if (key === "$$owner" || key === "$$propertyName" || key === "$$propertyIndex") {
+        if (key === "$$owner" || key === "$$propertyName" || key === "$$propertyIndex" || key === "_FRE_referred") {
             return undefined;
         }
         if (typeof value === "object" && value !== null) {
             if (seen.has(value)) {
-                return "SELF";
+                const nameOrId = value["id"] ?? value["name"] ?? ""
+                return "<circular> " + nameOrId;
             }
             seen.add(value);
         }
-        return runtimeReplacer(key, value);
+        return runtimeReplacer(value);
     };
 };
 
@@ -35,6 +33,6 @@ const getCircularReplacer = () => {
  * @param object
  * @param indent
  */
-export function jsonAsString(object: any, indent?: number) {
+export function jsonAsString(object: any, indent?: number): string {
     return JSON.stringify(object, getCircularReplacer(), indent);
 }

@@ -1,0 +1,56 @@
+/* These css styles are used when the pages in /src/routes are visited directly,
+ * for instance when testing. They are not meant to be exported or included elsewhere.
+*/
+@import 'lib/styles/freon.css';
+@import 'lib/styles/freon-color-definitions.css';
+@import 'lib/styles/freon-plain-dark.css';
+@import 'lib/styles/freon-light.css';
+
+h1 {
+    font-size: xx-large;
+}
+
+.test-area {
+    border: 2px dotted rgb(96 139 168);
+    background-color: antiquewhite;
+    margin: 20px;
+    padding: 10px;
+}
+.line {
+    border-color: blue;
+}
+
+a {
+    padding: 1px;
+    margin: 4px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 6px;
+    margin-left: 40px;
+}
+
+.contextmenu-area {
+    height: 8rem;
+    border: solid black 1px;
+    position: relative;
+}
+
+.limited-checkbox-component-group {
+    --md-sys-color-primary: darkblue;
+    --md-sys-color-on-surface-variant: darkblue;
+    --md-sys-color-on-surface: darkblue;
+}
+
+.top {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+
+.error {
+    border: 2px solid black;
+    padding: 2px;
+}

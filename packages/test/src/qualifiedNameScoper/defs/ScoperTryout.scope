@@ -1,0 +1,18 @@
+scoper for language ScoperTryout
+
+isNamespace { Referable, QualifiedName }
+
+UnitType1 {
+    imports { self.imports ; }
+}
+
+UnitType2 {
+    imports { recursive self.imports; }
+}
+
+QualifiedName {
+    alternatives {
+        recursive owner().if(UnitType2) ;
+        owner().if(QualifiedName).part ;
+    }
+}

@@ -1,8 +1,9 @@
 import { GrammarRule } from "./GrammarRule.js";
-import { FreMetaClassifier, FreMetaProperty } from "../../../languagedef/metalanguage/index.js";
-import { GenerationUtil, Names } from "../../../utils/index.js";
+import { FreMetaClassifier, FreMetaProperty } from '../../../languagedef/metalanguage/index.js';
+import { Names } from "../../../utils/on-lang/index.js";
 import { ParserGenUtil } from "../ParserGenUtil.js";
 import { RightHandSideEntry, RHSPropEntry } from "./RHSEntries/index.js";
+import { GenerationUtil } from '../../../utils/on-lang/GenerationUtil.js';
 
 export class ConceptRule extends GrammarRule {
     concept: FreMetaClassifier | undefined = undefined;
@@ -46,17 +47,17 @@ export class ConceptRule extends GrammarRule {
             return "";
         }
         const myProperties = this.propsToSet();
-        // TODO add parse location: $parseLocation: this.mainAnalyser.location(branch)
         return (
             `${ParserGenUtil.makeComment(this.toGrammar())}
-                public transform${this.ruleName} (branch: SPPTBranch) : ${Names.classifier(this.concept)} {
-                    // console.log('transform${this.ruleName} called: ' + branch.name);
-                    ${myProperties.map((prop) => `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)}`).join(";\n")}
-                    const children = this.${mainAnalyserName}.getChildren(branch);` + // to avoid an extra newline in the result
-            `${this.ruleParts.map((part, index) => `${part.toMethod(index, "children", mainAnalyserName)}`).join("")}
+                public transform${this.ruleName} (nodeInfo: SpptDataNodeInfo, children: KtList<any>, sentence: Sentence) : ${Names.classifier(this.concept)} {
+                    // console.log('4 transform${this.ruleName} called: ' + children.toString());
+                    ${myProperties.map((prop) => 
+                        `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)};\n`).join("")}` + // to avoid an extra newline in the result
+                    `${this.ruleParts.map((part, index) =>
+                        `${part.toMethod(index, "children", mainAnalyserName)}`).join("")}
                     return ${Names.classifier(this.concept)}.create({
-                        ${myProperties.map((prop) => `${prop.name}:${ParserGenUtil.internalName(prop.name)}`).join(", ")}
-                        ${myProperties.length > 0 ? "," : ""} parseLocation: this.${mainAnalyserName}.location(branch)
+                        ${myProperties.map((prop) => `${prop.name}:${ParserGenUtil.internalName(prop.name)}!`).join(", ")}
+                        ${myProperties.length > 0 ? "," : ""} parseLocation: this.${mainAnalyserName}.location(sentence, nodeInfo.node)
                     });
                 }`
         );

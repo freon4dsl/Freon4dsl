@@ -1,10 +1,11 @@
 import fs from "fs";
-import { LOG2USER } from "../../utils/UserLogger.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { FileUtil } from "../../utils/file-utils/index.js"
 import { TyperDef } from "../metalanguage/index.js";
 import { FreTyperReader } from "./FreTyperReader.js";
 import { FreTyperChecker } from "./FreTyperChecker.js";
-import { ParseLocationUtil } from "../../utils/parsingAndChecking/ParseLocationUtil.js";
+import { LOG2USER, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+
 
 /**
  * This class parses one of more .type files and merges them into a single TyperDef object, which is then
@@ -23,7 +24,7 @@ export class FreTyperMerger {
 
     parse(filePath: string): TyperDef | undefined {
         // Check if file exists
-        if (!fs.existsSync(filePath)) {
+        if (!FileUtil.exists(filePath)) {
             LOG2USER.error("definition file '" + filePath + "' does not exist, exiting.");
             throw new Error("definition file '" + filePath + "' does not exist, exiting.");
         }
@@ -41,7 +42,7 @@ export class FreTyperMerger {
 
         // read the files and parse them separately
         for (const file of filePaths) {
-            if (!fs.existsSync(file)) {
+            if (!FileUtil.exists(file)) {
                 LOG2USER.error("definition file '" + file + "' does not exist, exiting.");
                 throw new Error("definition file '" + file + "' does not exist, exiting.");
             }

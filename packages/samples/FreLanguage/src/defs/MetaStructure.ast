@@ -1,0 +1,153 @@
+// To avoid clashes with the names from core and other packages,
+// some concept names have been extended with an 'X'.
+language FreLanguageX
+
+// begin structure definition
+modelunit FreStructureDef {
+    name: identifier;
+    modelConcept: FreModelDescription;
+    units: FreUnitDescription[];
+    concepts: FreConcept[];
+    interfaces: FreInterface[];
+    file-extension = "ast";
+}
+
+// TODO this is not in our language, but we need it here because of limited concept FrePrimitiveType
+interface Type {
+    name: identifier;
+}
+concept FreParseLocationX {
+    filename: string;
+    column: number;
+    line: number;
+}
+// end extras
+abstract concept FreLangElement {
+    location?: FreParseLocationX;
+    name: identifier;
+    // piMetaName: string; not yet implemented
+}
+abstract concept FreClassifier base FreLangElement implements Type {
+    reference owningLanguage: FreStructureDef;
+    isPublic: boolean;
+    properties: FreProperty[];
+    //primProperties: FrePrimitiveProperty[];
+}
+concept FreModelDescription base FreClassifier {
+    isPublic: boolean = true;
+}
+concept FreUnitDescription base FreClassifier {
+    fileExtension: string = "";
+}
+concept FreInterface base FreClassifier {
+    reference base: FreInterface[];
+}
+concept FreConcept base FreClassifier {
+    isAbstract: boolean;
+    reference base?: FreConcept;
+    reference interfaces: FreInterface[];
+}
+concept FreExpressionConcept base FreConcept {
+}
+concept FreBinaryExpressionConcept base FreExpressionConcept {
+    left: FreExpressionConcept;
+    right: FreExpressionConcept;
+    priority: number;
+}
+concept FreLimitedConcept base FreConcept {
+    instances: FreInstance[];
+}
+abstract concept FreProperty base FreLangElement {
+    isPublic: boolean;
+    isOptional: boolean;
+    isList: boolean;
+    isPart: boolean; // if false then it is a reference property
+    reference type: Type;
+    // TODO see how we address the following
+    reference owningConcept?: FreClassifier;
+}
+concept FreConceptProperty base FreProperty {
+    // TODO see how we address the following
+    hasLimitedType: boolean;
+}
+concept FrePrimitiveProperty base FreProperty {
+    isStatic: boolean;
+	initialValue: FrePrimitiveValue;
+	initialValueList: FrePrimitiveValue[];
+}
+
+concept FreInstance base FreLangElement {
+    reference concept: FreLimitedConcept;
+    propertyDefs: FrePropertyInstance[];
+}
+concept FrePropertyInstance base FreLangElement {
+    reference owningInstance: FreInstance;
+    reference property: FreProperty;
+    value: FrePrimitiveValue;
+    valueList: FrePrimitiveValue[];
+}
+// the following two classes are only used in the typer and validator definitions
+concept FreFunction base FreLangElement {
+    reference language: FreStructureDef;
+    formalparams: FreParameter[];
+    reference returnType: Type;
+}
+
+concept FreParameter base FreLangElement {
+    reference type: Type;
+}
+// the basic types in the pi-languages
+abstract concept FrePrimitiveValue {
+}
+concept FreStringValue base FrePrimitiveValue {
+    value: string;
+}
+concept FreNumberValue base FrePrimitiveValue {
+    value: number;
+}
+concept FreBooleanValue base FrePrimitiveValue {
+    value: boolean;
+}
+
+limited FrePrimitiveType implements Type
+{ string; boolean; number; identifier; }
+
+// end structure definition
+// begin expressions definition
+abstract concept FreLangExp base FreLangElement {
+    sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
+    appliedFeature?: FreLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
+    reference referredElement: FreLangElement;            // refers to the element called 'sourceName'
+//    location: ParseLocation;                            // holds start and end in the parsed file
+    reference language: FreStructureDef;                           // the language for which this expression is defined
+}
+
+concept FreLangSimpleExp base FreLangExp {
+    value: number;
+}
+
+concept FreLangSelfExp base FreLangExp {
+//    reference referredElement: FreConcept;
+}
+
+concept FreInstanceExp base FreLangExp {
+    instanceName: string;
+//    reference referredElement: FreInstance;
+}
+
+concept FreLangConceptExp base FreLangExp {
+//    reference referredElement: FreConcept;
+}
+
+concept FreLangAppliedFeatureExp base FreLangExp {
+    reference sourceExp: FreLangExp;
+    reference referredElement: FreProperty;
+}
+
+concept FreLangFunctionCallExp base FreLangExp {
+    //sourceName: string; 			// in typer: name can only be 'commonSuperType', in validator: only 'conformsTo' and 'equalsType'
+    actualParams: FreLangExp[];
+    returnValue: boolean;
+//    reference referredElement: FreFunction;
+}
+// end expressions definition

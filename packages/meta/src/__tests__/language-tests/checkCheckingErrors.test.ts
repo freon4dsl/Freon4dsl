@@ -1,9 +1,10 @@
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { MetaLogger } from "../../utils/index.js";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { describe, test, expect } from "vitest";
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking language parser on checking errors", () => {
-    const testdir = "src/__tests__/language-tests/faultyDefFiles/checking-errors/";
+    const testdir: string = resolveTestDir(import.meta.url, "faultyDefFiles/checking-errors/");
     const parser = new LanguageParser();
     const checker = parser.checker;
     MetaLogger.muteAllErrors();

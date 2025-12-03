@@ -2,11 +2,20 @@ language ExternalTester
 
 model ExternalModel {
     parts: ExternalUnit[];
+    more: ExternalUnit2[];
 }
 
 modelunit ExternalUnit {
     content: AA;
+    toBeReferenced: CC[];
     file-extension = "ext";     // the file extension used by the parser
+}
+
+modelunit ExternalUnit2 {
+    content: conceptWithPrims;
+    content2: conceptWithParts;
+    content3: conceptWithRefs;
+    file-extension = "ext2";     // the file extension used by the parser
 }
 
 concept AA  {
@@ -82,4 +91,26 @@ interface DD {
 //    DDprop4: number[];
     DDprop5: boolean;
 //    DDprop6: boolean[];
+}
+
+concept conceptWithPrims  {
+    name: identifier;
+    // the possibilities for primitive properties
+    stringProp: string;
+//    stringList: string[];
+    numberProp: number;
+//    numberList: number[];
+    booleanProp: boolean;
+}
+
+concept conceptWithParts {
+    name: identifier;
+    conceptProp: CC;
+    conceptList: CC[];
+}
+
+concept conceptWithRefs {
+    name: identifier;
+    reference referenceProp: CC;
+    reference referenceList: CC[];
 }

@@ -1,4 +1,4 @@
-import { FreNode } from "./index.js";
+import type { FreNode } from "./index.js";
 import { FreParseLocation } from "../reader/index.js";
 import { MobxModelElementImpl } from "./decorators/index.js";
 

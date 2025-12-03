@@ -1,5 +1,5 @@
-import { FreMetaDefinitionElement } from "../../../utils/index.js";
-import { FreLangExp, FreMetaProperty, MetaElementReference } from "../../../languagedef/metalanguage/index.js";
+import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
+import { FreMetaProperty, MetaElementReference } from "../../../languagedef/metalanguage/index.js";
 import { FreEditBoolKeywords, DisplayType, FreEditListInfo, FreEditExternalInfo } from "./internal.js";
 
 /**
@@ -8,9 +8,8 @@ import { FreEditBoolKeywords, DisplayType, FreEditListInfo, FreEditExternalInfo 
  * are represented by subclasses of this class.
  */
 export class FreEditPropertyProjection extends FreMetaDefinitionElement {
-    property?: MetaElementReference<FreMetaProperty> = undefined;
-    // expression used during parsing, should not be used after that phase
-    expression?: FreLangExp = undefined;
+    // @ts-ignore
+    property: MetaElementReference<FreMetaProperty>;
     // projection info if the referred property is a list
     listInfo?: FreEditListInfo = undefined;
     // projection info if the referred property is to be displayed by an external component
@@ -39,7 +38,7 @@ export class FreEditPropertyProjection extends FreMetaDefinitionElement {
         if (!!this.boolKeywords) {
             extraText = `\n/* boolean */ ${this.boolKeywords}`;
         }
-        let nameText: string | undefined = this.expression?.toFreString();
+        let nameText: string | undefined = this.property.name;
         if (!nameText || nameText.length === 0) {
             nameText = this.property?.name;
         }

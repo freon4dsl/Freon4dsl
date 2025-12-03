@@ -3,16 +3,15 @@ import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults.js";
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
-    FreMetaExpressionConcept,
-} from "../../languagedef/metalanguage/index.js";
-import { GenerationUtil } from "../../utils/index.js";
+    FreMetaExpressionConcept, LangUtil
+} from '../../languagedef/metalanguage/index.js';
 
 export class ParserGenUtil {
     // find all expression bases for all binaries
     static findAllExpressionBases(list: FreMetaBinaryExpressionConcept[]): FreMetaExpressionConcept[] {
         const bases: FreMetaExpressionConcept[] = [];
         list.forEach((impl) => {
-            const expBase = GenerationUtil.findExpressionBase(impl as FreMetaBinaryExpressionConcept);
+            const expBase = LangUtil.findExpressionBase(impl as FreMetaBinaryExpressionConcept);
             if (bases.indexOf(expBase) === -1) {
                 // add if not present
                 bases.push(expBase);
@@ -120,8 +119,9 @@ export class ParserGenUtil {
         return `/**
              * Method to transform branches that match the following rule:
              * ${rule}
-             * @param branch
-             * @private
+             * @param nodeInfo
+             * @param children
+             * @param sentence
              */`;
     }
 
@@ -146,9 +146,10 @@ export class ParserGenUtil {
     }
 }
 
-export const internalTransformNode = "transformSharedPackedParseTreeNode";
-export const internalTransformList = "transformSharedPackedParseTreeList";
-export const internalTransformRefList = "transformSharedPackedParseTreeRefList";
-export const internalTransformLeaf = "transformSharedPackedParseTreeLeaf";
-export const internalTransformBranch = "transformSharedPackedParseTreeBranch";
-export const internalTransformFreNodeRef = "freNodeRef";
+// export const internalTransformNode = "transformSharedPackedParseTreeNode";
+export const internalTransformPrimValue = "transformPrimValue";
+export const internalTransformPartList = "transformPartList";
+export const internalTransformPrimList = "transformPrimList";
+export const internalTransformRefList = "transformRefList";
+export const internalTransformLimitedList = "transformLimitedList";
+export const internalTransformTempRef = "makeFreNodeRef";

@@ -1,13 +1,8 @@
 import * as fs from "fs";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import {
-    GenerationStatus,
-    FileUtil,
-    MetaLogger,
-    INTERPRETER_FOLDER,
-    INTERPRETER_GEN_FOLDER,
-    Names,
-} from "../../utils/index.js";
+import { INTERPRETER_FOLDER, INTERPRETER_GEN_FOLDER, Names } from "../../utils/on-lang/index.js";
+import { GenerationStatus, FileUtil } from "../../utils/file-utils/index.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { FreInterpreterDef } from "../metalanguage/FreInterpreterDef.js";
 import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate.js";
 import { InterpreterMainTemplate } from "./templates/InterpreterMainTemplate.js";
@@ -37,16 +32,19 @@ export class InterpreterGenerator {
         const template = new InterpreterBaseTemplate();
         const mainTemplate = new InterpreterMainTemplate();
 
+        // Set relative path to get the imports right
+        const relativePath = "../../";
+
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.interpreterGenFolder);
         FileUtil.deleteFilesInDir(this.interpreterGenFolder, generationStatus);
 
         let generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterBaseClassname(this.language)}.ts`;
-        let generatedContent = template.interpreterBase(this.language, interpreterDef);
+        let generatedContent = template.interpreterBase(this.language, interpreterDef, relativePath);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterClassname(this.language)}.ts`;
-        generatedContent = FileUtil.pretty(template.interpreterClass(this.language), "interpreter manual file" ,generationStatus);
+        generatedContent = FileUtil.pretty(template.interpreterClass(this.language, relativePath), "interpreter manual file" ,generationStatus);
         FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter class");
         // this.makeFile("interpreter class", generatedFilePath, generatedContent, generationStatus);
 

@@ -1,5 +1,5 @@
-import { FreLanguageConcept, FreLanguageInterface, FreLanguageModelUnit } from "../../language/index.js";
-import { FreNode } from "../../ast/index.js";
+import type { FreLanguageConcept, FreLanguageInterface, FreLanguageModelUnit } from "../../language/index.js";
+import type { FreNode } from "../../ast/index.js";
 
 export class RoleProvider {
     public static classifier(concept: FreLanguageModelUnit | FreLanguageConcept | FreLanguageInterface): string {
@@ -44,5 +44,9 @@ export class RoleProvider {
 
     static row(owningConceptName: string, propertyName: string, index: number) {
         return RoleProvider.startWithUpperCase(owningConceptName) + "-" + propertyName + "-row-" + index;
+    }
+    
+    static fragment(owningConceptName: string, externalName: string) {
+        return RoleProvider.startWithUpperCase(owningConceptName) + "-" + externalName;
     }
 }

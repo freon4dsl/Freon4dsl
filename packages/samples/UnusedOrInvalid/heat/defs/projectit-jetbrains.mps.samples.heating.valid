@@ -1,11 +1,11 @@
-validator heat for language heat // long name: jetbrains.mps.samples.heating
+validator for language heat // long name: jetbrains.mps.samples.heating
 /*
 HeatingPlan {
 	dailyPlans: DailyPlan[];
 }
 */
 DailyPlan {
-	isunique start in self.items;
+	 in self.items isunique start;
 }
 
 ChangeEvent  {

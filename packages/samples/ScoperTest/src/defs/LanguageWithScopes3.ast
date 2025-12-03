@@ -1,0 +1,29 @@
+language StarterLanguage
+
+modelunit StarterUnit3 {
+    modules: LangModule3[];
+}
+
+// The case of multiple hierarchical levels:
+// - each module can contain module definitions inside it
+// - we introduce an intermediate concept of ModuleReference to overcome the shadowing of
+//      modules that we want to use in our variable reference
+
+concept LangModule3 implements INamed {
+    reference imports: LangModule3;
+    varDefinitions: Variable[];
+    moduleDefinitions: LangModule3[];
+    varReferences: VarReference3[];
+}
+
+concept VarReference3 {
+    reference target: Variable;
+    module?: ModuleReference3;
+}
+
+concept ModuleReference3 {
+    // this one doesn't show as a reference for A.C.D (why???)
+    // and neither works as a scope (namespace) addition
+    reference target: LangModule3;
+    module?: ModuleReference3;
+}

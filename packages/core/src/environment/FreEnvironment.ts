@@ -1,20 +1,20 @@
-import { FreEditor, FreProjectionHandler } from "../editor/index.js"
-import { FreInterpreter } from "../interpreter/index.js";
-import { FreValidator } from "../validator/index.js";
-import { FreScoperComposite } from "../scoper/index.js";
-import { FreCompositeTyper } from "../typer/index.js";
-import { FreWriter } from "../writer/index.js";
-import { FreReader } from "../reader/index.js";
-import { FreModel } from "../ast/index.js";
+import type { FreEditor, FreProjectionHandler } from "../editor/index.js"
+import type { FreInterpreter } from "../interpreter/index.js";
+import type { FreValidator } from "../validator/index.js";
+import type { FreCompositeScoper } from "../scoper/index.js";
+import type { FreCompositeTyper } from "../typer/index.js";
+import type { FreWriter } from "../writer/index.js";
+import type { FreReader } from "../reader/index.js";
+import type { FreModel } from "../ast/index.js";
 
-export interface FreEnvironment {
+export type FreEnvironment = {
     /**
      * Creates a new model, an implementation of the language defined in the .ast file
      * @param modelName
      */
     newModel(modelName: string): FreModel;
 
-    scoper: FreScoperComposite;
+    scoper: FreCompositeScoper;
     typer: FreCompositeTyper;
     validator: FreValidator;
     editor: FreEditor;

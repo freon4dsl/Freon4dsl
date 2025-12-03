@@ -64,5 +64,5 @@ Parameter {
      [${name} : ${declaredType}]
 }
 
-// No need for projection for DocuType and its implementors, they
+// No need for projection for DocuType and its implementers, they
 // are only used as references, so their names suffice.

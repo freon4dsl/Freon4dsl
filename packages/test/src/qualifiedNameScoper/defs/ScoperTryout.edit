@@ -1,0 +1,15 @@
+editor qualified
+
+UnitType1 {[
+    UnitType1 ${self.name}
+    ${content vertical};
+]}
+
+UnitType2 {[
+    UnitType2 ${self.name}
+    myReferences: ${self.myReferences vertical}
+]}
+
+QualifiedName {[
+    Q ${self.part}[?.${self.restName}]
+]}

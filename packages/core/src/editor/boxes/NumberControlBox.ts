@@ -1,6 +1,6 @@
 import { AST } from "../../change-manager/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreUtils, isNullOrUndefined } from "../../util/index.js";
 import { Box } from "./internal.js";
 

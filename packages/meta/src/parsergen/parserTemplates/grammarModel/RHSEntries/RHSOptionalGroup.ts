@@ -34,27 +34,34 @@ export class RHSOptionalGroup extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         if (this.subs.length > 1) {
-            return (
-                `
-            if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
-                const _optGroup = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);` + // to avoid an extra newline
-                `const _propItem = this.${mainAnalyserName}.getChildren(_optGroup);` +
-                `${this.subs.map((sub) => `${sub.toMethod(this.propIndex, "_propItem", mainAnalyserName)}`).join("\n")}
-            }`
+            return (`
+            // RHSOptionalGroup
+            if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { 
+                const _optGroup = ${nodeName}.asJsReadonlyArrayView()[${index}];` + // to avoid an extra newline
+                `${this.subs.map((sub) => `${sub.toMethod(this.propIndex, "(_optGroup  as KtList<any>)", mainAnalyserName)}`).join("\n")}
+            }
+            // end RHSOptionalGroup
+            `
             );
         } else if (this.subs.length === 1) {
             const first = this.subs[0];
             if (first.isList) {
                 return `
-                    if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
+                // RHSOptionalGroup
+                    if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { 
                         ${first.toMethod(index, nodeName, mainAnalyserName)}
-                    }`;
+                    }
+            // end RHSOptionalGroup
+            `;
             } else {
                 return `
-                    if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
-                        const _optBranch = this.${mainAnalyserName}.getChildren(${nodeName}[${index}]);
-                        ${first.toMethod(0, "_optBranch", mainAnalyserName)}
-                    }`;
+                // RHSOptionalGroup
+                // this one
+                    if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { 
+                        ${first.toMethod(index, nodeName, mainAnalyserName)}
+                    }
+            // end RHSOptionalGroup
+            `;
             }
         }
         return `// ERROR no elements within optional group`;

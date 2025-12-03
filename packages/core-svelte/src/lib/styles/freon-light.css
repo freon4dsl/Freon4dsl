@@ -5,9 +5,9 @@
  *********************************************/
 
 .freon-component {
-    color: darkblue;
-    background-color: white;
-    --md-sys-color-primary: darkblue;
+    color: var(--color-light-freon-900);
+    background-color: var(--color-light-freon-50);
+    --md-sys-color-primary: var(--color-light-freon-900);
 }
 
 .label-component:empty:before {
@@ -17,11 +17,11 @@
 }
 
 .list-component-horizontal {
-    border-color: darkgreen;
+    border-color: var(--color-light-freon-border-green);
 }
 
 .list-component-vertical {
-    border-color: red;
+    border-color: var(--color-light-freon-accent-error);
 }
 
 .layout-component {
@@ -31,7 +31,7 @@
 }
 
 .layout-component-horizontal-error {
-    border-bottom: double thin red;
+    border-bottom: double thin var(--color-light-freon-accent-error);
     padding-bottom: 1px;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .layout-component-vertical-error {
-    border-left: 2px solid red;
+    border-left: 2px solid var(--color-light-freon-accent-error);
     height: 100%;
 }
 
@@ -47,8 +47,8 @@
 }
 .limited-checkbox-component-group:hover,
 .limited-checkbox-component-group:focus-within {
-    outline: #0d47a1 solid 1px;
-    box-shadow: 0 0 10px #0d47a1;
+    outline: var(--color-light-freon-700) solid 1px;
+    box-shadow: 0 0 10px var(--color-light-freon-700);
 }
 .limited-checkbox-component-label {
 }
@@ -59,8 +59,8 @@
 }
 .limited-radio-component-group:hover,
 .limited-radio-component-group:focus-within {
-    outline: darkblue solid 1px;
-    box-shadow: 0 0 10px darkblue;
+    outline: var(--color-light-freon-900) solid 1px;
+    box-shadow: 0 0 10px var(--color-light-freon-900);
 }
 .limited-radio-component-single {
 }
@@ -69,9 +69,9 @@
 .limited-radio-component-label {
 }
 .contextmenu {
-    border-color: #c5c5c5;
-    background: #e5e5e5;
-    box-shadow: 1.5px 1.5px 5px grey;
+    border-color: var(--color-light-freon-150);
+    background: var(--color-light-freon-50);
+    box-shadow: 1.5px 1.5px 5px var(--color-light-freon-200);
 }
 .contextmenu-button {
     background: none;
@@ -79,111 +79,102 @@
 }
 
 .contextmenu-button:hover {
-    background: #f4f4f4;
+    background: var(--color-light-freon-50);
 }
 
 .contextmenu-shortcut {
-    color: #666;
+    color: var(--color-light-freon-700);
 }
 
 .contextmenu-hr {
-    border-top: solid 1px #c5c5c5;
+    border-top: solid 1px var(--color-light-freon-150);
 }
 
 .error-tooltip {
-    border: 1px solid dimgrey;
-    box-shadow: 1px 1px 1px dimgrey;
-    background: antiquewhite;
+    border: 1px solid var(--color-light-freon-700);
+    box-shadow: 1px 1px 1px var(--color-light-freon-700);
+    background: var(--color-light-freon-100);
 }
 .error-marker {
-    background-color: #FF4C4C;
+    background-color: var(--color-light-freon-accent-error);
 }
 
-.button-component-ripple {
-}
-.button-component-ripple:hover {
-    background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) no-repeat center/15000%;
-    background-color: cornflowerblue;
-}
-.button-component-ripple:active {
-    background-color: lightgreen;
-}
-.button-component-empty {
-}
-
-/* Button style */
+/* Button Component */
 .button-component {
-    box-shadow: 2px 2px 4px cornflowerblue;
-    background-color: darkblue;
-    color: whitesmoke;
+    box-shadow: 2px 2px 4px var(--color-light-freon-250);
+    background-color: var(--color-light-freon-900);
+    color: var(--color-light-freon-50);
+}
+/* Hover effects */
+.button-component:hover {
+    background-color: var(--color-light-freon-900);
+}
+
+/* Focus-within styles */
+.button-component:focus-within {
+    box-shadow: 0 0 0 4px var(--color-light-freon-700);
 }
 
 .boolean-checkbox-component {
-    --md-sys-color-primary: darkblue;
+    --md-sys-color-primary: var(--color-light-freon-900);
 }
-.boolean-checkbox-component:hover,
+.boolean-checkbox-component:hover {
+    box-shadow: 0 0 10 var(--color-light-freon-800);
+}
 .boolean-checkbox-component:focus-within {
-    outline: darkblue solid 1px;
-    box-shadow: 0px 0px 10px darkblue;
+    outline: var(--color-light-freon-900) solid 1px;
+    /*box-shadow: 0 0 10 var(--color-light-freon-800);*/
 }
 
 .boolean-radio-component-group {
-    color: darkblue;
+    color: var(--color-light-freon-900);
     /*--md-sys-color-primary: var(--freon-boolean-color, var(--mdc-theme-primary));*/
-    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
+    /*--md-sys-color-on-surface-variant: var(--color-light-freon-accent-error); color for the one that is not checked */
 }
 .boolean-radio-component-group:hover,
 .boolean-radio-component-group:focus-within {
-    outline: darkblue solid 1px;
-    box-shadow: 0 0 10px darkblue;
-}
-.boolean-radio-component-single {
-}
-.boolean-radio-component-vertical {
-}
-.boolean-radio-component-label {
-}
-
-.text-component-width {
+    outline: var(--color-light-freon-900) solid 1px;
+    box-shadow: 0 0 10px var(--color-light-freon-800);
 }
 
 .text-component-input {
-    color: blue;
-    background: rgba(211, 227, 253, 255);
+    color: var(--color-light-freon-400);
+    background: var(--freon-light-accent-lightgreen);
 }
 
 .text-component-text {
-    color: blue;
-    /*background: var(--freon-text-component-background-color, inherit);*/
+    color: var(--color-light-freon-400);
+
 }
 .text-component-text-error {
-    text-decoration-line: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: red;
+    text-decoration-color: var(--color-light-freon-accent-error);
 }
 
 .text-component-placeholder {
-    color: blue;
-    /*background: var(--freon-text-component-background-color, inherit);*/
+    color: var(--color-light-freon-400);
+    opacity: 0.5;
 }
 .text-component-action-placeholder {
-    color: darkgrey;
-    /*background: var(--freon-text-component-background-color, inherit);*/
+    color: var(--color-light-freon-accent-dropdown);
+    opacity: 0.5;
 }
 
 .multiline-text-component {
-    color: blue;
-    /*background: var(--freon-text-component-background-color, inherit);*/
+    color: var(--color-light-freon-400);
+}
+.multiline-text-component:focus {
+    color: var(--color-light-base-300);
+    background-color: var(--color-light-accent-50);
 }
 
 .numeric-slider-component {
-    --md-slider-inactive-track-color: gray;
+    --md-slider-inactive-track-color: var(--color-light-freon-250);
 }
 
 .numeric-slider-component:hover,
 .numeric-slider-component:focus-within {
-    outline: blue solid 1px;
-    box-shadow: 0 0 8px gray;
+    outline: var(--color-light-freon-700) solid 1px;
+    box-shadow: 0 0 8px var(--color-light-freon-250);
     border-radius: 0.1em;
 }
 
@@ -191,95 +182,92 @@
  *  DropDownComponent
  */
 .dropdown-component {
-    border-color: darkblue;
-    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
-    background: #e5e5e5;
+    border-color: var(--color-light-freon-900);
+    /*box-shadow: 0 0 6px 0 var(--color-light-freon-250);*/
+    background: var(--freon-light-accent-lightgreen);
 }
 
 .dropdown-component-item {
-    color: darkblue;
+    color: var(--color-light-freon-accent-dropdown);
     background: none;
 }
 
 .dropdown-component-error {
-    color: red;
-    /*background-color: var(--freon-dropdownitem-component-error-bg-color, red);*/
+    color: var(--color-light-freon-accent-error);
+    /*background-color: var(--freon-dropdownitem-component-error-bg-color, var(--color-light-freon-accent-error));*/
 }
 
 .dropdown-component-item:hover {
-    color: darkblue;
-    background-color: #f4f4f4;
+    color: var(--color-light-freon-50);
+    background-color: var(--color-light-freon-accent-dropdown);
 }
 
 .dropdown-component-selected {
-    color: darkblue;
-    background-color: lightblue;
+    color: var(--color-light-freon-accent-dropdown);
+    font-weight: bold;
+    background-color: var(--freon-light-accent-lightgreen);
 }
 
 /******************************************************************
  *
  ******************************************************************/
+/*.inner-switch-component {*/
+/*    background: var(--color-light-freon-accent-dropdown);*/
+/*}*/
+
 .inner-switch-component button {
-    color: darkblue;
+    color: var(--color-light-freon-900);
+    background: var(--color-light-freon-200);
 }
 
 [role="switch"][aria-checked="true"] :first-child,
 [role="switch"][aria-checked="false"] :last-child {
-    color: white;
-    background-color: darkblue;
-}
-
-.inner-switch-component button span {
+    color: var(--color-light-freon-50);
+    background-color: var(--color-light-freon-900);
 }
 
 .inner-switch-component button:hover,
 .inner-switch-component button:focus {
-    outline: darkblue solid 1px;
-    box-shadow: 0 0 8px darkblue;
+    outline: var(--color-light-freon-900) solid 1px;
+    box-shadow: 0 0 8px var(--color-light-freon-900);
 }
 
-.optional-component-new:empty:before {
-    background-color: purple;
+.optional-component:empty:before {
+    background-color: var(--color-light-freon-accent-optional);
 }
 
-.optional-component-show {
-}
 .optional-component-hide {
-    color: lightgrey;
+    color: var(--color-light-freon-150);
 }
 
-.render-component {
-}
 .render-component-unknown-box {
-    color: red;
+    color: var(--color-light-freon-accent-error);
 }
 
 .render-component-error {
-    text-decoration-line: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: red;
+    text-decoration-color: var(--color-light-freon-accent-error);
 }
 
-.render-component-unselected {
-    /*background-color: transparent;*/
-}
 .render-component-selected {
-    outline-color: darkblue;
+    outline-color: var(--color-light-freon-900);
 }
 
-.switch-component {
+.render-component-selected:has(.layout-component-horizontal) > span:focus {
+    outline-color: var(--color-light-freon-700);
+    box-shadow: 0 0 10px var(--color-light-freon-700);
 }
+
 .switch-component button {
-    background: lightgray;
+    background: var(--color-light-freon-150);
 }
 
 .switch-component button::before {
     /* defines the knob */
-    background: darkblue;
+    background: var(--color-light-freon-900);
 }
 
 .switch-component button[aria-checked="true"] {
-    background-color: darkgray;
+    background-color: var(--color-light-freon-200);
 }
 
 .switch-component button[aria-checked="true"]::before {
@@ -287,7 +275,7 @@
 
 .switch-component button:hover,
 .switch-component button:focus {
-    box-shadow: 2px 2px 8px blue;
+    box-shadow: 2px 2px 8px var(--color-light-freon-700);
 }
 
 .switch-component button {
@@ -297,7 +285,7 @@
 }
 
 .table-component {
-    border-color: darkgreen;
+    border-color: var(--color-light-freon-border-green);
 }
 
 .table-cell-component {
@@ -308,11 +296,15 @@
     background: transparent;
 }
 .table-cell-component-selected {
-    outline-color: darkblue;
+    outline-color: var(--color-light-freon-900);
+    box-shadow: 0px 0px 8px 7px var(--color-light-freon-border-green);
+}
+.table-cell-component-selected:focus {
+    box-shadow: 0px 0px 8px 7px var(--color-light-freon-border-green);
 }
 
 .grid-component {
-    border-color: darkgreen;
+    border-color: var(--color-light-freon-border-green);
 }
 
 .grid-cell-component {
@@ -324,13 +316,21 @@
 }
 
 .text-dropdown-component .text-component-text {
-    color: green;
+    color: var(--color-light-freon-accent-dropdown);
 }
 
 .text-dropdown-component .text-component-input {
-    color: green;
+    color: var(--color-light-freon-accent-dropdown);
 }
 
 .brackets {
-    color: darkgray;
+    color: var(--color-light-freon-400);
+}
+
+.drag-handle-icon {
+    fill: var(--color-light-freon-400);
+}
+
+.reference-arrow {
+    fill: var(--color-dark-freon-accent-button);
 }
