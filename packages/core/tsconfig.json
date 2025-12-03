@@ -20,7 +20,7 @@
     // "outFile": "./",                             /* Concatenate and emit output to single file. */
     "outDir": "./dist",                             /* Redirect output structure to the directory. NB: this works for rollup.,  for tsc it should be "./dist" !!! */
     "rootDir": "./src",                             /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
-    // "composite": true,                           /* Enable project compilation */
+    "composite": true,                              /* Enable project compilation */
     // "tsBuildInfoFile": "./",                     /* Specify file to store incremental compilation information */
     "removeComments": true,                         /* Do not emit comments to output. */
     // "noEmit": true,                              /* Do not emit outputs. */
@@ -62,10 +62,10 @@
     // "allowUmdGlobalAccess": true,                /* Allow accessing UMD globals from modules. */
 
     /* Source Map Options */
-//     "sourceRoot": "../../src/",                            /* Specify the location where debugger should locate TypeScript files instead of source locations. */
+    "sourceRoot": "",                               /* Empty sourceRoot means paths are relative to sourcemap file */
     // "mapRoot": "",                               /* Specify the location where debugger should locate map files instead of generated locations. */
     // "inlineSourceMap": true,                     /* Emit a single file with source maps instead of having a separate file. */
-    // "inlineSources": true,                       /* Emit the source alongside the sourcemaps within a single file; requires '--inlineSourceMap' or '--sourceMap' to be set. */
+    "inlineSources": true,                         /* Embed source content in sourcemaps so debugging works even if source files aren't accessible */
 
     /* Experimental Options */
     "experimentalDecorators": true,              /* Enables experimental support for ES7 decorators. */

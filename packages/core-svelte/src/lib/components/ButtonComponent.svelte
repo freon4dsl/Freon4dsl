@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ButtonBox } from '@freon4dsl/core';
+    import { type ButtonBox } from '@freon4dsl/core';
     import { BUTTON_LOGGER } from './ComponentLoggers.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 

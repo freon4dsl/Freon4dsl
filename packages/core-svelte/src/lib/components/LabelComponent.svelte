@@ -4,7 +4,7 @@
     /**
      * This component shows a piece of non-editable text.
      */
-    import { notNullOrUndefined, LabelBox } from '@freon4dsl/core';
+    import { notNullOrUndefined, type LabelBox } from '@freon4dsl/core';
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 

@@ -7,7 +7,7 @@
         HorizontalListBox,
         LabelBox,
         type ListBox,
-        TableBox, TableBoxRowOriented,
+        type TableBox, TableBoxRowOriented,
         TableCellBox,
         TableRowBox,
         VerticalListBox

@@ -3,7 +3,7 @@ import {
     MobxModelElementImpl,
     observableprim,
     type FreNamedNode,
-    FreParseLocation,
+    type FreParseLocation,
     FreUtils
 } from '@freon4dsl/core';
 

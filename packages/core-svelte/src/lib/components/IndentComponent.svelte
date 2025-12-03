@@ -5,7 +5,7 @@
      * This component indents the child of its (Indent)Box.
      * Every indent is 8px wide.
      */
-    import { Box, notNullOrUndefined } from '@freon4dsl/core';
+    import { type Box, notNullOrUndefined } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
     import type { IndentBox } from '@freon4dsl/core';
     import { componentId } from '../index.js';

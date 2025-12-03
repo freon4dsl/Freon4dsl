@@ -31,7 +31,7 @@
         isExternalBox,
         isFragmentBox,
         isReferenceBox,
-        Box,
+        type Box,
         BoolDisplay,
         LimitedDisplay,
         isActionTextBox,

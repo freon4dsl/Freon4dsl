@@ -6,7 +6,7 @@
      * corresponding OptionalBox, or its placeholder.
      */
     import RenderComponent from './RenderComponent.svelte';
-    import { OptionalBox2, Box, notNullOrUndefined } from '@freon4dsl/core';
+    import { type OptionalBox2, type Box, notNullOrUndefined } from '@freon4dsl/core';
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 

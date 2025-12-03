@@ -8,7 +8,7 @@
     // and this example by Scott O'hara https://codepen.io/scottohara/pen/zLZwNv
 
     import { SWITCH_LOGGER } from './ComponentLoggers.js';
-    import { BooleanControlBox, notNullOrUndefined } from '@freon4dsl/core';
+    import { type BooleanControlBox, notNullOrUndefined } from '@freon4dsl/core';
     import { componentId } from '../index.js';
     import { onMount } from 'svelte';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
