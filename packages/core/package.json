@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/core",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "The core part of the Freon library, which enables you to build editors for the web",
   "publishConfig": {
     "access": "public"
