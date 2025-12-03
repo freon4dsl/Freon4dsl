@@ -1,7 +1,7 @@
 <!-- Copied and adapted from https://svelte.dev/repl/dd6754a2ad0547c5b1c1ea37c0293fef?version=4.2.19 -->
 
 <script lang="ts">
-    import { Box } from '@freon4dsl/core';
+    import { type Box } from '@freon4dsl/core';
     import type {ErrorProps} from "../index.js";
 
     let { editor, box, hasErr, parentLeft, parentTop, children }: ErrorProps<Box> = $props();

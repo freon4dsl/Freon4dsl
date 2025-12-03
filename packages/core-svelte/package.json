@@ -3,7 +3,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/core-svelte",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -73,7 +73,7 @@
     "@material/web": "^2.3.0",
     "@material/slider": "^14.0.0",
     "@material/switch": "^14.0.0",
-    "@freon4dsl/core": "~2.0.0"
+    "@freon4dsl/core": "~2.0.1"
   },
   "keywords": [
     "svelte", "freon", "dsl"

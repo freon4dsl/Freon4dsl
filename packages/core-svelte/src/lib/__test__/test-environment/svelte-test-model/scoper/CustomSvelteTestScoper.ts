@@ -5,7 +5,7 @@ import {
     type FreScoper,
     FreCompositeScoper,
     FreNodeReference,
-    FreNamespaceInfo
+    type FreNamespaceInfo
 } from '@freon4dsl/core';
 
 /**

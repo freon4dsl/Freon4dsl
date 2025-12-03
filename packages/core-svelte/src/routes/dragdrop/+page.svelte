@@ -4,7 +4,7 @@
         FreErrorSeverity, FreNodeReference,
         type ListBox,
         ListDirection, type TableBox,
-        TableDirection, TableUtil,
+        TableDirection,
     } from '@freon4dsl/core';
     import ListComponent from '$lib/components/ListComponent.svelte';
     import TableComponent from '$lib/components/TableComponent.svelte';

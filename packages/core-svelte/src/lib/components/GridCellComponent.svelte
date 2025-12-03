@@ -1,6 +1,6 @@
 <script lang="ts">
     import { GRIDCELL_LOGGER } from './ComponentLoggers.js';
-    import { isMetaKey, ENTER, Box, notNullOrUndefined, type GridCellBox } from '@freon4dsl/core';
+    import { isMetaKey, ENTER, type Box, notNullOrUndefined, type GridCellBox } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
     import { componentId, dummyBox, executeCustomKeyboardShortCut, isOdd } from '../index.js';
     import type { GridCellProps } from './svelte-utils/FreComponentProps.js';

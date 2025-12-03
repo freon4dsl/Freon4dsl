@@ -6,7 +6,7 @@
      * the associated editor.
      */
     import {
-        Box,
+        type Box,
         ARROW_UP,
         ARROW_DOWN,
         TAB,
