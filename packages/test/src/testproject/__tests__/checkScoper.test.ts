@@ -1,9 +1,9 @@
 import { AST, FreLanguage } from "@freon4dsl/core";
-import { TestStartEnvironment } from "../config/gen/TestStartEnvironment";
-import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../language/gen";
-import { TestStartStdlib } from "../stdlib/gen/TestStartStdlib";
+import { TestStartEnvironment } from "../freon/config/TestStartEnvironment.js";
+import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../freon/language/index.js";
+import { TestStartStdlib } from "../freon/stdlib/TestStartStdlib.js";
 import { describe, test, expect, beforeEach } from "vitest";
-import { getVisibleNames } from '../../utils/HelperFunctions';
+import { getVisibleNames } from '../../utils/HelperFunctions.js';
 
 describe("Checking stdlib for Demo", () => {
     TestStartEnvironment.getInstance();

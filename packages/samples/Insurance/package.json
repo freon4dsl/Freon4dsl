@@ -14,8 +14,8 @@
     "build-samples": "npm run build",
     "compile": "tsc && rollup --config",
     "install-local": "npm install --registry http://localhost:4873",
-    "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d src/defs -o src/",
-    "clean-gen": "bash ../../../scripts/freon-samples-dev.sh clean-it -d src/defs -o src/",
+    "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d src/defs",
+    "clean-gen": "bash ../../../scripts/freon-samples-dev.sh clean-it -d src/defs",
     "clean-config": "rm */config/FreonConfiguration.ts",
     "clean-custom": "rm */*/Custom*.ts",
     "clean-all": "npm run clean-gen && npm run clean-config && npm run clean-custom"

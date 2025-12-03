@@ -20,7 +20,8 @@
     "setup": "npm run setup --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "release-beta": "npm run release-beta --workspaces --if-present",
-    "prettier": "prettier --write --print-width 120 --tab-width 4 packages/*/src/**/*.ts packages/*/src/**/*.tsx packages/*/src/**/*.css"
+    "prettier": "prettier --write --print-width 120 --tab-width 4 packages/*/src/**/*.ts packages/*/src/**/*.tsx packages/*/src/**/*.css",
+    "check-imports": "npm run check-imports --workspaces --if-present"
   },
   "devDependencies": {
     "@prettier/sync": "^0.5.2",
@@ -52,9 +53,9 @@
     "rollup-plugin-polyfill-node": "0.13.0",
     "rollup-plugin-svelte": "^7.2.2",
     "ts-node": "^10.9.2",
-    "tslib": "^2.6.3",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.38.0"
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.1"
   },
   "engines": {
     "node": ">=22.0.0"

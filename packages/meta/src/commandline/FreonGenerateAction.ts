@@ -9,7 +9,9 @@ import { LOG2USER } from "../utils/basic-dependencies/index.js";
 // TODO subclasses do not call super.onDefineParameters(): is comment wrong or something else?
 export abstract class FreonGenerateAction extends CommandLineAction {
     private outputFolderArg: CommandLineStringParameter;
+    private customsFolderArg: CommandLineStringParameter;
     protected outputFolder: string = "";
+    protected customsFolder: string = "./src/custom";
 
     protected defFolder: CommandLineStringParameter;
     protected languageFiles: string[] = [];
@@ -23,17 +25,25 @@ export abstract class FreonGenerateAction extends CommandLineAction {
         super(options);
         this.defFolder = this.defineStringParameter({
             argumentName: "DEFINITIONS_DIR",
-            defaultValue: "defs",
+            defaultValue: "src/defs",
             parameterLongName: "--definitions",
             parameterShortName: "-d",
             description: "Folder where your language definition files can be found",
         });
         this.outputFolderArg = this.defineStringParameter({
             argumentName: "OUTPUT_DIR",
-            defaultValue: ".",
+            defaultValue: "src/freon",
             parameterLongName: "--output",
             parameterShortName: "-o",
             description: "The directory where the files are generated",
+            required: false,
+        });
+        this.customsFolderArg = this.defineStringParameter({
+            argumentName: "CUSTOM_DIR",
+            defaultValue: "../custom",
+            parameterLongName: "--custom",
+            parameterShortName: "-c",
+            description: "The directory where the custom code is located - relative to OUTPUT_DIR",
             required: false,
         });
     }
@@ -41,6 +51,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
     protected onExecute(): Promise<void> {
         const self = this;
         self.outputFolder = this.outputFolderArg.value ? this.outputFolderArg.value : "";
+        self.customsFolder = this.customsFolderArg.value ? this.customsFolderArg.value : "";
         // @ts-ignore
         // error TS6133: 'resolve' is declared but its value is never read.
         // error TS6133: 'reject' is declared but its value is never read.

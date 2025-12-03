@@ -1,7 +1,6 @@
 import { FreMetaConcept, FreMetaInstance, FreMetaLanguage, FreMetaLimitedConcept } from "../../metalanguage/index.js";
 import {
     Names,
-    CONFIGURATION_FOLDER,
     Imports
 } from "../../../utils/on-lang/index.js"
 
@@ -9,7 +8,7 @@ export class StdlibTemplate {
     limitedConceptNames: string[] = [];
     constructorText: string = "";
 
-    generateStdlibClass(language: FreMetaLanguage, relativePath: string): string {
+    generateStdlibClass(language: FreMetaLanguage, customsFolder: string, relativePath: string): string {
         this.makeTexts(language);
         const imports = new Imports(relativePath)
         imports.core = new Set<string>([
@@ -22,7 +21,7 @@ export class StdlibTemplate {
         return `
         // TEMPLATE: StdlibTemplate.generateStdlibClass
         ${imports.makeImports(language)}
-        import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
+        import { freonConfiguration } from "${relativePath}/${customsFolder}/${Names.configuration}.js";
 
         /**
          * Class ${Names.stdlib(language)} provides an entry point for all predefined elements in language ${language.name}.
@@ -118,9 +117,9 @@ export class StdlibTemplate {
             });
     }
 
-    generateIndex(language: FreMetaLanguage) {
+    generateIndex() {
         return `
-        export * from "./${Names.customStdlib(language)}.js";
+        export * from "./index.js";
         `;
     }
 }

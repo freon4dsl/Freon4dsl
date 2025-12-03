@@ -2,6 +2,9 @@ import { FreEditParser } from "../editordef/parser/FreEditParser.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator.js";
+import { DefaultEditorGenerator, FreEditUnit } from '../editordef/metalanguage/index.js';
+import { notNullOrUndefined } from '../utils/file-utils/index.js';
+import { LOG2USER } from '../utils/basic-dependencies/index.js';
 
 const LOGGER = new MetaLogger("FreonGenerateParser"); // .mute();
 
@@ -24,15 +27,28 @@ export class FreonGenerateParser extends FreonGeneratePartAction {
             return;
         }
         this.parserGenerator.outputfolder = this.outputFolder;
+        this.parserGenerator.customsfolder = this.customsFolder;
         this.parserGenerator.language = this.language;
 
-        const editor = new FreEditParser(this.language).parseMulti(this.editFiles);
-        // This command is being used to generate, specifically and only,
-        // the reader/writer couple. Therefore, we do not generate a default editor when
-        // no editor definition is found.
-        if (editor === null || editor === undefined) {
-            throw new Error("Editor definition could not be parsed, exiting.");
+        try {
+            let editor: FreEditUnit | undefined;
+            if (this.editFiles.length > 0) {
+                editor = new FreEditParser(this.language).parseMulti(this.editFiles);
+            } else {
+                editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
+            }
+            if (notNullOrUndefined(editor)) { // should never be the case, a default is generated
+                // add default values for everything that is not present in the editor definition
+                DefaultEditorGenerator.addDefaults(editor);
+                this.parserGenerator.generate(editor);
+            }
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOG2USER.error(
+                  "Stopping reader and writer generation because of errors: " + e.message + "\n" + e.stack,
+                );
+                // LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);
+            }
         }
-        this.parserGenerator.generate(editor);
     }
 }

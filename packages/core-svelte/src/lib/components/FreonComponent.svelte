@@ -32,8 +32,8 @@
         shouldBeHandledByBrowser
     } from './stores/AllStores.svelte.js';
     import type { MainComponentProps } from './svelte-utils/FreComponentProps.js';
-    import { getNearestScrollContainer } from './svelte-utils/ScrollingUtils';
-    import { type PaneLike, providePaneContext } from './svelte-utils/PaneLike';
+    import { getNearestScrollContainer } from './svelte-utils/ScrollingUtils.js';
+    import { type PaneLike, providePaneContext } from './svelte-utils/PaneLike.js';
 
     let LOGGER = FREON_LOGGER;
 

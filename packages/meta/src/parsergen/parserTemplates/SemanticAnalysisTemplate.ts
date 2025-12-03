@@ -85,7 +85,7 @@ export class SemanticAnalysisTemplate {
         imports.core = new Set(["FreLanguageConcept", Names.FreLanguage, Names.FreNode, Names.FreNodeReference, Names.notNullOrUndefined])
         imports.utils.add(Names.walker(language))        
         // start Template
-        return `// TEMPLATE SematicAnalysisTemplate.makeCorrector(...)
+        return `// TEMPLATE SemanticAnalysisTemplate.makeCorrector(...)
                 ${imports.makeImports(language)}
                 import { ${refWalkerName} } from "./${refWalkerName}.js";
 

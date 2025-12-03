@@ -1,5 +1,5 @@
 import { AST } from "@freon4dsl/core";
-import { BB } from "../language/gen";
+import { BB } from "../freon/language/index.js";
 import { describe, test, expect } from "vitest";
 
 describe("Checking generation of primitive properties", () => {

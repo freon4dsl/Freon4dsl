@@ -1,12 +1,12 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Imports, Names } from "../../../utils/on-lang/index.js"
+import { Imports, INTERPRETER_FOLDER, Names } from '../../../utils/on-lang/index.js';
 
 export class InterpreterMainTemplate {
     /**
      * The base class containing all interpreter functions that should be defined.
      * @param language
      */
-    public interpreterMain(language: FreMetaLanguage): string {
+    public interpreterMain(language: FreMetaLanguage, relativePath: string): string {
         const imports = new Imports("../../")
         imports.core = new Set<string>([
             "ConceptFunction", Names.FreInterpreter,
@@ -19,7 +19,7 @@ export class InterpreterMainTemplate {
         return `// TEMPLATE: InterpreterBaseTemplate.interpreterInit(...)
         // Will be overwritten with every generation.
         ${imports.makeImports(language)}
-        import {  ${Names.interpreterInitname(language)} } from "./gen/${Names.interpreterInitname(language)}.js";
+        import {  ${Names.interpreterInitname(language)} } from "${relativePath}/${INTERPRETER_FOLDER}/${Names.interpreterInitname(language)}.js";
 
         const getPropertyFunction: OwningPropertyFunction = (node: Object) => {
             const index = (node as ${Names.FreNode}).freOwnerDescriptor().propertyIndex;

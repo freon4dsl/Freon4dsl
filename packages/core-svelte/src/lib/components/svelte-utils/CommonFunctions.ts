@@ -1,4 +1,4 @@
-import { DummyNode } from './DummyNode';
+import { DummyNode } from './DummyNode.js';
 import {
     AST,
     type Box,
