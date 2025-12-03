@@ -37,6 +37,7 @@ export class Names {
     static FreCreateBinaryExpressionAction: string = "FreCreateBinaryExpressionAction";
     static FreCustomAction: string = "FreCustomAction";
     static FreEditor: string = "FreEditor";
+    static ReferenceUpdateManager: string = "ReferenceUpdateManager"
     static FreProjection: string = "FreProjection";
     static Box: string = "Box";
     static FreNodeReference: string = "FreNodeReference";

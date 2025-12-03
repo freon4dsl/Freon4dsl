@@ -14,6 +14,7 @@ export class EnvironmentTemplate {
     generateEnvironment(language: FreMetaLanguage, relativePath: string): string {
         const imports = new Imports(relativePath)
         imports.core = new Set<string>([
+            Names.ReferenceUpdateManager,
             Names.FreEditor, Names.FreEnvironment, Names.FreReader,
             Names.FreCompositeTyper, Names.FreValidator, Names.FreStdlib,
             Names.FreWriter, Names.FreInterpreter, Names.FreCompositeScoper, Names.FreLanguageEnvironment, Names.FreProjectionHandler
@@ -63,6 +64,7 @@ export class EnvironmentTemplate {
                 const actions = new ${Names.actions(language)}();
                 const myComposite = new FreProjectionHandler();
                 this.editor = new ${Names.FreEditor}(myComposite, this, actions);
+                ReferenceUpdateManager.getInstance()
                 initializeLanguage();
                 initializeProjections(myComposite);
                 initializeEditorDef();

@@ -19,6 +19,8 @@ import { ModelCreator } from "./ModelCreator";
 
 describe("Update references when name changes", () => {
     initializeLanguage();
+    // Reference updater needs to be initialized
+    ReferenceUpdateManager.getInstance()
 
     test(" for simple model", () => {
         let model: CalculatorModel = ModelCreator.createSimpleModel();
