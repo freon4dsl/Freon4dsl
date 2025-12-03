@@ -7,7 +7,7 @@ import {
 	FreUndoManager,
 	InMemoryModel,
 	isIdentifier,
-	isNullOrUndefined, ReferenceUpdateManager
+	isNullOrUndefined,
 } from '@freon4dsl/core';
 import type {
     FreEnvironment,
@@ -50,9 +50,6 @@ export class EditorState {
         }
         unitNames.ids = store.getUnitIdentifiers();
         units.refs = store.getUnits();
-				if (!isNullOrUndefined(store.model)) {
-					ReferenceUpdateManager.getInstance().freModel = store.model;
-				}
     };
 
     private constructor() {
