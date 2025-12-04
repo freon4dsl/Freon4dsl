@@ -8,6 +8,7 @@ import {
     type FrePrimDelta,
     type FrePrimListDelta,
     FreUndoManager,
+    ReferenceUpdateManager,
 } from "../change-manager/index.js"
 import type { FreEnvironment } from "../environment/index.js"
 import { FreLogger } from "../logging/index.js"
@@ -43,6 +44,7 @@ export class InMemoryModel {
         this.languageEnvironment = languageEnvironment
         this.server = server
         makeObservable(this, { model: observable })
+        ReferenceUpdateManager.getInstance() // initialize it
         autorun(() => {
             if (notNullOrUndefined(this.model)) {
                 this.model.getUnits()

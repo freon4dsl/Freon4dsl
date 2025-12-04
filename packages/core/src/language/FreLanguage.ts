@@ -1,5 +1,5 @@
 import type { ReferenceShortcut } from "../editor/index.js";
-import type { FreNode, FreModel, FreModelUnit } from "../ast/index.js";
+import  { type FreNode, type FreModel, type FreModelUnit, FreNodeReference } from "../ast/index.js";
 import { EmptyStdLib } from "../stdlib/index.js";
 import type { FreStdlib } from "../stdlib/index.js";
 import { isNullOrUndefined } from "../util/index.js";
@@ -318,6 +318,22 @@ export class FreLanguage {
      * @param prop
      */
     public getPropertyValue(element: FreNode, prop: FreLanguageProperty): FreNode[] {
+        if (prop.isList) {
+            return element[prop.name];
+        } else {
+            const value = element[prop.name];
+            if (!!value) {
+                return [value];
+            } else {
+                return [];
+            }
+        }
+    }
+
+    public getReferencePropertyValue(element: FreNode, prop: FreLanguageProperty): FreNodeReference<any>[] {
+        if (prop.propertyKind !== "reference") {
+            console.error(`FreLanguage.getReferencePropertyValue: property ${prop.name} is a ${prop.propertyKind}, should be a reference`)
+        }
         if (prop.isList) {
             return element[prop.name];
         } else {

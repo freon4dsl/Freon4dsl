@@ -1,8 +1,7 @@
 import { FreLogger } from "../logging/index.js";
 import { FreChangeManager } from "./FreChangeManager.js";
-import { type FreModel } from "../ast/index.js"
-import { FreDelta, FrePrimDelta } from "./FreDelta.js"
-import { AstWalker } from "../ast-utils/index.js"
+import { type FreDelta, type FrePrimDelta } from "./FreDelta.js"
+import { AstWalker, model } from "../ast-utils/index.js"
 import { ReferenceUpdateWorker } from "./ReferenceUpdateWorker.js"
 
 const LOGGER = new FreLogger("ReferenceUpdateManager").mute()
@@ -24,12 +23,6 @@ export class ReferenceUpdateManager {
         return this.theInstance;
     }
 
-    /**
-     * The model (AST) for which we keep the references updated.
-     * Should be set up externally.
-     */
-    public freModel: FreModel = null;
-
     private constructor() {
         FreChangeManager.getInstance().subscribeToPrimitive((delta: FreDelta) => this.updateReferences(delta));
     }
@@ -43,15 +36,14 @@ export class ReferenceUpdateManager {
     private updateReferences(delta: FreDelta) {
         if (!!delta.propertyName && delta.propertyName === "name") {
             const nameDelta: FrePrimDelta = delta as FrePrimDelta;
-            LOGGER.log(` update references for the node ${nameDelta.oldValue}`)
+            LOGGER.log(` update references for the node ${nameDelta.oldValue} renamed to ${nameDelta.newValue}`)
 
             // set up the walker of the visitor pattern
             const refWorker = new ReferenceUpdateWorker(nameDelta);
             const astWalker = new AstWalker();
             astWalker.myWorkers.push(refWorker);
-            astWalker.walk(this.freModel, () => {
-                return true;
-            });
+            // TODO wrap in AST.change() when references are added to undo
+            astWalker.walk(model(delta.unit))
         }
     }
 }

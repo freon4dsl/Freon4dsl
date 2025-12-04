@@ -19,11 +19,11 @@ import { ModelCreator } from "./ModelCreator.js";
 
 describe("Update references when name changes", () => {
     initializeLanguage();
+    // Reference updater needs to be initialized
+    ReferenceUpdateManager.getInstance()
 
     test(" for simple model", () => {
         let model: CalculatorModel = ModelCreator.createSimpleModel();
-        ReferenceUpdateManager.getInstance().freModel = model;
-
         AST.change(() => {
             model.calc[0].inputFields[0].name = "z"
         })
@@ -33,8 +33,6 @@ describe("Update references when name changes", () => {
 
     test(" for multiple references", () => {
         let model: CalculatorModel = ModelCreator.createModelWithMultipleReferences();
-        ReferenceUpdateManager.getInstance().freModel = model;
-
         AST.change(() => {
             model.calc[0].inputFields[1].name = "z"
         })
@@ -48,8 +46,6 @@ describe("Update references when name changes", () => {
 
     test(" for cross-unit references", () => {
         let model: CalculatorModel = ModelCreator.createModelWithCrossUnitReferences();
-        ReferenceUpdateManager.getInstance().freModel = model;
-
         AST.change(() => {
             model.calc[0].inputFields[0].name = "z"
             model.calc[0].inputFields[1].name = "t"
@@ -66,8 +62,6 @@ describe("Update references when name changes", () => {
 
     test(" for referred fields with the same name", ()=>{
         let model: CalculatorModel = ModelCreator.createModelWithClashingNames();
-        ReferenceUpdateManager.getInstance().freModel = model;
-
         AST.change(() => {
             model.calc[0].inputFields[0].name = "z"
         })

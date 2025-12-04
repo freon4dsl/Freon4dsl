@@ -147,14 +147,17 @@ export function observableprim(target: DecoratedModelElement, propertyKey: strin
             if (oldValue === newValue) {
                 return;
             }
+            FreChangeManager.getInstance().setPrimitive(this, propertyKey, oldValue, newValue);
             runInAction(() => {
                 storedObserver.set(newValue);
             });
-            FreChangeManager.getInstance().setPrimitive(this, propertyKey, oldValue, newValue);
         } else {
+            if (newValue === undefined) {
+                return;
+            }
+            FreChangeManager.getInstance().setPrimitive(this, propertyKey, undefined, newValue);
             storedObserver = observable.box(newValue);
             this[privatePropertyKey] = storedObserver;
-            FreChangeManager.getInstance().setPrimitive(this, propertyKey, undefined, newValue);
         }
         
     };
