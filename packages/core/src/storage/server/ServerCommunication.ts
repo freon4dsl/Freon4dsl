@@ -314,6 +314,11 @@ export class ServerCommunication implements IServerCommunication {
 
     async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
+        // If oldName and newName are the same, no rename is needed
+        if (oldName === newName) {
+            LOGGER.log(`ServerCommunication.renameModelUnit skipped: oldName and newName are the same (${oldName})`);
+            return { errors: [] };
+        }
         // put the unit under the new name
         await this.saveModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
         // remove the old unit

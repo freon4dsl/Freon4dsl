@@ -1,11 +1,9 @@
-import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
-import { AppliedFeature, DemoAttributeRef, Demo, initializeLanguage } from '../language/gen/index.js';
+import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
+import { AppliedFeature, DemoAttributeRef, Demo, initializeLanguage } from '../freon/language/index.js';
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe,  test, expect, beforeEach } from "vitest";
 import { isInScope, } from '../../utils/HelperFunctions.js';
 import { FreNamedNode } from '@freon4dsl/core';
-import { initializeScoperDef } from '../scoper/gen';
-// import { FileHandler } from '../../utils/FileHandler';
 
 
 describe("testing Alternative Scopes", () => {

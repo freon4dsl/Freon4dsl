@@ -14,7 +14,7 @@ import {
     type INamedConcept,
     initializeLanguage,
 } from "./reference-change-model/internal.js";
-import { ModelCreator } from "./ModelCreator";
+import { ModelCreator } from "./ModelCreator.js";
 
 
 describe("Update references when name changes", () => {

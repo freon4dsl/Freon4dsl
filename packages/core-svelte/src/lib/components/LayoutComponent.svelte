@@ -7,7 +7,7 @@
      * a break ('<br>').
      */
     import RenderComponent from './RenderComponent.svelte';
-    import { Box, FreLogger, ListDirection, LayoutBox, notNullOrUndefined } from '@freon4dsl/core';
+    import { type Box, FreLogger, ListDirection, type LayoutBox, notNullOrUndefined } from '@freon4dsl/core';
     import { componentId } from '../index.js';
     import ErrorMarker from './ErrorMarker.svelte';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';

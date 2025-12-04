@@ -1,5 +1,5 @@
-import { InsuranceModelEnvironment } from "../config/gen/InsuranceModelEnvironment";
-import { BaseProduct, InsuranceModel, Part, Product } from "../language/gen";
+import { InsuranceModelEnvironment } from "../freon/config/InsuranceModelEnvironment.js";
+import { BaseProduct, InsuranceModel, Part, Product } from "../freon/language/index.js";
 import { FreReader, FreValidator } from "@freon4dsl/core";
 import { FileUtil } from '@freon4dsl/test-helpers';
 import { describe, test, expect } from "vitest";

@@ -16,7 +16,7 @@ import {
     DemoOrExpression,
     DemoVariable,
     DemoVariableRef,
-} from "../language/gen/index.js";
+} from "../freon/language/index.js";
 import {
     MakeDivideExp,
     MakeEqualsExp,

@@ -65,7 +65,7 @@ const searchFieldCls: string =
         <div>
             <!--  Buttons for editor actions      -->
             <Button id="save-button" tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().saveModel}>
-                <FloppyDiskSolid class="{iconCls}"/>
+                <FloppyDiskSolid class={iconCls}/>
             </Button>
             <Button id="undo-button" tabindex={-1}  {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().undo}>
                 <UndoOutline class={iconCls}/>
@@ -96,17 +96,17 @@ const searchFieldCls: string =
             </Button>
         </div>
             <!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
-            <Tooltip tabindex={-1} triggeredBy="#model-button" placement="bottom" class="{tooltipClass}">Show Model Information</Tooltip>
-            <Tooltip tabindex={-1} triggeredBy="#save-button" placement="bottom" class="{tooltipClass}">Save Model</Tooltip>
-            <Tooltip tabindex={-1} triggeredBy="#undo-button" placement="bottom" class="{tooltipClass}">Undo</Tooltip>
-            <Tooltip tabindex={-1} triggeredBy="#redo-button" placement="bottom" class="{tooltipClass}">Redo</Tooltip>
-            <Tooltip tabindex={-1} triggeredBy="#cut-button" placement="bottom" class="{tooltipClass}">Cut</Tooltip>
-            <Tooltip tabindex={-1} triggeredBy="#copy-button" placement="bottom" class="{tooltipClass}">Copy</Tooltip>
-            <Tooltip tabindex={-1} triggeredBy="#paste-button" placement="bottom" class="{tooltipClass}">Paste</Tooltip>
-            <Tooltip tabindex={-1} triggeredBy="#element-search-button" placement="bottom" class="{tooltipClass}">Search for Type</Tooltip>
-            <Tooltip tabindex={-1} triggeredBy="#validate-button" placement="bottom" class="{tooltipClass}">Validate</Tooltip>
-            <Tooltip tabindex={-1} triggeredBy="#interpret-button" placement="bottom" class="{tooltipClass}">Interpret</Tooltip>
-            <Tooltip tabindex={-1} triggeredBy="#views-button" placement="bottom" class="{tooltipClass}">Change Views</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#model-button" placement="bottom" class={tooltipClass}>Show Model Information</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#save-button" placement="bottom" class={tooltipClass}>Save Model</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#undo-button" placement="bottom" class={tooltipClass}>Undo</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#redo-button" placement="bottom" class={tooltipClass}>Redo</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#cut-button" placement="bottom" class={tooltipClass}>Cut</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#copy-button" placement="bottom" class={tooltipClass}>Copy</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#paste-button" placement="bottom" class={tooltipClass}>Paste</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#element-search-button" placement="bottom" class={tooltipClass}>Search for Type</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#validate-button" placement="bottom" class={tooltipClass}>Validate</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#interpret-button" placement="bottom" class={tooltipClass}>Interpret</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#views-button" placement="bottom" class={tooltipClass}>Change Views</Tooltip>
         </div>
         <div class="relative {searchFieldCls}">
             <div class="flex absolute inset-y-0 start-0 items-center ps-3 pointer-events-none ">

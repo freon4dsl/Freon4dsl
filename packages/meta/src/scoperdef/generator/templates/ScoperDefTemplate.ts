@@ -1,9 +1,9 @@
 import { FreMetaClassifier, FreMetaLanguage, LangUtil } from "../../../languagedef/metalanguage/index.js";
 import { ScopeDef } from "../../metalanguage/index.js";
-import { CONFIGURATION_FOLDER, Imports, Names } from '../../../utils/on-lang/index.js';
+import { Imports, Names } from '../../../utils/on-lang/index.js';
 
 export class ScoperDefTemplate {
-    generateScoperDef(language: FreMetaLanguage, scoperDef: ScopeDef, relativePath: string): string {
+    generateScoperDef(language: FreMetaLanguage, scoperDef: ScopeDef, customsFolder: string, relativePath: string): string {
         const concreteNamespaces: FreMetaClassifier[] = []
         scoperDef.namespaces.forEach(ns => {
             LangUtil.findAllImplementorsAndSubs(ns).forEach(cls => {
@@ -17,7 +17,7 @@ export class ScoperDefTemplate {
 
         return `// TEMPLATE: ScoperDefTemplate.generateScoperDef(...)
             ${imports.makeImports(language)}
-            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
+            import { freonConfiguration } from "${relativePath}/${customsFolder}/${Names.configuration}.js";
             import { ${Names.scoper(language)} } from "./${Names.scoper(language)}.js";
 
             /**

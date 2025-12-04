@@ -22,7 +22,7 @@
     import TableCellComponent from './TableCellComponent.svelte';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
     import { activeElem, activeIn, draggedElem, draggedFrom } from './stores/AllStores.svelte';
-    import type { TableDetails } from './svelte-utils/TableDetails';
+    import type { TableDetails } from './svelte-utils/TableDetails.js';
 
     const LOGGER = TABLE_LOGGER;
 

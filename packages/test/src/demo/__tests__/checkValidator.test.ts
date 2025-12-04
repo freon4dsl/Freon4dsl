@@ -1,5 +1,5 @@
 import { FreNodeReference, FreError, AST, FreNode, isNullOrUndefined } from "@freon4dsl/core";
-import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
+import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import {
     DemoModel,
     DemoAttributeType,
@@ -11,8 +11,8 @@ import {
     DemoFunction,
     DemoVariable,
     Demo,
-} from "../language/gen/index.js";
-import { DemoValidator } from "../validator/gen/index.js";
+} from "../freon/language/index.js";
+import { DemoValidator } from "../freon/validator/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.js";
 import { describe, test, expect, beforeEach } from "vitest";
@@ -179,10 +179,10 @@ describe("Testing Validator", () => {
 
             errors = validator.validate(personEnt, true);
             errors.forEach((e) => {
-                console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity);
+                // console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity);
                 expect(e.reportedOn === personEnt);
             });
-            console.log(personEnt.attributes.map(att => att.name))
+            // console.log(personEnt.attributes.map(att => att.name))
             expect(errors.length).toBe(2);
         })
     });

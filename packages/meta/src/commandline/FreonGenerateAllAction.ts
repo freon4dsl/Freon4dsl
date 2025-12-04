@@ -19,7 +19,7 @@ import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator.js";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator.js";
 import { TyperDef } from "../typerdef/metalanguage/index.js";
 import { FreTyperMerger } from "../typerdef/parser/index.js";
-import { FileWatcher } from "../utils/file-utils/index.js";
+import { FileWatcher, notNullOrUndefined } from "../utils/file-utils/index.js";
 import { Imports } from "../utils/on-lang/index.js";
 import { LOG2USER } from "../utils/basic-dependencies/index.js";
 import { DiagramGenerator } from "../diagramgen/DiagramGenerator.js";
@@ -42,16 +42,16 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         super({
             actionName: "all",
             summary:
-                "Generates the TypeScript code for all parts of the work environment for your language, plus some diagrams that show the AST",
+                "Generates the TypeScript code for all parts of the work environment for your language, plus some diagrams that show the AST.",
             documentation:
-                "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, the reader, the writer, and the " +
-                "validator for language as defined in files in DEFINITIONS_DIR.",
+                "Generates the TypeScript code for all parts of the work environment for your language as defined in files in DEFINITIONS_DIR, plus some diagrams that show the AST",
         });
     }
 
     generate(): void {
         LOG2USER.info("Starting generation of all parts of your language as defined in " + this.defFolder.value);
         // LOG2USER.log("Output will be generated in: " + this.outputFolder);
+        // LOG2USER.log("Custom files will be generated in: " + this.customsFolder);
 
         // this try-catch is here for debugging purposes, should be removed from release
         try {
@@ -119,6 +119,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     //     try {
     //         this.lionWebGenerator.language = this.language;
     //         this.lionWebGenerator.outputfolder = this.outputFolder;
+    //         this.lionWebGenerator.customsfolder = this.customsFolder;
     //         this.lionWebGenerator.generate();
     //     } catch (e: unknown) {
     //         if (e instanceof Error) {
@@ -139,7 +140,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 typer = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
             }
             this.typerGenerator.language = this.language;
-            this.typerGenerator.outputfolder = this.outputFolder;
+            this.typerGenerator.outputFolder = this.outputFolder;
+            this.typerGenerator.customsFolder = this.customsFolder;
             this.typerGenerator.generate(typer);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -164,7 +166,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         }
         try {
             this.interpreterGenerator.language = this.language;
-            this.interpreterGenerator.outputfolder = this.outputFolder;
+            this.interpreterGenerator.outputFolder = this.outputFolder;
+            this.interpreterGenerator.customsFolder = this.customsFolder;
             this.interpreterGenerator.generate(interpreterDef);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -185,7 +188,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 scoper = new ScoperParser(this.language).parseMulti(this.scopeFiles);
             }
             this.scoperGenerator.language = this.language;
-            this.scoperGenerator.outputfolder = this.outputFolder;
+            this.scoperGenerator.outputFolder = this.outputFolder;
+            this.scoperGenerator.customsFolder = this.customsFolder;
             this.scoperGenerator.generate(scoper);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -206,7 +210,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 validator = new ValidatorParser(this.language).parseMulti(this.validFiles);
             }
             this.validatorGenerator.language = this.language;
-            this.validatorGenerator.outputfolder = this.outputFolder;
+            this.validatorGenerator.outputFolder = this.outputFolder;
+            this.validatorGenerator.customsFolder = this.customsFolder;
             this.validatorGenerator.generate(validator);
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -224,8 +229,10 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         let editor: FreEditUnit | undefined;
         try {
             this.editorGenerator.outputfolder = this.outputFolder;
+            this.editorGenerator.customsfolder = this.customsFolder;
             this.editorGenerator.language = this.language;
             this.parserGenerator.outputfolder = this.outputFolder;
+            this.parserGenerator.customsfolder = this.customsFolder;
             this.parserGenerator.language = this.language;
 
             if (this.editFiles.length > 0) {
@@ -233,7 +240,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             } else {
                 editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
             }
-            if (!!editor) {
+            if (notNullOrUndefined(editor)) {
                 // add default values for everything that is not present in the default projection group
                 DefaultEditorGenerator.addDefaults(editor);
 
@@ -260,7 +267,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             throw new Error("Language could not be parsed, exiting.");
         }
         Imports.initialize(this.language)
-        this.languageGenerator.outputfolder = this.outputFolder;
+        this.languageGenerator.outputFolder = this.outputFolder;
+        this.languageGenerator.customsFolder = this.customsFolder;
         this.languageGenerator.generate(this.language!);
     };
 
@@ -268,7 +276,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         if (this.language !== undefined && this.language !== null) {
             // generate the diagrams
             LOG2USER.info("Generating language diagrams");
-            this.diagramGenerator.outputfolder = this.outputFolder;
+            this.diagramGenerator.outputFolder = this.outputFolder;
             this.diagramGenerator.language = this.language;
             this.diagramGenerator.fileNames = this.languageFiles;
             this.diagramGenerator.generate();

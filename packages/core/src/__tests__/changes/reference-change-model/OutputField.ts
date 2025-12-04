@@ -2,8 +2,8 @@
 // TEMPLATE ConceptTemplate.generateConceptPrivate(...)
 
 import { MobxModelElementImpl, type FreNode, observablepart } from "../../../ast/index.js";
-import { FreUtils } from "../../../util";
-import { FreParseLocation } from '../../../reader';
+import { FreUtils } from "../../../util/index.js";
+import { FreParseLocation } from '../../../reader/index.js';
 import { CalcExpression } from "./internal.js";
 
 import { makeObservable, action } from "mobx";

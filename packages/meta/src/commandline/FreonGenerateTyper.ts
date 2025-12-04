@@ -3,6 +3,8 @@ import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator.js";
 import { FreTyperMerger } from "../typerdef/parser/FreTyperMerger.js";
 import { TyperDef } from "../typerdef/metalanguage/index.js";
+import { LOG2USER } from '../utils/basic-dependencies/index.js';
+import { notNullOrUndefined } from '../utils/file-utils/index.js';
 
 const LOGGER = new MetaLogger("FreonGenerateTyper"); // .mute();
 export class FreonGenerateTyper extends FreonGeneratePartAction {
@@ -20,19 +22,30 @@ export class FreonGenerateTyper extends FreonGeneratePartAction {
 
     generate(): void {
         LOGGER.log("Starting Freon typer generation ...");
+        super.generate();
         if (this.language === null || this.language === undefined) {
             return;
         }
-        super.generate();
-        this.typerGenerator = new FreonTyperGenerator();
         this.typerGenerator.language = this.language;
-        this.typerGenerator.outputfolder = this.outputFolder;
+        this.typerGenerator.outputFolder = this.outputFolder;
+        this.typerGenerator.customsFolder = this.customsFolder;
 
-        const typer: TyperDef | undefined = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
-        if (typer === null || typer === undefined) {
-            throw new Error("Typer definition could not be parsed, exiting.");
-        } else {
-            this.typerGenerator.generate(typer);
+        try {
+            if (this.typerFiles.length > 0) {
+                const typer: TyperDef | undefined = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
+                if (notNullOrUndefined(typer)) {
+                    this.typerGenerator.generate(typer);
+                }
+            } else {
+                LOG2USER.info("No .type file(s) found.");
+            }
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOG2USER.error(
+                  "Stopping typer generation because of errors: " + e.message + "\n" + e.stack,
+                );
+                // LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);
+            }
         }
     }
 }

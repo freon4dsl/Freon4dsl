@@ -1,9 +1,0 @@
-scoper for language RulesLanguage
-
-isNamespace { Data, Rules, Entity, Type }
-
-Rules {
-    imports { self.imports; self.forEntity; }
-}
-
-

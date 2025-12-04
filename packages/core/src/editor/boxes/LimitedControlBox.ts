@@ -15,6 +15,7 @@ export enum LimitedDisplay {
 export class LimitedControlBox extends Box {
     readonly kind: string = "LimitedControlBox";
     showAs: LimitedDisplay = LimitedDisplay.RADIO_BUTTON;
+    horizontal: boolean = false; // todo expose horizontal/vertical to user through the .edit file
     /**
      * NB
      * The following two functions are used for both single valued and list values limited properties.

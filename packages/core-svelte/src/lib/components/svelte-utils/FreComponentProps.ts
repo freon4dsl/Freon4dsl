@@ -1,6 +1,6 @@
 import { type Box, FreEditor, type GridBox, type SelectOption } from '@freon4dsl/core';
-import type { CaretDetails } from './CaretDetails';
-import type { TableDetails } from './TableDetails';
+import type { CaretDetails } from './CaretDetails.js';
+import type { TableDetails } from './TableDetails.js';
 
 /**
  * Properties for the FreonComponent

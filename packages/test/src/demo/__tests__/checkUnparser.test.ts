@@ -9,12 +9,12 @@ import {
     DemoFunction,
     DemoVariable,
     DemoAttributeType,
-} from "../language/gen";
+} from "../freon/language/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.js";
-import { DemoValidator } from "../validator/gen/index.js";
-import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
-import { FileHandler } from "../../utils/FileHandler";
+import { DemoValidator } from "../freon/validator/index.js";
+import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
+import { FileHandler } from "../../utils/FileHandler.js";
 import { describe, test, expect } from "vitest";
 
 describe("Testing Unparser", () => {

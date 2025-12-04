@@ -5,7 +5,7 @@ import {
     FreMetaLimitedConcept,
     FreMetaProperty,
 } from "../../../languagedef/metalanguage/index.js";
-import { CONFIGURATION_FOLDER, Names, Imports } from "../../../utils/on-lang/index.js";
+import { Names, Imports } from "../../../utils/on-lang/index.js";
 import { LOG2USER } from "../../../utils/basic-dependencies/index.js";
 import { isNullOrUndefined } from "../../../utils/file-utils/index.js";
 import { NamesForEditor } from "../../../utils/on-lang-and-editor/index.js";
@@ -20,7 +20,7 @@ import {
 } from "../../metalanguage/index.js";
 
 export class EditorDefTemplate {
-    generateEditorDef(language: FreMetaLanguage, editorDef: FreEditUnit, relativePath: string): string {
+    generateEditorDef(language: FreMetaLanguage, editorDef: FreEditUnit, customsFolder: string, relativePath: string): string {
         const defaultProjGroup: FreEditProjectionGroup | undefined = editorDef.getDefaultProjectiongroup();
         if (defaultProjGroup === null || defaultProjGroup === undefined) {
             // this should never happen
@@ -177,7 +177,7 @@ export class EditorDefTemplate {
         // template starts here
         return `    // TEMPLATE: EditorDefTemplate.generateEditorDef(...)
             ${imports.makeImports(language)}
-            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
+            import { freonConfiguration } from "${relativePath}/${customsFolder}/${Names.configuration}.js";
 
             const map = ${conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyProjection)};
 

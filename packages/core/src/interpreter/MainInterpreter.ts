@@ -3,7 +3,7 @@ import { InterpreterError } from "./InterpreterException.js";
 import { InterpreterTracer } from "./InterpreterTracer.js";
 import type { ConceptFunction, EvaluateFunction, IMainInterpreter, InitFunction, OwningPropertyFunction } from "./IMainInterpreter.js";
 import { isRtError, RtObject } from "./runtime/index.js";
-import type { FreNode } from '../ast';
+import type { FreNode } from '../ast/index.js';
 
 /**
  * The main interpreter class, usually hidden by a facade specific for a project.
@@ -29,7 +29,9 @@ export class MainInterpreter implements IMainInterpreter {
     }
 
     // Lookup map of all evaluate functions from all interpreters
-    private functions: Map<string, EvaluateFunction> = new Map<string, EvaluateFunction>();
+    // We store them as EvaluateFunction<FreNode> because at runtime we only know FreNode,
+    // but each registered function is actually more specific (e.g. InputField, IterateExp, ...)
+    private functions: Map<string, EvaluateFunction<FreNode>> = new Map();
     private tracing: boolean = false;
     private tracer: InterpreterTracer;
     // Function to get the concept name / type of the node
@@ -51,8 +53,8 @@ export class MainInterpreter implements IMainInterpreter {
     /**
      * @see IMainInterpreter.registerFunction
      */
-    public registerFunction(name: string, func: EvaluateFunction): void {
-        this.functions.set(name, func);
+    public registerFunction<TNode extends FreNode>(name: string, func: EvaluateFunction<TNode>): void {
+        this.functions.set(name, func as EvaluateFunction<FreNode>);
     }
 
     /**

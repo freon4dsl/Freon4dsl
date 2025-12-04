@@ -1,5 +1,5 @@
 import { FreLanguage } from "@freon4dsl/core";
-import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
+import { DSmodelEnvironment } from "../freon/config/DSmodelEnvironment.js";
 import { describe, test, expect } from "vitest";
 
 describe("Testing Defined Scoper, namespaces for implemented interfaces", () => {

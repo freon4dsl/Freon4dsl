@@ -1,10 +1,9 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { FileHandler } from '../../utils/FileHandler';
-import { ROOTEnvironment } from '../config/gen/ROOTEnvironment';
-import { XX } from '../../typer-test8';
+import { FileHandler } from '../../utils/FileHandler.js';
+import { ROOTEnvironment } from '../freon/config/ROOTEnvironment.js';
+import { XX } from '../../typer-test8/freon/language/index.js';
 import { AST, FreError } from '@freon4dsl/core';
-import { AAAAAA } from '../language/gen';
-
+import { AAAAAA } from '../freon/language/index.js';
 const reader = ROOTEnvironment.getInstance().reader;
 const validator = ROOTEnvironment.getInstance().validator;
 const handler = new FileHandler();

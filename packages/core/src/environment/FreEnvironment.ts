@@ -6,6 +6,7 @@ import type { FreCompositeTyper } from "../typer/index.js";
 import type { FreWriter } from "../writer/index.js";
 import type { FreReader } from "../reader/index.js";
 import type { FreModel } from "../ast/index.js";
+import type { FreStdlib } from '../stdlib/index.js';
 
 export type FreEnvironment = {
     /**
@@ -21,6 +22,7 @@ export type FreEnvironment = {
     writer: FreWriter;
     reader: FreReader;
     interpreter: FreInterpreter;
+    stdlib: FreStdlib;
     projectionHandler: FreProjectionHandler;
 
     languageName: string;

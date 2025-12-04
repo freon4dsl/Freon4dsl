@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/server",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "publishConfig": {
     "access": "public"
   },
@@ -26,7 +26,8 @@
     "publish-local": "npm publish --registry http://localhost:4873 --tag local",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local",
-    "test": "vitest run"
+    "test": "vitest run",
+    "check-imports": "bash ../../scripts/check-import-extensions.sh"
   },
   "devDependencies": {
     "vitest": "3.2.4",
@@ -40,6 +41,6 @@
     "@koa/router": "14.0.0",
     "@koa/cors": "5.0.0",
     "supertest": "^7.0.0",
-    "tslib": "^2.6.3"
+    "tslib": "^2.8.1"
   }
 }
