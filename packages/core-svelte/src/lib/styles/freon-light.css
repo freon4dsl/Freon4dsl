@@ -7,7 +7,6 @@
 .freon-component {
     color: var(--color-light-freon-900);
     background-color: var(--color-light-freon-50);
-    --md-sys-color-primary: var(--color-light-freon-900);
 }
 
 .label-component:empty:before {
@@ -44,6 +43,39 @@
 }
 
 .limited-checkbox-component-group {
+    /* Base (unchecked) */
+    --limited-checkbox-border-color: var(--color-light-freon-600);
+    --limited-checkbox-background-color: transparent;
+
+    /* Checked */
+    --limited-checkbox-checked-border-color: var(--color-light-freon-900);
+    --limited-checkbox-checked-background-color: var(--color-light-freon-900);
+    --limited-checkbox-checkmark-color: var(--color-light-freon-50);
+
+    /* Focus / hover ring */
+    --limited-checkbox-focus-ring-color: color-mix(
+            in srgb,
+            var(--color-light-freon-accent-dropdown) 30%,
+            transparent
+    );
+
+    /* Disabled */
+    --limited-checkbox-disabled-border-color: var(--color-light-freon-400);
+    --limited-checkbox-disabled-background-color: var(--color-light-freon-250);
+
+    --limited-checkbox-disabled-checked-border-color: color-mix(
+            in srgb,
+            var(--color-light-freon-900) 38%,
+            var(--color-light-freon-250)
+    );
+    --limited-checkbox-disabled-checked-background-color: color-mix(
+            in srgb,
+            var(--color-light-freon-900) 38%,
+            var(--color-light-freon-250)
+    );
+
+    /* Label text */
+    --limited-checkbox-label-color: var(--color-light-freon-900);
 }
 .limited-checkbox-component-group:hover,
 .limited-checkbox-component-group:focus-within {
@@ -55,19 +87,41 @@
 .limited-checkbox-component-single {
 }
 
+/*******************************************************
+ *  LimitedRadioComponent
+ *******************************************************/
 .limited-radio-component-group {
+    --limited-radio-unchecked-border-color: var(--color-light-freon-600);
+    --limited-radio-dot-color: var(--color-light-freon-900);
+    --limited-radio-hover-background-color: var(--color-light-freon-150);
+    --limited-radio-focus-ring-color: color-mix(
+            in srgb,
+            var(--color-light-freon-accent-dropdown) 30%,
+            transparent
+    );
+    --limited-radio-label-color: var(--color-light-freon-900);
+    --limited-radio-shadow-color: var(--color-light-freon-700);
 }
-.limited-radio-component-group:hover,
-.limited-radio-component-group:focus-within {
-    outline: var(--color-light-freon-900) solid 1px;
-    box-shadow: 0 0 10px var(--color-light-freon-900);
+
+/*******************************************************
+ *  BooleanRadioComponent
+ *******************************************************/
+.boolean-radio-component-group {
+    --boolean-radio-border-color: var(--color-light-freon-400);
+    --boolean-radio-color: var(--color-light-freon-900);
+    --boolean-radio-hover-ripple: var(--color-light-freon-200);
+    --boolean-radio-focus-ring-color: color-mix(
+            in srgb,
+            var(--color-light-freon-accent-dropdown) 30%,
+            transparent
+    );
+    --boolean-radio-label-color: var(--color-light-freon-900);
+    --boolean-radio-shadow-color: var(--color-light-freon-700);
 }
-.limited-radio-component-single {
-}
-.limited-radio-component-vertical {
-}
-.limited-radio-component-label {
-}
+
+/*******************************************************
+ *  ContextMenuComponent
+ *******************************************************/
 .contextmenu {
     border-color: var(--color-light-freon-150);
     background: var(--color-light-freon-50);
@@ -99,24 +153,62 @@
     background-color: var(--color-light-freon-accent-error);
 }
 
-/* Button Component */
+/*******************************************************
+ *  ButtonComponent
+ *******************************************************/
 .button-component {
     box-shadow: 2px 2px 4px var(--color-light-freon-250);
-    background-color: var(--color-light-freon-900);
-    color: var(--color-light-freon-50);
+    background-color: var(--color-light-freon-accent-button);
+    color: var(--color-light-freon-900);
+    border: 1px solid var(--color-light-freon-500);
 }
 /* Hover effects */
 .button-component:hover {
-    background-color: var(--color-light-freon-900);
+    background-color: var(--color-light-freon-accent-button);
+    box-shadow: 2px 2px 8px var(--color-light-freon-700);
 }
-
 /* Focus-within styles */
-.button-component:focus-within {
-    box-shadow: 0 0 0 4px var(--color-light-freon-700);
+.button-component:focus-visible {
+    outline: 2px solid var(--color-light-freon-500);
 }
 
+/*******************************************************
+ *  BooleanCheckboxComponent
+ *******************************************************/
 .boolean-checkbox-component {
-    --md-sys-color-primary: var(--color-light-freon-900);
+    /* Base (unchecked) */
+    --limited-checkbox-border-color: var(--color-light-freon-600);
+    --limited-checkbox-background-color: transparent;
+
+    /* Checked */
+    --limited-checkbox-checked-border-color: var(--color-light-freon-900);
+    --limited-checkbox-checked-background-color: var(--color-light-freon-900);
+    --limited-checkbox-checkmark-color: var(--color-light-freon-50);
+
+    /* Focus / hover ring */
+    --limited-checkbox-focus-ring-color: color-mix(
+            in srgb,
+            var(--color-light-freon-accent-dropdown) 30%,
+            transparent
+    );
+
+    /* Disabled */
+    --limited-checkbox-disabled-border-color: var(--color-light-freon-400);
+    --limited-checkbox-disabled-background-color: var(--color-light-freon-250);
+
+    --limited-checkbox-disabled-checked-border-color: color-mix(
+            in srgb,
+            var(--color-light-freon-900) 38%,
+            var(--color-light-freon-250)
+    );
+    --limited-checkbox-disabled-checked-background-color: color-mix(
+            in srgb,
+            var(--color-light-freon-900) 38%,
+            var(--color-light-freon-250)
+    );
+
+    /* Label text */
+    --limited-checkbox-label-color: var(--color-light-freon-900);
 }
 .boolean-checkbox-component:hover {
     box-shadow: 0 0 10 var(--color-light-freon-800);
@@ -126,20 +218,13 @@
     /*box-shadow: 0 0 10 var(--color-light-freon-800);*/
 }
 
-.boolean-radio-component-group {
-    color: var(--color-light-freon-900);
-    /*--md-sys-color-primary: var(--freon-boolean-color, var(--mdc-theme-primary));*/
-    /*--md-sys-color-on-surface-variant: var(--color-light-freon-accent-error); color for the one that is not checked */
-}
-.boolean-radio-component-group:hover,
-.boolean-radio-component-group:focus-within {
-    outline: var(--color-light-freon-900) solid 1px;
-    box-shadow: 0 0 10px var(--color-light-freon-800);
-}
 
+/*******************************************************
+ *  TextComponent
+ *******************************************************/
 .text-component-input {
     color: var(--color-light-freon-400);
-    background: var(--freon-light-accent-lightgreen);
+    background: var(--color-freon-light-accent-lightgreen);
 }
 
 .text-component-text {
@@ -164,134 +249,132 @@
 }
 .multiline-text-component:focus {
     color: var(--color-light-base-300);
-    background-color: var(--color-light-accent-50);
+    background-color: var(--color-freon-light-accent-lightgreen);
 }
 
+/*******************************************************
+ *  NumericSliderComponent
+ *******************************************************/
 .numeric-slider-component {
-    --md-slider-inactive-track-color: var(--color-light-freon-250);
-}
+    /* Track gradient endpoints – use palette colors directly */
+    --numeric-slider-low-color: var(--color-freon-light-accent-lightgreen);
+    --numeric-slider-high-color: var(--color-light-freon-border-green);
 
-.numeric-slider-component:hover,
-.numeric-slider-component:focus-within {
-    outline: var(--color-light-freon-700) solid 1px;
-    box-shadow: 0 0 8px var(--color-light-freon-250);
-    border-radius: 0.1em;
+    /* Track background (the “filled” part under/after the thumb) */
+    --numeric-slider-background-color: var(--color-light-freon-300);
+
+    /* Thumb colors */
+    --numeric-slider-thumb-background-color: var(--color-light-freon-accent-button);
+    --numeric-slider-thumb-border-color: var(--color-light-freon-accent-dropdown);
+
+    /* Neutral shadow is fine – doesn’t *have* to be themed */
+    --numeric-slider-thumb-shadow-color: rgba(0, 0, 0, 0.08);
+
+    /* Focus ring */
+    --numeric-slider-focus-ring-color: var(--color-light-freon-accent-optional);
+
+    /* Tooltip */
+    --numeric-slider-tooltip-background-color: var(--color-light-freon-900);
+    --numeric-slider-tooltip-text-color: var(--color-light-freon-50);
+
+    --numeric-slider-thumb-size: 18px;
+    --numeric-slider-tooltip-distance: 18px;
 }
 
 /*******************************************************
  *  DropDownComponent
- */
+ *******************************************************/
 .dropdown-component {
     border-color: var(--color-light-freon-900);
     /*box-shadow: 0 0 6px 0 var(--color-light-freon-250);*/
-    background: var(--freon-light-accent-lightgreen);
+    background: var(--color-freon-light-accent-lightgreen);
 }
-
 .dropdown-component-item {
     color: var(--color-light-freon-accent-dropdown);
     background: none;
 }
-
 .dropdown-component-error {
     color: var(--color-light-freon-accent-error);
     /*background-color: var(--freon-dropdownitem-component-error-bg-color, var(--color-light-freon-accent-error));*/
 }
-
 .dropdown-component-item:hover {
     color: var(--color-light-freon-50);
     background-color: var(--color-light-freon-accent-dropdown);
 }
-
 .dropdown-component-selected {
     color: var(--color-light-freon-accent-dropdown);
     font-weight: bold;
-    background-color: var(--freon-light-accent-lightgreen);
+    background-color: var(--color-freon-light-accent-lightgreen);
 }
 
-/******************************************************************
- *
- ******************************************************************/
-/*.inner-switch-component {*/
-/*    background: var(--color-light-freon-accent-dropdown);*/
-/*}*/
-
+/*******************************************************
+ *  BooleanInnerSwitchComponent
+ *******************************************************/
 .inner-switch-component button {
     color: var(--color-light-freon-900);
     background: var(--color-light-freon-200);
+    --inner-switch-border-color: var(--color-light-freon-900);
 }
-
 [role="switch"][aria-checked="true"] :first-child,
 [role="switch"][aria-checked="false"] :last-child {
     color: var(--color-light-freon-50);
     background-color: var(--color-light-freon-900);
 }
-
 .inner-switch-component button:hover,
 .inner-switch-component button:focus {
     outline: var(--color-light-freon-900) solid 1px;
     box-shadow: 0 0 8px var(--color-light-freon-900);
 }
 
+/*******************************************************
+ *  OptionalComponent
+ *******************************************************/
 .optional-component:empty:before {
     background-color: var(--color-light-freon-accent-optional);
 }
-
 .optional-component-hide {
     color: var(--color-light-freon-150);
 }
 
+/*******************************************************
+ *  RenderComponent
+ *******************************************************/
 .render-component-unknown-box {
     color: var(--color-light-freon-accent-error);
 }
-
 .render-component-error {
     text-decoration-color: var(--color-light-freon-accent-error);
 }
-
 .render-component-selected {
     outline-color: var(--color-light-freon-900);
 }
-
 .render-component-selected:has(.layout-component-horizontal) > span:focus {
     outline-color: var(--color-light-freon-700);
     box-shadow: 0 0 10px var(--color-light-freon-700);
 }
 
-.switch-component button {
-    background: var(--color-light-freon-150);
+/*******************************************************
+ *  BooleanSwitchComponent
+ *******************************************************/
+.switch-component {
+    --switch-background-off: var(--color-light-freon-150);
+    --switch-background-on: var(--color-light-freon-accent-button);
+
+    --switch-border-color-off: var(--color-light-freon-500);
+
+    --switch-knob-color: var(--color-light-freon-900);
+    --switch-shadow-color: var(--color-light-freon-700);
 }
 
-.switch-component button::before {
-    /* defines the knob */
-    background: var(--color-light-freon-900);
-}
-
-.switch-component button[aria-checked="true"] {
-    background-color: var(--color-light-freon-200);
-}
-
-.switch-component button[aria-checked="true"]::before {
-}
-
-.switch-component button:hover,
-.switch-component button:focus {
-    box-shadow: 2px 2px 8px var(--color-light-freon-700);
-}
-
-.switch-component button {
-}
-
-.switch-component button::before {
-}
-
+/*******************************************************
+ *  TableComponent and TableCellComponent
+ *******************************************************/
 .table-component {
     border-color: var(--color-light-freon-border-green);
 }
-
 .table-cell-component {
     background-color: transparent;
 }
-
 .table-cell-component-unselected {
     background: transparent;
 }
@@ -303,16 +386,22 @@
     box-shadow: 0px 0px 8px 7px var(--color-light-freon-border-green);
 }
 
+/*******************************************************
+ *  GridComponent and GridCellComponent
+ *******************************************************/
 .grid-component {
     border-color: var(--color-light-freon-border-green);
 }
-
 .grid-cell-component {
     color: inherit;
 }
 
+/*******************************************************
+ *  Other ...
+ *******************************************************/
 .reference-button {
     background-color: transparent;
+    color: var(--color-light-freon-100)
 }
 
 .text-dropdown-component .text-component-text {
@@ -320,7 +409,8 @@
 }
 
 .text-dropdown-component .text-component-input {
-    color: var(--color-light-freon-accent-dropdown);
+    color: var(--color-light-freon-accent-editable);
+    background: var(--color-light-freon-accent-dropdown);
 }
 
 .brackets {

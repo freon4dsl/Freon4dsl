@@ -13,9 +13,9 @@ import {
     isNullOrUndefined,
     notNullOrUndefined,
 } from "@freon4dsl/core";
-import { AAAAAA, ZZ, BB, DD } from "../../language/gen/index.js";
+import { AAAAAA, ZZ, BB, DD } from "../language/index.js";
 
-import { ROOTDefaultWorker } from "../../utils/gen/index.js";
+import { ROOTDefaultWorker } from "../utils/index.js";
 import { reservedWordsInTypescript } from "./ReservedWords.js";
 
 import { type ROOTCheckerInterface } from "./ROOTValidator.js";

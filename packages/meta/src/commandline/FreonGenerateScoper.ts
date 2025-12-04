@@ -3,6 +3,8 @@ import { ScoperParser } from "../scoperdef/parser/ScoperParser.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { ScopeDef } from "../scoperdef/metalanguage/index.js";
+import { LOG2USER } from '../utils/basic-dependencies/index.js';
+import { notNullOrUndefined } from '../utils/file-utils/index.js';
 
 const LOGGER = new MetaLogger("FreonGenerateScoper"); // .mute();
 export class FreonGenerateScoper extends FreonGeneratePartAction {
@@ -26,12 +28,24 @@ export class FreonGenerateScoper extends FreonGeneratePartAction {
             return;
         }
         this.scoperGenerator.language = this.language;
-        this.scoperGenerator.outputfolder = this.outputFolder;
-
-        const scoper: ScopeDef | undefined = new ScoperParser(this.language).parseMulti(this.scopeFiles);
-        if (scoper === null || scoper === undefined) {
-            throw new Error("Scoper definition could not be parsed, exiting.");
+        this.scoperGenerator.outputFolder = this.outputFolder;
+        this.scoperGenerator.customsFolder = this.customsFolder;
+        try {
+            if (this.scopeFiles.length > 0) {
+                const scoper: ScopeDef | undefined = new ScoperParser(this.language).parseMulti(this.scopeFiles);
+                if (notNullOrUndefined(scoper)) {
+                    this.scoperGenerator.generate(scoper);
+                }
+            } else {
+                LOG2USER.info("No .scope file(s) found.");
+            }
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOG2USER.error(
+                  "Stopping typer generation because of errors: " + e.message + "\n" + e.stack,
+                );
+                // LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);
+            }
         }
-        this.scoperGenerator.generate(scoper);
     }
 }

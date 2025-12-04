@@ -22,12 +22,4 @@ export class EditorIndexTemplate {
         ${boxProviderConcepts.map(cls => `export * from "./${NamesForEditor.boxProvider(cls)}.js";` ).join("")} 
             export * from "./EditorDef.js"; `;
     }
-
-    generateIndex(language: FreMetaLanguage): string {
-        return `
-        export * from "./gen/index.js";
-        export * from "./${Names.customProjection(language)}.js";
-        export * from "./${Names.customActions(language)}.js";
-        `;
-    }
 }

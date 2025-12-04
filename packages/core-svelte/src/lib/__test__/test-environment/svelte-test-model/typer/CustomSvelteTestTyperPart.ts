@@ -9,32 +9,31 @@ import type {FreNode, FreType, FreTyper} from "@freon4dsl/core";
 export class CustomSvelteTestTyperPart implements FreTyper {
     mainTyper!: FreTyper;
 
-    // @ts-ignore
-    isType(modelelement: FreNode): boolean | null {
-        return null;
+    isType(node: FreNode): boolean | undefined {
+        return undefined;
     }
 
-    inferType(modelelement: FreNode): FreType | null {
-        return null;
+    inferType(node: FreNode): FreType | undefined {
+        return undefined;
     }
 
-    equals(type1: FreType, type2: FreType): boolean | null {
-        return null;
+    equals(type1: FreType, type2: FreType): boolean | undefined {
+        return undefined;
     }
 
-    conforms(type1: FreType, type2: FreType): boolean | null {
-        return null;
+    conforms(type1: FreType, type2: FreType): boolean | undefined {
+        return undefined;
     }
 
-    conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | null {
-        return null;
+    conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | undefined {
+        return undefined;
     }
 
-    commonSuper(typelist: FreType[]): FreType | null {
-        return null;
+    commonSuper(typelist: FreType[]): FreType | undefined {
+        return undefined;
     }
 
-    public getSuperTypes(type: FreType): FreType[] | null {
-        return null;
+    public getSuperTypes(type: FreType): FreType[] | undefined {
+        return undefined;
     }
 }

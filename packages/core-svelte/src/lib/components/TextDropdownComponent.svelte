@@ -26,7 +26,7 @@
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
     import { selectedBoxes } from './stores/AllStores.svelte.js';
     import { clickOutsideConditional } from './svelte-utils/ClickOutside.js';
-    import { type CaretDetails } from './svelte-utils/CaretDetails';
+    import { type CaretDetails } from './svelte-utils/CaretDetails.js';
     import { tick } from 'svelte';
     import type DropdownCmp from "./DropdownComponent.svelte";
 

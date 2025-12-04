@@ -25,11 +25,12 @@
     let id: string = box.id;
     let trueElement: HTMLInputElement;
     let falseElement: HTMLInputElement;
-    let undefinedElement: HTMLInputElement;
+    let undefinedElement: HTMLInputElement | undefined = $state(undefined);
     let currentValue: boolean | undefined = $state(box.getBoolean());
-    let ariaLabel = 'toBeDone'; // todo create useful aria-label
-    let isHorizontal: boolean = false; // todo expose horizontal/vertical to user
-    let isOptional: boolean = $state(false);
+    let ariaLabel = box.propertyName;
+    let isHorizontal: boolean = box.horizontal;
+    let isOptional: boolean = $state(false); // is set in $effect to optionality from box
+
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
@@ -41,7 +42,7 @@
             trueElement.focus();
         } else if (currentValue === false) {
             falseElement.focus();
-        } else if (currentValue === "unknown") {
+        } else if (currentValue === undefined && notNullOrUndefined(undefinedElement)) {
             undefinedElement.focus();
         }
     }
@@ -70,18 +71,19 @@
                 'BooleanRadioComponent.onChange for box ' +
                     box.role +
                     ', value:' +
-                    event.target['value' as keyof EventTarget]
+                    event.currentTarget.value
             );
             const tmp = event.currentTarget.value
             if (tmp === "unknown") {
                 // Using value "unknown", as undefined does not work with radio button
                 currentValue = undefined
-            } else if (typeof tmp === "boolean") {
-                currentValue = tmp
-            } else if (typeof tmp === "string") {
-                currentValue = tmp === "true"
+            } else if (tmp === "true") {
+                currentValue = true;
+            } else if (tmp === "false") {
+                currentValue = false;
             } else {
-                LOGGER.error(`unkown value in BooleanRadioComponent: '${tmp}'`)
+                LOGGER.error(`unknown value in BooleanRadioComponent: '${tmp}'`)
+                return; // bail out, don't update box
             }
             box.setBoolean(currentValue);
             editor.selectElementForBox(box);
@@ -89,7 +91,7 @@
         }
     };
 
-    const onClick = (event: MouseEvent & { currentTarget: EventTarget & HTMLInputElement }) => {
+    const onClick = (event: MouseEvent & { currentTarget: EventTarget & HTMLLabelElement }) => {
         event.stopPropagation();
     };
 
@@ -114,23 +116,23 @@
 <span
     role="radiogroup"
     aria-labelledby={ariaLabel}
-    class="boolean-radio-component-group {box.cssClass}"
-    class:boolean-radio-component-vertical={!isHorizontal}
+    class="freon-radio-group boolean-radio-component-group {box.cssClass}"
+    class:freon-radio-group-vertical={!isHorizontal}
     {id}
 >
-    <span class="boolean-radio-component-single">
-        <label for="{id}-trueOne" class="boolean-radio-component-label">
+    <span class="freon-radio-item boolean-radio-component-single">
+        <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
             <input
                 type="radio"
                 id="{id}-trueOne"
                 name="{id}-group"
-                role="radio"
                 tabindex="0"
                 aria-checked={currentValue === true}
                 value={true}
                 checked={currentValue === true}
                 aria-label="radio-control-true"
-                onclick={onClick}
                 onchange={onChange}
                 onkeydown={onKeyDown}
                 bind:this={trueElement}
@@ -138,19 +140,19 @@
             {box.labels.yes}
         </label>
     </span>
-    <span class="boolean-radio-component-single">
-        <label class="boolean-radio-component-label" for="{id}-falseOne">
+    <span class="freon-radio-item boolean-radio-component-single">
+        <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
             <input
                 type="radio"
                 id="{id}-falseOne"
                 name="{id}-group"
-                role="radio"
                 tabindex="0"
                 aria-checked={currentValue === false}
                 value={false}
                 checked={currentValue === false}
                 aria-label="radio-control-false"
-                onclick={onClick}
                 onchange={onChange}
                 onkeydown={onKeyDown}
                 bind:this={falseElement}
@@ -159,19 +161,19 @@
         </label>
     </span>
     {#if isOptional} 
-        <span class="boolean-radio-component-single">
-            <label class="boolean-radio-component-label" for="{id}-undefinedOne">
+        <span class="freon-radio-item boolean-radio-component-single">
+            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
                 <input
                     type="radio"
                     id="{id}-undefinedOne"
                     name="{id}-group"
-                    role="radio"
                     tabindex="0"
                     aria-checked={currentValue === undefined}
                     value="unknown"
                     checked={currentValue === undefined}
                     aria-label="radio-control-undefined"
-                    onclick={onClick}
                     onchange={onChange}
                     onkeydown={onKeyDown}
                     bind:this={undefinedElement}
@@ -181,3 +183,5 @@
         </span>
     {/if}
 </span>
+
+

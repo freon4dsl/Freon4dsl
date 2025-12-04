@@ -12,7 +12,6 @@
     } from '@freon4dsl/core';
     import type { LimitedControlBox } from '@freon4dsl/core';
     import { onMount } from 'svelte';
-    import { MdCheckbox } from '@material/web/checkbox/checkbox.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
@@ -23,9 +22,9 @@
     let id: string = box.id;
     let currentNames: string[] = $state(box.getNames());
     let myEnum: string[] = box.getPossibleNames();
-    let allElements: MdCheckbox[] = $state([]);
-    let ariaLabel: string = 'toBeDone'; // todo ariaLabel
-    let isHorizontal: boolean = false; // todo expose horizontal/vertical to user
+    let allElements: HTMLInputElement[] = $state([]);
+    let ariaLabel: string = box.propertyName;
+    let isHorizontal: boolean = box.horizontal;
 
     const onClick = (event: MouseEvent) => {
         // console.log("onClick")
@@ -153,28 +152,31 @@
 </script>
 
 <span
-    role="group"
-    aria-labelledby={ariaLabel}
-    {id}
-    class="limited-checkbox-component-group {box.cssClass}"
-    class:limited-checkbox-component-vertical={!isHorizontal}
+  role="group"
+  aria-labelledby={ariaLabel}
+  {id}
+  class="limited-checkbox-component-group"
+  class:limited-checkbox-component-vertical={!isHorizontal}
 >
     {#each myEnum as nn, i}
         <span class="limited-checkbox-component-single">
-            <md-checkbox
-                id="{id}-{nn}-{i}"
-                value={nn}
-                checked={isChecked(nn)}
-                aria-label="checkbox-{nn}"
-                role="checkbox"
-                aria-checked={isChecked(nn)}
-                tabindex={0}
-                onchange={() => changed(nn)}
-                onclick={onClick}
-                onkeydown={onKeyDown}
-                bind:this={allElements[i]}
-            ></md-checkbox>
-            <label for="{id}-{nn}-{i}" class="limited-checkbox-component-label">{nn}</label>
+            <label class="limited-checkbox-component-label">
+                <input
+                  class="limited-checkbox-component-input"
+                  type="checkbox"
+                  id="{id}-{nn}-{i}"
+                  value={nn}
+                  checked={isChecked(nn)}
+                  aria-label="checkbox-{nn}"
+                  aria-checked={isChecked(nn)}
+                  tabindex={0}
+                  onchange={() => changed(nn)}
+                  onclick={onClick}
+                  onkeydown={onKeyDown}
+                  bind:this={allElements[i]}
+                >
+                {nn}
+            </label>
         </span>
     {/each}
 </span>

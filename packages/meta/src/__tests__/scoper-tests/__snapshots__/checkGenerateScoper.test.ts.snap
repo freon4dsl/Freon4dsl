@@ -11,9 +11,9 @@ import {
     notNullOrUndefined,
     FreLanguage,
 } from "@freon4dsl/core";
-import { EE, AA, FF, BB, DD } from "../../language/gen/index.js";
+import { EE, AA, FF, BB, DD } from "../language/index.js";
 
-import { LanguageEnvironment } from "../../index.js";
+import { LanguageEnvironment } from "../index.js";
 
 /**
  * Class ROOTScoper implements the scoper generated from, if present, the scoper definition,

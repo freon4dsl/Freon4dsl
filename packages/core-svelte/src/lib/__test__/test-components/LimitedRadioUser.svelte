@@ -66,10 +66,11 @@
     };
     let limitedBox1: LimitedControlBox = new LimitedControlBox(
         limElement,
-        'limited checkbox',
+        'limited radio',
         getValues,
         setValues,
-        allValues
+        allValues,
+			{horizontal: true},
     );
 </script>
 

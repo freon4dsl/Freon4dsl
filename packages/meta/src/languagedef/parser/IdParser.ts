@@ -1,5 +1,5 @@
 import { IdMap } from "../../commandline/IdMap.js";
-import { LOG2USER } from "../../utils/basic-dependencies/index.js";
+import { MetaLogger } from '../../utils/no-dependencies/index.js';
 
 export type IdProperty = {
     name: string
@@ -36,13 +36,14 @@ export type IdJson = {
     limited: IdLimited[]
 }
 
+const LOGGER = new MetaLogger("CommonChecker").mute();
 /**
  * Parser the id.json  file, as specified by the type _IdJson_ and return
  * the contents as an IdMap.
  * @param json
  */
 export function parseIds(json: any): IdMap {
-    LOG2USER.log("PARSE IDS");
+    LOGGER.log("PARSE IDS");
     const idData = json as IdJson;
     const idMap = new IdMap();
     // validateIdSyntax(json);

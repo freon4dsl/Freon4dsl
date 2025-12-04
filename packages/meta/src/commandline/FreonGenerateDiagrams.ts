@@ -19,7 +19,7 @@ export class FreonGenerateDiagrams extends FreonGeneratePartAction {
         LOGGER.log("Starting Freon diagram generation ...");
         super.generate();
 
-        this.diagramGenerator.outputfolder = this.outputFolder;
+        this.diagramGenerator.outputFolder = this.outputFolder;
         this.diagramGenerator.language = this.language;
 
         this.diagramGenerator.fileNames = this.languageFiles;

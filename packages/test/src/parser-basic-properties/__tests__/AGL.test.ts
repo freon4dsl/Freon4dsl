@@ -1,15 +1,11 @@
 import {FreUtils, ServerCommunication} from "@freon4dsl/core";
-import {TestParserModelEnvironment} from "../config/gen/TestParserModelEnvironment";
-import {FileHandler} from "../../utils/FileHandler";
+import {TestParserModelEnvironment} from "../freon/config/TestParserModelEnvironment.js";
+import {FileHandler} from "../../utils/FileHandler.js";
 import {
-    LimitedTest,
-    PartsTest,
-    PrimitivesTest,
     RefsTest,
-    PrimsWithKeywordTest,
     TestParserModel,
-} from "../language/gen";
-import {describe, it, test, expect, beforeEach} from "vitest";
+} from "../freon/language/index.js";
+import {describe, test, expect, beforeEach} from "vitest";
 
 describe("Parser properties of type", () => {
     const reader = TestParserModelEnvironment.getInstance().reader;
@@ -27,7 +23,7 @@ describe("Parser properties of type", () => {
         model.name = "TestParserModel-new";
         const unit1: RefsTest = reader.readFromString(input, "RefsTest", model) as RefsTest;
         // console.log(writer.writeToString(unit1));
-        ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId(), type: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 });

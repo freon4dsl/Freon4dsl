@@ -4,7 +4,7 @@ import {
     observableprim,
     observablepartlist,
     type FreModelUnit,
-    FreParseLocation,
+    type FreParseLocation,
     type FreNodeReference,
     FreUtils,
     matchElementList,

@@ -9,12 +9,12 @@
      */
     import { flip } from 'svelte/animate';
     import {
-        Box,
+        type Box,
         dropListElement,
         isActionBox,
         isNullOrUndefined,
         FreLanguage,
-        ListBox,
+        type ListBox,
         ListDirection,
         ListElementInfo,
         MenuOptionsType,

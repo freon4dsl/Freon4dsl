@@ -3,9 +3,7 @@ import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 import {
     Names,
     READER_FOLDER,
-    READER_GEN_FOLDER,
     WRITER_FOLDER,
-    WRITER_GEN_FOLDER,
 } from "../utils/on-lang/index.js";
 import { FreEditUnit } from "../editordef/metalanguage/index.js";
 import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates/index.js";
@@ -26,11 +24,10 @@ const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
  */
 export class ReaderWriterGenerator {
     public outputfolder: string = ".";
+    public customsfolder: string = ".";
     public language: FreMetaLanguage | undefined;
     private writerFolder: string = "";
-    private writerGenFolder: string = "";
     private readerFolder: string = "";
-    private readerGenFolder: string = "";
 
     generate(editDef: FreEditUnit): void {
         if (this.language === null || this.language === undefined) {
@@ -40,7 +37,7 @@ export class ReaderWriterGenerator {
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
         LOGGER.log(
-            "Generating parser and unparser in folder " + this.writerGenFolder + " for language " + this.language?.name,
+            "Generating parser and unparser in folder " + this.writerFolder + " for language " + this.language?.name,
         );
 
         const unparserTemplate = new WriterTemplate();
@@ -48,19 +45,20 @@ export class ReaderWriterGenerator {
         const grammarGenerator = new GrammarGenerator();
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.writerGenFolder);
-        FileUtil.deleteFilesInDir(this.writerGenFolder, generationStatus);
-        FileUtil.createDirIfNotExisting(this.readerGenFolder);
-        FileUtil.deleteFilesInDir(this.readerGenFolder, generationStatus);
+        FileUtil.createDirIfNotExisting(this.outputfolder + "/" + this.customsfolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.writerFolder);
+        FileUtil.deleteFilesInDir(this.writerFolder, generationStatus);
+        FileUtil.createDirIfNotExisting(this.readerFolder);
+        FileUtil.deleteFilesInDir(this.readerFolder, generationStatus);
 
         // set relative path to get the imports right
-        const relativePath = "../../";
+        const relativePath = "..";
 
         // remember all file names etc. for the index
         let indexContent: string = "";
 
         //  Generate the writer
-        let generatedFilePath = `${this.writerGenFolder}/${Names.writer(this.language)}.ts`;
+        let generatedFilePath = `${this.writerFolder}/${Names.writer(this.language)}.ts`;
         let generatedContent = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
         this.makeFile(`language writer`, generatedFilePath, generatedContent, generationStatus);
 
@@ -83,19 +81,19 @@ export class ReaderWriterGenerator {
         // TODO Turn this on again after examining the reason why this is slow.
         // this.testGrammar(generatedContent, generationStatus);
         // write the grammar to file
-        generatedFilePath = `${this.readerGenFolder}/${Names.grammar(this.language)}.ts`;
+        generatedFilePath = `${this.readerFolder}/${Names.grammar(this.language)}.ts`;
         indexContent += `export * from "./${Names.grammar(this.language)}.js";\n`;
         this.makeFile(`AGL grammar`, generatedFilePath, generatedContent, generationStatus);
 
         // Write the main syntax analyser to file
-        generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(this.language)}.ts`;
+        generatedFilePath = `${this.readerFolder}/${Names.syntaxAnalyser(this.language)}.ts`;
         indexContent += `export * from "./${Names.syntaxAnalyser(this.language)}.js";\n`;
         const mainContent = grammarModel.toMethod(this.language!, relativePath);
         this.makeFile(`main syntax analyser`, generatedFilePath, mainContent, generationStatus);
 
         // Write the syntax analysers for each unit to file
         grammarModel.parts.forEach((grammarPart) => {
-            generatedFilePath = `${this.readerGenFolder}/${Names.unitAnalyser(this.language!, grammarPart.unit)}.ts`;
+            generatedFilePath = `${this.readerFolder}/${Names.unitAnalyser(this.language!, grammarPart.unit)}.ts`;
             indexContent += `export * from "./${Names.unitAnalyser(this.language!, grammarPart.unit)}.js";\n`;
             const analyserContent: string = grammarPart.toMethod(this.language!, relativePath);
             let message: string;
@@ -108,25 +106,25 @@ export class ReaderWriterGenerator {
         });
 
         // Get the semantic analyser and write it to file
-        generatedFilePath = `${this.readerGenFolder}/${Names.semanticAnalyser(this.language)}.ts`;
+        generatedFilePath = `${this.readerFolder}/${Names.semanticAnalyser(this.language)}.ts`;
         indexContent += `export * from "./${Names.semanticAnalyser(this.language)}.js";\n`;
         generatedContent = analyser.getRefCorrectorContent(this.language, relativePath);
         this.makeFile(`semantic analyser`, generatedFilePath, generatedContent, generationStatus);
 
         // get the semantic analysis walker and write it to file
-        generatedFilePath = `${this.readerGenFolder}/${Names.semanticWalker(this.language)}.ts`;
+        generatedFilePath = `${this.readerFolder}/${Names.semanticWalker(this.language)}.ts`;
         indexContent += `export * from "./${Names.semanticWalker(this.language)}.js";\n`;
         generatedContent = analyser.getRefCorrectorWalkerContent(this.language, relativePath);
         this.makeFile(`semantic analysis walker`, generatedFilePath, generatedContent, generationStatus);
 
         // get the reader and write it to file
-        generatedFilePath = `${this.readerGenFolder}/${Names.reader(this.language)}.ts`;
+        generatedFilePath = `${this.readerFolder}/${Names.reader(this.language)}.ts`;
         indexContent += `export * from "./${Names.reader(this.language)}.js";\n`;
         generatedContent = readerTemplate.generateReader(this.language, relativePath);
         this.makeFile(`language reader`, generatedFilePath, generatedContent, generationStatus);
 
         // write the index file for the reader gen folder
-        generatedFilePath = `${this.readerGenFolder}/index.ts`;
+        generatedFilePath = `${this.readerFolder}/index.ts`;
         this.makeFile(`reader index`, generatedFilePath, indexContent, generationStatus);
 
         if (generationStatus.numberOfErrors > 0) {
@@ -157,8 +155,6 @@ export class ReaderWriterGenerator {
     private getFolderNames() {
         this.writerFolder = this.outputfolder + "/" + WRITER_FOLDER;
         this.readerFolder = this.outputfolder + "/" + READER_FOLDER;
-        this.writerGenFolder = this.outputfolder + "/" + WRITER_GEN_FOLDER;
-        this.readerGenFolder = this.outputfolder + "/" + READER_GEN_FOLDER;
     }
 
     private makeFile(
@@ -170,18 +166,5 @@ export class ReaderWriterGenerator {
         LOGGER.log(`Generating ${generationMessage}: ${generatedFilePath}`);
         generatedContent = FileUtil.pretty(generatedContent, `${generatedFilePath}`, generationStatus);
         fs.writeFileSync(`${generatedFilePath}`, generatedContent);
-    }
-
-    clean(force: boolean) {
-        this.getFolderNames();
-        FileUtil.deleteDirAndContent(this.writerGenFolder);
-        FileUtil.deleteDirAndContent(this.readerGenFolder);
-        if (force) {
-            FileUtil.deleteDirAndContent(this.writerFolder);
-            FileUtil.deleteDirAndContent(this.readerFolder);
-        } else {
-            FileUtil.deleteDirIfEmpty(this.writerFolder);
-            FileUtil.deleteDirIfEmpty(this.readerFolder);
-        }
     }
 }

@@ -5,13 +5,13 @@
  * taking into account only the hierarchical namespace relationships.
  */
 import { beforeEach, describe, test, expect } from 'vitest';
-import { ScoperModel } from './scoper-model/ScoperModel';
-import { ModelCreator } from './ModelCreator';
-import { initializeLanguage, NodeX, NodeY, UnitA, UnitB } from './scoper-model';
-import { FreCompositeScoper, FreNamespace, FreScoper, FreScoperBase } from '../../scoper';
-import { FreNamedNode } from '../../ast';
-import { FreLanguage } from '../../language';
-import { ScoperModelScoper } from './scoper-model/ScoperModelScoper';
+import { ScoperModel } from './scoper-model/ScoperModel.js';
+import { ModelCreator } from './ModelCreator.js';
+import { initializeLanguage, NodeX, NodeY, UnitA, UnitB } from './scoper-model/index.js';
+import { FreCompositeScoper, FreScoper } from '../../scoper/index.js';
+import { FreNamedNode } from '../../ast/index.js';
+import { FreLanguage } from '../../language/index.js';
+import { ScoperModelScoper } from './scoper-model/ScoperModelScoper.js';
 
 function printNames(set: FreNamedNode[]) {
 	let names: string = '';

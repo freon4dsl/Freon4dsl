@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { GenerationStatus, FileUtil } from "../utils/file-utils/index.js";
-import { DIAGRAM_FOLDER, DIAGRAM_GEN_FOLDER } from "../utils/on-lang/index.js";
+import { DIAGRAM_FOLDER } from "../utils/on-lang/index.js";
 import { HtmlTemplate } from "./diagramTemplates/HtmlTemplate.js";
 import { MarkDownTemplate } from "./diagramTemplates/MarkDownTemplate.js";
 import { DiagramTemplate } from "./diagramTemplates/DiagramTemplate.js";
@@ -12,10 +12,10 @@ const LOGGER = new MetaLogger("DiagramGenerator").mute();
 /**
  */
 export class DiagramGenerator {
-    public outputfolder: string = ".";
+    public outputFolder: string = ".";
     public language?: FreMetaLanguage;
     private diagramFolder: string = "";
-    private diagramGenFolder: string = "";
+    // private diagramGenFolder: string = "";
     fileNames: string[] = [];
     private diagramAstFolder: string = "";
 
@@ -34,8 +34,6 @@ export class DiagramGenerator {
         const mdMaker = new DiagramTemplate(false);
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.diagramGenFolder);
-        FileUtil.deleteFilesInDir(this.diagramGenFolder, generationStatus);
         FileUtil.createDirIfNotExisting(this.diagramFolder);
         FileUtil.deleteFilesInDir(this.diagramFolder, generationStatus);
         FileUtil.createDirIfNotExisting(this.diagramAstFolder);
@@ -45,13 +43,13 @@ export class DiagramGenerator {
         let title: string = `Class diagram for language ${this.language.name}`;
 
         //  Generate the html version of the complete diagram
-        let generatedFilePath = `${this.diagramGenFolder}/complete-view.html`;
+        let generatedFilePath = `${this.diagramFolder}/complete-view.html`;
         let content: string = htmlMaker.makeOverview(this.language);
         let generatedContent = htmlTemplate.generate(title, content);
         this.makeFile(`complete diagram in html`, generatedFilePath, generatedContent);
 
         //  Generate the md version of the complete diagram
-        generatedFilePath = `${this.diagramGenFolder}/complete-view.md`;
+        generatedFilePath = `${this.diagramFolder}/complete-view.md`;
         content = mdMaker.makeOverview(this.language);
         generatedContent = mdTemplate.generate(title, content);
         this.makeFile(`complete diagram in md`, generatedFilePath, generatedContent);
@@ -59,13 +57,13 @@ export class DiagramGenerator {
         title = `Inheritance diagram for language ${this.language.name}`;
 
         //  Generate the html version of the inheritance diagram
-        generatedFilePath = `${this.diagramGenFolder}/inheritance-view.html`;
+        generatedFilePath = `${this.diagramFolder}/inheritance-view.html`;
         content = htmlMaker.makeInheritanceTrees(this.language);
         generatedContent = htmlTemplate.generate(title, content);
         this.makeFile(`inheritance diagram in html`, generatedFilePath, generatedContent);
 
         //  Generate the md version of the inheritance diagram
-        generatedFilePath = `${this.diagramGenFolder}/inheritance-view.md`;
+        generatedFilePath = `${this.diagramFolder}/inheritance-view.md`;
         content = mdMaker.makeInheritanceTrees(this.language);
         generatedContent = mdTemplate.generate(title, content);
         this.makeFile(`inheritance diagram in md`, generatedFilePath, generatedContent);
@@ -108,31 +106,7 @@ export class DiagramGenerator {
     }
 
     private getFolderNames() {
-        this.diagramFolder = this.outputfolder + "/" + DIAGRAM_FOLDER;
-        this.diagramGenFolder = this.outputfolder + "/" + DIAGRAM_GEN_FOLDER;
-        this.diagramAstFolder = this.outputfolder + "/" + DIAGRAM_GEN_FOLDER + "/ast";
-    }
-
-    clean(force: boolean) {
-        this.getFolderNames();
-        // Note that the order in which the folders are removed is significant
-        FileUtil.deleteDirAndContent(this.diagramAstFolder);
-        if (force) {
-            FileUtil.deleteDirAndContent(this.diagramAstFolder);
-        } else {
-            FileUtil.deleteDirIfEmpty(this.diagramAstFolder);
-        }
-        FileUtil.deleteDirAndContent(this.diagramGenFolder);
-        if (force) {
-            FileUtil.deleteDirAndContent(this.diagramGenFolder);
-        } else {
-            FileUtil.deleteDirIfEmpty(this.diagramGenFolder);
-        }
-        FileUtil.deleteDirAndContent(this.diagramFolder);
-        if (force) {
-            FileUtil.deleteDirAndContent(this.diagramFolder);
-        } else {
-            FileUtil.deleteDirIfEmpty(this.diagramFolder);
-        }
+        this.diagramFolder = this.outputFolder + "/" + DIAGRAM_FOLDER;
+        this.diagramAstFolder = this.outputFolder + "/" + DIAGRAM_FOLDER + "/ast";
     }
 }

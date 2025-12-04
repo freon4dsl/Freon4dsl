@@ -17,6 +17,7 @@ export enum BoolDisplay {
 export class BooleanControlBox extends Box {
     readonly kind: string = "BooleanControlBox";
     showAs: BoolDisplay = BoolDisplay.RADIO_BUTTON;
+    horizontal: boolean = false; // todo expose horizontal/vertical to user through the .edit file
     labels: { yes: string; no: string, unknown?: string } = { yes: "true", no: "false", unknown: "unknown" };
     $getBoolean: () => boolean| undefined;
     $setBoolean: (newValue: boolean| undefined) => void;

@@ -13,12 +13,12 @@
  */
 import { beforeEach, describe, test, expect } from 'vitest';
 import { ScoperModel } from './scoper-model/ScoperModel.js';
-import { ModelCreator } from './ModelCreator';
-import { initializeLanguage, NodeX, NodeY, UnitA, UnitB } from './scoper-model';
-import { FreCompositeScoper, } from '../../scoper';
-import { FreNamedNode } from '../../ast';
-import { FreLanguage } from '../../language';
-import { FreLanguageEnvironment } from '../../environment';
+import { ModelCreator } from './ModelCreator.js';
+import { initializeLanguage, NodeX, NodeY, UnitA, UnitB } from './scoper-model/index.js';
+import { FreCompositeScoper, } from '../../scoper/index.js';
+import { FreNamedNode } from '../../ast/index.js';
+import { FreLanguage } from '../../language/index.js';
+import { FreLanguageEnvironment } from '../../environment/index.js';
 import { ExportedNamespacesScoper } from './scoper-model/ExportedNamespacesScoper.js';
 
 function printNames(set: FreNamedNode[]) {
