@@ -14,10 +14,10 @@ import { qualifiedName } from '../../../ast/index.js';
 import { RoleProvider } from "../RoleProvider.js";
 import type { FreScoper } from "../../../scoper/index.js";
 import { BehaviorExecutionResult } from "../../util/index.js";
-import { BoxUtil, FreListInfo } from "../BoxUtil.js";
+import { BoxUtil, type FreListInfo } from "../BoxUtil.js";
 import { UtilCommon } from "./UtilCommon.js";
 import { FreLanguage } from "../../../language/index.js";
-import { FreEditor } from "../../FreEditor.js";
+import { type FreEditor } from "../../FreEditor.js";
 import { FreUtils, isNullOrUndefined, notNullOrUndefined } from '../../../util/index.js';
 
 const LOGGER = new FreLogger("UtilRefHelpers")
