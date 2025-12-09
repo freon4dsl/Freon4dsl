@@ -1,7 +1,7 @@
 import { AST } from "../../change-manager/index.js";
 import { FreUtils } from "../../util/index.js";
 import type { Box } from "../boxes/index.js";
-import { FreEditor } from "../FreEditor.js";
+import type { FreEditor } from "../FreEditor.js";
 import type { CustomAction, FreTriggerUse, FrePostAction } from "../index.js";
 import {
     FreAction,

@@ -1,6 +1,7 @@
 import { runInAction } from "mobx";
+import type {
+    FreDelta} from "./FreDelta.js";
 import {
-    FreDelta,
     FrePartDelta,
     FrePartListDelta,
     FrePrimDelta,

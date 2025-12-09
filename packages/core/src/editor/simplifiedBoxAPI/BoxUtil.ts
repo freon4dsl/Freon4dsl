@@ -1,36 +1,38 @@
 import type { FreNamedNode, FreNode } from '../../ast/index.js';
-import {
+import type {
     BoolDisplay,
-    BooleanWrapperBox,
     Box,
-    BoxFactory,
     ButtonBox,
-    EmptyLineBox,
-    BooleanReplacerBox,
-    NumberReplacerBox,
-    PartReplacerBox,
     PartListReplacerBox,
-    RefReplacerBox,
     RefListReplacerBox,
-    StringReplacerBox,
-    FragmentWrapperBox,
     HorizontalListBox,
     IndentBox,
     LabelBox,
     LimitedControlBox,
     LimitedDisplay,
     NumberDisplay,
+    ReferenceBox,
+    SelectBox,
+    TextBox,
+    VerticalListBox, MultiLineTextBox
+} from '../boxes/index.js';
+import {
+    BooleanWrapperBox,
+    BoxFactory,
+    EmptyLineBox,
+    BooleanReplacerBox,
+    NumberReplacerBox,
+    PartReplacerBox,
+    RefReplacerBox,
+    StringReplacerBox,
+    FragmentWrapperBox,
     type NumberDisplayInfo,
     NumberWrapperBox,
     PartListWrapperBox,
     PartWrapperBox,
-    ReferenceBox,
     RefListWrapperBox,
     RefWrapperBox,
-    SelectBox,
-    StringWrapperBox,
-    TextBox,
-    VerticalListBox, MultiLineTextBox
+    StringWrapperBox
 } from '../boxes/index.js';
 import type { FreScoper } from "../../scoper/index.js";
 import { RoleProvider } from "./RoleProvider.js";

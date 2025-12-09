@@ -1,6 +1,6 @@
 import { SelectBox } from "./SelectBox.js";
-import { Box } from "./Box.js";
-import { FreEditor } from "../FreEditor.js";
+import type { Box } from "./Box.js";
+import type { FreEditor } from "../FreEditor.js";
 import { FreCaret } from "../util/index.js";
 import type { FreModelUnit, FreNode } from "../../ast/index.js";
 import { FreNodeReference } from "../../ast/index.js";

@@ -9,12 +9,13 @@ import type { FreOwnerDescriptor, FreNode } from "../ast/index.js";
 import { FreLanguage } from "../language/index.js";
 import type { FreLanguageClassifier, FreLanguageProperty } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
-import { FreAction } from "./actions/index.js";
+import type { FreAction } from "./actions/index.js";
 import type { FreCombinedActions } from "./FreCombinedActions.js";
-import {
+import type {
     Box,
+    FreProjectionHandler} from './index.js';
+import {
     FreCaret,
-    FreProjectionHandler,
     ElementBox,
     RoleProvider,
     isElementBox,
@@ -23,7 +24,7 @@ import {
 } from './index.js';
 import type { ClientRectangle } from "./ClientRectangleTypes.js";
 import { UndefinedRectangle } from "./ClientRectangleTypes.js";
-import { FreError, FreErrorSeverity } from "../validator/index.js";
+import type { FreError, FreErrorSeverity } from "../validator/index.js";
 import { isExpressionPreOrPost, isNullOrUndefined, notNullOrUndefined, LEFT_MOST } from "../util/index.js";
 import { FreErrorDecorator } from "./FreErrorDecorator.js";
 

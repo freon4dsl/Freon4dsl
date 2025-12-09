@@ -1,9 +1,9 @@
-import {FreError} from "../validator/index.js";
+import type {FreError} from "../validator/index.js";
 import type {FreNode} from "../ast/index.js";
 import {isNullOrUndefined, notNullOrUndefined} from "../util/index.js";
 import type {Box} from "./boxes/index.js";
 import {ElementBox, isActionBox, isSelectBox, isTextBox} from "./boxes/index.js";
-import {FreEditor} from "./FreEditor.js";
+import type {FreEditor} from "./FreEditor.js";
 import {FreLogger} from "../logging/index.js";
 import {UndefinedRectangle} from "./ClientRectangleTypes.js";
 

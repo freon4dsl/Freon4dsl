@@ -1,4 +1,4 @@
-import { FreAction } from "../index.js";
+import type { FreAction } from "../index.js";
 import type { FreTriggerType } from "../index.js";
 // the following import is needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.FreKey'
 import type { FreKey } from "./Keys.js";

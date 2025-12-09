@@ -1,6 +1,6 @@
-import { InterpreterContext } from "./InterpreterContext.js";
-import { InterpreterTracer } from "./InterpreterTracer.js";
-import { RtObject } from "./runtime/index.js";
+import type { InterpreterContext } from "./InterpreterContext.js";
+import type { InterpreterTracer } from "./InterpreterTracer.js";
+import type { RtObject } from "./runtime/index.js";
 import type { FreNode } from '../ast/index.js';
 
 export type ConceptFunction = (node: Object) => string;

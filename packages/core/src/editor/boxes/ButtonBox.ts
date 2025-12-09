@@ -5,7 +5,7 @@ import { FreLogger } from "../../logging/index.js";
 import { FreUtils } from "../../util/index.js";
 import { BehaviorExecutionResult } from "../util/index.js";
 import type { FrePostAction } from "../actions/index.js";
-import { FreEditor } from "../FreEditor.js";
+import type { FreEditor } from "../FreEditor.js";
 
 const LOGGER: FreLogger = new FreLogger("ButtonBox").mute();
 

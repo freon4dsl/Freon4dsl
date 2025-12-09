@@ -4,7 +4,7 @@ import { computed, observable, makeObservable } from "mobx";
 import { FreLanguageEnvironment } from "../environment/index.js";
 import { FreLogger } from "../logging/index.js";
 import { MobxModelElementImpl } from "./decorators/index.js";
-import { FreParseLocation } from '../reader/index.js';
+import type { FreParseLocation } from '../reader/index.js';
 
 const LOGGER = new FreLogger("FreNodeReference").mute();
 /**

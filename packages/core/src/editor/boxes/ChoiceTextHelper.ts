@@ -1,4 +1,4 @@
-import { TextBox } from "./TextBox.js";
+import type { TextBox } from "./TextBox.js";
 
 export class ChoiceTextHelper {
     box: TextBox;

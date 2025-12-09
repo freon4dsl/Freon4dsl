@@ -1,13 +1,14 @@
 import { AST } from "../../../change-manager/index.js";
 import { FreLogger } from "../../../logging/index.js";
-import {
+import type {
     Box,
-    BoxFactory,
-    RefListReplacerBox,
     HorizontalListBox,
     ReferenceBox,
-    type SelectOption,
-    VerticalListBox,
+    VerticalListBox} from "../../boxes/index.js";
+import {
+    BoxFactory,
+    RefListReplacerBox,
+    type SelectOption
 } from "../../boxes/index.js";
 import type { FreNamedNode, FreNode, FreNodeReference } from '../../../ast/index.js';
 import { qualifiedName } from '../../../ast/index.js';

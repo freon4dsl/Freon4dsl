@@ -1,13 +1,13 @@
 import type { FreNode } from "../../../ast/index.js";
 import { AST } from "../../../change-manager/index.js";
-import { BoxFactory, LimitedControlBox, LimitedDisplay, SelectBox } from "../../boxes/index.js";
-import type { SelectOption } from "../../boxes/index.js";
+import { BoxFactory, LimitedDisplay } from "../../boxes/index.js";
+import type { SelectOption , LimitedControlBox, SelectBox } from "../../boxes/index.js";
 import { FreLanguage } from "../../../language/index.js";
 import type { FreLanguageProperty } from "../../../language/index.js";
 import { UtilCheckers } from "./UtilCheckers.js";
 import { RoleProvider } from "../RoleProvider.js";
 import type {FreScoper} from "../../../scoper/index.js";
-import {FreEditor} from "../../FreEditor.js";
+import type {FreEditor} from "../../FreEditor.js";
 import {BehaviorExecutionResult} from "../../util/index.js";
 
 export class UtilLimitedHelpers {

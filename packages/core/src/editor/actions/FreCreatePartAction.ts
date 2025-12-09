@@ -1,8 +1,8 @@
 import type { FreBinaryExpression, FreNode } from "../../ast/index.js";
 import { FreLanguage } from "../../language/index.js";
 import { BTREE, FreUtils } from "../../util/index.js";
-import { Box } from "../boxes/index.js";
-import { FreEditor } from "../FreEditor.js";
+import type { Box } from "../boxes/index.js";
+import type { FreEditor } from "../FreEditor.js";
 import { ACTION_LOGGER, EMPTY_POST_ACTION, FreAction } from "./FreAction.js";
 import { isString, triggerTypeToString } from "./FreTriggers.js";
 import type { FreTriggerUse } from "./FreTriggers.js";

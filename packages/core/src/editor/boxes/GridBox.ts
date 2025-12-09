@@ -1,4 +1,4 @@
-import { GridCellBox } from "./GridCellBox.js";
+import type { GridCellBox } from "./GridCellBox.js";
 
 import { Box } from "./Box.js";
 import type { FreNode } from "../../ast/index.js";

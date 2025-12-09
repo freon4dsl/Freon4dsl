@@ -1,7 +1,8 @@
+import type {
+    TableBox} from "../boxes/index.js";
 import {
     BoxFactory,
     isTableRowBox,
-    TableBox,
     TableBoxColumnOriented,
     TableBoxRowOriented,
     TableCellBox,
@@ -12,7 +13,7 @@ import type { FreNode } from "../../ast/index.js";
 import { isNullOrUndefined, FreUtils, notNullOrUndefined } from '../../util/index.js';
 import { FreLanguage } from "../../language/index.js";
 import { RoleProvider } from "./RoleProvider.js";
-import { FreHeaderProvider } from "../projections/FreHeaderProvider.js";
+import type { FreHeaderProvider } from "../projections/FreHeaderProvider.js";
 
 // import { FreLogger } from "../../logging";
 // const LOGGER = new FreLogger("NewTableUtil");

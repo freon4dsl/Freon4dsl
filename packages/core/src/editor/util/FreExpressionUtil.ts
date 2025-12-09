@@ -1,10 +1,11 @@
 import { AST } from "../../change-manager/index.js";
-import {
+import type {
     Box,
+    FreEditor} from "../index.js";
+import {
     type HorizontalLayoutBox,
     isHorizontalBox,
     type SelectOption,
-    FreEditor,
     triggerTypeToString,
     BoxFactory,
     type FreProjectionHandler,
