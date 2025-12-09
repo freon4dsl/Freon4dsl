@@ -568,7 +568,6 @@ export class WebappConfigurator {
                     unitInTab.name = unitId.name
                 }
             })
-            ReferenceUpdateManager.getInstance().freModel = store.model
         }
     }
 }

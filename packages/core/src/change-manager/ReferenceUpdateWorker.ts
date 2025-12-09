@@ -1,10 +1,10 @@
-import { type FreNode, FreNodeReference } from "../ast/index.js";
+import { type FreNode } from "../ast/index.js";
 import type { AstWorker } from "../ast-utils/index.js";
 import { FreLanguage, type FreLanguageProperty } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
-import { FrePrimDelta } from "./FreDelta.js"
+import { type FrePrimDelta } from "./FreDelta.js"
 
-const LOGGER = new FreLogger("CollectNamesWorker").mute();
+const LOGGER = new FreLogger("ReferenceUpdateWorker").mute();
 
 /**
  * AST worker that updates the referenced name per node.
@@ -26,13 +26,12 @@ export class ReferenceUpdateWorker implements AstWorker {
         );
         // check whether any of references are touched by delta
         for (const childProp of referenceProperties) {
-            const childValue = FreLanguage.getInstance().getPropertyValue(node, childProp)
-            for(const elem of childValue) {
-                const ref = elem as unknown as FreNodeReference<any>;
-                if (ref.pathname.indexOf(this.delta.oldValue as string) > -1 &&
-                        ref.referred === this.delta.owner) {
+            const childValue = FreLanguage.getInstance().getReferencePropertyValue(node, childProp)
+            for(const ref of childValue) {
+                const foundIndex = ref.pathname.indexOf(this.delta.oldValue as string)
+                if (foundIndex > -1 && ref.referred === this.delta.owner) {
                     let newPathName = ref.pathname;
-                    newPathName[ref.pathname.indexOf(this.delta.oldValue as string)] = this.delta.newValue as string;
+                    newPathName[foundIndex] = this.delta.newValue as string;
                     ref.pathname = newPathName;
                     LOGGER.log(`    updated reference in the node ${node.freId()} to the ${newPathName}`)
                 }

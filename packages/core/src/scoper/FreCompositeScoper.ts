@@ -2,8 +2,8 @@ import type { FreNamedNode, FreNode, FreNodeReference } from '../ast/index.js';
 import { FreLogger } from "../logging/index.js";
 import { type FreScoper } from "./FreScoper.js";
 import { notNullOrUndefined } from '../util/index.js';
-import { FreNamespaceInfo } from './FreNamespaceInfo.js';
-import { FreNamespace } from './FreNamespace.js';
+import { type FreNamespaceInfo } from './FreNamespaceInfo.js';
+import { type FreNamespace } from './FreNamespace.js';
 import { findEnclosingNamespace, resolvePathStartingInNamespace } from './ScoperUtil.js';
 
 const LOGGER = new FreLogger("FreCompositeScoper").mute();
@@ -27,7 +27,7 @@ export class FreCompositeScoper implements FreScoper {
      * @param refToResolve
      */
     resolvePathName(refToResolve: FreNodeReference<FreNamedNode>): FreNamedNode | undefined {
-        // console.log('resolving: ', toBeResolved.pathname)
+        // console.log('resolving: ', refToResolve.pathname)
         let baseNamespace: FreNamespace = findEnclosingNamespace(refToResolve);
         let currentNamespace: FreNamespace = baseNamespace;
         let found: FreNamedNode = undefined;

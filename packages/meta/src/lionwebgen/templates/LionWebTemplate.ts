@@ -324,7 +324,7 @@ export class LionWebTemplate {
                     reference: MetaPointers.PropertyType,
                     targets: [
                         {
-                            resolveInfo: prop.type.name,
+                            resolveInfo: this.toLionWebPropertyType(prop),
                             // @ts-ignore
                             reference: (prop.type.id === "" ? null : prop.type.id)
                         }
@@ -541,6 +541,29 @@ export class LionWebTemplate {
             parent: parent.id
         };
         return result;
+    }
+
+    /**
+     * Primitive property type conversion
+     * @param prop
+     */
+    toLionWebPropertyType(prop: FreMetaProperty): string {
+        switch (prop.type.name) {
+            case "number":
+                return "Integer"
+                break
+            case "string":
+                return "String"
+                break
+            case "boolean":
+                return "Boolean"
+                break
+            case "identifier":
+                return "String"
+                break
+            default:
+                return prop.type.name
+        }
     }
 }
 

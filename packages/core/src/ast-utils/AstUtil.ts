@@ -57,6 +57,23 @@ export function modelUnit(node: FreNode): FreModelUnit | null {
     return null;
 }
 
+/**
+ * Returns the modelunit that owns this `element'
+ * @param node
+ */
+export function model(node: FreNode): FreModel | null {
+    let current = node;
+    while (!!current) {
+        if (current.freIsModel()) {
+            return current as FreModel;
+        } else {
+            current = current.freOwnerDescriptor()?.owner;
+        }
+    }
+    // No model found, node is standalone
+    return null;
+}
+
 export function instanceOfExact(src: FreNode, target: string): boolean {
     return src.freLanguageConcept() === target;
 }

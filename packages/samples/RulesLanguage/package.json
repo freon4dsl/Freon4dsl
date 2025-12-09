@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/samples-rules-language",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -18,10 +18,10 @@
     "check-imports": "bash ../../../scripts/check-import-extensions.sh"
   },
   "devDependencies": {
-    "@freon4dsl/meta": "~2.0.1"
+    "@freon4dsl/meta": "~2.1.0"
   },
   "dependencies": {
-    "@freon4dsl/core": "~2.0.1",
+    "@freon4dsl/core": "~2.1.0",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",
     "mobx": "^6.12.3",
