@@ -148,4 +148,17 @@ describe("Parser on extra elements", () => {
         // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
+
+    test(" On chars in identifiers", () => {
+        let input: string = fileHandler.stringFromFile("src/parser-extra-tests/__inputs__/test-chars-in-identifiers.prod");
+        let model = new TestParserExtra();
+        model.name = "TestParserIdentifiers";
+        const unit1: ProductTest = reader.readFromString(input, "ProductTest", model) as ProductTest;
+        expect(unit1).not.toBe(null);
+        expect(unit1).not.toBe(undefined);
+        expect(unit1).toBeInstanceOf(ProductTest);
+        console.log(writer.writeToString(unit1));
+        // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        expect(unit1).toMatchSnapshot();
+    });
 });

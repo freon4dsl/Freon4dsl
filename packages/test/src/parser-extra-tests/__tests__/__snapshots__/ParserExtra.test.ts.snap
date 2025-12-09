@@ -1,5 +1,101 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Parser on extra elements >  On chars in identifiers 1`] = `
+ProductTest {
+  "$$owner": TestParserExtra {
+    "$$owner": null,
+    "$$propertyIndex": undefined,
+    "$$propertyName": "",
+    "$id": "ID-1",
+    "$typename": "TestParserExtra",
+    "_FRE_lim": [Circular],
+    "name": "TestParserIdentifiers",
+  },
+  "$$propertyIndex": undefined,
+  "$$propertyName": "lim",
+  "$id": "ID-3",
+  "$typename": "ProductTest",
+  "_FRE_name": "TE ST1",
+  "_FRE_product": InsuranceProduct {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "product",
+    "$id": "ID-2",
+    "$typename": "InsuranceProduct",
+    "_FRE_name": "N$&*(^#@!~AME",
+    "_FRE_partsInitiator": [
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "partsInitiator",
+        "_FRE_pathname": [
+          "P A R T 3",
+        ],
+        "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 7,
+          "line": 7,
+        },
+        "typeName": "InsurancePart",
+      },
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "partsInitiator",
+        "_FRE_pathname": [
+          "PART4,.:;"'|/\\",
+        ],
+        "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 21,
+          "line": 7,
+        },
+        "typeName": "InsurancePart",
+      },
+    ],
+    "_FRE_partsTerminator": [
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "partsTerminator",
+        "_FRE_pathname": [
+          "PART1",
+        ],
+        "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 5,
+          "line": 5,
+        },
+        "typeName": "InsurancePart",
+      },
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "partsTerminator",
+        "_FRE_pathname": [
+          "PA+_=-?"<>{}[]RT2",
+        ],
+        "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 14,
+          "line": 5,
+        },
+        "typeName": "InsurancePart",
+      },
+    ],
+    "parseLocation": FreParseLocation {
+      "column": 1,
+      "line": 3,
+    },
+  },
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;
+
 exports[`Parser on extra elements >  On lists of references to parts 1`] = `
 ProductTest {
   "$$owner": TestParserExtra {
