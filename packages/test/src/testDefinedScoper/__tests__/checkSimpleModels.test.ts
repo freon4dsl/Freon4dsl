@@ -141,9 +141,9 @@ describe("Testing Scoper where all units are namespaces", () => {
         const errors = validator.validate(model);
         const errorMessages: string[] = [];
         errors.forEach((mess) => {
-            errorMessages.push(mess.message + " in " + mess.locationDescription);
+            errorMessages.push(mess.message);
         });
-        // print("!!! found errors", errorMessages);
+        print("!!! found errors", errorMessages);
         expect(errors.length).toBe(8);
         expect(
             errorMessages.includes(
