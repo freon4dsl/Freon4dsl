@@ -1,10 +1,9 @@
 import type { FreNode } from "../../ast/index.js";
-import { BehaviorExecutionResult } from "../util/index.js";
-// import { FreLogger } from "../../logging";
+import { type BehaviorExecutionResult } from "../util/index.js";
 import { isNullOrUndefined, FreUtils, notNullOrUndefined } from '../../util/index.js';
-import { FreEditor } from "../FreEditor.js";
+import { type FreEditor } from "../FreEditor.js";
 import {
-    Box,
+    type Box,
     BooleanControlBox,
     NumberControlBox,
     ActionBox,
@@ -12,18 +11,17 @@ import {
     TextBox,
     SelectBox,
     IndentBox,
-    OptionalBox,
     HorizontalListBox,
     VerticalListBox,
     GridCellBox,
     HorizontalLayoutBox,
     VerticalLayoutBox,
     TableCellBox,
-    OptionalBox2,
+    OptionalBox,
     LimitedControlBox,
     ButtonBox,
     NumberDisplay,
-    AbstractExternalBox,
+    type AbstractExternalBox,
     PartListReplacerBox,
     isPartListReplacerBox,
     ReferenceBox, MultiLineTextBox
@@ -51,8 +49,8 @@ let limitedCache: BoxCache<LimitedControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
 let referenceCache: BoxCache<ReferenceBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
+// let optionalCache: BoxCache<OptionalBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
-let optionalCache2: BoxCache<OptionalBox2> = {};
 // let svgCache: BoxCache<SvgBox> = {};
 let horizontalLayoutCache: BoxCache<HorizontalLayoutBox> = {};
 let verticalLayoutCache: BoxCache<VerticalLayoutBox> = {};
@@ -71,8 +69,6 @@ let cacheNumberOff: boolean = false;
 let cacheLimitedOff: boolean = false;
 let cacheSelectOff: boolean = false;
 let cacheReferenceOff: boolean = false;
-// let cacheIndentOff: boolean = false;
-// let cacheOptionalOff: boolean = false;
 let cacheHorizontalLayoutOff: boolean = false;
 let cacheVerticalLayoutOff: boolean = false;
 let cacheHorizontalListOff: boolean = false;
@@ -95,10 +91,7 @@ export class BoxFactory {
         limitedCache = {};
         selectCache = {};
         referenceCache = {};
-        // indentCache = {};
         optionalCache = {};
-        optionalCache2 = {};
-        // svgCache = {};
         horizontalLayoutCache = {};
         verticalLayoutCache = {};
         horizontalListCache = {};
@@ -506,7 +499,7 @@ export class BoxFactory {
         condition: BoolFunctie,
         box: Box,
         mustShow: boolean,
-        actionText: string,
+        optional: Box,
         initializer?: Partial<OptionalBox>,
     ): OptionalBox {
         // TODO This only works with cache on, should also work with cache off.
@@ -514,31 +507,8 @@ export class BoxFactory {
         //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
         // }
         // 1. Create the optional box, or find the one that already exists for this element and role
-        const creator = () => new OptionalBox(node, role, condition, box, mustShow, actionText);
+        const creator = () => new OptionalBox(node, role, condition, box, mustShow, optional);
         const result: OptionalBox = this.find<OptionalBox>(node, role, creator, optionalCache);
-
-        // 2. Apply the other arguments in case they have changed
-        FreUtils.initializeObject(result, initializer);
-
-        return result;
-    }
-
-    static optional2(
-        node: FreNode,
-        role: string,
-        condition: BoolFunctie,
-        box: Box,
-        mustShow: boolean,
-        optional: Box,
-        initializer?: Partial<OptionalBox2>,
-    ): OptionalBox2 {
-        // TODO This only works with cache on, should also work with cache off.
-        // if (cacheOptionalOff) {
-        //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
-        // }
-        // 1. Create the optional box, or find the one that already exists for this element and role
-        const creator = () => new OptionalBox2(node, role, condition, box, mustShow, optional);
-        const result: OptionalBox2 = this.find<OptionalBox2>(node, role, creator, optionalCache2);
 
         // 2. Apply the other arguments in case they have changed
         FreUtils.initializeObject(result, initializer);

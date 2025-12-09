@@ -1,6 +1,7 @@
 import { autorun } from "mobx";
 import type { FreNode } from "../../ast/index.js";
-import { Box, ActionBox, BoxFactory } from "./internal.js";
+import { FreUtils } from "../../util/index.js";
+import { Box } from "./internal.js";
 
 export type BoolFunctie = () => boolean;
 
@@ -14,10 +15,10 @@ export type BoolFunctie = () => boolean;
  * to this OptionalBox, which is triggered by the user.
  */
 export class OptionalBox extends Box {
-    readonly kind = "OptionalBox";
+    readonly kind = "OptionalBox2";
 
     content: Box = null;
-    placeholder: ActionBox = null;
+    placeholder: Box = null;
     _mustShow: boolean = false; // is set to true by action that does not (yet) change the model, but causes part of the optional to be shown
     condition: () => boolean; // a condition based on the model that determines whether the optional is shown
 
@@ -30,18 +31,20 @@ export class OptionalBox extends Box {
     }
 
     constructor(
-        element: FreNode,
+        node: FreNode,
         role: string,
         condition: BoolFunctie,
         box: Box,
         mustShow: boolean,
-        actionText: string,
+        placeholder: Box,
+        initializer?: Partial<OptionalBox>,
     ) {
-        super(element, role);
+        super(node, role);
+        FreUtils.initializeObject(this, initializer);
         this.content = box;
         box.parent = this;
         // TODO question: should not the role be diff from role of this box? Where is the "action" prefix added?
-        this.placeholder = BoxFactory.action(element, role, actionText);
+        this.placeholder = placeholder;
         this.placeholder.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;
@@ -52,6 +55,9 @@ export class OptionalBox extends Box {
         return this.condition();
     }
 
+    /**
+     * Ensure a refresh is triggered if the condition for showing this optional bix has changed.
+     */
     conditionChanged = () => {
         // console.log("AUTORUN showByCondition");
         this.condition();
@@ -94,6 +100,6 @@ export class OptionalBox extends Box {
     }
 }
 
-export function isOptionalBox(b: Box): b is OptionalBox {
-    return b?.kind === "OptionalBox"; // b instanceof OptionalBox;
+export function isOptionalBox2(b: Box): b is OptionalBox {
+    return b?.kind === "OptionalBox2"; // b instanceof OptionalBox2;
 }
