@@ -187,9 +187,9 @@ export class FreLionwebSerializer implements FreSerializer {
 
     /**
      * Convert primitive property values and add value directly into the `freNode`.
-     * Any limited values found will be returned in tje list of `ParsedReference`s
+     * Any limited values found will be returned in the list of `ParsedReference`s
      * @param freNode       Node being converted into.
-     * @param concept       The Conceot of the `freNode`.
+     * @param concept       The Concept of the `freNode`.
      * @param jsonObject    The object being converted from.
      * @return              The parsed references for limited properties.
      * @private
@@ -224,10 +224,6 @@ export class FreLionwebSerializer implements FreSerializer {
                 console.error("Primitive value found for non primitive property: " + property.name)
                 // continue
             }
-            // FreUtils.CHECK(
-            //     property.propertyKind === "primitive",
-            //     "Primitive value found for non primitive property: " + property.name,
-            // );
             // console.log(`DESER prop '${property.name}': '${property.type}' value '${jsonProperty.value}'`)
             const propertyConcept = FreLanguage.getInstance().concept(property.type)
             // LIONWEB: Handle Limited references as primitive properties, because limited maps to Enumeration in LionWeb.
