@@ -1,10 +1,11 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { Names } from "../../utils/on-lang/index.js";
 import { ParseLocationUtil, FreGenericParser } from "../../utils/basic-dependencies/index.js";
-import {
+import type {
     FreEditExtraClassifierInfo,
+    FreEditUnit} from "../metalanguage/index.js";
+import {
     FreEditProjectionGroup,
-    FreEditUnit,
     FreEditChecker,
 } from "../metalanguage/index.js";
 import { setCurrentFileName as editFileName } from "./FreEditCreators.js";

@@ -1,17 +1,19 @@
-import {
+import type {
     FreEditExtraClassifierInfo,
     FreEditClassifierProjection,
-    FreEditNormalProjection,
     FreEditProjectionGroup,
     FreEditProjectionLine,
-    FreEditTableProjection,
-    FreEditUnit,
+    FreEditUnit} from "../../metalanguage/index.js";
+import {
+    FreEditNormalProjection,
+    FreEditTableProjection
 } from "../../metalanguage/index.js";
+import type {
+    FreMetaClassifier,
+    FreMetaLanguage} from "../../../languagedef/metalanguage/index.js";
 import {
     FreMetaBinaryExpressionConcept,
-    FreMetaClassifier,
-    FreMetaExpressionConcept,
-    FreMetaLanguage,
+    FreMetaExpressionConcept
 } from "../../../languagedef/metalanguage/index.js";
 import { ListUtil } from "../../../utils/no-dependencies/index.js";
 import { Names, Imports } from "../../../utils/on-lang/index.js";

@@ -1,3 +1,5 @@
+import type {
+    ValidationRule} from "../metalanguage/index.js";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -9,11 +11,10 @@ import {
     ValidationMessage,
     ValidationMessageReference,
     ValidationMessageText,
-    ValidationRule,
     ValidationSeverity,
     ValidNameRule,
 } from "../metalanguage/index.js";
-import { FreMetaDefinitionElement } from '../../utils/no-dependencies/index.js';
+import type { FreMetaDefinitionElement } from '../../utils/no-dependencies/index.js';
 import { ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 
 // Functions used to create instances of the language classes (in ValidatorDefLang)

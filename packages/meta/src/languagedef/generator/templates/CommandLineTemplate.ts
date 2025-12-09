@@ -1,4 +1,4 @@
-import { FreMetaLanguage } from "../../metalanguage/index.js";
+import type { FreMetaLanguage } from "../../metalanguage/index.js";
 import { Imports, Names } from "../../../utils/on-lang/index.js"
 
 export class CommandLineTemplate {

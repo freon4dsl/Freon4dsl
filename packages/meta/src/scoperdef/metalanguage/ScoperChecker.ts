@@ -1,15 +1,18 @@
-import {
+import type {
     FreMetaLanguage,
-    FreMetaClassifier, LangUtil, MetaElementReference, FreMetaModelDescription
+    FreMetaClassifier, MetaElementReference} from '../../languagedef/metalanguage/index.js';
+import { LangUtil, FreMetaModelDescription
 } from '../../languagedef/metalanguage/index.js';
+import type {
+    ScopeDef} from './FreScopeDefLang.js';
 import {
     FreNamespaceAlternative,
     FreNamespaceImport,
-    ScopeDef,
     FreMetaNamespaceInfo, ScopeConceptDef
 } from './FreScopeDefLang.js';
 import { FreLangExpressionChecker } from '../../langexpressions/checking/FreLangExpressionChecker.js';
-import { FreFunctionExp, FreLangExp, FreVarExp } from '../../langexpressions/metalanguage/index.js';
+import type { FreLangExp} from '../../langexpressions/metalanguage/index.js';
+import { FreFunctionExp, FreVarExp } from '../../langexpressions/metalanguage/index.js';
 import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';

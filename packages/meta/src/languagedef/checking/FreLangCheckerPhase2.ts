@@ -1,15 +1,17 @@
-import { CheckerPhase, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import type { CheckRunner} from '../../utils/basic-dependencies/index.js';
+import { CheckerPhase, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { isNullOrUndefined } from '../../utils/file-utils/index.js';
-import {
+import type {
     FreMetaConcept,
     FreMetaInstance,
     FreMetaLanguage,
+    FreMetaProperty,
+    FreMetaInstanceProperty,
+    FreMetaUnitDescription} from "../metalanguage/index.js";
+import {
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
     FreMetaPrimitiveType,
-    FreMetaProperty,
-    FreMetaInstanceProperty,
-    FreMetaUnitDescription,
     MetaElementReference,
 } from "../metalanguage/index.js";
 import { CommonChecker } from "./CommonChecker.js";

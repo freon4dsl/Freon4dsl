@@ -1,5 +1,5 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
-import { FreMetaPrimitiveProperty } from "../../../../languagedef/metalanguage/index.js";
+import type { FreMetaPrimitiveProperty } from "../../../../languagedef/metalanguage/index.js";
 import { getPrimCall, makeIndent } from "../GrammarUtils.js";
 
 import { internalTransformPrimList, ParserGenUtil } from "../../ParserGenUtil.js";

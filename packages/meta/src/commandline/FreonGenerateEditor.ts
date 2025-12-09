@@ -4,7 +4,7 @@ import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator.js";
 import { notNullOrUndefined } from '../utils/file-utils/index.js';
-import { FreEditUnit } from '../editordef/metalanguage/index.js';
+import type { FreEditUnit } from '../editordef/metalanguage/index.js';
 import { LOG2USER } from '../utils/basic-dependencies/index.js';
 
 const LOGGER = new MetaLogger("FreonGenerateEditor"); // .mute();

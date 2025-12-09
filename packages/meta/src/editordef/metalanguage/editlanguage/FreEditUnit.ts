@@ -1,7 +1,7 @@
-import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import type { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { Names } from "../../../utils/on-lang/index.js";
 import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
-import {
+import type {
     FreEditProjectionGroup,
     FreEditClassifierProjection,
     FreEditTableProjection,

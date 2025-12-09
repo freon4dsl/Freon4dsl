@@ -24,8 +24,9 @@ import {
     FreEditSimpleExternal,
     FreEditFragmentProjection
 } from "../metalanguage/index.js";
-import { ListUtil, ParseLocation } from '../../utils/no-dependencies/index.js';
-import { FreMetaClassifier, FreMetaProperty } from '../../languagedef/metalanguage/index.js';
+import type { ParseLocation } from '../../utils/no-dependencies/index.js';
+import { ListUtil } from '../../utils/no-dependencies/index.js';
+import type { FreMetaClassifier, FreMetaProperty } from '../../languagedef/metalanguage/index.js';
 import { FreEditParseUtil } from "./FreEditParseUtil.js";
 import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
 

@@ -1,4 +1,5 @@
-import { FreMetaClassifier, MetaElementReference, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import type { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import { MetaElementReference } from "../../../languagedef/metalanguage/index.js";
 import { FreTyperElement } from "../FreTyperElement.js";
 
 export abstract class FretExp extends FreTyperElement {

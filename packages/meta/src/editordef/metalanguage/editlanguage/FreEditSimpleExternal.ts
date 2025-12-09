@@ -1,5 +1,5 @@
 import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
-import { FreEditKeyValuePair } from "./internal.js";
+import type { FreEditKeyValuePair } from "./internal.js";
 
 /**
  * Represents a projection item that is not linked to the AST. It is used to introduce extra

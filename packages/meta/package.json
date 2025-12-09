@@ -44,7 +44,8 @@
     "republish-local": "npm run unpublish-local && npm run publish-local",
     "test": "vitest run",
     "circular": "madge --circular src/* > DEPENDENCIES.md",
-    "check-imports": "bash ../../scripts/check-import-extensions.sh"
+    "check-imports": "bash ../../scripts/check-import-extensions.sh",
+    "lint": "eslint"
   },
   "devDependencies": {
     "vitest": "3.2.4",

@@ -1,5 +1,6 @@
 import { OrderedList } from "./OrderedList.js";
-import { FreMetaClassifier, FreMetaConcept, FreMetaInterface } from "../../metalanguage/index.js";
+import type { FreMetaClassifier} from "../../metalanguage/index.js";
+import { FreMetaConcept, FreMetaInterface } from "../../metalanguage/index.js";
 
 // algorithm from https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla
 // 1. Breath First Search of each class hierarchy going "upwards" - result into OrderedList (preserve order + no duplicates).

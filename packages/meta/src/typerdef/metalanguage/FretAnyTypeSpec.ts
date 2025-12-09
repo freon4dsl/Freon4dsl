@@ -1,5 +1,5 @@
 import { FreTyperElement } from "./FreTyperElement.js";
-import { FretTypeRule } from "./FretTypeRule.js";
+import type { FretTypeRule } from "./FretTypeRule.js";
 
 export class FretAnyTypeSpec extends FreTyperElement {
     /**

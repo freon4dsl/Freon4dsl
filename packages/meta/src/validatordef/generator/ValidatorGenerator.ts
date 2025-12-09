@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { Names, VALIDATOR_FOLDER } from "../../utils/on-lang/index.js";
 import { FileUtil, GenerationStatus } from '../../utils/file-utils/index.js';
-import { ValidatorDef } from "../metalanguage/index.js";
+import type { ValidatorDef } from "../metalanguage/index.js";
 import { RulesCheckerTemplate } from "./templates/RulesCheckerTemplate.js";
 import { ValidatorTemplate } from "./templates/ValidatorTemplate.js";
 import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate.js";

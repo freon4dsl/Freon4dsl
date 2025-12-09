@@ -1,13 +1,14 @@
-import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
+import type { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
 import { FileUtil } from "../../utils/file-utils/index.js"
-import { ParseLocation } from '../../utils/no-dependencies/index.js';
+import type { ParseLocation } from '../../utils/no-dependencies/index.js';
 import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker.js";
-import { LanguageExpressionTester } from "./LanguageExpressionTester.js";
+import type { LanguageExpressionTester } from "./LanguageExpressionTester.js";
 import { parse } from "./ExpressionGrammar.js";
 import { setCurrentFileName } from "./ExpressionCreators.js";
 import fs from 'fs';
-import { Checker, LOG2USER, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
-import { parser } from 'peggy';
+import type { Checker} from '../../utils/basic-dependencies/index.js';
+import { LOG2USER, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import type { parser } from 'peggy';
 
 // These classes are helpers to test the parsing and checking of expressions over the metamodel.
 // They are not used in the actual generation.

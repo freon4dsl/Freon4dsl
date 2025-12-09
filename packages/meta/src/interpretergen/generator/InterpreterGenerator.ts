@@ -1,9 +1,9 @@
 import * as fs from "fs";
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { INTERPRETER_FOLDER, Names } from "../../utils/on-lang/index.js";
 import { GenerationStatus, FileUtil } from "../../utils/file-utils/index.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
-import { FreInterpreterDef } from "../metalanguage/FreInterpreterDef.js";
+import type { FreInterpreterDef } from "../metalanguage/FreInterpreterDef.js";
 import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate.js";
 import { InterpreterMainTemplate } from "./templates/InterpreterMainTemplate.js";
 import { getCombinedFolderPath } from '../../utils/no-dependencies/FolderPathHelper.js';

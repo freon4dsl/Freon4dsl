@@ -1,6 +1,7 @@
 import { Names, Imports } from "../../../utils/on-lang/index.js"
-import { FreMetaConcept, FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
-import { TyperDef } from "../../metalanguage/index.js";
+import type { FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
+import { FreMetaConcept } from "../../../languagedef/metalanguage/index.js";
+import type { TyperDef } from "../../metalanguage/index.js";
 import { FreTypeEqualsMaker } from "./FreTypeEqualsMaker.js";
 import { FreTypeInferMaker } from "./FreTypeInferMaker.js";
 import { FreSuperTypeMaker } from "./FreSuperTypeMaker.js";

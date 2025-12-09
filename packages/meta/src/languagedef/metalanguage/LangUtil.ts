@@ -1,10 +1,11 @@
+import type {
+    FreMetaPrimitiveProperty,
+    FreMetaProperty} from './internal.js';
 import {
     FreMetaClassifier,
     FreMetaConcept,
     FreMetaExpressionConcept,
     FreMetaLangElement,
-    FreMetaPrimitiveProperty,
-    FreMetaProperty,
     FreMetaPrimitiveType,
     FreMetaInterface,
     FreMetaUnitDescription,

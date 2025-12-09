@@ -1,27 +1,30 @@
-import {
-    ListJoinType,
+import type {
     FreEditNormalProjection,
     FreEditProjectionGroup,
     FreEditProjectionItem,
-    FreEditProjectionLine,
+    FreEditProjectionLine} from "../../editordef/metalanguage/index.js";
+import {
+    ListJoinType,
     FreEditProjectionText,
     FreEditPropertyProjection,
     FreEditSuperProjection,
     FreOptionalPropertyProjection,
 } from "../../editordef/metalanguage/index.js";
+import type {
+    FreMetaClassifier,
+    FreMetaProperty} from "../../languagedef/metalanguage/index.js";
 import {
     FreMetaBinaryExpressionConcept,
-    FreMetaClassifier,
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
-    FreMetaPrimitiveType,
-    FreMetaProperty,
+    FreMetaPrimitiveType
 } from "../../languagedef/metalanguage/index.js";
 import { ParserGenUtil } from "./ParserGenUtil.js";
-import {
+import type {
     GrammarRule,
+    RightHandSideEntry} from "./grammarModel/index.js";
+import {
     ConceptRule,
-    RightHandSideEntry,
     RHSText,
     RHSPropEntry,
     RHSOptionalGroup,

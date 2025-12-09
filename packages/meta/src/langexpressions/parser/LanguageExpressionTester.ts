@@ -1,9 +1,11 @@
-import { FreLangExp } from "../metalanguage/FreLangExpressions.js";
-import {
+import type { FreLangExp } from "../metalanguage/FreLangExpressions.js";
+import type {
     FreMetaLanguage,
-    FreMetaLangElement,
     MetaElementReference,
     FreMetaClassifier
+} from '../../languagedef/metalanguage/index.js';
+import {
+    FreMetaLangElement
 } from '../../languagedef/metalanguage/index.js';
 
 // These classes are helpers to test the parsing and checking of expressions over the metamodel.

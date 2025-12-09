@@ -1,13 +1,14 @@
 import { Imports, Names } from "../../../utils/on-lang/index.js"
+import type {
+    FreMetaConcept,
+    FreMetaProperty,
+    FreMetaInstanceProperty,
+    FreMetaClassifier} from "../../metalanguage/index.js";
 import {
     FreMetaPrimitiveProperty,
     FreMetaBinaryExpressionConcept,
     FreMetaExpressionConcept,
-    FreMetaConcept,
     FreMetaLimitedConcept,
-    FreMetaProperty,
-    FreMetaInstanceProperty,
-    FreMetaClassifier,
     FreMetaPrimitiveType,
     LangUtil,
 } from "../../metalanguage/index.js";

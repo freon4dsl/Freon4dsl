@@ -1,10 +1,12 @@
-import {
+import type {
     FreMetaClassifier,
     FreMetaConcept,
     FreMetaInterface,
     FreMetaLanguage,
-    FreMetaLimitedConcept,
     FreMetaProperty, FreMetaUnitDescription
+} from "../../languagedef/metalanguage/index.js";
+import {
+    FreMetaLimitedConcept
 } from "../../languagedef/metalanguage/index.js";
 import { ListUtil } from "../../utils/no-dependencies/index.js";
 

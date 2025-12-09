@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { TyperDef } from "../metalanguage/index.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { TyperDef } from "../metalanguage/index.js";
 import {
     Names,
     TYPER_FOLDER,

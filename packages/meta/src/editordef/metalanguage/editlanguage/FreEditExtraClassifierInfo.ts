@@ -1,5 +1,5 @@
 import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
-import {
+import type {
     FreMetaClassifier,
     FreMetaProperty,
     MetaElementReference,

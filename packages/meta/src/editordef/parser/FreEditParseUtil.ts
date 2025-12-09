@@ -1,7 +1,8 @@
+import type {
+    FreEditNormalProjection} from "../metalanguage/index.js";
 import {
     FreEditParsedNewline,
     FreEditParsedProjectionIndent,
-    FreEditNormalProjection,
     FreEditProjectionLine,
     FreOptionalPropertyProjection,
 } from "../metalanguage/index.js";

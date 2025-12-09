@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import { FileUtil } from "../file-utils/index.js"
-import { Checker } from "./Checker.js";
-import { parser } from 'peggy';
+import type { Checker } from "./Checker.js";
+import type { parser } from 'peggy';
 import { LOG2USER } from "./UserLogger.js";
-import { FreMetaDefinitionElement, ParseLocation } from "../no-dependencies/index.js";
+import type { FreMetaDefinitionElement, ParseLocation } from "../no-dependencies/index.js";
 import { ParseLocationUtil } from './ParseLocationUtil.js';
 
 

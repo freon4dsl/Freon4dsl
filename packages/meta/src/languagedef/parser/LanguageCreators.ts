@@ -1,7 +1,9 @@
 import { IdMap } from "../../commandline/IdMap.js";
+import type {
+    FreMetaClassifier,
+    FreMetaProperty} from "../metalanguage/index.js";
 import {
     FreMetaBinaryExpressionConcept,
-    FreMetaClassifier,
     FreMetaConcept,
     FreMetaConceptProperty,
     FreMetaExpressionConcept,
@@ -13,7 +15,6 @@ import {
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
     FreMetaPrimitiveType,
-    FreMetaProperty,
     FreMetaUnitDescription,
     MetaElementReference,
     FreMetaEnumValue,

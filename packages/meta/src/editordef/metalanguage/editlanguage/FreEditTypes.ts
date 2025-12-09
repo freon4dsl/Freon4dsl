@@ -1,4 +1,4 @@
-import {
+import type {
     FreEditSimpleExternal,
     FreEditParsedNewline,
     FreEditParsedProjectionIndent,
@@ -6,7 +6,7 @@ import {
     FreEditPropertyProjection,
     FreEditSuperProjection,
 } from "./internal.js";
-import { FreEditFragmentProjection } from "./FreEditFragmentProjection.js";
+import type { FreEditFragmentProjection } from "./FreEditFragmentProjection.js";
 
 /**
  * Super type of all elements that may be part of a projection definition.

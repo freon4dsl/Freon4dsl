@@ -1,6 +1,7 @@
-import {
+import type {
     FreMetaClassifier,
-    FreMetaPrimitiveProperty,
+    FreMetaPrimitiveProperty} from "../../languagedef/metalanguage/index.js";
+import {
     FreMetaPrimitiveType,
 } from "../../languagedef/metalanguage/index.js";
 import { FreComparator } from '../metalanguage/index.js';

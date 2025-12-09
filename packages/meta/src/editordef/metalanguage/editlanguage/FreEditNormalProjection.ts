@@ -1,8 +1,9 @@
+import type {
+    FreEditExternalInfo,
+    FreEditProjectionLine} from "./internal.js";
 import {
     FreEditClassifierProjection,
-    FreEditExternalInfo,
     FreEditSimpleExternal,
-    FreEditProjectionLine,
     FreEditPropertyProjection,
 } from "./internal.js";
 import { FreEditFragmentProjection } from "./FreEditFragmentProjection.js";

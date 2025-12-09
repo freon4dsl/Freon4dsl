@@ -1,5 +1,5 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
-import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
+import type { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 
 export abstract class RHSPropPartWithSeparator extends RHSPropEntry {
     protected separatorText: string = "";

@@ -1,5 +1,7 @@
-import { FretExp, FretWhereExp, TyperDef } from "../../metalanguage/index.js";
-import { Imports, Names } from '../../../utils/on-lang/index.js';
+import type { FretExp, TyperDef } from "../../metalanguage/index.js";
+import { FretWhereExp } from "../../metalanguage/index.js";
+import type { Imports} from '../../../utils/on-lang/index.js';
+import { Names } from '../../../utils/on-lang/index.js';
 import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
 import { FretEqualsRule } from "../../metalanguage/FretEqualsRule.js";
 import { LangUtil } from "../../../languagedef/metalanguage/index.js";

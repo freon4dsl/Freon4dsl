@@ -1,17 +1,19 @@
+import type {
+    FreMetaLanguage,
+    FreMetaClassifier,
+    FreMetaPrimitiveProperty,
+    FreMetaProperty} from "../../languagedef/metalanguage/index.js";
 import {
     MetaElementReference,
     FreMetaInterface,
-    FreMetaLanguage,
     FreMetaBinaryExpressionConcept,
-    FreMetaClassifier,
-    FreMetaLimitedConcept,
-    FreMetaPrimitiveProperty,
-    FreMetaProperty,
+    FreMetaLimitedConcept
 } from "../../languagedef/metalanguage/index.js";
+import type {
+    FreEditClassifierProjection} from "../metalanguage/index.js";
 import {
     FreEditExtraClassifierInfo,
     FreEditListInfo,
-    FreEditClassifierProjection,
     FreEditNormalProjection,
     FreEditProjectionGroup,
     FreEditProjectionLine,

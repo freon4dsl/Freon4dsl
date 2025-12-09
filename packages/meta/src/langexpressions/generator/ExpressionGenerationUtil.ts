@@ -1,12 +1,14 @@
+import type {
+    FreLangExp} from "../metalanguage/index.js";
 import {
     FreFunctionExp,
-    FreLangExp,
     FreLangSimpleExp,
     FreLimitedInstanceExp,
     FreVarExp
 } from "../metalanguage/index.js"
-import { Imports, Names } from '../../utils/on-lang/index.js';
-import { FreMetaClassifier, FreMetaProperty } from '../../languagedef/metalanguage/index.js';
+import type { Imports} from '../../utils/on-lang/index.js';
+import { Names } from '../../utils/on-lang/index.js';
+import type { FreMetaClassifier, FreMetaProperty } from '../../languagedef/metalanguage/index.js';
 import { MetaFunctionNames } from '../../utils/no-dependencies/index.js';
 
 /**

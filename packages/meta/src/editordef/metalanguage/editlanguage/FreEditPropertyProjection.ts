@@ -1,6 +1,6 @@
 import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
-import { FreMetaProperty, MetaElementReference } from "../../../languagedef/metalanguage/index.js";
-import { FreEditBoolKeywords, DisplayType, FreEditListInfo, FreEditExternalInfo } from "./internal.js";
+import type { FreMetaProperty, MetaElementReference } from "../../../languagedef/metalanguage/index.js";
+import type { FreEditBoolKeywords, DisplayType, FreEditListInfo, FreEditExternalInfo } from "./internal.js";
 
 /**
  * An element of a line in a projection definition that represents the projection of a property.

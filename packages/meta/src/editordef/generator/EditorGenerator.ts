@@ -1,9 +1,10 @@
 import * as fs from "fs";
 import { ListUtil, MetaLogger } from "../../utils/no-dependencies/index.js";
-import {
+import type {
     FreMetaClassifier,
+    FreMetaLanguage} from "../../languagedef/metalanguage/index.js";
+import {
     FreMetaConcept,
-    FreMetaLanguage,
     FreMetaLimitedConcept,
 } from "../../languagedef/metalanguage/index.js";
 import {
@@ -15,7 +16,7 @@ import {
     FileUtil,
     isNullOrUndefined
 } from "../../utils/file-utils/index.js";
-import { FreEditUnit } from "../metalanguage/index.js";
+import type { FreEditUnit } from "../metalanguage/index.js";
 import { ActionsTemplate, EditorIndexTemplate, BoxProviderTemplate } from "./templates/index.js";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate } from "./templates/index.js";
 import { EditorDefTemplate } from "./templates/index.js";

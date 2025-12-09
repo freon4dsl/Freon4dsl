@@ -1,5 +1,6 @@
 import { FretExp } from "./FretExp.js";
-import { FreMetaClassifier, FreMetaConcept } from "../../../languagedef/metalanguage/index.js";
+import type { FreMetaClassifier} from "../../../languagedef/metalanguage/index.js";
+import { FreMetaConcept } from "../../../languagedef/metalanguage/index.js";
 
 export class FretAnytypeExp extends FretExp {
     static anyType: FreMetaClassifier = new FreMetaConcept();

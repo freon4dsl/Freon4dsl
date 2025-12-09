@@ -1,4 +1,4 @@
-import {
+import type {
     FreMetaClassifier,
     FreMetaInstance,
     FreMetaLanguage,
@@ -6,18 +6,21 @@ import {
     FreMetaProperty,
     MetaElementReference
 } from '../../languagedef/metalanguage/index.js';
+import type {
+    FreTyperElement,
+    FretVarDecl,
+    FretTypeConcept
+} from '../metalanguage/index.js';
 import {
     FretCreateExp,
     FretPropertyCallExp,
     FretVarCallExp,
     FretWhereExp,
-    TyperDef,
-    FreTyperElement,
-    FretVarDecl,
-    FretTypeConcept
+    TyperDef
 } from '../metalanguage/index.js';
 import { Names } from "../../utils/on-lang/index.js";
-import { CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import type { CheckRunner} from '../../utils/basic-dependencies/index.js';
+import { ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
 import { isNullOrUndefined } from '../../utils/file-utils/index.js';

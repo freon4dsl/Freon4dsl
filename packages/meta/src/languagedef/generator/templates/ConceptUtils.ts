@@ -1,11 +1,13 @@
-import { Names, Imports } from "../../../utils/on-lang/index.js"
+import type { Imports } from "../../../utils/on-lang/index.js";
+import { Names } from "../../../utils/on-lang/index.js"
 import { GenerationUtil } from '../../../utils/on-lang/GenerationUtil.js';
-import {
+import type {
     FreMetaClassifier,
-    FreMetaConcept,
     FreMetaConceptProperty,
     FreMetaPrimitiveProperty,
-    FreMetaProperty,
+    FreMetaProperty} from "../../metalanguage/index.js";
+import {
+    FreMetaConcept,
     FreMetaPrimitiveType,
     FreMetaInterface,
     FreMetaEnumValue

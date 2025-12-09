@@ -1,5 +1,6 @@
 import { Names, Imports } from "../../../utils/on-lang/index.js"
-import { FreMetaLanguage, FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage, FreMetaClassifier} from "../../../languagedef/metalanguage/index.js";
+import { FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
 import { ValidationUtils } from "../ValidationUtils.js";
 
 const paramName: string = "node";

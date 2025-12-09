@@ -1,5 +1,6 @@
-import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+// eslint-disable-next-line n/no-unpublished-import
 import { expect } from "vitest";
 
 export function parseCorrectModel(parser: LanguageParser, parseFile: string) {

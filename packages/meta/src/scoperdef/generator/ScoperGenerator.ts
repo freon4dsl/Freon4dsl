@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import {
     Names,
     SCOPER_FOLDER

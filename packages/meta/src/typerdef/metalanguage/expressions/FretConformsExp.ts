@@ -1,4 +1,5 @@
-import { FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
+import type { FreMetaClassifier} from "../../../languagedef/metalanguage/index.js";
+import { FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
 import { FretBinaryExp } from "./FretBinaryExp.js";
 
 export class FretConformsExp extends FretBinaryExp {

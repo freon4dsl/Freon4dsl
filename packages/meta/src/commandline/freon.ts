@@ -1,4 +1,5 @@
-import { CommandLineParser, CommandLineFlagParameter } from "@rushstack/ts-command-line";
+import type { CommandLineFlagParameter } from "@rushstack/ts-command-line";
+import { CommandLineParser } from "@rushstack/ts-command-line";
 import { FreonGenerateInterpreter } from "./FreonGenerateInterpreter.js";
 import { FreonGenerateLanguage } from "./FreonGenerateLanguage.js";
 import { FreonGenerateAllAction } from "./FreonGenerateAllAction.js";
@@ -14,6 +15,7 @@ import { FreonGenerateDiagrams } from "./FreonGenerateDiagrams.js";
 // require('source-map-support').install();
 // import sm_support from 'source-map-support';
 // sm_support.install();
+// eslint-disable-next-line n/no-missing-import
 import "source-map-support/register.js";
 
 const LOGGER = new MetaLogger("Freon").mute();

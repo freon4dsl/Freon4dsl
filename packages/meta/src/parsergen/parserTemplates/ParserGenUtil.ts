@@ -1,9 +1,11 @@
-import { FreEditNormalProjection, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage/index.js";
+import type { FreEditNormalProjection, FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { FreEditProjectionGroup } from "../../editordef/metalanguage/index.js";
 import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults.js";
-import {
+import type {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
-    FreMetaExpressionConcept, LangUtil
+    FreMetaExpressionConcept} from '../../languagedef/metalanguage/index.js';
+import { LangUtil
 } from '../../languagedef/metalanguage/index.js';
 
 export class ParserGenUtil {

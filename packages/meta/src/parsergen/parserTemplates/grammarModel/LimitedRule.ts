@@ -1,5 +1,5 @@
 import { GrammarRule } from "./GrammarRule.js";
-import { FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
+import type { FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
 import { Names } from "../../../utils/on-lang/index.js";
 import { ParserGenUtil } from "../ParserGenUtil.js";
 

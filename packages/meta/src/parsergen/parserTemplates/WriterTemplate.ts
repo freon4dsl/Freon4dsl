@@ -1,29 +1,31 @@
 import { Names, Imports } from "../../utils/on-lang/index.js"
-import {
-    FreMetaBinaryExpressionConcept,
+import type {
     FreMetaClassifier,
-    FreMetaConcept,
     FreMetaInterface,
     FreMetaLanguage,
+    FreMetaProperty} from '../../languagedef/metalanguage/index.js';
+import {
+    FreMetaBinaryExpressionConcept,
+    FreMetaConcept,
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
-    FreMetaPrimitiveType,
-    FreMetaProperty, LangUtil
+    FreMetaPrimitiveType, LangUtil
 } from '../../languagedef/metalanguage/index.js';
-import {
+import type {
     FreEditBoolKeywords,
     FreEditExtraClassifierInfo,
-    ForType,
     FreEditClassifierProjection,
-    FreEditNormalProjection,
-    FreEditProjectionDirection,
     FreEditProjectionGroup,
     FreEditProjectionItem,
     FreEditProjectionLine,
+    FreEditUnit} from "../../editordef/metalanguage/index.js";
+import {
+    ForType,
+    FreEditNormalProjection,
+    FreEditProjectionDirection,
     FreEditProjectionText,
     FreEditPropertyProjection,
     FreEditSuperProjection,
-    FreEditUnit,
     FreOptionalPropertyProjection,
     ListJoinType,
 } from "../../editordef/metalanguage/index.js";

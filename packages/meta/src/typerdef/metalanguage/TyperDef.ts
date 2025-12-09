@@ -1,13 +1,14 @@
 import { FreTyperElement } from "./FreTyperElement.js";
-import {
+import type {
     FreMetaClassifier,
+    FreMetaLanguage} from "../../languagedef/metalanguage/index.js";
+import {
     MetaElementReference,
-    FreMetaLanguage,
     FreMetaProperty,
 } from "../../languagedef/metalanguage/index.js";
 import { FretTypeConcept } from "./FretTypeConcept.js";
-import { FretClassifierSpec } from "./FretClassifierSpec.js";
-import { FretAnyTypeSpec } from "./FretAnyTypeSpec.js";
+import type { FretClassifierSpec } from "./FretClassifierSpec.js";
+import type { FretAnyTypeSpec } from "./FretAnyTypeSpec.js";
 import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil.js";
 import { Names } from "../../utils/on-lang/index.js";
 

@@ -1,5 +1,5 @@
 import { CheckRunner } from "./CheckRunner.js";
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 
 export abstract class CheckerPhase<DEFINITION> {
     language: FreMetaLanguage; // should be set in every checker phase, except the checker for the language definition language (.ast)

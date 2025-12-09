@@ -1,5 +1,6 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { ScopeDef, ScoperChecker } from "../metalanguage/index.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { ScopeDef} from "../metalanguage/index.js";
+import { ScoperChecker } from "../metalanguage/index.js";
 import { setCurrentFileName } from "./ScoperCreators.js";
 import { setCurrentFileName as expressionFileName } from "../../langexpressions/parser/ExpressionCreators.js";
 

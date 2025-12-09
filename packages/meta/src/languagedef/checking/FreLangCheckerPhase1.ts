@@ -1,12 +1,13 @@
-import {
+import type {
     FreMetaLanguage,
+    FreMetaPrimitiveProperty,
+    FreMetaProperty,
+    FreMetaClassifier} from '../metalanguage/index.js';
+import {
     FreMetaBinaryExpressionConcept,
     FreMetaExpressionConcept,
-    FreMetaPrimitiveProperty,
     FreMetaInterface,
     FreMetaConcept,
-    FreMetaProperty,
-    FreMetaClassifier,
     FreMetaLimitedConcept,
     MetaElementReference,
     FreMetaPrimitiveType,
@@ -15,8 +16,9 @@ import {
     FreMetaConceptProperty,
     FreMetaEnumValue
 } from '../metalanguage/index.js';
+import type {
+    CheckRunner} from "../../utils/basic-dependencies/index.js";
 import {
-    CheckRunner,
     CheckerPhase,
     ParseLocationUtil,
 } from "../../utils/basic-dependencies/index.js";

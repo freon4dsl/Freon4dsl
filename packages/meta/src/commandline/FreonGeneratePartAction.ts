@@ -1,8 +1,8 @@
-import { ICommandLineActionOptions } from "@rushstack/ts-command-line";
+import type { ICommandLineActionOptions } from "@rushstack/ts-command-line";
 import { LanguageParser } from "../languagedef/parser/LanguageParser.js";
 import { Imports } from "../utils/on-lang/index.js"
 import { FreonGenerateAction } from "./FreonGenerateAction.js";
-import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 
 /**
  * Generic generator action for generating part of the language, e.g. only the typer.

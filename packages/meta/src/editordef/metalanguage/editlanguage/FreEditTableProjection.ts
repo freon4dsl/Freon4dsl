@@ -1,4 +1,5 @@
-import { FreEditClassifierProjection, FreEditPropertyProjection } from "./internal.js";
+import type { FreEditPropertyProjection } from "./internal.js";
+import { FreEditClassifierProjection } from "./internal.js";
 
 /**
  * A table projection for a concept or interface

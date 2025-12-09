@@ -1,5 +1,5 @@
 import { Names, Imports } from "../../../utils/on-lang/index.js"
-import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 
 export class CustomActionsTemplate {
     generate(language: FreMetaLanguage): string {

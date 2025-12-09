@@ -1,17 +1,19 @@
 import { Names } from '../../utils/on-lang/index.js';
 import { MetaLogger, MetaFunctionNames } from '../../utils/no-dependencies/index.js';
 import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
-import { LanguageExpressionTester, TestExpressionsForConcept } from "../parser/LanguageExpressionTester.js";
-import {
+import type { LanguageExpressionTester, TestExpressionsForConcept } from "../parser/LanguageExpressionTester.js";
+import type {
     FreMetaLanguage,
-    FreMetaClassifier,
+    FreMetaClassifier} from '../../languagedef/metalanguage/index.js';
+import {
     FreMetaLimitedConcept,
     FreMetaUnitDescription,
     LangUtil
 } from '../../languagedef/metalanguage/index.js';
+import type {
+    FreLangExp} from '../metalanguage/index.js';
 import {
     FreFunctionExp,
-    FreLangExp,
     FreLangSimpleExp,
     FreLimitedInstanceExp,
     FreVarExp

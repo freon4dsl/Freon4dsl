@@ -1,7 +1,7 @@
 import fs from "fs";
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { FileUtil } from "../../utils/file-utils/index.js"
-import { TyperDef } from "../metalanguage/index.js";
+import type { TyperDef } from "../metalanguage/index.js";
 import { FreTyperReader } from "./FreTyperReader.js";
 import { FreTyperChecker } from "./FreTyperChecker.js";
 import { LOG2USER, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';

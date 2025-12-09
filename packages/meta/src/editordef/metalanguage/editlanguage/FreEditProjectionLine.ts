@@ -1,8 +1,9 @@
 import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
+import type {
+    FreEditProjectionItem} from "./internal.js";
 import {
     FreEditParsedNewline,
     FreEditParsedProjectionIndent,
-    FreEditProjectionItem,
     FreOptionalPropertyProjection,
 } from "./internal.js";
 

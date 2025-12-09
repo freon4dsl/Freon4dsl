@@ -1,4 +1,4 @@
-import {
+import type {
     FreMetaConcept,
     FreMetaModelDescription,
     FreMetaProperty,
