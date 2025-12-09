@@ -1,11 +1,10 @@
 import { Names, Imports } from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage, FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
-import { ValidationUtils } from "../ValidationUtils.js";
 
 const paramName: string = "node";
 const commentBefore = `/**
                         * Checks '${paramName}' before checking its children.
-                        * Found errors are pushed onto 'errorlist'.
+                        * Found errors are pushed onto 'errorList'.
                         * If an error is found, it is NOT considered 'fatal', which means that other checks on
                         * '${paramName}' are performed.
                         *
@@ -15,7 +14,7 @@ const commentBefore = `/**
 export class NonOptionalsCheckerTemplate {
     done: FreMetaClassifier[] = [];
 
-    generateChecker(language: FreMetaLanguage, relativePath: string): string {
+    generateChecker(language: FreMetaLanguage, customsFolder: string, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName: string = Names.FreError;
         const errorSeverityName: string = Names.FreErrorSeverity;
@@ -55,13 +54,13 @@ export class NonOptionalsCheckerTemplate {
         // TEMPLATE: NonOptionalsCheckerTemplate.generateChecker(...)
         ${imports.makeImports(language)}
         import { type ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
+        import { locationDescription } from "${relativePath}/${customsFolder}/${Names.locationDescription()}.js";
         
         ${result}`;
     }
 
     private createChecksOnNonOptionalParts(concept: FreMetaClassifier): string {
         let result: string = "";
-        const locationdescription = ValidationUtils.findLocationDescription(concept, paramName);
 
         concept.allProperties().forEach((prop) => {
             // the following is added only for non-list properties
@@ -78,7 +77,7 @@ export class NonOptionalsCheckerTemplate {
                 }
 
                 result += `if (${Names.isNullOrUndefined}(${paramName}.${prop.name}) ${additionalStringCheck}) {
-                    this.errorList.push(new ${Names.FreError}("Property '${prop.name}' must have a value", ${paramName}, ${locationdescription}, '${prop.name}', ${Names.FreErrorSeverity}.Error));
+                    this.errorList.push(new ${Names.FreError}(\`Property '${prop.name}' of \${locationDescription(node)} must have a value\`, ${paramName}, '${prop.name}', ${Names.FreErrorSeverity}.Error));
                 }
                 `;
             }

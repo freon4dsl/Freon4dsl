@@ -18,3 +18,10 @@ BB {[
 SubCC {[
     SubCC \[ CCprop3: ${self.CCprop3}, DDprop3: ${self.DDprop3}, FFprop3: ${self.FFprop3}\]
 ]}
+
+BBBBBB {[
+    Modelunit ${self.name}
+    Prop of type ZZ: ${self.BBprop1}
+    Prop of type YY: ${self.BBprop2}
+    Prop of type XX: ${self.BBprop3}
+]}
