@@ -129,7 +129,7 @@ export class ItemBoxHelper {
             const condition: string = property.isList
                 ? `() => (!!${elementVarName}.${optionalPropertyName}) && (${elementVarName}.${optionalPropertyName}).length !== 0`
                 : `() => (!!${elementVarName}.${optionalPropertyName})`;
-            result = `BoxFactory.optional2(${elementVarName}, "optional-${optionalPropertyName}", ${condition},
+            result = `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", ${condition},
                 ${result},
                 false, 
                 BoxFactory.action(this._node, "optional-${optionalPropertyName}", "${optionalLiteral}")
