@@ -60,27 +60,27 @@ export class ValidatorTemplate {
              * The default for 'includeChildren' is true.
              */
             public validate(node: ${Names.FreNode}, includeChildren: boolean = true) : ${this.errorClassName}[]{
-                // initialize the errorlist
-                const errorlist : ${this.errorClassName}[] = [];
+                // initialize the errorList
+                const errorList : ${this.errorClassName}[] = [];
 
                 // create the walker over the model tree
                 const myWalker = new ${Names.walker(language)}();
 
                 // create the checker on non-optional parts
                 let myChecker = new ${nonOptionalsChecker}();
-                myChecker.errorList = errorlist;
+                myChecker.errorList = errorList;
                 // and add the checker to the walker
                 myWalker.myWorkers.push( myChecker );
 
                 // create the checker on references
                 myChecker = new ${referenceChecker}();
-                myChecker.errorList = errorlist;
+                myChecker.errorList = errorList;
                 // and add the checker to the walker
                 myWalker.myWorkers.push( myChecker );
                 
                 // create the checker on (double names in) namespaces
                 myChecker = new ${namespaceChecker}();
-                myChecker.errorList = errorlist;
+                myChecker.errorList = errorList;
                 // and add the checker to the walker
                 myWalker.myWorkers.push( myChecker );
                 ${
@@ -88,7 +88,7 @@ export class ValidatorTemplate {
                         ? `
                     // create the checker based on the rules in the validation definition (.valid file)
                     myChecker = new ${rulesChecker}();
-                    myChecker.errorList = errorlist;
+                    myChecker.errorList = errorList;
                     // and add the checker to the walker
                     myWalker.myWorkers.push( myChecker );`
                         : ``
@@ -96,7 +96,7 @@ export class ValidatorTemplate {
 
                 // add any custom validations
                 for (let checker of freonConfiguration.customValidations) {
-                    checker.errorList = errorlist;
+                    checker.errorList = errorList;
                     myWalker.myWorkers.push(checker);
                 }
 
@@ -104,7 +104,7 @@ export class ValidatorTemplate {
                 myWalker.walk(node, ()=> { return includeChildren; } );
 
                 // return any errors
-                return errorlist;
+                return errorList;
             }
         }`;
     }

@@ -33,3 +33,27 @@ interface FF {
     FFprop3: number;
 }
 
+/* model unit used to test the content of error messages */
+modelunit BBBBBB  {
+    name: identifier;
+    // properties with concept as type
+    BBprop1: ZZ;
+    BBprop2: YY;
+    BBprop3: XX;
+}
+
+concept ZZ {
+    name: string;
+    ZZprop1: YY;
+    ZZlist: XX[];
+}
+
+concept YY {
+    name: string;
+    YYprop1: XX;
+}
+
+concept XX {
+    name: string;
+    XXprop1: boolean;
+}

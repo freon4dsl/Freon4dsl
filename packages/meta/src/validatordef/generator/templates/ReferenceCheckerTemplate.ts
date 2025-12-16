@@ -1,12 +1,11 @@
 import { Names, Imports } from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
-import { ValidationUtils } from "../ValidationUtils.js";
 
 const paramName: string = "node";
 
 export class ReferenceCheckerTemplate {
 
-    generateChecker(language: FreMetaLanguage, relativePath: string): string {
+    generateChecker(language: FreMetaLanguage, customsFolder: string, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName: string = Names.FreError;
         const errorSeverityName: string = Names.FreErrorSeverity;
@@ -22,7 +21,6 @@ export class ReferenceCheckerTemplate {
             errorClassName, errorSeverityName, writerInterfaceName, Names.FreNodeReference, Names.FreNamedNode, Names.FreNode, Names.FreLanguageEnvironment
         ])
         imports.utils.add(defaultWorkerName)
-        
         const allClassifiers: FreMetaClassifier[] = [];
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
@@ -33,6 +31,7 @@ export class ReferenceCheckerTemplate {
         // TEMPLATE ReferenceCheckerTemplate.generateChecker(...)
         ${imports.makeImports(language)}
         import { type ${Names.checkerInterface(language)} } from "./${Names.validator(language)}.js";
+        import { locationDescription } from "${relativePath}/${customsFolder}/${Names.locationDescription()}.js";
 
         /**
          * Class ${checkerClassName} is part of the implementation of the default validator.
@@ -50,22 +49,21 @@ export class ReferenceCheckerTemplate {
 
             ${allMethods}
 
-            private makeErrorMessage(${paramName}: ${overallTypeName}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>, propertyName: string, locationDescription: string) {
+            private makeErrorMessage(${paramName}: ${overallTypeName}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>, propertyName: string) {
                 const scoper = ${Names.FreLanguageEnvironment}.getInstance().scoper;
                 const possibles = scoper.getVisibleNodes(${paramName}).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {
                     this.errorList.push(
                         new ${Names.FreError}(
-                            \`Reference '\${referredElem.pathnameToString(this.refSeparator)}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.freLanguageConcept()}\`).join(", ")}]\`,
+                            \`Reference '\${referredElem.pathnameToString(this.refSeparator)}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.freLanguageConcept()}\`).join(", ")}] in \${propertyName} of \${locationDescription(node)}\`,
                                 ${paramName},
-                                \`\${propertyName} of \${locationDescription}\`,
                             \`\${propertyName}\`,
                             ${Names.FreErrorSeverity}.Error
                         )
                     );
                 } else {
                     this.errorList.push(
-                        new ${Names.FreError}(\`Cannot find reference '\${referredElem.pathnameToString(this.refSeparator)}'\`, ${paramName}, \`\${propertyName} of \${locationDescription}\`, \`\${propertyName}\`, ${Names.FreErrorSeverity}.Error)
+                        new ${Names.FreError}(\`Cannot find reference '\${referredElem.pathnameToString(this.refSeparator)}' in \${propertyName} of \${locationDescription(node)}\`, ${paramName}, \`\${propertyName}\`, ${Names.FreErrorSeverity}.Error)
                     );
                 }
             }
@@ -74,20 +72,18 @@ export class ReferenceCheckerTemplate {
 
     private createChecksOnNonOptionalParts(concept: FreMetaClassifier, imports: Imports): string {
         let result: string = "";
-        // todo check location description, I (A) think that too often 'unnamed' is the result
-        const locationdescription = ValidationUtils.findLocationDescription(concept, paramName);
         concept.allProperties().forEach((prop) => {
             if (!prop.isPart) {
                 if (prop.isList) {
                     imports.core.add("isNullOrUndefined");
                     result += `for (const referredElem of ${paramName}.${prop.name} ) {
                         if (isNullOrUndefined(referredElem.referred)) {
-                            this.makeErrorMessage(${paramName}, referredElem, "${prop.name}", \`\${${locationdescription}}\`);
+                            this.makeErrorMessage(${paramName}, referredElem, "${prop.name}");
                         }
                     }`;
                 } else {
                     result += `if (!!${paramName}.${prop.name} && ${paramName}.${prop.name}.referred === null) {
-                            this.makeErrorMessage(${paramName}, ${paramName}.${prop.name}, "${prop.name}", \`\${${locationdescription}}\`);
+                            this.makeErrorMessage(${paramName}, ${paramName}.${prop.name}, "${prop.name}");
                     }`;
                 }
             }
@@ -98,7 +94,7 @@ export class ReferenceCheckerTemplate {
             return `
             /**
              * Checks '${paramName}' before checking its children.
-             * Found errors are pushed onto 'errorlist'.
+             * Found errors are pushed onto 'errorList'.
              * If an error is found, it is considered 'fatal', which means that no other checks on
              * '${paramName}' are performed.
              *

@@ -44,7 +44,7 @@ export class ROOTValidationRulesChecker extends ROOTDefaultWorker implements ROO
 
         // self.AAprop3 >= 10
         if (!(node.AAprop3 >= 10)) {
-            this.errorList.push(new FreError("'self.AAprop3 >= 10' is false", node, node.name, FreErrorSeverity.ToDo));
+            this.errorList.push(new FreError("'self.AAprop3 >= 10' is false", node, FreErrorSeverity.ToDo));
         }
         // isunique BBprop15 in self.AAprop8
         let uniqueBBprop15InAAprop8: ZZ[] = [];
@@ -54,7 +54,6 @@ export class ROOTValidationRulesChecker extends ROOTDefaultWorker implements ROO
                     new FreError(
                         \`Element[\${index}] of property 'AAprop8' has no value\`,
                         node.AAprop8[index],
-                        node.name,
                         "BBprop15",
                         FreErrorSeverity.ToDo,
                     ),
@@ -67,7 +66,6 @@ export class ROOTValidationRulesChecker extends ROOTDefaultWorker implements ROO
                         new FreError(
                             \`The value of property 'BBprop15' ("\${this.myWriter.writeNameOnly(elem)}") is not unique in list 'AAprop8'\`,
                             node.AAprop8[index],
-                            node.name,
                             "BBprop15",
                             FreErrorSeverity.ToDo,
                         ),
@@ -77,15 +75,11 @@ export class ROOTValidationRulesChecker extends ROOTDefaultWorker implements ROO
         });
         // notEmpty self.AAprop2
         if (node.AAprop2.length === 0) {
-            this.errorList.push(
-                new FreError("List 'self.AAprop2' may not be empty", node, node.name, "self.AAprop2", FreErrorSeverity.ToDo),
-            );
+            this.errorList.push(new FreError("List 'self.AAprop2' may not be empty", node, "self.AAprop2", FreErrorSeverity.ToDo));
         }
         // notEmpty self.AAprop10
         if (node.$AAprop10.length === 0) {
-            this.errorList.push(
-                new FreError("List 'self.AAprop10' may not be empty", node, node.name, "self.AAprop10", FreErrorSeverity.ToDo),
-            );
+            this.errorList.push(new FreError("List 'self.AAprop10' may not be empty", node, "self.AAprop10", FreErrorSeverity.ToDo));
         }
         // isunique self.DDprop4 in self.AAprop12
         let uniqueDDprop4InAAprop12: number[] = [];
@@ -95,7 +89,6 @@ export class ROOTValidationRulesChecker extends ROOTDefaultWorker implements ROO
                     new FreError(
                         \`Element[\${index}] of property 'AAprop12' has no value\`,
                         node.AAprop12[index],
-                        node.name,
                         "DDprop4",
                         FreErrorSeverity.ToDo,
                     ),
@@ -108,7 +101,6 @@ export class ROOTValidationRulesChecker extends ROOTDefaultWorker implements ROO
                         new FreError(
                             \`The value of property 'DDprop4' ("\${this.myWriter.writeNameOnly(elem)}") is not unique in list 'AAprop12'\`,
                             node.AAprop12[index],
-                            node.name,
                             "DDprop4",
                             FreErrorSeverity.ToDo,
                         ),
@@ -118,7 +110,7 @@ export class ROOTValidationRulesChecker extends ROOTDefaultWorker implements ROO
         });
         // validIdentifier name
         if (!this.isValidName(node.name)) {
-            this.errorList.push(new FreError("'" + node.name + "' is not a valid identifier", node, node.name, FreErrorSeverity.ToDo));
+            this.errorList.push(new FreError("'" + node.name + "' is not a valid identifier", node, FreErrorSeverity.ToDo));
         }
         return hasFatalError;
     }
