@@ -101,7 +101,7 @@ export class ReaderTemplate {
                             // Strip the error message, otherwise it's too long for the webapp,
                             // and add the location information.
                             let location = \` [\${sourceName}:\${err.location?.line}:\${err.location?.column}]\`;
-                            let mess = err.message.replace(/^Failed to match \\{.*?\\} at:\\s*\\.*\\s*/, "Parse error: ");
+                            let mess = err.message.replace(/^Failed to match \\{.*?\\} at:\\s*\\.*\\s*/, "cannot parse ...");
                             // if (!!err.data) {
                             //     mess += ' (expected ' + err.data + ')';
                             // }
