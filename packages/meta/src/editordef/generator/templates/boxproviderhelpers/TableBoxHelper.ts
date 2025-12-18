@@ -1,13 +1,14 @@
-import { FreEditProjectionDirection, FreEditTableProjection } from "../../../metalanguage/index.js";
-import {
+import type { FreEditTableProjection } from "../../../metalanguage/index.js";
+import { FreEditProjectionDirection } from "../../../metalanguage/index.js";
+import type {
     FreMetaClassifier,
     FreMetaConceptProperty,
     FreMetaLanguage,
 } from "../../../../languagedef/metalanguage/index.js";
 import { Names } from "../../../../utils/on-lang/index.js";
 import { NamesForEditor } from "../../../../utils/on-lang-and-editor/index.js";
-import { ItemBoxHelper } from "./ItemBoxHelper.js";
-import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
+import type { ItemBoxHelper } from "./ItemBoxHelper.js";
+import type { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class TableBoxHelper {
     private _myTemplate: BoxProviderTemplate;

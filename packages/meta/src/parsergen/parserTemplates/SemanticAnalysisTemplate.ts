@@ -1,12 +1,13 @@
-import {
+import type {
     FreMetaClassifier,
-    FreMetaConcept,
     FreMetaLanguage,
-    FreMetaPrimitiveProperty,
+    FreMetaPrimitiveProperty} from "../../languagedef/metalanguage/index.js";
+import {
+    FreMetaConcept
 } from "../../languagedef/metalanguage/index.js";
 import { Imports, Names } from "../../utils/on-lang/index.js"
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/FreMetaLanguage.js";
-import { UnitAnalyser } from "./UnitAnalyser.js";
+import type { UnitAnalyser } from "./UnitAnalyser.js";
 
 // first call 'analyse' then the other methods as they depend on the global variables to be set
 

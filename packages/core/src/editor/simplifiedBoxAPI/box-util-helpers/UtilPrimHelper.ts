@@ -1,11 +1,12 @@
 import type { FreNode } from "../../../ast/index.js";
 import { AST } from "../../../change-manager/index.js";
+import type { MultiLineTextBox} from '../../boxes/index.js';
 import {
     BoolDisplay,
     type BooleanControlBox,
     type Box,
     BoxFactory,
-    CharAllowed, MultiLineTextBox,
+    CharAllowed,
     type NumberControlBox,
     NumberDisplay,
     type NumberDisplayInfo,

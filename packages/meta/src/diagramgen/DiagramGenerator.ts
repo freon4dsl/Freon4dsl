@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { GenerationStatus, FileUtil } from "../utils/file-utils/index.js";
 import { DIAGRAM_FOLDER } from "../utils/on-lang/index.js";

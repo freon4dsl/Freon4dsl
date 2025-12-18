@@ -1,6 +1,7 @@
-import { AST, FreDelta} from "../../change-manager/index.js"
+import type { FreDelta} from "../../change-manager/index.js";
+import { AST} from "../../change-manager/index.js"
 import { FreLogger } from "../../logging/index.js";
-import { Box, FreAction, FreEditor } from "../index.js";
+import type { Box, FreAction, FreEditor } from "../index.js";
 import type { FreExpressionNode } from "../../ast/index.js";
 import { isFreExpression } from "../../ast-utils/index.js";
 import { isProKey, type FreTriggerUse } from "../actions/index.js";

@@ -1,6 +1,6 @@
 import { FreTyperCheckerPhase1 } from "./FreTyperCheckerPhase1.js";
 import { FreTyperCheckerPhase2 } from "./FreTyperCheckerPhase2.js";
-import { TyperDef } from "../metalanguage/index.js";
+import type { TyperDef } from "../metalanguage/index.js";
 import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 
 export class FreTyperChecker extends Checker<TyperDef> {

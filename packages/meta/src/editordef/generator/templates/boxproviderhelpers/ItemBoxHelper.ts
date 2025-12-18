@@ -1,7 +1,8 @@
+import type {
+    FreEditFragmentDefinition,
+    FreEditProjectionItem} from "../../../metalanguage/index.js";
 import {
     FreEditButtonDef,
-    FreEditFragmentDefinition,
-    FreEditProjectionItem,
     FreEditProjectionText,
     FreEditPropertyProjection,
     FreEditSimpleExternal,
@@ -9,19 +10,20 @@ import {
     FreOptionalPropertyProjection,
     FreEditFragmentProjection,
 } from "../../../metalanguage/index.js";
-import {
+import type {
     FreMetaClassifier,
-    FreMetaConceptProperty,
     FreMetaLanguage,
+    FreMetaProperty} from "../../../../languagedef/metalanguage/index.js";
+import {
+    FreMetaConceptProperty,
     FreMetaLimitedConcept,
-    FreMetaPrimitiveProperty,
-    FreMetaProperty,
+    FreMetaPrimitiveProperty
 } from "../../../../languagedef/metalanguage/index.js";
 import { LOG2USER } from '../../../../utils/basic-dependencies/index.js';
 import { Names } from '../../../../utils/on-lang/index.js';
 import { NamesForEditor } from '../../../../utils/on-lang-and-editor/index.js';
 import { ParserGenUtil } from "../../../../parsergen/parserTemplates/ParserGenUtil.js";
-import {
+import type {
     PrimitivePropertyBoxesHelper,
     ExternalBoxesHelper,
     TableBoxHelper,
@@ -29,7 +31,7 @@ import {
     LimitedBoxHelper,
     PartPropertyBoxHelper,
 } from "./index.js";
-import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
+import type { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class ItemBoxHelper {
     set tableBoxHelper(value: TableBoxHelper) {
@@ -129,7 +131,7 @@ export class ItemBoxHelper {
             const condition: string = property.isList
                 ? `() => (!!${elementVarName}.${optionalPropertyName}) && (${elementVarName}.${optionalPropertyName}).length !== 0`
                 : `() => (!!${elementVarName}.${optionalPropertyName})`;
-            result = `BoxFactory.optional2(${elementVarName}, "optional-${optionalPropertyName}", ${condition},
+            result = `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", ${condition},
                 ${result},
                 false, 
                 BoxFactory.action(this._node, "optional-${optionalPropertyName}", "${optionalLiteral}")

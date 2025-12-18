@@ -1,10 +1,11 @@
-import { FreMetaConceptProperty, FreMetaLanguage } from "../../../../languagedef/metalanguage/index.js";
+import type { FreMetaConceptProperty, FreMetaLanguage } from "../../../../languagedef/metalanguage/index.js";
 import { Names } from "../../../../utils/on-lang/index.js";
 import { DisplayTypeHelper } from "./DisplayTypeHelper.js";
-import { ForType, FreEditListInfo, FreEditProjectionGroup } from "../../../metalanguage/index.js";
-import { ListPropertyBoxHelper } from "./ListPropertyBoxHelper.js";
-import { PartPropertyBoxHelper } from "./PartPropertyBoxHelper.js";
-import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
+import type { FreEditListInfo, FreEditProjectionGroup } from "../../../metalanguage/index.js";
+import { ForType } from "../../../metalanguage/index.js";
+import type { ListPropertyBoxHelper } from "./ListPropertyBoxHelper.js";
+import type { PartPropertyBoxHelper } from "./PartPropertyBoxHelper.js";
+import type { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class LimitedBoxHelper {
     private stdLimitedSingleDisplayType: string = "text";

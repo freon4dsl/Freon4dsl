@@ -1,12 +1,13 @@
+import type {
+    FreMetaClassifier} from '../../languagedef/metalanguage/index.js';
 import {
     FreMetaBinaryExpressionConcept,
-    FreMetaClassifier,
     FreMetaConcept,
     FreMetaInterface,
     FreMetaLimitedConcept, LangUtil
 } from '../../languagedef/metalanguage/index.js';
 import { FreMetaPrimitiveType, FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage.js";
-import { FreAnalyser } from "./LanguageAnalyser.js";
+import type { FreAnalyser } from "./LanguageAnalyser.js";
 
 export class UnitAnalyser implements FreAnalyser {
     unit: FreMetaUnitDescription | undefined = undefined;

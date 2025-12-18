@@ -3,7 +3,7 @@ import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator
 import { ValidatorParser } from "../validatordef/parser/ValidatorParser.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 import { MetaLogger } from "../utils/no-dependencies/index.js";
-import { ValidatorDef } from "../validatordef/metalanguage/index.js";
+import type { ValidatorDef } from "../validatordef/metalanguage/index.js";
 import { notNullOrUndefined } from '../utils/file-utils/index.js';
 
 const LOGGER = new MetaLogger("FreonGenerateValidator"); // .mute();

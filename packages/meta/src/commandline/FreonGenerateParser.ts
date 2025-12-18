@@ -2,7 +2,8 @@ import { FreEditParser } from "../editordef/parser/FreEditParser.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator.js";
-import { DefaultEditorGenerator, FreEditUnit } from '../editordef/metalanguage/index.js';
+import type { FreEditUnit } from '../editordef/metalanguage/index.js';
+import { DefaultEditorGenerator } from '../editordef/metalanguage/index.js';
 import { notNullOrUndefined } from '../utils/file-utils/index.js';
 import { LOG2USER } from '../utils/basic-dependencies/index.js';
 

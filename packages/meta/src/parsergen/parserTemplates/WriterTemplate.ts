@@ -1,37 +1,38 @@
 import { Names, Imports } from "../../utils/on-lang/index.js"
-import {
-    FreMetaBinaryExpressionConcept,
+import type {
     FreMetaClassifier,
-    FreMetaConcept,
     FreMetaInterface,
     FreMetaLanguage,
+    FreMetaProperty} from '../../languagedef/metalanguage/index.js';
+import {
+    FreMetaBinaryExpressionConcept,
+    FreMetaConcept,
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
-    FreMetaPrimitiveType,
-    FreMetaProperty, LangUtil
+    FreMetaPrimitiveType, LangUtil
 } from '../../languagedef/metalanguage/index.js';
-import {
+import type {
     FreEditBoolKeywords,
     FreEditExtraClassifierInfo,
-    ForType,
     FreEditClassifierProjection,
-    FreEditNormalProjection,
-    FreEditProjectionDirection,
     FreEditProjectionGroup,
     FreEditProjectionItem,
     FreEditProjectionLine,
+    FreEditUnit} from "../../editordef/metalanguage/index.js";
+import {
+    ForType,
+    FreEditNormalProjection,
+    FreEditProjectionDirection,
     FreEditProjectionText,
     FreEditPropertyProjection,
     FreEditSuperProjection,
-    FreEditUnit,
     FreOptionalPropertyProjection,
     ListJoinType,
 } from "../../editordef/metalanguage/index.js";
 import { ParserGenUtil } from "./ParserGenUtil.js";
-import { GenerationUtil } from '../../utils/on-lang/GenerationUtil.js';
-import { ListUtil } from '../../utils/no-dependencies/index.js';
-import { isNullOrUndefined } from '../../utils/file-utils/index.js';
-import { notNullOrUndefined } from '@freon4dsl/core';
+import { GenerationUtil } from '../../utils/on-lang/index.js';
+import { ListUtil } from "../../utils/no-dependencies/index.js"
+import { isNullOrUndefined, notNullOrUndefined } from "../../utils/file-utils/index.js"
 
 // TODO more preconditions should be added to avoid null pointer errors
 

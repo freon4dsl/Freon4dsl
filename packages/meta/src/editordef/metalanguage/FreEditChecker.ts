@@ -1,12 +1,13 @@
-import {
+import type {
     FreMetaClassifier,
+    FreMetaLanguage,
+    FreMetaProperty} from "../../languagedef/metalanguage/index.js";
+import {
     FreMetaConcept,
     FreMetaInterface,
-    FreMetaLanguage,
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
     FreMetaPrimitiveType,
-    FreMetaProperty,
     MetaElementReference,
     LangUtil
 } from "../../languagedef/metalanguage/index.js";
@@ -14,23 +15,24 @@ import { Checker, CheckRunner, ParseLocationUtil } from "../../utils/basic-depen
 import { type FreMetaDefinitionElement, MetaLogger } from "../../utils/no-dependencies/index.js";
 import { Names } from "../../utils/on-lang/index.js";
 import { FreEditParseUtil } from "../parser/FreEditParseUtil.js";
-import {
-    DisplayType,
+import type {
     FreEditExtraClassifierInfo,
-    ForType,
     FreEditClassifierProjection,
-    FreEditSimpleExternal,
     FreEditFragmentDefinition,
     FreEditGlobalProjection,
-    FreEditNormalProjection,
     FreEditProjectionGroup,
     FreEditProjectionItem,
     FreEditProjectionLine,
+    FreEditUnit} from "./editlanguage/index.js";
+import {
+    DisplayType,
+    ForType,
+    FreEditSimpleExternal,
+    FreEditNormalProjection,
     FreEditProjectionText,
     FreEditPropertyProjection,
     FreEditSuperProjection,
     FreEditTableProjection,
-    FreEditUnit,
     FreOptionalPropertyProjection,
     FreEditListInfo,
     ListJoinType,

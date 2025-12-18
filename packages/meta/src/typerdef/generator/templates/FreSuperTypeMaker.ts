@@ -1,18 +1,21 @@
-import {
+import type {
     FretClassifierSpec,
+    FretExp,
+    TyperDef,
+    FretBinaryExp,
+    FretEqualsRule} from "../../metalanguage/index.js";
+import {
     FretConformanceRule,
     FretConformsExp,
     FretEqualsExp,
-    FretExp,
     FretPropertyCallExp,
-    FretWhereExp,
-    TyperDef,
-    FretBinaryExp,
-    FretEqualsRule,
+    FretWhereExp
 } from "../../metalanguage/index.js";
 import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
-import { Imports, Names } from '../../../utils/on-lang/index.js';
-import { FreMetaClassifier, FreMetaLimitedConcept, LangUtil } from "../../../languagedef/metalanguage/index.js";
+import type { Imports} from '../../../utils/on-lang/index.js';
+import { Names } from '../../../utils/on-lang/index.js';
+import type { FreMetaClassifier} from "../../../languagedef/metalanguage/index.js";
+import { FreMetaLimitedConcept, LangUtil } from "../../../languagedef/metalanguage/index.js";
 
 /**
  * This class generates the code for all 'conformsto' entries in the .type file.

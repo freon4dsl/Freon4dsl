@@ -1,23 +1,23 @@
 import { autorun } from "mobx";
 import type { FreNode } from "../../ast/index.js";
-import { FreUtils } from "../../util/index.js";
-import { Box } from "./internal.js";
-import type { BoolFunctie } from "./internal.js";
+import { Box, type ActionBox, BoxFactory, type BoolFunctie } from "./internal.js"
+
+// todo remove this class when all tests on OptionalBox have been executed
 
 /**
  * OptionalBox holds the content from a projection that is optional. This content is always present in the
- * attribute 'content'. Next to the context there is a 'placeholder' box, which is shown when the content is not
- * present in the FreElement model.
+ * attribute 'content'. Next to the content there is a 'placeholder' box, which is shown when the content is not
+ * present in the FreNode model.
  * The attributes 'mustShow' and 'condition' determine which of the pair [content, placeholder] is shown. If the 'condition'
  * results in true, then the content box is shown. If 'mustShow' is true, then the content box is also shown, even though
- * there may not be actual content within the FreElement model. The latter is set by the custom action, that is coupled
+ * there may not be actual content within the FreNode model. The latter is set by the custom action, that is coupled
  * to this OptionalBox, which is triggered by the user.
  */
-export class OptionalBox2 extends Box {
-    readonly kind = "OptionalBox2";
+export class OptionalOLDBox extends Box {
+    readonly kind = "OptionalBox";
 
     content: Box = null;
-    placeholder: Box = null;
+    placeholder: ActionBox = null;
     _mustShow: boolean = false; // is set to true by action that does not (yet) change the model, but causes part of the optional to be shown
     condition: () => boolean; // a condition based on the model that determines whether the optional is shown
 
@@ -35,15 +35,13 @@ export class OptionalBox2 extends Box {
         condition: BoolFunctie,
         box: Box,
         mustShow: boolean,
-        placeholder: Box,
-        initializer?: Partial<OptionalBox2>,
+        actionText: string,
     ) {
         super(node, role);
-        FreUtils.initializeObject(this, initializer);
         this.content = box;
         box.parent = this;
         // TODO question: should not the role be diff from role of this box? Where is the "action" prefix added?
-        this.placeholder = placeholder;
+        this.placeholder = BoxFactory.action(node, role, actionText);
         this.placeholder.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;
@@ -58,7 +56,7 @@ export class OptionalBox2 extends Box {
      * Ensure a refresh is triggered if the condition for showing this optional bix has changed.
      */
     conditionChanged = () => {
-        // console.log("AUTORUN showByCondition")
+        // console.log("AUTORUN showByCondition");
         this.condition();
         this.isDirty();
     };
@@ -99,6 +97,6 @@ export class OptionalBox2 extends Box {
     }
 }
 
-export function isOptionalBox2(b: Box): b is OptionalBox2 {
-    return b?.kind === "OptionalBox2"; // b instanceof OptionalBox2;
+export function isOptionalBox(b: Box): b is OptionalOLDBox {
+    return b?.kind === "OptionalBox"; // b instanceof OptionalBox;
 }

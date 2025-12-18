@@ -1,9 +1,9 @@
-import {
+import type {
     FreEditClassifierProjection, FreEditFragmentDefinition,
     FreEditProjectionGroup,
     FreEditTableProjection,
 } from "../../editordef/metalanguage/index.js";
-import { FreMetaClassifier } from '../../languagedef/metalanguage/index.js';
+import type { FreMetaClassifier } from '../../languagedef/metalanguage/index.js';
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical

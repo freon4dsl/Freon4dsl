@@ -1,5 +1,5 @@
 import { FreMetaConceptProperty } from "../../languagedef/metalanguage/index.js";
-import { FretTypeConcept } from "./FretTypeConcept.js";
+import type { FretTypeConcept } from "./FretTypeConcept.js";
 
 export class FretProperty extends FreMetaConceptProperty {
     /**

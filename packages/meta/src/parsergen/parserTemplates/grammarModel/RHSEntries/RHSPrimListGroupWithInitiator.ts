@@ -1,6 +1,6 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
-import { RHSPropEntry } from "./RHSPropEntry.js";
-import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
+import type { RHSPropEntry } from "./RHSPropEntry.js";
+import type { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 
 import { internalTransformPrimList, ParserGenUtil } from "../../ParserGenUtil.js";
 import { makeIndent } from "../GrammarUtils.js";

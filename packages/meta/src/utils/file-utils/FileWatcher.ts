@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { WatchEventType } from "fs";
+import type { WatchEventType } from "fs";
 
 export class FileWatcher {
     filename: string = "";

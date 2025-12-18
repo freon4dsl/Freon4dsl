@@ -1,8 +1,9 @@
-import {
+import type {
     FreEditExtraClassifierInfo,
-    FreEditClassifierProjection,
     FreEditNormalProjection,
-    FreEditTableProjection,
+    FreEditTableProjection} from "./internal.js";
+import {
+    FreEditClassifierProjection
 } from "./internal.js";
 import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
 

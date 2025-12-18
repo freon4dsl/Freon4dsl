@@ -1,4 +1,4 @@
-import { Box } from "../Box.js";
+import type { Box } from "../Box.js";
 import type { FreNode } from "../../../ast/index.js";
 import { FreUtils } from "../../../util/index.js";
 import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox.js";

@@ -1,4 +1,4 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js"
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js"
 import { Names } from "./Names.js"
 import { EDITOR_FOLDER, FREON_CORE, LANGUAGE_FOLDER, LANGUAGE_UTILS_FOLDER, TYPER_CONCEPTS_FOLDER } from "./PathProvider.js"
 

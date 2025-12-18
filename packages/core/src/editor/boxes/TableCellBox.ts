@@ -1,9 +1,11 @@
 import type { FreNode } from "../../ast/index.js";
-import { Box } from "./Box.js";
+import type { Box } from "./Box.js";
 import { GridCellBox } from "./GridCellBox.js";
-import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util/index.js";
+import type { MenuItem} from "../util/index.js";
+import { getContextMenuOptions, MenuOptionsType } from "../util/index.js";
 import { isElementBox } from "./ElementBox.js";
-import { isTableBox, TableBox } from "./TableBox.js";
+import type { TableBox } from "./TableBox.js";
+import { isTableBox } from "./TableBox.js";
 
 export class TableCellBox extends GridCellBox {
     kind: string = "TableCellBox";

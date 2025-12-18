@@ -1,5 +1,6 @@
 import type { ReferenceShortcut } from "../editor/index.js";
-import  { type FreNode, type FreModel, type FreModelUnit, FreNodeReference } from "../ast/index.js";
+import type { FreNodeReference } from "../ast/index.js";
+import  { type FreNode, type FreModel, type FreModelUnit } from "../ast/index.js";
 import { EmptyStdLib } from "../stdlib/index.js";
 import type { FreStdlib } from "../stdlib/index.js";
 import { isNullOrUndefined } from "../util/index.js";

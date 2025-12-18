@@ -1,8 +1,9 @@
 import { GrammarRule } from "./GrammarRule.js";
-import { FreMetaClassifier, FreMetaProperty } from '../../../languagedef/metalanguage/index.js';
+import type { FreMetaClassifier, FreMetaProperty } from '../../../languagedef/metalanguage/index.js';
 import { Names } from "../../../utils/on-lang/index.js";
 import { ParserGenUtil } from "../ParserGenUtil.js";
-import { RightHandSideEntry, RHSPropEntry } from "./RHSEntries/index.js";
+import type { RightHandSideEntry} from "./RHSEntries/index.js";
+import { RHSPropEntry } from "./RHSEntries/index.js";
 import { GenerationUtil } from '../../../utils/on-lang/GenerationUtil.js';
 
 export class ConceptRule extends GrammarRule {

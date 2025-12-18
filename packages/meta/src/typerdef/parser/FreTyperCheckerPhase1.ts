@@ -1,20 +1,23 @@
+import type {
+    FreMetaInstance,
+    FreMetaProperty} from '../../languagedef/metalanguage/index.js';
 import {
     FreMetaClassifier,
     FreMetaConcept,
-    FreMetaInstance,
     FreMetaLimitedConcept,
     FreMetaPrimitiveType,
-    FreMetaProperty,
     MetaElementReference, LangUtil
 } from '../../languagedef/metalanguage/index.js';
+import type {
+    FretAnyTypeSpec,
+    FretClassifierSpec,
+    FretExp,
+    FretTypeRule} from "../metalanguage/index.js";
 import {
     FretAnytypeExp,
-    FretAnyTypeSpec,
     FretBinaryExp,
-    FretClassifierSpec,
     FretConformanceRule,
     FretCreateExp,
-    FretExp,
     FretEqualsRule,
     FretFunctionCallExp,
     FretInferenceRule,
@@ -24,14 +27,14 @@ import {
     FretPropertyCallExp,
     FretSelfExp,
     FretTypeConcept,
-    FretTypeRule,
     FretVarCallExp,
     FretWhereExp,
     TyperDef,
 } from "../metalanguage/index.js";
 import { FretOwnerSetter } from "./FretOwnerSetter.js";
 import { CommonSuperTypeUtil } from "../../languagedef/checking/index.js";
-import { CheckerPhase, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import type { CheckRunner} from '../../utils/basic-dependencies/index.js';
+import { CheckerPhase, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { freReservedWords, ListUtil, reservedWordsInTypescript } from '../../utils/no-dependencies/index.js';
 import { Names } from '../../utils/on-lang/index.js';
 import { FretResolver } from './FretResolver.js';

@@ -25,7 +25,6 @@ export * from "./ListBox.js";
 export * from "./LayoutBox.js";
 export * from "./ActionBox.js";
 export * from "./OptionalBox.js";
-export * from "./OptionalBox2.js";
 export * from "./SvgBox.js";
 export * from "./TextBox.js";
 export * from "./MultiLineTextBox.js";

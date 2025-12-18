@@ -1,9 +1,11 @@
-import {
+import type {
 	FreMetaClassifier,
 	FreMetaLanguage,
-	FreMetaPrimitiveProperty,
-	FreMetaPrimitiveType,
 	FreMetaProperty
+} from '../../languagedef/metalanguage/index.js';
+import {
+	FreMetaPrimitiveProperty,
+	FreMetaPrimitiveType
 } from '../../languagedef/metalanguage/index.js';
 import { Names } from './Names.js';
 

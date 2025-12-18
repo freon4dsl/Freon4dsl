@@ -1,7 +1,8 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
-import {
+import type {
     FreMetaBinaryExpressionConcept,
-    FreMetaProperty,
+    FreMetaProperty} from '../../../../languagedef/metalanguage/index.js';
+import {
     LangUtil
 } from '../../../../languagedef/metalanguage/index.js';
 import { makeIndent } from "../GrammarUtils.js";

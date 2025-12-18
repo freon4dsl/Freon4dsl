@@ -3,14 +3,16 @@
  *
  * Every class represents a certain expression over a metamodel as defined in an .ast file.
  */
-import {
-    FreMetaLangElement,
+import type {
     FreMetaInstance,
     FreMetaLanguage,
     FreMetaClassifier,
     FreMetaProperty,
-    FreMetaPrimitiveType,
     FreMetaConcept
+} from '../../languagedef/metalanguage/index.js';
+import {
+    FreMetaLangElement,
+    FreMetaPrimitiveType
 } from '../../languagedef/metalanguage/index.js';
 import { MetaFunctionNames } from '../../utils/no-dependencies/index.js';
 

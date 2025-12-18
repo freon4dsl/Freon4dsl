@@ -1,6 +1,6 @@
-import { FreMetaClassifier, FreMetaConcept } from "../../languagedef/metalanguage/index.js";
+import type { FreMetaClassifier, FreMetaConcept } from "../../languagedef/metalanguage/index.js";
 import { Names } from "../../utils/on-lang/index.js";
-import { GrammarRule } from "./grammarModel/GrammarRule.js";
+import type { GrammarRule } from "./grammarModel/GrammarRule.js";
 import { ChoiceRule } from "./grammarModel/ChoiceRule.js";
 import { SuperChoiceRule } from "./grammarModel/SuperChoiceRule.js";
 

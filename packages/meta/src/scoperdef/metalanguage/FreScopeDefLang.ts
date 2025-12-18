@@ -1,6 +1,7 @@
-import { FreMetaClassifier, MetaElementReference } from '../../languagedef/metalanguage/index.js';
+import type { FreMetaClassifier} from '../../languagedef/metalanguage/index.js';
+import { MetaElementReference } from '../../languagedef/metalanguage/index.js';
 import { FreMetaDefinitionElement } from "../../utils/no-dependencies/index.js";
-import { FreLangExp } from '../../langexpressions/metalanguage/index.js';
+import type { FreLangExp } from '../../langexpressions/metalanguage/index.js';
 import { isNullOrUndefined } from '../../utils/file-utils/index.js';
 
 export class ScopeDef extends FreMetaDefinitionElement {

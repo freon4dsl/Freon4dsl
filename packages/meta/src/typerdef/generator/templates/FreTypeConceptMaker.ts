@@ -1,6 +1,8 @@
 import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUtils.js"
-import { FreMetaConcept, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
-import { FretTypeConcept, TyperDef } from "../../metalanguage/index.js";
+import type { FreMetaConcept} from "../../../languagedef/metalanguage/index.js";
+import { FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
+import type { TyperDef } from "../../metalanguage/index.js";
+import { FretTypeConcept } from "../../metalanguage/index.js";
 import { Names, Imports } from "../../../utils/on-lang/index.js"
 import { ListUtil } from '../../../utils/no-dependencies/index.js';
 

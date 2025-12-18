@@ -1,4 +1,5 @@
-import { ParseLocation, FreMetaDefinitionElement } from "../../utils/no-dependencies/index.js";
+import type { ParseLocation} from "../../utils/no-dependencies/index.js";
+import { FreMetaDefinitionElement } from "../../utils/no-dependencies/index.js";
 import { MetaElementReference } from './internal.js';
 
 // Some properties of the classes defined here are marked @ts-ignore to avoid the error:

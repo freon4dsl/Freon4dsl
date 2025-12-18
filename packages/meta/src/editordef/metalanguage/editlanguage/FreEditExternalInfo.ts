@@ -1,5 +1,5 @@
 import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
-import { FreEditKeyValuePair } from "./FreEditKeyValuePair.js";
+import type { FreEditKeyValuePair } from "./FreEditKeyValuePair.js";
 
 /**
  * This class holds all the information that is needed to wrap or replace a property projection by

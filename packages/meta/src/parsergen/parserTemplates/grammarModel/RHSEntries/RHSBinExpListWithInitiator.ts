@@ -1,5 +1,6 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
-import { FreMetaBinaryExpressionConcept, FreMetaProperty, LangUtil } from "../../../../languagedef/metalanguage/index.js";
+import type { FreMetaBinaryExpressionConcept, FreMetaProperty} from "../../../../languagedef/metalanguage/index.js";
+import { LangUtil } from "../../../../languagedef/metalanguage/index.js";
 import { makeIndent } from "../GrammarUtils.js";
 import { BinaryExpMaker } from "../../BinaryExpMaker.js";
 import { ParserGenUtil } from "../../ParserGenUtil.js";

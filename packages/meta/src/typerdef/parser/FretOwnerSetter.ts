@@ -1,12 +1,13 @@
-import {
+import type {
     FretExp,
+    TyperDef,
+    FreTyperElement} from "../metalanguage/index.js";
+import {
     FretFunctionCallExp,
     FretLimitedInstanceExp,
     FretProperty,
     FretPropertyCallExp,
-    FretWhereExp,
-    TyperDef,
-    FreTyperElement,
+    FretWhereExp
 } from "../metalanguage/index.js";
 import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../metalanguage/expressions/index.js";
 

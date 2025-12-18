@@ -1,4 +1,5 @@
-import { FreMetaLanguage, LangUtil } from '../../metalanguage/index.js';
+import type { FreMetaLanguage} from '../../metalanguage/index.js';
+import { LangUtil } from '../../metalanguage/index.js';
 import { Names, Imports } from "../../../utils/on-lang/index.js"
 
 export class IndexTemplate {

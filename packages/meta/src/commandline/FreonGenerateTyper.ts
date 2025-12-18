@@ -2,7 +2,7 @@ import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator.js";
 import { FreTyperMerger } from "../typerdef/parser/FreTyperMerger.js";
-import { TyperDef } from "../typerdef/metalanguage/index.js";
+import type { TyperDef } from "../typerdef/metalanguage/index.js";
 import { LOG2USER } from '../utils/basic-dependencies/index.js';
 import { notNullOrUndefined } from '../utils/file-utils/index.js';
 

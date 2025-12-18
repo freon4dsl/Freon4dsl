@@ -1,7 +1,7 @@
 import { InterpreterGenerator } from "../interpretergen/generator/InterpreterGenerator.js";
 import { FreInterpreterDef } from "../interpretergen/metalanguage/FreInterpreterDef.js";
-import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
-import { FreEditUnit } from "../editordef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
+import type { FreEditUnit } from "../editordef/metalanguage/index.js";
 import { FreEditParser } from "../editordef/parser/FreEditParser.js";
 // import { LionWebGenerator } from "../lionwebgen/LionWebGenerator.js";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator.js";
@@ -12,12 +12,12 @@ import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorG
 import { EditorGenerator } from "../editordef/generator/EditorGenerator.js";
 import { ScoperParser } from "../scoperdef/parser/ScoperParser.js";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator.js";
-import { ScopeDef } from "../scoperdef/metalanguage/index.js";
+import type { ScopeDef } from "../scoperdef/metalanguage/index.js";
 import { ValidatorParser } from "../validatordef/parser/ValidatorParser.js";
-import { ValidatorDef } from "../validatordef/metalanguage/index.js";
+import type { ValidatorDef } from "../validatordef/metalanguage/index.js";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator.js";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator.js";
-import { TyperDef } from "../typerdef/metalanguage/index.js";
+import type { TyperDef } from "../typerdef/metalanguage/index.js";
 import { FreTyperMerger } from "../typerdef/parser/index.js";
 import { FileWatcher, notNullOrUndefined } from "../utils/file-utils/index.js";
 import { Imports } from "../utils/on-lang/index.js";

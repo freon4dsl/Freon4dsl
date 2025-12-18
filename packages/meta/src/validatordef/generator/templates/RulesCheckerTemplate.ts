@@ -2,15 +2,20 @@
 // this leads to a load error
 // import { FreErrorSeverity } from "@freon4dsl/core";
 import { GenerationUtil, Imports, Names } from '../../../utils/on-lang/index.js';
-import {
+import type {
     FreMetaClassifier,
+    FreMetaLanguage,
+    FreMetaProperty} from '../../../languagedef/metalanguage/index.js';
+import {
     FreMetaConcept,
-    FreMetaInterface,
-    FreMetaLanguage, FreMetaPrimitiveType,
-    FreMetaProperty,
+    FreMetaInterface, FreMetaPrimitiveType,
     LangUtil,
     MetaElementReference
 } from '../../../languagedef/metalanguage/index.js';
+import type {
+    ValidationMessage,
+    ValidationRule,
+    ValidatorDef} from '../../metalanguage/index.js';
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -18,10 +23,7 @@ import {
     ExpressionRule,
     IsUniqueRule,
     NotEmptyRule,
-    ValidationMessage,
     ValidationMessageText,
-    ValidationRule,
-    ValidatorDef,
     ValidNameRule
 } from '../../metalanguage/index.js';
 import { ValidationUtils } from '../ValidationUtils.js';

@@ -9,7 +9,7 @@ import {
     STDLIB_FOLDER
 } from "../../utils/on-lang/index.js"
 import { FileUtil, GenerationStatus } from '../../utils/file-utils/index.js';
-import { FreMetaLanguage } from "../metalanguage/index.js";
+import type { FreMetaLanguage } from "../metalanguage/index.js";
 import {
     // AllConceptsTemplate,
     ConceptTemplate,

@@ -1,4 +1,5 @@
-import { FreMetaConcept, FreMetaInstance, FreMetaLanguage, FreMetaLimitedConcept } from "../../metalanguage/index.js";
+import type { FreMetaConcept, FreMetaInstance, FreMetaLanguage} from "../../metalanguage/index.js";
+import { FreMetaLimitedConcept } from "../../metalanguage/index.js";
 import {
     Names,
     Imports

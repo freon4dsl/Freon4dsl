@@ -1,12 +1,13 @@
-import { FreMetaConceptProperty, FreMetaLanguage } from "../../../../languagedef/metalanguage/index.js";
-import {
+import type { FreMetaConceptProperty, FreMetaLanguage } from "../../../../languagedef/metalanguage/index.js";
+import type {
     FreEditListInfo,
+    FreEditPropertyProjection} from "../../../metalanguage/index.js";
+import {
     FreEditProjectionDirection,
-    FreEditPropertyProjection,
     ListJoinType,
 } from "../../../metalanguage/index.js";
 import { Names } from "../../../../utils/on-lang/index.js";
-import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
+import type { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class ListPropertyBoxHelper {
     private _myTemplate: BoxProviderTemplate;

@@ -1,18 +1,21 @@
-import { FreMetaPrimitiveProperty, FreMetaPrimitiveType } from "../../../../languagedef/metalanguage/index.js";
-import {
-    DisplayType,
-    ForType,
+import type { FreMetaPrimitiveProperty} from "../../../../languagedef/metalanguage/index.js";
+import { FreMetaPrimitiveType } from "../../../../languagedef/metalanguage/index.js";
+import type {
     FreEditBoolKeywords,
     FreEditGlobalProjection,
     FreEditListInfo,
-    FreEditProjectionDirection,
     FreEditProjectionGroup,
     FreEditPropertyProjection
 } from '../../../metalanguage/index.js';
+import {
+    DisplayType,
+    ForType,
+    FreEditProjectionDirection
+} from '../../../metalanguage/index.js';
 import { Roles } from "../../../../utils/on-lang/index.js";
 import { DisplayTypeHelper } from "./DisplayTypeHelper.js";
-import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
-import { ExternalBoxesHelper } from "./ExternalBoxesHelper.js";
+import type { BoxProviderTemplate } from "../BoxProviderTemplate.js";
+import type { ExternalBoxesHelper } from "./ExternalBoxesHelper.js";
 
 export class PrimitivePropertyBoxesHelper {
     private readonly _myTemplate: BoxProviderTemplate;

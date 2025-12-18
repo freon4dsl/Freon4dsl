@@ -1,16 +1,17 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import {
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type {
     FreEditBoolKeywords,
-    ForType,
     FreEditProjectionGroup,
-    FreEditUnit,
+    FreEditUnit} from "../../editordef/metalanguage/index.js";
+import {
+    ForType
 } from "../../editordef/metalanguage/index.js";
 import { LimitedMaker } from "./LimitedMaker.js";
 import { BinaryExpMaker } from "./BinaryExpMaker.js";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker.js";
 import { ConceptMaker } from "./ConceptMaker.js";
 import { GrammarModel } from "./grammarModel/index.js";
-import { LanguageAnalyser, FreAnalyser } from "./LanguageAnalyser.js";
+import type { LanguageAnalyser, FreAnalyser } from "./LanguageAnalyser.js";
 import { GrammarPart } from "./grammarModel/GrammarPart.js";
 import { Names } from "../../utils/on-lang/index.js";
 import { ParserGenUtil } from "./ParserGenUtil.js";

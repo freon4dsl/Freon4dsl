@@ -1,7 +1,7 @@
 import { jsonAsString } from "../util/index.js";
 import type { ConceptFunction, OwningPropertyFunction } from "./IMainInterpreter.js";
 import { InterpreterContext } from "./InterpreterContext.js";
-import { RtObject } from "./runtime/index.js";
+import type { RtObject } from "./runtime/index.js";
 
 const INDENT = "    ";
 const INDENT_DIRECT = "|-- ";

@@ -1,7 +1,8 @@
+import type {
+    FreVarOrFunctionExp} from '../metalanguage/FreLangExpressions.js';
 import {
     FreLangSimpleExp,
     FreLimitedInstanceExp,
-    FreVarOrFunctionExp,
     FreFunctionExp,
     FreVarExp
 } from '../metalanguage/FreLangExpressions.js';
@@ -10,7 +11,8 @@ import {
     LanguageExpressionTester,
     TestExpressionsForConcept
 } from './LanguageExpressionTester.js';
-import { FreMetaClassifier, MetaElementReference } from '../../languagedef/metalanguage/index.js';
+import type { FreMetaClassifier} from '../../languagedef/metalanguage/index.js';
+import { MetaElementReference } from '../../languagedef/metalanguage/index.js';
 
 const LOGGER = new MetaLogger("FreLanguageExpressionCreator").mute();
 

@@ -1,23 +1,26 @@
 import { FreErrorSeverity, MetaLogger, nameForSelf } from '../../utils/no-dependencies/index.js';
 import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
-import {
+import type {
     FreMetaClassifier,
     FreMetaLanguage,
-    FreMetaPrimitiveProperty,
     FreMetaProperty
 } from '../../languagedef/metalanguage/index.js';
 import {
+    FreMetaPrimitiveProperty
+} from '../../languagedef/metalanguage/index.js';
+import type {
+    ClassifierRuleSet,
+    ValidatorDef,
+    ValidationMessage,
+    ValidationRule} from "./ValidatorDefLang.js";
+import {
     CheckConformsRule,
     CheckEqualsTypeRule,
-    ClassifierRuleSet,
     ExpressionRule,
     IsUniqueRule,
     NotEmptyRule,
-    ValidatorDef,
-    ValidationMessage,
     ValidationMessageReference,
-    ValidationRule,
     ValidationSeverity,
     ValidNameRule,
 } from "./ValidatorDefLang.js";

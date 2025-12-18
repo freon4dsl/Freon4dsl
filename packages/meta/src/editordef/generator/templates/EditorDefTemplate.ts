@@ -1,22 +1,24 @@
-import {
-    FreMetaBinaryExpressionConcept,
+import type {
     FreMetaConcept,
     FreMetaLanguage,
-    FreMetaLimitedConcept,
-    FreMetaProperty,
+    FreMetaProperty} from "../../../languagedef/metalanguage/index.js";
+import {
+    FreMetaBinaryExpressionConcept,
+    FreMetaLimitedConcept
 } from "../../../languagedef/metalanguage/index.js";
 import { Names, Imports } from "../../../utils/on-lang/index.js";
 import { LOG2USER } from "../../../utils/basic-dependencies/index.js";
 import { isNullOrUndefined } from "../../../utils/file-utils/index.js";
 import { NamesForEditor } from "../../../utils/on-lang-and-editor/index.js";
-import {
+import type {
     FreEditExtraClassifierInfo,
     FreEditClassifierProjection,
-    FreEditNormalProjection,
     FreEditProjectionGroup,
     FreEditPropertyProjection,
     FreEditTableProjection,
-    FreEditUnit,
+    FreEditUnit} from "../../metalanguage/index.js";
+import {
+    FreEditNormalProjection
 } from "../../metalanguage/index.js";
 
 export class EditorDefTemplate {

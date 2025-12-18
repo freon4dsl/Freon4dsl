@@ -1,5 +1,5 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
-import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
+import type { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { getTypeCall, makeIndent } from "../GrammarUtils.js";
 import { ParserGenUtil } from '../../ParserGenUtil.js';
 import { GenerationUtil } from '../../../../utils/on-lang/index.js';

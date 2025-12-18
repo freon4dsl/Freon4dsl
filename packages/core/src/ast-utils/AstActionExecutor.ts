@@ -1,5 +1,6 @@
 import type {FreModelUnit, FreNode, FreOwnerDescriptor} from "../ast/index.js";
-import { AST, FreDelta, FreUndoManager } from "../change-manager/index.js"
+import type { FreDelta} from "../change-manager/index.js";
+import { AST, FreUndoManager } from "../change-manager/index.js"
 import {FreErrorSeverity} from "../validator/index.js";
 import {type Box, type FreEditor, isActionBox, isActionTextBox, isListBox} from "../editor/index.js";
 import {FreLanguage} from "../language/index.js";

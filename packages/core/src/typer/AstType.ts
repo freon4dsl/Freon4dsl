@@ -1,7 +1,7 @@
 import type { FreOwnerDescriptor, FreNode, FreNamedNode } from "../ast/index.js";
 import type { FreWriter } from "../writer/index.js";
 import type { FreType } from "./FreType.js";
-import { FreParseLocation } from "../reader/index.js";
+import type { FreParseLocation } from "../reader/index.js";
 
 class NamedNode implements FreNamedNode {
     static environment: NamedNode;

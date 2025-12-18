@@ -1,12 +1,15 @@
-import { LanguageRegistry, LionWebJsonChunk, LionWebJsonNode, LionWebValidator, MetaPointers } from "@lionweb/validation";
-import {
+import type { LionWebJsonChunk, LionWebJsonNode} from "@lionweb/validation";
+import { LanguageRegistry, LionWebValidator, MetaPointers } from "@lionweb/validation";
+import type {
     FreMetaClassifier,
     FreMetaConcept,
     FreMetaConceptProperty, FreMetaInstance,
     FreMetaInterface,
-    FreMetaLanguage, FreMetaLimitedConcept,
+    FreMetaLanguage,
     FreMetaProperty,
     FreMetaUnitDescription, MetaElementReference
+} from "../../languagedef/metalanguage/index.js";
+import { FreMetaLimitedConcept
 } from "../../languagedef/metalanguage/index.js";
 
 export class LionWebTemplate {

@@ -1,8 +1,9 @@
-import {
-    FreMetaBinaryExpressionConcept,
+import type {
     FreMetaClassifier,
     FreMetaConceptProperty,
-    FreMetaProperty,
+    FreMetaProperty} from "../../languagedef/metalanguage/index.js";
+import {
+    FreMetaBinaryExpressionConcept
 } from "../../languagedef/metalanguage/index.js";
 import { Names } from "./Names.js";
 

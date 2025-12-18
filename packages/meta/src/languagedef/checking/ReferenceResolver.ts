@@ -1,9 +1,10 @@
-import {
+import type {
     FreMetaClassifier,
     MetaElementReference,
     FreMetaLanguage, FreMetaProperty, FreMetaLimitedConcept, FreMetaInstance
 } from '../metalanguage/index.js';
-import { CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import type { CheckRunner} from '../../utils/basic-dependencies/index.js';
+import { ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 
 const LOGGER = new MetaLogger("ReferenceResolver").mute();

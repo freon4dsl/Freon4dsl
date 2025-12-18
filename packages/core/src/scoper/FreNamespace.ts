@@ -52,7 +52,7 @@ import { isNullOrUndefined, notNullOrUndefined } from '../util/index.js';
 import type { FreCompositeScoper } from './FreCompositeScoper.js';
 import { FreLogger } from "../logging/index.js";
 import { resolvePathStartingInNamespace } from './ScoperUtil.js';
-import { FreNamespaceInfo } from './FreNamespaceInfo.js';
+import type { FreNamespaceInfo } from './FreNamespaceInfo.js';
 
 const LOGGER = new FreLogger("FreonNamespace").mute();
 

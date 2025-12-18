@@ -1,13 +1,13 @@
 import { Names, Imports } from "../../../utils/on-lang/index.js"
-import { FreMetaConcept, FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
-import { TyperDef } from "../../metalanguage/index.js";
+import type { FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
+import { FreMetaConcept } from "../../../languagedef/metalanguage/index.js";
+import type { TyperDef } from "../../metalanguage/index.js";
 import { FreTypeEqualsMaker } from "./FreTypeEqualsMaker.js";
 import { FreTypeInferMaker } from "./FreTypeInferMaker.js";
 import { FreSuperTypeMaker } from "./FreSuperTypeMaker.js";
 // import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
 import { LOG2USER } from '../../../utils/basic-dependencies/index.js';
-import { isNullOrUndefined } from '../../../utils/file-utils/index.js';
-import { notNullOrUndefined } from '@freon4dsl/core';
+import { isNullOrUndefined, notNullOrUndefined } from "../../../utils/file-utils/index.js"
 import { FreTyperGenUtils } from './FreTyperGenUtils.js';
 
 export class FreTyperPartTemplate {

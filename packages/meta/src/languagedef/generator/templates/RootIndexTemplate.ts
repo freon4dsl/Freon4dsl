@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/on-lang/index.js"
-import { FreMetaLanguage } from "../../metalanguage/index.js"
+import type { FreMetaLanguage } from "../../metalanguage/index.js"
 
 export class RootIndexTemplate {
     generateRootIndex(language: FreMetaLanguage): string {

@@ -1,5 +1,5 @@
 import { Names } from "../../../utils/on-lang/index.js"
-import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { LOG2USER } from '../../../utils/basic-dependencies/index.js';
 
 /**

@@ -1,16 +1,18 @@
+import type {
+    FretExp,
+    FretPropInstance} from "../../metalanguage/index.js";
 import {
     FretAnytypeExp,
-    FretExp,
     FretFunctionCallExp,
     FretLimitedInstanceExp,
     FretPropertyCallExp,
-    FretPropInstance,
     FretSelfExp,
     FretTypeConcept,
     FretWhereExp,
 } from "../../metalanguage/index.js";
-import { Imports, Names } from '../../../utils/on-lang/index.js';
-import { FreMetaClassifier, FreMetaProperty } from "../../../languagedef/metalanguage/index.js";
+import type { Imports} from '../../../utils/on-lang/index.js';
+import { Names } from '../../../utils/on-lang/index.js';
+import type { FreMetaClassifier, FreMetaProperty } from "../../../languagedef/metalanguage/index.js";
 import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../../metalanguage/expressions/index.js";
 import { isNullOrUndefined } from '../../../utils/file-utils/index.js';
 

@@ -1,5 +1,6 @@
 import { Names } from "../../../utils/on-lang/index.js";
-import { FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
+import type { FreMetaClassifier, FreMetaLanguage} from "../../../languagedef/metalanguage/index.js";
+import { FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
 import { NamesForEditor } from '../../../utils/on-lang-and-editor/index.js';
 
 export class EditorIndexTemplate {

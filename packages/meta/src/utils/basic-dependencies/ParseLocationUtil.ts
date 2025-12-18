@@ -1,4 +1,4 @@
-import { FreMetaDefinitionElement, ParseLocation } from '../no-dependencies/FreMetaDefinitionElement.js';
+import type { FreMetaDefinitionElement, ParseLocation } from '../no-dependencies/FreMetaDefinitionElement.js';
 
 export class ParseLocationUtil {
     static defaultParseLocation: ParseLocation = {

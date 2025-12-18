@@ -1,4 +1,4 @@
-import { FreMetaLangElement } from './internal.js';
+import type { FreMetaLangElement } from './internal.js';
 
 
 /**

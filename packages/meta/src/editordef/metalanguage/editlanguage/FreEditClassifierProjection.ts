@@ -1,7 +1,7 @@
 import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
-import { FreMetaClassifier, MetaElementReference } from "../../../languagedef/metalanguage/index.js";
-import { FreEditFragmentDefinition, FreEditExternalInfo, FreEditPropertyProjection } from "./internal.js";
-import { FreEditFragmentProjection } from "./FreEditFragmentProjection.js";
+import type { FreMetaClassifier, MetaElementReference } from "../../../languagedef/metalanguage/index.js";
+import type { FreEditFragmentDefinition, FreEditExternalInfo, FreEditPropertyProjection } from "./internal.js";
+import type { FreEditFragmentProjection } from "./FreEditFragmentProjection.js";
 
 /**
  * A single projection definition for a single concept or interface

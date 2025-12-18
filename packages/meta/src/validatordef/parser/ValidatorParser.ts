@@ -1,7 +1,7 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { FreGenericParser } from "../../utils/basic-dependencies/index.js";
 import { ValidatorChecker } from "../metalanguage/index.js";
-import { ValidatorDef } from "../metalanguage/index.js";
+import type { ValidatorDef } from "../metalanguage/index.js";
 import { setCurrentFileName } from "./ValidatorCreators.js";
 import { setCurrentFileName as expressionFileName } from "../../langexpressions/parser/ExpressionCreators.js";
 import { parse } from "./ValidatorGrammar.js";

@@ -1,14 +1,16 @@
-import {
+import type {
     FreMetaClassifier,
     FreMetaConcept,
+    FreMetaPrimitiveValue,
+    FreMetaLimitedConcept} from '../metalanguage/index.js';
+import {
     FreMetaPrimitiveProperty,
     FreMetaPrimitiveType,
-    FreMetaPrimitiveValue,
     FreMetaProperty,
-    FreMetaLimitedConcept,
     FreMetaEnumValue
 } from '../metalanguage/index.js';
-import { CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import type { CheckRunner} from '../../utils/basic-dependencies/index.js';
+import { ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { Names } from '../../utils/on-lang/index.js';
 import { CommonSuperTypeUtil } from "./common-super/CommonSuperTypeUtil.js";

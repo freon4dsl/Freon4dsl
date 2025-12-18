@@ -1,6 +1,6 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
-import { RightHandSideEntry } from "./RightHandSideEntry.js";
-import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
+import type { RightHandSideEntry } from "./RightHandSideEntry.js";
+import type { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { makeIndent } from "../GrammarUtils.js";
 import { RHSBooleanWithSingleKeyWord } from "./RHSBooleanWithSingleKeyWord.js";
 

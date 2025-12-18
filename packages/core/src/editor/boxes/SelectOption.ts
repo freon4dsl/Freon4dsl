@@ -1,4 +1,4 @@
-import { FreAction } from "../actions/index.js";
+import type { FreAction } from "../actions/index.js";
 import type { FreNamedNode } from '../../ast/index.js';
 
 /**

@@ -1,12 +1,12 @@
-import { FreEditExternalInfo, FreEditFragmentProjection, FreEditPropertyProjection, FreEditSimpleExternal } from "../../../metalanguage/index.js"
-import {
+import type { FreEditExternalInfo, FreEditFragmentProjection, FreEditPropertyProjection, FreEditSimpleExternal } from "../../../metalanguage/index.js"
+import type {
     FreMetaConceptProperty,
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
     FreMetaProperty,
 } from "../../../../languagedef/metalanguage/index.js";
 import { Names } from '../../../../utils/on-lang/index.js';
-import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
+import type { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class ExternalBoxesHelper {
     private _myTemplate: BoxProviderTemplate;

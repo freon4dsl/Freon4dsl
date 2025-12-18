@@ -1,4 +1,5 @@
-import { CommandLineAction, CommandLineStringParameter, ICommandLineActionOptions } from "@rushstack/ts-command-line";
+import type { CommandLineStringParameter, ICommandLineActionOptions } from "@rushstack/ts-command-line";
+import { CommandLineAction } from "@rushstack/ts-command-line";
 import { GenerationStatus, FileUtil } from "../utils/file-utils/index.js";
 import { LOG2USER } from "../utils/basic-dependencies/index.js";
 

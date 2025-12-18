@@ -3,9 +3,10 @@ import type { FreLanguageConcept, FreLanguageProperty, FreLanguageClassifier } f
 import { BehaviorExecutionResult, executeSingleBehavior } from "../util/index.js";
 import {FreCreatePartAction, FreCustomAction, isRegExp} from "../actions/index.js";
 import type { FreTriggerType } from "../actions/index.js";
-import { triggerTypeToString, FreEditor, isProKey } from "../internal.js";
-import { Box, AbstractChoiceBox } from "./internal.js";
-import type { SelectOption } from "./internal.js";
+import type { FreEditor} from "../internal.js";
+import { triggerTypeToString, isProKey } from "../internal.js";
+import { AbstractChoiceBox } from "./internal.js";
+import type { SelectOption , Box} from "./internal.js";
 import type { FreNode } from "../../ast/index.js";
 import { FreNodeReference } from "../../ast/index.js";
 import { runInAction } from "mobx";
