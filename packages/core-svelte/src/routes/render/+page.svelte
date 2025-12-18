@@ -13,7 +13,7 @@
         IndentBox,
         LabelBox,
         type LayoutBox,
-        OptionalBox2,
+        OptionalBox,
         VerticalLayoutBox
     } from '@freon4dsl/core';
     import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
@@ -77,7 +77,7 @@
     let placeholder = new LabelBox(optionalNode, 'element-label-box', () => {
         return 'placeholder';
     });
-    let optionalBox: OptionalBox2 = new OptionalBox2(
+    let optionalBox: OptionalBox = new OptionalBox(
         optionalNode,
         'optional',
         () => {

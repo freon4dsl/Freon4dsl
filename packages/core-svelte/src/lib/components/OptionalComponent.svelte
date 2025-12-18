@@ -6,12 +6,12 @@
      * corresponding OptionalBox, or its placeholder.
      */
     import RenderComponent from './RenderComponent.svelte';
-    import { type OptionalBox2, type Box, notNullOrUndefined } from '@freon4dsl/core';
+    import { type OptionalBox, type Box, notNullOrUndefined } from '@freon4dsl/core';
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
-    let { editor, box }: FreComponentProps<OptionalBox2> = $props();
+    let { editor, box }: FreComponentProps<OptionalBox> = $props();
 
     const LOGGER = OPTIONAL_LOGGER;
     let id: string = $state(''); // an id for the html element showing the optional
@@ -24,7 +24,7 @@
     let placeholderComponent: RenderComponent | undefined = $state();
 
     const refresh = (why?: string): void => {
-        LOGGER.log('REFRESH OptionalBox2: ' + why);
+        LOGGER.log('REFRESH OptionalBox: ' + why);
         mustShow = box.mustShow;
         showByCondition = box.condition();
         childBox = box.content;

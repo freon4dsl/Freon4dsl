@@ -15,7 +15,7 @@ export type BoolFunctie = () => boolean;
  * to this OptionalBox, which is triggered by the user.
  */
 export class OptionalBox extends Box {
-    readonly kind = "OptionalBox2";
+    readonly kind = "OptionalBox";
 
     content: Box = null;
     placeholder: Box = null;
@@ -100,6 +100,6 @@ export class OptionalBox extends Box {
     }
 }
 
-export function isOptionalBox2(b: Box): b is OptionalBox {
-    return b?.kind === "OptionalBox2"; // b instanceof OptionalBox2;
+export function isOptionalBox(b: Box): b is OptionalBox {
+    return b?.kind === "OptionalBox"; // b instanceof OptionalBox;
 }

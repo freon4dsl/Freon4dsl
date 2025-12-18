@@ -24,7 +24,7 @@
         isBooleanControlBox,
         isNumberControlBox,
         isElementBox,
-        isOptionalBox2,
+        isOptionalBox,
         isMultiLineTextBox,
         isLimitedControlBox,
         isButtonBox,
@@ -212,7 +212,7 @@
             <LayoutComponent {box} {editor} />
         {:else if isListBox(box)}
             <ListComponent {box} {editor} />
-        {:else if isOptionalBox2(box)}
+        {:else if isOptionalBox(box)}
             <OptionalComponent {box} {editor} />
         {:else if isSvgBox(box)}
             <SvgComponent {box} {editor} />

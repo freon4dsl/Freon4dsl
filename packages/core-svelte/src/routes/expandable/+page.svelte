@@ -12,7 +12,7 @@
         HorizontalLayoutBox,
         IndentBox,
         LabelBox,
-        OptionalBox2,
+        OptionalBox,
         VerticalLayoutBox
     } from '@freon4dsl/core';
     import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
