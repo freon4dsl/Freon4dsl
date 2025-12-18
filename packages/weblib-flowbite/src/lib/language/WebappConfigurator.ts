@@ -22,8 +22,7 @@ import {
     isInMemoryError,
     isNullOrUndefined,
     jsonAsString,
-    notNullOrUndefined,
-    ReferenceUpdateManager,
+    notNullOrUndefined
 } from "@freon4dsl/core"
 import { runInAction } from "mobx"
 
@@ -57,7 +56,10 @@ export class WebappConfigurator {
         WebappConfigurator.initialize(editorEnvironment)
         this.modelStore = new InMemoryModel(editorEnvironment, serverCommunication)
         this.modelStore.addCurrentModelListener(this.modelChanged)
-        this.langEnv.editor.setUserMessage = setUserMessage
+
+        // let the editor know how to set the user message,
+        // we do this by assigning our own method to the editor's method
+        this.langEnv.editor.setUserMessage = setUserMessage;
     }
 
     /**
@@ -90,10 +92,6 @@ export class WebappConfigurator {
             tmp.push(val)
         }
         langInfo.fileExtensions = tmp
-
-        // let the editor know how to set the user message,
-        // we do this by assigning our own method to the editor's method
-        // langEnv.editor.setUserMessage = setUserMessage;
 
         // start the undo manager
         FreUndoManager.getInstance()
@@ -323,11 +321,9 @@ export class WebappConfigurator {
             LOGGER.log("openModelUnit doing NOTHING")
         } else {
             let toBeOpened: FreModelUnit | undefined = undefined
-            // autorun(() => {
             if (this.modelStore) {
                 toBeOpened = this.modelStore.getUnitById(unitId)
             }
-            // })
             if (notNullOrUndefined(toBeOpened)) {
                 this.showUnit(toBeOpened, unitId)
             } else {
@@ -496,20 +492,19 @@ export class WebappConfigurator {
         return this.modelStore?.getUnitById(unitId)
     }
 
-    // async renameModelUnit(unit: FreModelUnit, oldName: string, newName: string) {
-    //     LOGGER.log(`renameModelUnit: from ${oldName} to ${newName} isId: ${isIdentifier(newName)} Units before: ` + editorInfo.unitIds.map((u: FreUnitIdentifier) => u.name))
-    //     unit.name = newName
-    //     // TODO Use model store
-    //     if (!isNullOrUndefined(editorInfo.modelName) && !isNullOrUndefined(editorInfo.currentUnit)) {
-    //         this.serverEnv!.renameModelUnit(editorInfo.currentUnit.name, oldName, newName, unit)
-    //         // todo store the info in editorInfo
-    //         // this.modelChanged(this.modelStore)
-    //         setUserMessage(`Saved ${newName}`)
-    //         LOGGER.log("renameModelUnit: Units after: " + editorInfo.unitIds.map((u: FreUnitIdentifier) => u.name))
-    //     } else {
-    //         setUserMessage(`No current unit to be saved`)
-    //     }
-    // }
+    async renameModelUnit(oldId: FreUnitIdentifier, newName: string) {
+        if (isNullOrUndefined(oldId)) {
+            setUserMessage(`No current unit to be renamed.`, FreErrorSeverity.Info)
+            return;
+        }
+
+        LOGGER.log(`renameModelUnit: from ${oldId.name} to ${newName} Units before: ` + editorInfo.unitIds.map((u: FreUnitIdentifier) => u.name))
+        const unit: FreModelUnit | undefined = this.modelStore?.getUnitById(oldId);
+        if (notNullOrUndefined(unit)) {
+            unit.name = newName;
+            // No need to do anything else. All is triggered through the MobX wiring.
+        }
+    }
 
     /**
      * Runs the validator for the current unit

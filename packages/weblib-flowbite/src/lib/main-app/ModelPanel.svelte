@@ -31,7 +31,6 @@
                 return 0;
             })
             : [];
-
     });
 
     $effect(() => {
@@ -131,7 +130,7 @@
         {editorInfo.modelName}
     </span>
     <ButtonGroup class="*:!ring-light-base-700 ">
-        <Button id="rename-model-button" disabled class="{buttonCls} px-3" name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
+        <Button id="rename-model-button" {disabled} class="{buttonCls} px-3" name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
             <PenSolid class="{iconCls} "/>
         </Button>
         <Button id="delete-model-button" {disabled} class="{buttonCls} px-3" name="Delete"  onclick={() => {dialogs.deleteModelDialogVisible = true}}>
@@ -184,10 +183,6 @@
                     <Tooltip class={tooltipClass} placement="bottom">Actions on {unit.name}</Tooltip>
                     <Dropdown class="p-0 m-0 bg-light-base-500" placement='bottom' triggeredBy="#dots-menu-{index}">
                         <div class="flex flex-col justify-end p-0 m-0">
-<!--                            // <Button class={dropdownButtonCls} name="Open" size="xs" onclick={() => openUnit(index)}>-->
-<!--                            //     <FolderOpenSolid class="{iconCls} me-2"/>-->
-<!--                            //     Open-->
-<!--                            // </Button>-->
                             <Button class={dropdownButtonCls}  name="Rename" size="xs" onclick={() => renameUnit(index)}>
                                 <PenSolid class="{iconCls} me-2"/>
                                 Rename
