@@ -30,10 +30,9 @@ import {
     ListJoinType,
 } from "../../editordef/metalanguage/index.js";
 import { ParserGenUtil } from "./ParserGenUtil.js";
-import { GenerationUtil } from '../../utils/on-lang/GenerationUtil.js';
-import { ListUtil } from '../../utils/no-dependencies/index.js';
-import { isNullOrUndefined } from '../../utils/file-utils/index.js';
-import { notNullOrUndefined } from '@freon4dsl/core';
+import { GenerationUtil } from '../../utils/on-lang/index.js';
+import { ListUtil } from "../../utils/no-dependencies/index.js"
+import { isNullOrUndefined, notNullOrUndefined } from "../../utils/file-utils/index.js"
 
 // TODO more preconditions should be added to avoid null pointer errors
 

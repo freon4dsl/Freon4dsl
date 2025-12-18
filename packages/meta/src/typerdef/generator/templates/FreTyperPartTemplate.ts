@@ -7,8 +7,7 @@ import { FreTypeInferMaker } from "./FreTypeInferMaker.js";
 import { FreSuperTypeMaker } from "./FreSuperTypeMaker.js";
 // import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
 import { LOG2USER } from '../../../utils/basic-dependencies/index.js';
-import { isNullOrUndefined } from '../../../utils/file-utils/index.js';
-import { notNullOrUndefined } from '@freon4dsl/core';
+import { isNullOrUndefined, notNullOrUndefined } from "../../../utils/file-utils/index.js"
 import { FreTyperGenUtils } from './FreTyperGenUtils.js';
 
 export class FreTyperPartTemplate {
