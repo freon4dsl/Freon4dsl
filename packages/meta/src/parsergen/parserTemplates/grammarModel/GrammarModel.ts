@@ -48,7 +48,7 @@ skip SINGLE_LINE_COMMENT = "//[^\\\\r\\\\n]*" ;
 skip MULTI_LINE_COMMENT = "/\\\\*[^*]*\\\\*+(?:[^*/][^*]*\\\\*+)*/" ;
 
 // the predefined basic types
-leaf identifier        = "\\\`[a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\\:;\\\\"'<>,.?/][a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\\:;\\\\"'<>,.?/]*\\\`" ;
+leaf identifier        = "\\\`[a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\\:;\\\\"'<>,.?/][a-zA-Z0-9-_~!@#$%^&*()\\\\\\\\+={\\\\[}\\\\]|\\\:;\\\\"'<>,.?/ ]*\\\`" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf optStringLiteral  = "<no-value>" | stringLiteral ;
 leaf stringLiteral     = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;

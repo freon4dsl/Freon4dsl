@@ -161,8 +161,6 @@ export class RulesCheckerTemplate {
 
     private createRules(ruleSet: ClassifierRuleSet, imports: Imports): string {
         let result: string = "";
-        // find the string that indicates the location in human terms
-        const locationdescription: string = ValidationUtils.findLocationDescription(ruleSet.classifier, paramName);
 
         // add import to the classifier of this set
         imports.language.add(ruleSet.classifier!.name);
@@ -180,18 +178,18 @@ export class RulesCheckerTemplate {
 
             // create the text for the rule
             if (r instanceof CheckEqualsTypeRule) {
-                result += this.makeEqualsTypeRule(r, locationdescription, severity, index, imports, message);
+                result += this.makeEqualsTypeRule(r, severity, index, imports, message);
             } else if (r instanceof CheckConformsRule) {
-                result += this.makeConformsRule(r, locationdescription, severity, imports, message);
+                result += this.makeConformsRule(r, severity, imports, message);
             } else if (r instanceof NotEmptyRule) {
-                result += this.makeNotEmptyRule(r, locationdescription, severity, imports, message);
+                result += this.makeNotEmptyRule(r, severity, imports, message);
             } else if (r instanceof ValidNameRule) {
                 this.needIsValidNameMethod = true;
-                result += this.makeValidNameRule(r, locationdescription, severity, imports, message);
+                result += this.makeValidNameRule(r, severity, imports, message);
             } else if (r instanceof ExpressionRule) {
-                result += this.makeExpressionRule(r, locationdescription, severity, imports, message);
+                result += this.makeExpressionRule(r, severity, imports, message);
             } else if (r instanceof IsUniqueRule) {
-                result += this.makeIsuniqueRule(r, locationdescription, severity, imports, message);
+                result += this.makeIsuniqueRule(r, severity, imports, message);
             }
         });
         return result;
@@ -238,13 +236,13 @@ export class RulesCheckerTemplate {
         return result;
     }
 
-    private makeExpressionRule(r: ExpressionRule, locationdescription: string, severity: string, imports: Imports, message?: string) {
+    private makeExpressionRule(r: ExpressionRule,  severity: string, imports: Imports, message?: string) {
         if (!message || message.length === 0) {
             message = `"'${r.toFreString()}' is false"`;
         }
         if (!!r.exp1 && !!r.exp2) {
             return `if (!(${ExpressionGenerationUtil.langExpToTypeScript(r.exp1, paramName, imports)} ${ValidationUtils.freComparatorToTypeScript(r.comparator)} ${ExpressionGenerationUtil.langExpToTypeScript(r.exp2, paramName, imports)})) {
-                    this.errorList.push( new ${Names.FreError}( ${message}, ${paramName}, ${locationdescription}, ${severity} ));
+                    this.errorList.push( new ${Names.FreError}( ${message}, ${paramName}, ${severity} ));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
@@ -254,7 +252,7 @@ export class RulesCheckerTemplate {
 
     private makeValidNameRule(
         r: ValidNameRule,
-        locationdescription: string,
+
         severity: string,
         imports: Imports,
         message?: string,
@@ -264,7 +262,7 @@ export class RulesCheckerTemplate {
                 message = `"'" + ${ExpressionGenerationUtil.langExpToTypeScript(r.property, paramName, imports)} + "' is not a valid identifier"`;
             }
             return `if (!this.isValidName(${ExpressionGenerationUtil.langExpToTypeScript(r.property, paramName, imports)})) {
-                    this.errorList.push( new ${Names.FreError}( ${message}, ${paramName}, ${locationdescription}, ${severity} ));
+                    this.errorList.push( new ${Names.FreError}( ${message}, ${paramName}, ${severity} ));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
@@ -272,13 +270,13 @@ export class RulesCheckerTemplate {
         }
     }
 
-    private makeNotEmptyRule(r: NotEmptyRule, locationdescription: string, severity: string, imports: Imports, message?: string): string {
+    private makeNotEmptyRule(r: NotEmptyRule,  severity: string, imports: Imports, message?: string): string {
         if (!!r.property) {
             if (!message || message.length === 0) {
                 message = `"List '${r.property.toFreString()}' may not be empty"`;
             }
             return `if (${ExpressionGenerationUtil.langExpToTypeScript(r.property, paramName, imports)}.length === 0) {
-                    this.errorList.push(new ${Names.FreError}(${message}, ${paramName}, ${locationdescription}, "${r.property.toFreString()}", ${severity}));
+                    this.errorList.push(new ${Names.FreError}(${message}, ${paramName}, "${r.property.toFreString()}", ${severity}));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
@@ -288,7 +286,7 @@ export class RulesCheckerTemplate {
 
     private makeConformsRule(
         r: CheckConformsRule,
-        locationdescription: string,
+
         severity: string,
         imports: Imports,
         message?: string,
@@ -299,7 +297,7 @@ export class RulesCheckerTemplate {
                          "] does not conform to " + this.myWriter.writeNameOnly(${ExpressionGenerationUtil.langExpToTypeScript(r.type2Exp, paramName, imports)})`;
             }
             return `if (!this.typer.conformsType(${ExpressionGenerationUtil.langExpToTypeScript(r.type1Exp, paramName, imports)}, ${ExpressionGenerationUtil.langExpToTypeScript(r.type2Exp, paramName, imports)})) {
-                    this.errorList.push(new ${Names.FreError}(${message}, ${ExpressionGenerationUtil.langExpToTypeScript(r.type1Exp, paramName, imports)}, ${locationdescription}, ${severity}));
+                    this.errorList.push(new ${Names.FreError}(${message}, ${ExpressionGenerationUtil.langExpToTypeScript(r.type1Exp, paramName, imports)}, ${severity}));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                  }`;
         } else {
@@ -309,7 +307,6 @@ export class RulesCheckerTemplate {
 
     private makeEqualsTypeRule(
         r: CheckEqualsTypeRule,
-        locationdescription: string,
         severity: string,
         index: number,
         imports: Imports,
@@ -332,7 +329,7 @@ export class RulesCheckerTemplate {
             const rightType${index} = this.typer.inferType(${rightElement});
             if (notNullOrUndefined(leftType0) && notNullOrUndefined(rightType0)) {
                 if (!this.typer.equals(leftType${index}, rightType${index})) {
-                    this.errorList.push(new ${Names.FreError}(${message}, ${leftElement}, ${locationdescription}, ${severity}));
+                    this.errorList.push(new ${Names.FreError}(${message}, ${leftElement}, ${severity}));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }
             }`;
@@ -343,7 +340,7 @@ export class RulesCheckerTemplate {
 
     private makeIsuniqueRule(
         rule: IsUniqueRule,
-        locationdescription: string,
+
         severity: string,
         imports: Imports,
         message?: string,
@@ -407,7 +404,6 @@ export class RulesCheckerTemplate {
             if (isNullOrUndefined(elem)) {
                 this.errorList.push(new ${Names.FreError}(\`Element[\$\{index\}] of property '${listName}' has no value\`,
                  ${ExpressionGenerationUtil.langExpToTypeScript(rule.listExp, paramName, imports)}[index]${refAddition},
-                 ${locationdescription},
                  "${listpropertyName}",
                  ${severity}));
                     ${rule.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
@@ -417,7 +413,6 @@ export class RulesCheckerTemplate {
                 } else {
                     this.errorList.push(new ${Names.FreError}(${message},
                      ${ExpressionGenerationUtil.langExpToTypeScript(rule.listExp, paramName, imports)}[index]${refAddition},
-                     ${locationdescription},
                      "${listpropertyName}",
                      ${severity}));                }
                     ${rule.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}

@@ -11,6 +11,7 @@ import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemp
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate.js";
 import { NamespaceCheckerTemplate } from './templates/NamespaceCheckerTemplate.js';
 import { getCombinedFolderPath } from '../../utils/no-dependencies/FolderPathHelper.js';
+import { CustomLocationDescriptionTemplate } from "./templates/CustomLocationDescriptionTemplate.js"
 
 // TODO use new AstWalker and AstWorker
 
@@ -36,6 +37,7 @@ export class ValidatorGenerator {
         const referenceCheckerTemplate = new ReferenceCheckerTemplate();
         const checkerTemplate = new RulesCheckerTemplate();
         const reservedWordsTemplate = new ReservedWordsTemplate();
+        const locationTemplate = new CustomLocationDescriptionTemplate();
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.outputFolder + "/" + this.customsFolder); // will not be overwritten
@@ -59,7 +61,7 @@ export class ValidatorGenerator {
             `Generating checker for non-optional parts: ${this.validatorFolder}/${Names.nonOptionalsChecker(this.language)}.ts`,
         );
         let checkerFile = FileUtil.pretty(
-            nonOptionalsCheckerTemplate.generateChecker(this.language, relativePath),
+            nonOptionalsCheckerTemplate.generateChecker(this.language, this.customsFolder, relativePath),
             "Non-optionals Checker Class",
             generationStatus,
         );
@@ -70,7 +72,7 @@ export class ValidatorGenerator {
             `Generating checker for references: ${this.validatorFolder}/${Names.referenceChecker(this.language)}.ts`,
         );
         checkerFile = FileUtil.pretty(
-            referenceCheckerTemplate.generateChecker(this.language, relativePath),
+            referenceCheckerTemplate.generateChecker(this.language, this.customsFolder, relativePath),
             "Reference Checker Class",
             generationStatus,
         );
@@ -129,6 +131,18 @@ export class ValidatorGenerator {
             `${this.outputFolder}/${this.customsFolder}/${Names.customValidator(this.language)}.ts`,
             customFile,
             "Custom Validator Class",
+        );
+
+        const filePath: string = `${this.outputFolder}/${this.customsFolder}/${Names.locationDescription()}.ts`;
+        LOGGER.log(
+            `Generating custom validator: ${filePath}`,
+        );
+        const locationFile = FileUtil.pretty(
+            locationTemplate.generateLocationDescription(this.language, relativePath),
+            "Custom Location Description Fucntion",
+            generationStatus,
+        );
+        FileUtil.generateManualFile(filePath, locationFile, "Custom Location Description Function",
         );
 
         if (generationStatus.numberOfErrors > 0) {

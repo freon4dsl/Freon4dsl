@@ -1,0 +1,31 @@
+Modelunit `B`
+    Prop of type ZZ: ZZ {
+        name ""
+        ZZprop1 YY {
+            name ""
+            YYprop1 XX {
+                name ""
+                XXprop1 true }
+        }
+        ZZlist
+            XX {
+                name ""
+                XXprop1 true }
+            XX {
+                name ""
+                XXprop1 true }
+    }
+
+
+    Prop of type YY: YY {
+        name ""
+        YYprop1 XX {
+            name ""
+            XXprop1 true
+        }
+    }
+
+    Prop of type XX: XX {
+        name ""
+        XXprop1 true
+    }

@@ -1,9 +1,9 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { FileHandler } from '../../utils/FileHandler.js';
-import { ROOTEnvironment } from '../freon/config/ROOTEnvironment.js';
-import { XX } from '../../typer-test8/freon/language/index.js';
 import { AST, FreError } from '@freon4dsl/core';
-import { AAAAAA } from '../freon/language/index.js';
+import { ROOTEnvironment } from '../freon/config/ROOTEnvironment.js';
+import { AAAAAA, ROOT } from "../freon/language/index.js"
+import { FileHandler } from '../../utils/FileHandler.js';
+
 const reader = ROOTEnvironment.getInstance().reader;
 const validator = ROOTEnvironment.getInstance().validator;
 const handler = new FileHandler();
@@ -19,7 +19,7 @@ describe("Testing Validator on Inheritance", () => {
         // the rule 'CCprop3 <= 12' is defined for concept CC, and should also be checked on any of its sub concepts
         let unit1: AAAAAA;
         AST.change( () => {
-            const model = new XX();
+            const model = new ROOT();
             unit1 = reader.readFromString(
               handler.stringFromFile(testdir + "valid-test-input1.txt"),
               "AAAAAA",
@@ -54,7 +54,7 @@ describe("Testing Validator on Inheritance", () => {
         // the rule 'DDprop3 >= 10' is defined for interface DD, and should also be checked on any of its implementors
         let unit1: AAAAAA;
         AST.change( () => {
-            const model = new XX();
+            const model = new ROOT();
             unit1 = reader.readFromString(
               handler.stringFromFile(testdir + "valid-test-input2.txt"),
               "AAAAAA",
@@ -82,7 +82,7 @@ describe("Testing Validator on Inheritance", () => {
         // the rule 'FFprop3 < 4' is defined for interface FF, and should also be checked on any of its implementors
         let unit1: AAAAAA;
         AST.change( () => {
-            const model = new XX();
+            const model = new ROOT();
             unit1 = reader.readFromString(
               handler.stringFromFile(testdir + "valid-test-input3.txt"),
               "AAAAAA",
