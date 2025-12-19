@@ -501,7 +501,9 @@ export class WebappConfigurator {
         LOGGER.log(`renameModelUnit: from ${oldId.name} to ${newName} Units before: ` + editorInfo.unitIds.map((u: FreUnitIdentifier) => u.name))
         const unit: FreModelUnit | undefined = this.modelStore?.getUnitById(oldId);
         if (notNullOrUndefined(unit)) {
-            unit.name = newName;
+            AST.changeNamed("Rename Model Unit", () => {
+                unit.name = newName;
+            })
             // No need to do anything else. All is triggered through the MobX wiring.
         }
     }
