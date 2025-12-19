@@ -1,12 +1,13 @@
 <script lang="ts">
     import Dialog from "$lib/dialogs/Dialog.svelte"
-    import { notNullOrUndefined } from "@freon4dsl/core"
+    import { FreErrorSeverity, type FreUnitIdentifier, notNullOrUndefined } from "@freon4dsl/core"
     import {Button, Input, Helper} from 'flowbite-svelte';
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
     import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
     import { PenSolid } from 'flowbite-svelte-icons';
+    import { editorInfo, setUserMessage } from "$lib"
 
     let errorText: string = $state('');
     let newName: string = $state('');
@@ -29,11 +30,15 @@
     async function handleSubmit() {
         // console.log("RENAMING UNIT TO: " + newName);
         if (newName.length > 0 && checkName(newName).length === 0) {
-            const existing: string[] = await WebappConfigurator.getInstance().getUnitNames();
-            if (notNullOrUndefined(existing) && existing.length > 0 && existing.indexOf(newName) !== -1) {
+            const nameExist: boolean = notNullOrUndefined(editorInfo.unitIds.find((existing: FreUnitIdentifier) => existing.name === newName));
+            if (nameExist) {
                 errorText = `Cannot rename unit to '${newName}', because a unit with that name already exists on the server.`;
             } else {
-                // WebappConfigurator.getInstance().renameUnit(newName);
+                if (notNullOrUndefined(editorInfo.toBeRenamed)) {
+                    WebappConfigurator.getInstance().renameModelUnit(editorInfo.toBeRenamed, newName);
+                } else {
+                    setUserMessage(`Cannot rename unit to '${newName}', because the old unit cannot be identified.`, FreErrorSeverity.Error);
+                }
                 resetVariables();
             }
         } else {
@@ -48,7 +53,6 @@
 
 <Dialog open={dialogs.renameUnitDialogVisible}>
     <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Rename unit</h3>
-    <p>This is not yet functioning</p>
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-light-base-700">
             <Input class={textInputClass}

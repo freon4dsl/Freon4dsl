@@ -380,10 +380,6 @@
                 {
                     "file": "SomeNameOrOther.json",
                     "name": "SomeNameOrOther"
-                },
-                {
-                    "file": "unit9_1.json",
-                    "name": "unit9_1"
                 }
             ],
             "version": "1"
