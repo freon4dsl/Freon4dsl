@@ -94,7 +94,21 @@ router.get("/deleteModel", async (ctx: Router.IRouterContext) => {
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'folder'";
+        ctx.message = "Missing query parameter 'model'";
+    }
+    ctx.body = { massage: (ctx.request as any).body };
+});
+
+router.put("/renameModel", async (ctx: Router.IRouterContext) => {
+    const oldName = ctx.query["oldName"];
+    const newName = ctx.query["newName"];
+    console.log("RenameModel: " + oldName + ' => ' + newName);
+    if (!!oldName && typeof oldName === "string" && !!newName && typeof newName === "string") {
+        ModelRequests.renameModel(oldName, newName, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'newName' or 'oldName'";
     }
     ctx.body = { massage: (ctx.request as any).body };
 });

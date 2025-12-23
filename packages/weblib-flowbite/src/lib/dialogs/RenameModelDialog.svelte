@@ -50,7 +50,6 @@
 
 <Dialog open={dialogs.renameModelDialogVisible}>
     <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Rename model</h3>
-    <p>This is not yet functioning</p>
 
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-light-base-700">

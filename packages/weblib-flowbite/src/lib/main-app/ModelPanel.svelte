@@ -131,7 +131,7 @@
         {editorInfo.modelName}
     </span>
     <ButtonGroup class="*:!ring-light-base-700 ">
-        <Button id="rename-model-button" disabled class="{buttonCls} px-3" name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
+        <Button id="rename-model-button" {disabled} class="{buttonCls} px-3" name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
             <PenSolid class="{iconCls} "/>
         </Button>
         <Button id="delete-model-button" {disabled} class="{buttonCls} px-3" name="Delete"  onclick={() => {dialogs.deleteModelDialogVisible = true}}>

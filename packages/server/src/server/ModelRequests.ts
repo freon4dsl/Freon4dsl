@@ -216,6 +216,29 @@ export class ModelRequests {
         }
     }
 
+    /**
+     * Rename a model, from 'oldName' to 'newName'
+     * @param oldName
+     * @param newName
+     * @param ctx
+     */
+    public static async renameModel(oldName: string, newName: string, ctx: IRouterContext) {
+        console.log(`ModelRequest.renameModel ${oldName}`)
+        try {
+            const catalog = ModelRequests.readStoreCatalog()
+            const storedModel = catalog.models.find(m => m.name === oldName)
+            console.log(`ModelRequest.renameModel  ${storedModel?.name}`)
+            if (storedModel !== undefined) {
+                storedModel.name = newName;
+                ModelRequests.writeStoreCatalog(catalog);
+            }
+        } catch (e) {
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
+        }
+    }
+
     private static checkStoreFolder() {
         try {
             if (!FileUtil.exists(`${storeFolder}`)) {
