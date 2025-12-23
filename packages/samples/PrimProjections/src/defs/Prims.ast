@@ -1,0 +1,21 @@
+language Prims
+
+model Prims {
+    units: TestPrims[];
+}
+
+modelunit TestPrims {
+    entities: Entity[];
+}
+
+concept Entity {
+    isCompany: boolean; // for testing boolean single keyword projection
+    name: identifier;
+    reference baseEntity?: Entity;
+    nrOfEmployees?: number; // for testing undefined number projection
+    nameOfSpouse?: string;
+}
+
+concept EntityAttribute {
+    numVal: number;
+}
