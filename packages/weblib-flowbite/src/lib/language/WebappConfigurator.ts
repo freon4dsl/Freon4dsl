@@ -257,10 +257,12 @@ export class WebappConfigurator {
         noUnitAvailable.value = true
     }
 
-    // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-    renameModel(newName: string) {
-        // todo implement renaming in the server
-        // console.log(newName)
+    async renameModel(newName: string) {
+        console.log("rename model")
+        const response = await this.modelStore?.renameModel(newName)
+        if (isInMemoryError(response)) {
+            setUserMessage(response.message, FreErrorSeverity.Error)
+        }
     }
 
     async saveModel() {
@@ -554,7 +556,7 @@ export class WebappConfigurator {
      ***********************************************************/
 
     modelChanged(store: InMemoryModel): void {
-        LOGGER.log(`modelChanged: ${store?.model?.name}`)
+        console.log(`modelChanged: ${store?.model?.name}`)
         if (notNullOrUndefined(store?.model)) {
             editorInfo.modelName = store?.model?.name
             editorInfo.unitIds = store.getUnitIdentifiers()

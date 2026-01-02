@@ -99,4 +99,6 @@ export interface IServerCommunication {
      * @param unit
      */
     createModelUnit(modelName: string, unit: FreModelUnit): Promise<VoidServerResponse>;
+
+    renameModel(oldName: string, newName: string): void
 }
