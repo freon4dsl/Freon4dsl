@@ -14,7 +14,7 @@ import { Box, type ActionBox, BoxFactory, type BoolFunctie } from "./internal.js
  * to this OptionalBox, which is triggered by the user.
  */
 export class OptionalOLDBox extends Box {
-    readonly kind = "OptionalBox";
+    readonly kind = "OptionalBoxOLD";
 
     content: Box = null;
     placeholder: ActionBox = null;
@@ -97,6 +97,6 @@ export class OptionalOLDBox extends Box {
     }
 }
 
-export function isOptionalBox(b: Box): b is OptionalOLDBox {
-    return b?.kind === "OptionalBox"; // b instanceof OptionalBox;
+export function isOLDOptionalBox(b: Box): b is OptionalOLDBox {
+    return b?.kind === "OptionalBoxOLD"; // b instanceof OptionalBox;
 }

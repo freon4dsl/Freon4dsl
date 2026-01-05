@@ -140,6 +140,13 @@ export class InMemoryModel {
         this.dirtyUnits.clear()
     }
 
+    async renameModel(newName: string) {
+        LOGGER.log(`renameModel to ${newName}`)
+        await this.server.renameModel(this.model.name, newName);
+        this.model.name = newName;
+        this.currentModelChanged();
+    }
+
     /**
      * Get a list of all model names that are available on the server.
      */
@@ -208,8 +215,9 @@ export class InMemoryModel {
     }
 
     /**
-     * Delete _unit_ from the model.
+     *
      * @param oldName
+     * @param newName
      * @param unit
      */
     async renameUnit(oldName: string, newName: string, unit: FreModelUnit): Promise<void | InMemoryError> {
@@ -358,7 +366,7 @@ export class InMemoryModel {
      ***********************************************************/
 
     /**
-     * Callbacks to inform listeners that the currentmodel/currentunit has changed.
+     * Callbacks to inform listeners that the current model/current unit has changed.
      */
     private currentModelListeners: ModelChangedCallbackFunction[] = []
     addCurrentModelListener(l: ModelChangedCallbackFunction): void {

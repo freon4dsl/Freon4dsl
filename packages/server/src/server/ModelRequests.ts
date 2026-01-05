@@ -1,6 +1,6 @@
 import { issuestoString, LanguageRegistry, LionWebJsonChunk, LionWebValidator } from "@lionweb/validation"
-import * as fs from "fs";
-import { IRouterContext } from "@koa/router";
+import * as fs from "fs"
+import { IRouterContext } from "@koa/router"
 import * as path from "node:path"
 import { FileUtil } from "./FileUtil.js"
 import { StoreCatalog } from "./StoreCatalog.js"
@@ -127,8 +127,7 @@ export class ModelRequests {
             this.checkStoreFolder();
             const catalog = ModelRequests.readStoreCatalog()
             const model = catalog.models.find(m => m.name === modelname)
-            const dir = model.units.map(u => u.name)
-            ctx.response.body = dir;
+            ctx.response.body = model.units.map(u => u.name);
         } catch (e) {
             const message = (e instanceof Error? e.message : e.toString())
             console.log(message);
@@ -140,11 +139,13 @@ export class ModelRequests {
      * Get a list of all model names on the server, optionally filtered by `language`.
      * @param ctx
      * @param language The name of the language to filter on if it has a value.
+     * @param version The version of the language to filter on if it has a value.
      * @returns The list of all model names on the server.
      * 
      * If `language` is `undefined`  the list of models for `language`
      */
     public static getModelList(ctx: IRouterContext, language?: string, version?: string) {
+        // TODO use version as filter
         console.log(`ModelRequest.getModelList ${language}`)
         try {
             this.checkStoreFolder();
@@ -208,6 +209,37 @@ export class ModelRequests {
                 ModelRequests.writeStoreCatalog(catalog)
                 console.log("Unlink: " + path.join(`${storeFolder}`, storedModel.folder));
                 fs.rmSync(path.join(`${storeFolder}`, storedModel.folder), { recursive: true });
+            }
+        } catch (e) {
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
+        }
+    }
+
+    /**
+     * Rename a model, from 'oldName' to 'newName'
+     * @param oldName
+     * @param newName
+     * @param ctx
+     */
+    public static async renameModel(oldName: string, newName: string, ctx: IRouterContext) {
+        console.log(`ModelRequest.renameModel ${oldName}`)
+        try {
+            const catalog = ModelRequests.readStoreCatalog()
+            const storedModel = catalog.models.find(m => m.name === oldName)
+            console.log(`ModelRequest.renameModel  ${storedModel?.name}`)
+            const conflictingModel = catalog.models.find(m => m.name === newName)
+            if (conflictingModel !== undefined) {
+                // Error, model with 'newName' should not exist.
+                const message = `Cannot rename model, because ${newName} already exists.`
+                ctx.request.body = message;
+                ctx.response.status = 412;
+                return;
+            }
+            if (storedModel !== undefined) {
+                storedModel.name = newName;
+                ModelRequests.writeStoreCatalog(catalog);
             }
         } catch (e) {
             const message = (e instanceof Error? e.message : e.toString())

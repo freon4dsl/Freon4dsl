@@ -233,4 +233,9 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         await this.deleteModelUnit(modelName, { name: oldName, id: unit.freId(), type: unit.freLanguageConcept() });
         return { errors: [] }
     }
+
+    async renameModel(_oldName: string, _newName: string): Promise<VoidServerResponse> {
+        // TODO implement this method
+        return { errors: ['renameModel not implemented'] };
+    }
 }

@@ -3,7 +3,7 @@
 
 import { FreError, FreErrorSeverity } from "@freon4dsl/core";
 import { XXEnvironment } from "../freon/config/XXEnvironment.js";
-import { ExpWithType } from "../freon/language/index.js";
+import type { ExpWithType } from "../freon/language/index.js";
 import { XXDefaultWorker } from "../freon/utils/index.js";
 import { type XXCheckerInterface } from "../freon/validator/index.js";
 
