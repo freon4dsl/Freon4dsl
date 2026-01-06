@@ -15,7 +15,7 @@ export class WalkerTemplate {
         const imports = new Imports(relativePath)
         imports.language = new Set<string>(classifiersToDo.map(c => Names.classifier(c)))
         imports.core = new Set<string>([ Names.FreLogger, Names.FreNode ])
-        if (classifiersToDo.some(concept => concept.allParts().length > 0 && concept.allParts().some(part => part.isList))) {
+        if (classifiersToDo.some(concept => concept.allParts().length > 0)) {
           imports.core.add('notNullOrUndefined');
         }
         // Template starts here
