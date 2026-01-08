@@ -6,7 +6,7 @@
 		notNullOrUndefined,
 		type NewOptionalBox,
 		type SelectOption,
-		isNullOrUndefined
+		isNullOrUndefined, ARROW_DOWN, ARROW_UP, ENTER
 	} from "@freon4dsl/core"
 	import DropdownComponent from './DropdownComponent.svelte';
 	import { tick } from "svelte"
@@ -44,6 +44,7 @@
 		}
 	}
 
+	/* Functions that handle the dropdown */
 	const showDropdown = async () => {
 		dropdownShown = true;
 		// wait until DOM updates and styles/layout settle
@@ -57,15 +58,7 @@
 		});
 	};
 
-	const itemSelected = (sel: SelectOption) => {
-		console.log('item selected is ' + sel.label)
-		dropdownShown = false;
-		box.executeOption(editor, sel);
-		selectedOption = sel;
-		isEmpty = false;
-	}
-
-	let getOptions = (): SelectOption[] => {
+	const getOptions = (): SelectOption[] => {
 		let result = box?.getOptions(editor);
 		if (isNullOrUndefined(result)) {
 			result = [{ id: noOptionsId, label: '<no known options>' }];
@@ -74,6 +67,126 @@
 		return result;
 	};
 
+	const itemSelected = (sel: SelectOption) => {
+		console.log('item selected is ' + sel.label)
+		dropdownShown = false;
+		box.executeOption(editor, sel);
+		selectedOption = sel;
+		isEmpty = false;
+	}
+
+	const onKeyDown = (event: KeyboardEvent) => {
+		console.log(`onKeyDown: box(${box.id}) [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}` + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedOption?.id + " dropdown:" + dropdownShown);
+		if (dropdownShown) {
+			if (!event.ctrlKey && !event.altKey) {
+				switch (event.key) {
+					case ARROW_DOWN: {
+						if (dropdownShown) {
+							// if stat removed
+							if (!selectedOption) {
+								// there is no current selection: start at the first option
+								selectFirstOption();
+							} else {
+								const index = filteredOptions.findIndex(
+									(o) => o.id === selectedOption?.id
+								);
+								if (index + 1 < filteredOptions.length) {
+									// the 'normal' case: go one down
+									selectedOption = filteredOptions[index + 1];
+								} else if (index + 1 === filteredOptions.length) {
+									// the end of the options reached: go to the first
+									selectFirstOption();
+								}
+							}
+							event.preventDefault();
+							event.stopPropagation();
+						}
+						break;
+					}
+					case ARROW_UP: {
+						if (dropdownShown) {
+							// if stat removed
+							if (!selectedOption) {
+								// there is no current selection, start at the last option
+								selectLastOption();
+							} else {
+								const index = filteredOptions.findIndex(
+									(o) => o.id === selectedOption?.id
+								);
+								if (index > 0) {
+									// the 'normal' case: go one up
+									selectedOption = filteredOptions[index - 1];
+								} else if (index === 0) {
+									// the beginning of the options reached: go to the last
+									selectLastOption();
+								}
+							}
+							event.preventDefault();
+							event.stopPropagation();
+						}
+						break;
+					}
+					case ENTER: {
+						// user wants current selection
+						// find the chosen option
+						handleEnterOrControlSpace(event)
+						break;
+					}
+					default: {
+						// handled by FreonComponent
+					}
+				}
+			}
+		}
+	};
+
+	function selectFirstOption() {
+		if (dropdownShown) {
+			if (filteredOptions?.length !== 0) {
+				selectedOption = filteredOptions[0];
+			}
+		}
+	}
+
+	function selectLastOption() {
+		if (dropdownShown) {
+			if (filteredOptions?.length !== 0) {
+				selectedOption = filteredOptions[filteredOptions.length - 1];
+			}
+		}
+	}
+
+	function handleEnterOrControlSpace(event: KeyboardEvent): void {
+		let chosenOption: SelectOption | null = null;
+		if (filteredOptions.length <= 1) {
+			if (filteredOptions.length !== 0) {
+				// if there is just one option left, choose that one
+				chosenOption = filteredOptions[0];
+			} else {
+				// there are no valid options left
+				editor.setUserMessage('No valid selection');
+			}
+		} else {
+			// find the selected option and choose that one
+			const index = filteredOptions.findIndex((o) => o.id === selectedOption?.id);
+			if (index >= 0 && index < filteredOptions.length) {
+				chosenOption = filteredOptions[index];
+			}
+		}
+		// execute the option
+		if (notNullOrUndefined(chosenOption)) {
+			box.executeOption(editor, chosenOption);
+			dropdownShown = false;
+			isEmpty = false;
+		} else {
+			// TODO no valid option in dropdown
+		}
+		event.preventDefault();
+		event.stopPropagation();
+
+	}
+
+	/* Functions to remove the optional element */
     function remove() {
         console.log('removing')
         isEmpty = true;
@@ -130,7 +243,10 @@
 	}
 </script>
 
-<span class="optional-component {box.cssClass}" {id}>
+<span class="optional-component {box.cssClass}" {id}
+	  onkeydown={onKeyDown}
+	  role="none"
+>
 	{#if isEmpty}
 		<button
 			onclick={add}

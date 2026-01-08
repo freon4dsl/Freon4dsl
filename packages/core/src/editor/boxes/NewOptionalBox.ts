@@ -20,7 +20,7 @@ export class NewOptionalBox extends Box {
      * Filled with the name of the concept, in case the optional needs to create new concept instance or reference.
      * May remain undefined when the property is primitive.
      */
-    conceptOfContent?: string;
+    conceptOfProperty?: string;
 
     constructor(node: FreNode,
                 role: string,
@@ -47,8 +47,8 @@ export class NewOptionalBox extends Box {
     }
 
     getOptions(editor: FreEditor): SelectOption[] {
-        LOGGER.log("getOptions for " + this.$id + "- " + this.conceptOfContent + "." + this.propertyName);
-        return createOptions(editor, this.node, this, this.conceptOfContent);
+        LOGGER.log("getOptions for " + this.$id + "- " + this.conceptOfProperty + "." + this.propertyName);
+        return createOptions(editor, this.node, this, this.conceptOfProperty);
     }
 
     removeContent() {
