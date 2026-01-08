@@ -375,7 +375,7 @@ export class FreEditor {
      * @param box
      */
     deleteBox(box: Box): void {
-        LOGGER.log(`deleteBox  ${box.id} for property ${box.propertyName}`);
+        console.log(`deleteBox  ${box.id} for property ${box.propertyName}, box.kind: ${box.kind}`);
         const node: FreNode = box.node;
         if (node.freIsUnit()) {
             return;

@@ -24,8 +24,8 @@ import {
     type AbstractExternalBox,
     PartListReplacerBox,
     isPartListReplacerBox,
-    ReferenceBox, MultiLineTextBox
-} from './internal.js';
+    ReferenceBox, MultiLineTextBox, NewOptionalBox
+} from "./internal.js"
 import type { SelectOption } from "./internal.js";
 import type { BoolFunctie } from "./internal.js";
 
@@ -49,8 +49,8 @@ let limitedCache: BoxCache<LimitedControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
 let referenceCache: BoxCache<ReferenceBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
-// let optionalCache: BoxCache<OptionalBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
+let newOptionalCache: BoxCache<NewOptionalBox> = {};
 // let svgCache: BoxCache<SvgBox> = {};
 let horizontalLayoutCache: BoxCache<HorizontalLayoutBox> = {};
 let verticalLayoutCache: BoxCache<VerticalLayoutBox> = {};
@@ -92,6 +92,7 @@ export class BoxFactory {
         selectCache = {};
         referenceCache = {};
         optionalCache = {};
+        newOptionalCache = {};
         horizontalLayoutCache = {};
         verticalLayoutCache = {};
         horizontalListCache = {};
@@ -509,6 +510,27 @@ export class BoxFactory {
         // 1. Create the optional box, or find the one that already exists for this element and role
         const creator = () => new OptionalBox(node, role, condition, box, mustShow, optional);
         const result: OptionalBox = this.find<OptionalBox>(node, role, creator, optionalCache);
+
+        // 2. Apply the other arguments in case they have changed
+        FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static newOptional(
+        node: FreNode,
+        role: string,
+        placeHolder: string,
+        contentBox: Box,
+        initializer?: Partial<NewOptionalBox>,
+    ): NewOptionalBox {
+        // TODO This only works with cache on, should also work with cache off.
+        // if (cacheOptionalOff) {
+        //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
+        // }
+        // 1. Create the optional box, or find the one that already exists for this element and role
+        const creator = () => new NewOptionalBox(node, role, placeHolder, contentBox);
+        const result: NewOptionalBox = this.find<NewOptionalBox>(node, role, creator, newOptionalCache);
 
         // 2. Apply the other arguments in case they have changed
         FreUtils.initializeObject(result, initializer);

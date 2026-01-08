@@ -24,7 +24,7 @@
     let placeholderComponent: RenderComponent | undefined = $state();
 
     const refresh = (why?: string): void => {
-        LOGGER.log('REFRESH OptionalBox: ' + why);
+        console.log('REFRESH OptionalBox: ' + why);
         mustShow = box.mustShow;
         showByCondition = box.condition();
         childBox = box.content;

@@ -630,6 +630,18 @@
                     "file": "unit1.json"
                 }
             ]
+        },
+        {
+            "name": "OptionalBoxTest1",
+            "folder": "OptionalBoxTest1",
+            "language": "Test1",
+            "version": "1",
+            "units": [
+                {
+                    "name": "NEWWW",
+                    "file": "NEWWW.json"
+                }
+            ]
         }
     ]
 }

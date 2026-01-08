@@ -369,6 +369,7 @@
 					break;
 				}
 				case DELETE: {
+                    console.log('TextComponent delete')
 					myHelper.handleDelete(event, editor);
 					break;
 				}

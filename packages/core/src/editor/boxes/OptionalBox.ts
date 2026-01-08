@@ -56,10 +56,10 @@ export class OptionalBox extends Box {
     }
 
     /**
-     * Ensure a refresh is triggered if the condition for showing this optional bix has changed.
+     * Ensure a refresh is triggered if the condition for showing this optional box has changed.
      */
     conditionChanged = () => {
-        // console.log("AUTORUN showByCondition");
+        console.log("AUTORUN showByCondition, this.mustShow: " + this.mustShow);
         this.condition();
         this.isDirty();
     };
