@@ -1,0 +1,144 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-Prims",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-2",
+         "classifier": {
+            "language": "-key-Prims",
+            "version": "2023.1",
+            "key": "-key-TestPrims"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Prims",
+                  "version": "2023.1",
+                  "key": "-key-TestPrims-name"
+               },
+               "value": "Unit"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Prims",
+                  "version": "2023.1",
+                  "key": "-key-TestPrims-entities"
+               },
+               "children": [
+                  "ID-3",
+                  "ID-4"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-3",
+         "classifier": {
+            "language": "-key-Prims",
+            "version": "2023.1",
+            "key": "-key-Entity"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Prims",
+                  "version": "2023.1",
+                  "key": "-key-Entity-isCompany"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-Prims",
+                  "version": "2023.1",
+                  "key": "-key-Entity-name"
+               },
+               "value": "PhilipsEnterprises"
+            },
+            {
+               "property": {
+                  "language": "-key-Prims",
+                  "version": "2023.1",
+                  "key": "-key-Entity-nrOfEmployees"
+               }
+            },
+            {
+               "property": {
+                  "language": "-key-Prims",
+                  "version": "2023.1",
+                  "key": "-key-Entity-nameOfSpouse"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Prims",
+                  "version": "2023.1",
+                  "key": "-key-Entity-baseEntity"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-2"
+      },
+      {
+         "id": "ID-4",
+         "classifier": {
+            "language": "-key-Prims",
+            "version": "2023.1",
+            "key": "-key-Entity"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Prims",
+                  "version": "2023.1",
+                  "key": "-key-Entity-isCompany"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-Prims",
+                  "version": "2023.1",
+                  "key": "-key-Entity-name"
+               },
+               "value": "FritsPhilips"
+            },
+            {
+               "property": {
+                  "language": "-key-Prims",
+                  "version": "2023.1",
+                  "key": "-key-Entity-nrOfEmployees"
+               }
+            },
+            {
+               "property": {
+                  "language": "-key-Prims",
+                  "version": "2023.1",
+                  "key": "-key-Entity-nameOfSpouse"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-2"
+      }
+   ]
+}

@@ -1,0 +1,5 @@
+editor default
+
+Entity {[
+    ${self.isCompany [COMPANY]} ${self.name} [?based on ${self.baseEntity}]
+]}

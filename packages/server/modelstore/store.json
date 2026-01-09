@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 6,
+    "currentPostfix": 7,
     "models": [
         {
             "folder": "modelstore",
@@ -628,6 +628,18 @@
                 {
                     "name": "unit1",
                     "file": "unit1.json"
+                }
+            ]
+        },
+        {
+            "name": "Prims2",
+            "folder": "Prims2",
+            "language": "Prims",
+            "version": "1",
+            "units": [
+                {
+                    "name": "Unit",
+                    "file": "Unit.json"
                 }
             ]
         }
