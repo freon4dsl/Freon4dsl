@@ -6,7 +6,7 @@
 		notNullOrUndefined,
 		type NewOptionalBox,
 		type SelectOption,
-		isNullOrUndefined, ARROW_DOWN, ARROW_UP, ENTER
+		isNullOrUndefined, ARROW_DOWN, ARROW_UP, ENTER, DELETE, BACKSPACE
 	} from "@freon4dsl/core"
 	import DropdownComponent from './DropdownComponent.svelte';
 	import { tick } from "svelte"
@@ -63,7 +63,7 @@
 		if (isNullOrUndefined(result)) {
 			result = [{ id: noOptionsId, label: '<no known options>' }];
 		}
-		console.log(`getOptions ${result[0]?.label}`);
+		console.log(`getOptions ${JSON.stringify(result)}`);
 		return result;
 	};
 
@@ -137,6 +137,17 @@
 					}
 				}
 			}
+		} else {
+			if (!isEmpty) {
+				switch (event.key) {
+					case BACKSPACE:
+					case DELETE: {
+						remove();
+						event.stopPropagation();
+						event.preventDefault();
+					}
+				}
+			}
 		}
 	};
 
@@ -186,6 +197,12 @@
 
 	}
 
+	function onFocusOut() {
+		console.log('onBlurSpan')
+		isHovered = false;
+		dropdownShown = false;
+	}
+
 	/* Functions to remove the optional element */
     function remove() {
         console.log('removing')
@@ -193,8 +210,9 @@
         box.removeContent();
     }
 
+	/* Functions to make the Component fit in the framework */
     const refresh = (why?: string): void => {
-        console.log('REFRESH OptionalBox: ' + why);
+        console.log('REFRESH NewOptionalBox: ' + why);
         contentBox = box.content;
         isEmpty = box.isEmpty();
 		placeholder = box.placeholder;
@@ -245,6 +263,7 @@
 
 <span class="optional-component {box.cssClass}" {id}
 	  onkeydown={onKeyDown}
+	  onfocusout={onFocusOut}
 	  role="none"
 >
 	{#if isEmpty}
