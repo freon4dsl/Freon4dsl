@@ -8,7 +8,7 @@ import {
     FreCreatePartAction,
     FreCustomAction,
     type FreTriggerType,
-    type NewOptionalBox,
+    type OptionalBox,
     type ActionBox
 } from "../index.js"
 import { FreLogger } from "../../logging/index.js";
@@ -57,7 +57,7 @@ export function executeSingleBehavior(
     return BehaviorExecutionResult.EXECUTED;
 }
 
-export function createOptions(editor: FreEditor, node: FreNode, box: ActionBox | NewOptionalBox, conceptOfContent: string): SelectOption[] {
+export function createOptions(editor: FreEditor, node: FreNode, box: ActionBox | OptionalBox, conceptOfContent: string): SelectOption[] {
     const result: SelectOption[] = [];
     if (notNullOrUndefined(box.propertyName) && notNullOrUndefined(conceptOfContent)) {
         console.log(`  has property ${box.propertyName} and concept ${conceptOfContent}`)

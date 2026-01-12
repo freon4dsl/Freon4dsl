@@ -35,7 +35,9 @@
         BoolDisplay,
         LimitedDisplay,
         isActionTextBox,
-        notNullOrUndefined, type ClientRectangle, UndefinedRectangle, isNewOptionalBox
+        notNullOrUndefined,
+        type ClientRectangle,
+        UndefinedRectangle
     } from "@freon4dsl/core"
     import MultiLineTextComponent from './MultiLineTextComponent.svelte';
     import EmptyLineComponent from './EmptyLineComponent.svelte';
@@ -65,7 +67,6 @@
     import { selectedBoxes } from './stores/AllStores.svelte.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
     import type { Component } from 'svelte';
-    import NewOptionalComponent from "$lib/components/NewOptionalComponent.svelte"
 
     const LOGGER = RENDER_LOGGER;
 
@@ -213,8 +214,6 @@
             <LayoutComponent {box} {editor} />
         {:else if isListBox(box)}
             <ListComponent {box} {editor} />
-        {:else if isNewOptionalBox(box)}
-            <NewOptionalComponent {box} {editor} />
         {:else if isOptionalBox(box)}
             <OptionalComponent {box} {editor} />
         {:else if isSvgBox(box)}
