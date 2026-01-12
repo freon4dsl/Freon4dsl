@@ -1,16 +1,25 @@
 <script lang="ts">
-    // Props
-    import { componentId, type FreComponentProps, RenderComponent } from "$lib"
+	import { componentId } from '../index.js';
+	import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 	import {
 		type Box,
-		notNullOrUndefined,
 		type NewOptionalBox,
 		type SelectOption,
-		isNullOrUndefined, ARROW_DOWN, ARROW_UP, ENTER, DELETE, BACKSPACE
-	} from "@freon4dsl/core"
+		notNullOrUndefined,
+		isNullOrUndefined,
+		ARROW_DOWN,
+		ARROW_UP,
+		ENTER,
+		DELETE,
+		BACKSPACE
+	} from "@freon4dsl/core";
 	import DropdownComponent from './DropdownComponent.svelte';
-	import { tick } from "svelte"
+	import RenderComponent from './RenderComponent.svelte';
+	import { tick } from "svelte";
+	import DeleteIcon from "$lib/components/images/DeleteIcon.svelte"
+	import AddIcon from "$lib/components/images/AddIcon.svelte"
 
+	// Props
     let { editor, box }: FreComponentProps<NewOptionalBox> = $props();
 
     let id: string = $state(''); // an id for the html element showing the optional
@@ -20,8 +29,8 @@
     let contentBox: Box = $state()!;
     let contentComponent: RenderComponent | undefined = $state();
     let addButtonComponent: HTMLButtonElement | undefined = $state();
-	let addButtonTitle: string = '+';
-	let removeButtonTitle: string = 'X';
+	// let addButtonTitle: string = '+';
+	// let removeButtonTitle: string = 'X';
 	let dropdownShown: boolean = $state(false);
 	let selectedOption: SelectOption | undefined = $state(undefined); // the selected option in the dropdown
 	let filteredOptions: SelectOption[] = $state([]); // the list of filtered options that are shown in the dropdown
@@ -40,7 +49,6 @@
 			showDropdown();
 		} else {
 			box.executeOption(editor, allOptions[0]);
-			isEmpty = false;
 		}
 	}
 
@@ -267,57 +275,52 @@
 	  role="none"
 >
 	{#if isEmpty}
-		<button
-			onclick={add}
-			onfocus={onFocus}
-			onblur={onBlur}
-			onmouseover={mouseOver}
-			onmouseleave={mouseLeave}
-			onmousemove={mouseMove}
-			bind:this={addButtonComponent}>
-			{addButtonTitle}
-		</button>
-		{#if isHovered}
-			<div class='optional-tooltip' role="tooltip">
-				{placeholder}
-			</div>
-		{/if}
-		{#if dropdownShown}
-			<DropdownComponent
-				bind:this={dropdownCmp}
-				bind:selected={selectedOption}
-				bind:options={filteredOptions}
-				selectionChanged={itemSelected}
-			/>
-		{/if}
+		<span class="optional-component-tooltip-anchor">
+			<button class="optional-component-button"
+					onclick={add}
+					onfocus={onFocus}
+					onblur={onBlur}
+					onmouseover={mouseOver}
+					onmouseleave={mouseLeave}
+					onmousemove={mouseMove}
+					aria-label="Add optional component"
+					bind:this={addButtonComponent}>
+
+				<AddIcon/>
+			</button>
+			{#if isHovered}
+				<div class='optional-component-tooltip' role="tooltip">
+					{placeholder}
+				</div>
+			{/if}
+			{#if dropdownShown}
+				<DropdownComponent
+					bind:this={dropdownCmp}
+					bind:selected={selectedOption}
+					bind:options={filteredOptions}
+					selectionChanged={itemSelected}
+				/>
+			{/if}
+		</span>
 	{:else}
-        <button
-			onclick={remove}
-			onfocus={onFocus}
-			onblur={onBlur}
-			onmouseover={mouseOver}
-			onmouseleave={mouseLeave}
-			onmousemove={mouseMove}
-		>
-			{removeButtonTitle}
-		</button>
-		{#if isHovered}
-			<div class='optional-tooltip' role="tooltip">
-				remove optional element
-			</div>
-		{/if}
+		<span class="optional-component-tooltip-anchor">
+			<button class="optional-component-button"
+					onclick={remove}
+					onfocus={onFocus}
+					onblur={onBlur}
+					onmouseover={mouseOver}
+					onmouseleave={mouseLeave}
+					onmousemove={mouseMove}
+					aria-label="Remove optional component"
+			>
+				<DeleteIcon/>
+			</button>
+			{#if isHovered}
+				<div class='optional-component-tooltip' role="tooltip">
+					remove optional element
+				</div>
+			{/if}
+		</span>
 		<RenderComponent box={contentBox} {editor} bind:this={contentComponent} />
 	{/if}
 </span>
-
-<style>
-	.optional-tooltip {
-		border: 1px solid #ddd;
-		box-shadow: 1px 1px 1px #ddd;
-		background: white;
-		color: black;
-		border-radius: 4px;
-		padding: 1px;
-		position: absolute;
-	}
-</style>

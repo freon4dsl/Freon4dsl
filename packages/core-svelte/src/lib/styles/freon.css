@@ -854,31 +854,59 @@
     border-radius: 0.1em;
 }
 
-.optional-component:empty:before {
-    content: attr(data-placeholdertext);
-}
-
+/*******************************************************
+ *  OptionalComponent
+ *******************************************************/
 .optional-component {
-    margin: 0 3px 0 3px;
-    white-space: normal;
-    display: inline-block;
+    display: inline-flex;
+    align-items: flex-start;
 }
+.optional-component-tooltip-anchor {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+.optional-component-tooltip { /* non-colors props */
+    position: absolute;
+    top: calc(100%);
+    left: 0;
 
-.optional-component-new:empty:before {
-    content: attr(data-placeholdertext);
-}
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
 
-.optional-component-show {
-    margin: 0 3px 0 3px;
-    white-space: normal;
-    display: inline-block;
+    pointer-events: none;
+    z-index: 1000;
 }
-.optional-component-hide {
-    margin: 3px;
-    white-space: normal;
-    display: inline-block;
-}
+.optional-component-button { /* non-colors props */
+    /* layout */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
+    /* sizing */
+    padding: 0;
+    line-height: 0;
+    font-size: 1.2rem; /* controls icon size */
+    margin-top: 2px;
+
+    /* visuals */
+    cursor: pointer;
+}
+.delete-icon { /* non-colors props */
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+}
+.add-icon { /* non-colors props */
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+}
+/*******************************************************
+ *  RenderComponent
+ *******************************************************/
 .render-component {
     box-sizing: border-box;
     display: flex;

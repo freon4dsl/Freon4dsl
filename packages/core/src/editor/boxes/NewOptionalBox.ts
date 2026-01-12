@@ -47,31 +47,46 @@ export class NewOptionalBox extends Box {
         this.nodeConcept = this.node.freLanguageConcept();
     }
 
-    executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
-        LOGGER.log("OptionalBox executeOption " + JSON.stringify(option) + `${this.nodeConcept}, this.propDef: ${this.propDef?.propertyKind}`);
+    getOptions(editor: FreEditor): SelectOption[] {
+        LOGGER.log(`getOptions: ${this.nodeConcept}, this.propDef: ${this.propDef?.propertyKind}`);
         if (this.propDef.propertyKind === "primitive") {
-            let actualValue = this.node[this.propertyName];
-            LOGGER.log(`isPrimitive for property ${this.propertyName}, actualValue: "${actualValue}"`);
+            if (this.propDef.type === "boolean") {
+                return this.getBooleanOptions(editor);
+            }
+            return [];
+        } else {
+            LOGGER.log("getOptions for " + this.$id + "- " + this.conceptOfProperty + "." + this.propertyName)
+            return createOptions(editor, this.node, this, this.conceptOfProperty)
+        }
+    }
+
+    executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
+        console.log("OptionalBox executeOption " + JSON.stringify(option) + ` ${this.nodeConcept}, this.propDef: ${this.propDef?.propertyKind}`);
+        if (this.propDef.propertyKind === "primitive") {
+            const self: NewOptionalBox = this;
+            console.log(`isPrimitive for property ${this.propertyName}, actualValue: "${self.node[self.propertyName]}"`);
             if (this.propDef.type === "boolean") {
                 const boolBox: Box = this.content.firstEditableChild;
                 console.log(`getOptions: boolBox: ${boolBox?.kind}`);
                 if (isBooleanControlBox(boolBox)) {
                     AST.change(() => {
                         if (option.id === boolBox.labels.yes) {
-                            actualValue = true;
+                            self.node[self.propertyName] = true;
                         } else if (option.id === boolBox.labels.no) {
-                            actualValue = false;
+                            self.node[self.propertyName] = false;
                         } else if (option.id === boolBox.labels.unknown) {
-                            actualValue = undefined;
+                            self.node[self.propertyName] = undefined;
                         }
                     });
                 } else if (isSelectBox(boolBox)) {
                     boolBox.executeOption(editor, option);
                 }
+            } else if (this.propDef.type === "string") {
+                console.log("found string");
+                self.node[self.propertyName] = " ";
+            } else if (this.propDef.type === "number") {
+                self.node[self.propertyName] = 1; // todo improve when undefined value for numbers has been decided
             }
-            // else if (typeof actualValue === "number") {
-                //     return isNullOrUndefined(actualValue);
-                // }
         } else {
             FreUtils.CHECK(!!option?.action, `NewOptionalBox.executeOption: action missing for ${option?.label}`)
             if (!!option.action) {
@@ -82,39 +97,9 @@ export class NewOptionalBox extends Box {
         return BehaviorExecutionResult.NULL;
     }
 
-    getOptions(editor: FreEditor): SelectOption[] {
-        LOGGER.log(`getOptions: ${this.nodeConcept}, this.propDef: ${this.propDef?.propertyKind}`);
-        if (this.propDef.propertyKind === "primitive") {
-            if (this.propDef.type === "boolean") {
-                const boolBox: Box = this.content.firstEditableChild;
-                console.log(`getOptions: boolBox: ${boolBox?.kind}`);
-                if (isBooleanControlBox(boolBox)) {
-                    // Create two options, one for true and one for false
-                    return [
-                        {
-                            id: boolBox.labels.yes,
-                            label: boolBox.labels.yes,
-                            description: `true value for ${ this.propertyName }`,
-                        },
-                        {
-                            id: boolBox.labels.no,
-                            label: boolBox.labels.no,
-                            description: `false value for ${ this.propertyName }`,
-                        }
-                    ];
-                } else if (isSelectBox(boolBox)) {
-                    // Use the options from the SelectBox, but filter out the 'unknown' option
-                    const rawResult = boolBox.getOptions(editor);
-                    return [rawResult[0], rawResult[1]];
-                }
-            }
-            return [];
-        } else {
-            LOGGER.log("getOptions for " + this.$id + "- " + this.conceptOfProperty + "." + this.propertyName)
-            return createOptions(editor, this.node, this, this.conceptOfProperty)
-        }
-    }
-
+    /**
+     * Sets the value of the property that is contained in this Optional Box to not present / not set.
+     */
     removeContent() {
         LOGGER.log(`removeContent ${this.id}`);
         const self: NewOptionalBox = this;
@@ -138,26 +123,31 @@ export class NewOptionalBox extends Box {
             });
         }
         console.log(`removeContent ${this.id}: "${this.node[this.propertyName]}"`);
+        this.isDirty();
     }
 
+    /**
+     * Returns true when the property that is contained in this Optional Box is not present / not set.
+     */
     isEmpty(): boolean {
-        LOGGER.log(`isEmpty for property ${this.propertyName} of concept ${this.nodeConcept}`);
-
-        LOGGER.log(`executeOption: ${this.nodeConcept}, this.propDef: ${this.propDef?.propertyKind}`);
+        console.log(`isEmpty for property ${this.propertyName} of concept ${this.nodeConcept}`);
         if (isNullOrUndefined(this.propDef)) {
-            LOGGER.log(`Cannot find property definition for property ${this.propertyName} of concept ${this.nodeConcept}.`)
+            console.log(`Cannot find property definition for property ${this.propertyName} of concept ${this.nodeConcept}.`)
             return false;
         }
         if (this.propDef.propertyKind === "primitive") {
             const actualValue = this.node[this.propertyName];
-            LOGGER.log(`isPrimitive for property ${this.propertyName}, actualValue: "${actualValue}"`);
-            // todo check whether these are the right conditions
-            if (typeof actualValue === "string") {
+            console.log(`isPrimitive for property ${this.propertyName}, actualValue: "${actualValue}"`);
+            if (this.propDef.type === "string") {
+                if (isNullOrUndefined(actualValue)) {
+                    console.log(`Error in model, property ${this.propertyName} of concept ${this.nodeConcept} is undefined.`)
+                    return false;
+                }
                 return actualValue.length === 0;
-            } else if (typeof actualValue === "boolean") {
+            } else if (this.propDef.type === "boolean") {
                 return isNullOrUndefined(actualValue);
-            } else if (typeof actualValue === "number") {
-                return isNullOrUndefined(actualValue);
+            } else if (this.propDef.type === "number") {
+                return isNullOrUndefined(actualValue); // todo improve when undefined value for numbers has been decided
             }
         } else if (this.propDef.propertyKind === "part") {
             const actualValue: FreNode[] = FreLanguage.getInstance().getPropertyValue(this.node, this.propDef);
@@ -214,6 +204,36 @@ export class NewOptionalBox extends Box {
             this._propDef = FreLanguage.getInstance().classifierProperty(this.nodeConcept, this.propertyName)
         }
         return this._propDef;
+    }
+
+    /**
+     * Returns the SelectOptions for the property, when it is of boolean type.
+     * @param editor
+     * @private
+     */
+    private getBooleanOptions(editor: FreEditor): SelectOption[] {
+        const boolBox: Box = this.content.firstEditableChild;
+        console.log(`getOptions: boolBox: ${boolBox?.kind}`);
+        if (isBooleanControlBox(boolBox)) {
+            // Create two options, one for true and one for false
+            return [
+                {
+                    id: boolBox.labels.yes,
+                    label: boolBox.labels.yes,
+                    description: `true value for ${ this.propertyName }`,
+                },
+                {
+                    id: boolBox.labels.no,
+                    label: boolBox.labels.no,
+                    description: `false value for ${ this.propertyName }`,
+                }
+            ];
+        } else if (isSelectBox(boolBox)) {
+            // Use the options from the SelectBox, but filter out the 'unknown' option
+            const rawResult = boolBox.getOptions(editor);
+            return [rawResult[0], rawResult[1]];
+        }
+        return [];
     }
 }
 

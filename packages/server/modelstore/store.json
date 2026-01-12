@@ -642,6 +642,18 @@
                     "file": "NEWWW.json"
                 }
             ]
+        },
+        {
+            "name": "OptionalTest2",
+            "folder": "SECOND",
+            "language": "Test1",
+            "version": "1",
+            "units": [
+                {
+                    "name": "NEWWW",
+                    "file": "NEWWW.json"
+                }
+            ]
         }
     ]
 }

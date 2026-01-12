@@ -353,13 +353,18 @@
 /*******************************************************
  *  OptionalComponent
  *******************************************************/
-.optional-component:empty:before {
-    background-color: var(--color-dark-freon-accent-optional);
+.optional-component-tooltip { /* color props */
+    border: 1px solid var(--color-dark-freon-accent-optional);
+    box-shadow: 1px 1px 1px var(--color-dark-freon-accent-optional);
+    background: var(--color-dark-freon-150);
+    color: var(--color-dark-freon-900);
 }
-.optional-component-hide {
-    color: var(--color-dark-freon-150);
+.delete-icon {
+    fill: var(--color-dark-freon-accent-error, currentColor);
 }
-
+.add-icon {
+    fill: var(--color-dark-freon-accent-button, currentColor);
+}
 /*******************************************************
  *  RenderComponent
  *******************************************************/
