@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 6,
+    "currentPostfix": 7,
     "models": [
         {
             "folder": "modelstore",
@@ -652,6 +652,14 @@
                 {
                     "name": "NEWWW",
                     "file": "NEWWW.json"
+                },
+                {
+                    "name": "testundefined",
+                    "file": "testundefined.json"
+                },
+                {
+                    "name": "test2",
+                    "file": "test2.json"
                 }
             ]
         }

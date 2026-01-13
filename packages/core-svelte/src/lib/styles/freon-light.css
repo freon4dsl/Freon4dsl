@@ -336,7 +336,7 @@
     color: var(--color-light-freon-900);
 }
 .delete-icon { /* color props */
-    fill: var(--color-light-freon-accent-error, currentColor);
+    fill: var(--color-light-freon-accent-button, currentColor);
 }
 .add-icon { /* color props */
     fill: var(--color-light-freon-accent-button, currentColor);
