@@ -304,7 +304,7 @@ export class FreEditor {
                 this._selectedBox = first;
                 this._selectedProperty = first.propertyName;
                 this._selectedIndex = first.propertyIndex;
-                this._selectedPosition = FreCaret.LEFT_MOST;
+                this._selectedPosition = FreCaret.UNSPECIFIED;
             }
             this._selectedElement = element;
             this.selectionChanged();
@@ -658,7 +658,7 @@ export class FreEditor {
                 LOGGER.log(`selectNextleaf: skipping ${next.id} ${next.kind}`)
                 this.selectNextLeaf(next);
             } else {
-                this.selectElementForBox(next, FreCaret.LEFT_MOST);
+                this.selectElementForBox(next, FreCaret.UNSPECIFIED);
             }
         }
     }
@@ -681,7 +681,7 @@ export class FreEditor {
         const next: Box = box?.nextLeafRight;
         LOGGER.log("Select next leaf is box " + next?.role);
         if (!!next) {
-            this.selectElementForBox(next, FreCaret.LEFT_MOST);
+            this.selectElementForBox(next, FreCaret.UNSPECIFIED);
         }
     }
 

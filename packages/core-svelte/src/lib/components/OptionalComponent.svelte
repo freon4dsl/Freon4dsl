@@ -18,6 +18,9 @@
 	import DeleteIcon from "./images/DeleteIcon.svelte"
 	import AddIcon from "./images/AddIcon.svelte"
 	import { tick } from "svelte";
+	import { OPTIONAL_LOGGER, } from "$lib/components/ComponentLoggers.js"
+
+	const LOGGER = OPTIONAL_LOGGER;
 
 	// Props
     let { editor, box }: FreComponentProps<OptionalBox> = $props();
@@ -39,13 +42,13 @@
 
 	/* Functions for adding the optional element */
 	function add() {
-		console.log('adding')
+		LOGGER.log('adding')
 		isHovered = false;
 		const allOptions = getOptions();
 		filteredOptions = allOptions;
-		console.log(allOptions.map(opt => opt.label))
+		LOGGER.log(`${allOptions.map(opt => opt.label)}`)
 		if (allOptions.length > 1) {
-			console.log('showing dropdown')
+			LOGGER.log('showing dropdown')
 			showDropdown();
 		} else {
 			box.executeOption(editor, allOptions[0]);
@@ -71,20 +74,20 @@
 		if (isNullOrUndefined(result)) {
 			result = [{ id: noOptionsId, label: '<no known options>' }];
 		}
-		console.log(`getOptions ${JSON.stringify(result)}`);
+		LOGGER.log(`getOptions ${JSON.stringify(result)}`);
 		return result;
 	};
 
 	const itemSelected = (sel: SelectOption) => {
-		console.log('item selected is ' + sel.label)
+		LOGGER.log('item selected is ' + sel.label)
 		dropdownShown = false;
 		box.executeOption(editor, sel);
 		selectedOption = sel;
-		isEmpty = false;
+		// isEmpty = false;
 	}
 
 	const onKeyDown = (event: KeyboardEvent) => {
-		console.log(`onKeyDown: box(${box.id}) [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}` + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedOption?.id + " dropdown:" + dropdownShown);
+		LOGGER.log(`onKeyDown: box(${box.id}) [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}` + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedOption?.id + " dropdown:" + dropdownShown);
 		if (dropdownShown) {
 			if (!event.ctrlKey && !event.altKey) {
 				switch (event.key) {
@@ -196,7 +199,7 @@
 		if (notNullOrUndefined(chosenOption)) {
 			box.executeOption(editor, chosenOption);
 			dropdownShown = false;
-			isEmpty = false;
+			// isEmpty = false;
 		} else {
 			// TODO no valid option in dropdown
 		}
@@ -206,15 +209,15 @@
 	}
 
 	function onFocusOut() {
-		console.log('onBlurSpan')
+		LOGGER.log('onBlurSpan')
 		isHovered = false;
 		dropdownShown = false;
 	}
 
 	/* Functions to remove the optional element */
     function remove() {
-        console.log('removing')
-        isEmpty = true;
+        LOGGER.log('removing')
+        // isEmpty = true;
         box.removeContent();
     }
 
@@ -227,9 +230,10 @@
     };
 
     async function setFocus(): Promise<void> {
-        console.log('setFocus on box ' + box.role);
-        if (!isEmpty && notNullOrUndefined(contentComponent) && notNullOrUndefined(box.content.firstEditableChild)) {
-            box.content.firstEditableChild.setFocus();
+        console.log('setFocus on box ' + box.role + " isEmpty " + isEmpty);
+        if (!isEmpty && notNullOrUndefined(contentComponent)) {
+			console.log('setting focus on content of optional')
+			editor.selectFirstLeafChildBox();
         } else if (notNullOrUndefined(addButtonComponent)) {
             addButtonComponent.focus();
         }
@@ -248,15 +252,18 @@
 	let y: number = $state(0);
 
 	function mouseOver(event: MouseEvent) {
+		LOGGER.log('mouseOver')
 		isHovered = true;
 		x = event.pageX + 5;
 		y = event.pageY + 5;
 	}
 	function mouseMove(event: MouseEvent) {
+		LOGGER.log('mouseMove')
 		x = event.pageX + 5;
 		y = event.pageY + 5;
 	}
 	function mouseLeave() {
+		LOGGER.log('mouseLeave')
 		isHovered = false;
 	}
 	function onFocus() {
@@ -312,6 +319,7 @@
 					onmouseleave={mouseLeave}
 					onmousemove={mouseMove}
 					aria-label="Remove optional component"
+					tabindex="-1"
 			>
 				<DeleteIcon/>
 			</button>

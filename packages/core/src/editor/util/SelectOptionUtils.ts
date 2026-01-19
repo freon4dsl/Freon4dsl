@@ -60,7 +60,7 @@ export function executeSingleBehavior(
 export function createOptions(editor: FreEditor, node: FreNode, box: ActionBox | OptionalBox, conceptOfContent: string): SelectOption[] {
     const result: SelectOption[] = [];
     if (notNullOrUndefined(box.propertyName) && notNullOrUndefined(conceptOfContent)) {
-        console.log(`  has property ${box.propertyName} and concept ${conceptOfContent}`)
+        LOGGER.log(`  has property ${box.propertyName} and concept ${conceptOfContent}`)
         // If the box has a property and concept name, then this can be used to create element of the
         // concept type and its subtypes.
         const clsOtIntf: FreLanguageClassifier = FreLanguage.getInstance().classifier(conceptOfContent)
@@ -68,10 +68,10 @@ export function createOptions(editor: FreEditor, node: FreNode, box: ActionBox |
             conceptOfContent,
             box.propertyName
         )
-        console.log(`clsIntf: ${clsOtIntf?.typeName} prop kind: ${propDef?.propertyKind}`)
+        LOGGER.log(`clsIntf: ${clsOtIntf?.typeName} prop kind: ${propDef?.propertyKind}`)
         clsOtIntf.subConceptNames.concat(conceptOfContent).forEach((creatableConceptname: string) => {
             const creatableConcept: FreLanguageConcept = FreLanguage.getInstance().concept(creatableConceptname)
-            console.log(`creatableConcept: ${creatableConcept?.typeName}`)
+            LOGGER.log(`creatableConcept: ${creatableConcept?.typeName}`)
             if (notNullOrUndefined(creatableConcept) && !creatableConcept.isAbstract) {
                 if (notNullOrUndefined(creatableConcept.referenceShortcut)) {
                     addReferenceShortcuts(creatableConcept as FreLanguageConcept, result, editor, node, box)
@@ -92,7 +92,7 @@ export function createOptions(editor: FreEditor, node: FreNode, box: ActionBox |
             node.freLanguageConcept(),
             box.propertyName
         )
-        console.log(`parent: ${node.freLanguageConcept()} prop ${propDef.name} kind: ${propDef?.propertyKind}`)
+        LOGGER.log(`parent: ${node.freLanguageConcept()} prop ${propDef.name} kind: ${propDef?.propertyKind}`)
         addReferences(node, propDef, result, editor);
     }
     return result;
@@ -107,7 +107,7 @@ export function createOptions(editor: FreEditor, node: FreNode, box: ActionBox |
  * @param box
  */
 function addReferenceShortcuts(concept: FreLanguageConcept, result: SelectOption[], editor: FreEditor, node: FreNode, box: Box): void {
-    console.log("addReferenceShortcuts")
+    LOGGER.log("addReferenceShortcuts")
     // Create the new element for this behavior inside a dummy and then point the owner to the
     // current element ('box').  This way the new element is not part of the model and will not trigger mobx
     // reactions. But the scoper can be used to find available references, because the scoper only
@@ -155,7 +155,7 @@ function addReferences(
     // current element.  This way the new element is not part of the model and will not trigger mobx
     // reactions. But the scoper can be used to find available references, because the scoper only
     // needs the owner.
-    console.log("addReferences: " + parentNode.freLanguageConcept() + " property " + property.name);
+    LOGGER.log("addReferences: " + parentNode.freLanguageConcept() + " property " + property.name);
     const propType: string = property.type;
     // const self: ActionBox = this;
     runInAction(() => {
@@ -188,7 +188,7 @@ function getCreateElementOption(
     conceptName: string,
     concept: FreLanguageConcept,
 ): SelectOption {
-    console.log("createElementAction property: " + propertyName + " concept " + conceptName);
+    LOGGER.log("createElementAction property: " + propertyName + " concept " + conceptName);
     return {
         id: conceptName,
         label: concept.trigger,

@@ -10,6 +10,7 @@ import { FreLanguage, type FreLanguageProperty } from "../../language/index.js"
 import { AST } from "../../change-manager/index.js"
 import { isBooleanControlBox } from "./BooleanControlBox.js"
 import { isSelectBox } from "./SelectBox.js"
+import { FreCustomAction, type FreTriggerType } from "../actions"
 
 const LOGGER: FreLogger = new FreLogger("OptionalBox");
 
@@ -61,13 +62,13 @@ export class OptionalBox extends Box {
     }
 
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
-        console.log("OptionalBox executeOption " + JSON.stringify(option) + ` ${this.nodeConcept}, this.propDef: ${this.propDef?.propertyKind}`);
+        LOGGER.log("OptionalBox executeOption " + JSON.stringify(option) + ` ${this.nodeConcept}, this.propDef: ${this.propDef?.propertyKind}`);
         if (this.propDef.propertyKind === "primitive") {
             const self: OptionalBox = this;
-            console.log(`isPrimitive for property ${this.propertyName}, actualValue: "${self.node[self.propertyName]}"`);
+            LOGGER.log(`isPrimitive for property ${this.propertyName}, actualValue: "${self.node[self.propertyName]}"`);
             if (this.propDef.type === "boolean") {
                 const boolBox: Box = this.content.firstEditableChild;
-                console.log(`getOptions: boolBox: ${boolBox?.kind}`);
+                LOGGER.log(`getOptions: boolBox: ${boolBox?.kind}`);
                 if (isBooleanControlBox(boolBox)) {
                     AST.change(() => {
                         if (option.id === boolBox.labels.yes) {
@@ -82,10 +83,14 @@ export class OptionalBox extends Box {
                     boolBox.executeOption(editor, option);
                 }
             } else if (this.propDef.type === "string") {
-                console.log("found string");
-                self.node[self.propertyName] = " ";
+                LOGGER.log("found string");
+                AST.change(() => {
+                    self.node[self.propertyName] = "";
+                });
             } else if (this.propDef.type === "number") {
-                self.node[self.propertyName] = 1; // todo improve when undefined value for numbers has been decided
+                AST.change(() => {
+                    self.node[self.propertyName] = 0;
+                });
             }
         } else {
             FreUtils.CHECK(!!option?.action, `OptionalBox.executeOption: action missing for ${option?.label}`)
@@ -103,26 +108,16 @@ export class OptionalBox extends Box {
     removeContent() {
         LOGGER.log(`removeContent ${this.id}`);
         const self: OptionalBox = this;
-        if (this.propDef.propertyKind === "primitive") {
-            if (this.propDef.type === "boolean") {
-                AST.change(() => {
-                    self.node[self.propertyName] = undefined;
-                });
-            } else if (this.propDef.type === "string") {
-                AST.change(() => {
-                    self.node[self.propertyName] = "";
-                });
-            } else if (this.propDef.type === "number") {
-                AST.change(() => {
-                    self.node[self.propertyName] = 0; // todo improve when undefined value for numbers has been decided
-                });
-            }
-        } else if (this.propDef.propertyKind === "part") {
+        if (!this.propDef.isList) {
             AST.change(() => {
                 self.node[self.propertyName] = undefined;
             });
+        } else {
+            AST.change(() => {
+                self.node[self.propertyName] = [];
+            });
         }
-        console.log(`removeContent ${this.id}: "${this.node[this.propertyName]}"`);
+        LOGGER.log(`removeContent ${this.id}: "${this.node[this.propertyName]}"`);
         this.isDirty();
     }
 
@@ -132,22 +127,16 @@ export class OptionalBox extends Box {
     isEmpty(): boolean {
         console.log(`isEmpty for property ${this.propertyName} of concept ${this.nodeConcept}`);
         if (isNullOrUndefined(this.propDef)) {
-            console.log(`Cannot find property definition for property ${this.propertyName} of concept ${this.nodeConcept}.`)
+            LOGGER.log(`Cannot find property definition for property ${this.propertyName} of concept ${this.nodeConcept}.`)
             return false;
         }
         if (this.propDef.propertyKind === "primitive") {
             const actualValue = this.node[this.propertyName];
-            console.log(`isPrimitive for property ${this.propertyName}, actualValue: "${actualValue}"`);
-            if (this.propDef.type === "string") {
-                if (isNullOrUndefined(actualValue)) {
-                    console.log(`Error in model, property ${this.propertyName} of concept ${this.nodeConcept} is undefined.`)
-                    return false;
-                }
-                return actualValue.length === 0;
-            } else if (this.propDef.type === "boolean") {
+            LOGGER.log(`isPrimitive for property ${this.propertyName}, actualValue: "${actualValue}"`);
+            if (!this.propDef.isList) {
                 return isNullOrUndefined(actualValue);
-            } else if (this.propDef.type === "number") {
-                return isNullOrUndefined(actualValue); // todo improve when undefined value for numbers has been decided
+            } else {
+                return actualValue.length === 0;
             }
         } else if (this.propDef.propertyKind === "part") {
             const actualValue: FreNode[] = FreLanguage.getInstance().getPropertyValue(this.node, this.propDef);
@@ -213,7 +202,7 @@ export class OptionalBox extends Box {
      */
     private getBooleanOptions(editor: FreEditor): SelectOption[] {
         const boolBox: Box = this.content.firstEditableChild;
-        console.log(`getOptions: boolBox: ${boolBox?.kind}`);
+        LOGGER.log(`getOptions: boolBox: ${boolBox?.kind}`);
         if (isBooleanControlBox(boolBox)) {
             // Create two options, one for true and one for false
             return [
