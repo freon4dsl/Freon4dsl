@@ -10,7 +10,6 @@ import { FreLanguage, type FreLanguageProperty } from "../../language/index.js"
 import { AST } from "../../change-manager/index.js"
 import { isBooleanControlBox } from "./BooleanControlBox.js"
 import { isSelectBox } from "./SelectBox.js"
-import { FreCustomAction, type FreTriggerType } from "../actions"
 
 const LOGGER: FreLogger = new FreLogger("OptionalBox");
 
