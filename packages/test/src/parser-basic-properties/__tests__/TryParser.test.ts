@@ -40,7 +40,7 @@ describe("Parser properties of type", () => {
           new TestParserModel(),
           "test4.opt"
         ) as OptionalPrimitivesTest;
-        // console.log(writer.writeToString(unit1));
+        console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
     });
 
