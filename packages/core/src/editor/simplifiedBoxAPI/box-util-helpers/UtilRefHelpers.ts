@@ -1,4 +1,4 @@
-import { AST } from "../../../change-manager/index.js";
+import { FREON } from "../../../environment/index.js"
 import { FreLogger } from "../../../logging/index.js";
 import type {
     Box,
@@ -77,7 +77,7 @@ export class UtilRefHelpers {
                     // check whether the label denotes an ambiguous node, if so store the option.node, not the option.label
                     const currentVisibleNodes =  scoper.getVisibleNodes(node, propType).filter((node) => !!node.name && node.name !== option.label)
                     // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + option.label);
-                    AST.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to ${option.label}`, () => {
+                    FREON.astChanger.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to ${option.label}`, () => {
                         if (currentVisibleNodes.length > 1) {
                             setFunc(option.node);
                         } else {
@@ -85,7 +85,7 @@ export class UtilRefHelpers {
                         }
                     });
                 } else {
-                    AST.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to null`, () => {
+                    FREON.astChanger.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to null`, () => {
                         node[propertyName] = null;
                     });
                 }

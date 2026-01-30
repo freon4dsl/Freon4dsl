@@ -203,7 +203,7 @@ export class ServerCommunication implements IServerCommunication {
         } else {
             const units = response.result.map((u) => {
                 // The information the unit's type is not available. This is not a problem
-                // at the moment, because this method is only used in InMemoryModel.
+                // at the moment, because this method is only used in ModelManager.
                 // Note that whenever this changes, this code may give problems.
                 return { name: u, id: u, type: '' };
             });

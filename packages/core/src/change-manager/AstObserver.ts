@@ -9,7 +9,7 @@ export type PartChangeCallback = (delta: FrePartDelta) => void;
 export type ListElementChangeCallback = (delta: FrePartDelta | FrePrimDelta) => void;
 export type ListChangeCallback = (delta: FrePartListDelta | FrePrimListDelta) => void;
 
-const LOGGER: FreLogger = new FreLogger("FreChangeManager").mute();
+const LOGGER: FreLogger = new FreLogger("AstObserver").mute();
 
 /**
  * This class dispatches all changes in a model to all its subscribers.
@@ -17,15 +17,15 @@ const LOGGER: FreLogger = new FreLogger("FreChangeManager").mute();
  * are not distributed.
  */
 
-export class FreChangeManager {
+export class AstObserver {
     private static theInstance; // the only instance of this class
 
     /**
      * This method implements the singleton pattern
      */
-    public static getInstance(): FreChangeManager {
+    public static getInstance(): AstObserver {
         if (this.theInstance === undefined || this.theInstance === null) {
-            this.theInstance = new FreChangeManager();
+            this.theInstance = new AstObserver();
         }
         return this.theInstance;
     }
@@ -42,19 +42,19 @@ export class FreChangeManager {
     private changeListCallbacks: ListChangeCallback[] = [];
 
     public subscribeToPrimitive(callback: PrimChangeCallback) {
-        FreChangeManager.getInstance().changePrimCallbacks.push(callback);
+        AstObserver.getInstance().changePrimCallbacks.push(callback);
     }
 
     public subscribeToPart(callback: PartChangeCallback) {
-        FreChangeManager.getInstance().changePartCallbacks.push(callback);
+        AstObserver.getInstance().changePartCallbacks.push(callback);
     }
 
     public subscribeToListElement(callback: ListElementChangeCallback) {
-        FreChangeManager.getInstance().changeListElemCallbacks.push(callback);
+        AstObserver.getInstance().changeListElemCallbacks.push(callback);
     }
 
     public subscribeToList(callback: ListChangeCallback) {
-        FreChangeManager.getInstance().changeListCallbacks.push(callback);
+        AstObserver.getInstance().changeListCallbacks.push(callback);
     }
 
     /**
@@ -71,7 +71,7 @@ export class FreChangeManager {
         oldValue: DecoratedModelElement,
     ): void {
         LOGGER.log(
-            "ChangeManager: set PART value for " +
+            "AstObserver: set PART value for " +
                 nodeToChange.freLanguageConcept() +
                 "[" +
                 propertyName +
@@ -97,7 +97,7 @@ export class FreChangeManager {
      */
     public setPrimitive(nodeToChange: FreNode, propertyName: string, oldValue:  string | boolean | number, newValue: string | boolean | number): void {
         LOGGER.log(
-            "ChangeManager: set PRIMITIVE value for " +
+            "AstObserver: set PRIMITIVE value for " +
                 nodeToChange.freLanguageConcept() +
                 "[" +
                 propertyName +
@@ -131,7 +131,7 @@ export class FreChangeManager {
         const owner: FreNode = oldValue.$$owner;
         const propertyName: string = oldValue.$$propertyName;
         LOGGER.log(
-            "ChangeManager: UPDATE LIST ELEMENT for " +
+            "AstObserver: UPDATE LIST ELEMENT for " +
                 owner.freLanguageConcept() +
                 "[" +
                 propertyName +
@@ -168,7 +168,7 @@ export class FreChangeManager {
         removed: DecoratedModelElement[],
         added: DecoratedModelElement[],
     ) {
-        LOGGER.log("ChangeManager: UPDATE PART LIST for " + listOwner.freLanguageConcept() + "[" + propertyName + "]");
+        LOGGER.log("AstObserver: UPDATE PART LIST for " + listOwner.freLanguageConcept() + "[" + propertyName + "]");
         if (!!this.changeListCallbacks) {
             const unit = modelUnit(listOwner);
             if (!!unit?.freOwner() || listOwner.freIsModel()) {
@@ -189,7 +189,7 @@ export class FreChangeManager {
 
     public updatePrimList(listOwner: any, propertyName: string, index: number, removed: PrimType[], added: PrimType[]) {
         LOGGER.log(
-            "ChangeManager: UPDATE PRIMITIVE LIST for " + listOwner.freLanguageConcept() + "[" + propertyName + "]",
+            "AstObserver: UPDATE PRIMITIVE LIST for " + listOwner.freLanguageConcept() + "[" + propertyName + "]",
         );
         if (!!this.changeListCallbacks) {
             const unit = modelUnit(listOwner);
@@ -217,7 +217,7 @@ export class FreChangeManager {
         index: number,
     ) {
         LOGGER.log(
-            "ChangeManager: UPDATE LIST ELEMENT for " +
+            "AstObserver: UPDATE LIST ELEMENT for " +
                 listOwner.freLanguageConcept() +
                 "[" +
                 propertyName +

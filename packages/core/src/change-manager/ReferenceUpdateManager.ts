@@ -1,5 +1,5 @@
 import { FreLogger } from "../logging/index.js";
-import { FreChangeManager } from "./FreChangeManager.js";
+import { AstObserver } from "./AstObserver.js";
 import { type FreDelta, type FrePrimDelta } from "./FreDelta.js"
 import { AstWalker, model } from "../ast-utils/index.js"
 import { ReferenceUpdateWorker } from "./ReferenceUpdateWorker.js"
@@ -24,7 +24,7 @@ export class ReferenceUpdateManager {
     }
 
     private constructor() {
-        FreChangeManager.getInstance().subscribeToPrimitive((delta: FreDelta) => this.updateReferences(delta));
+        AstObserver.getInstance().subscribeToPrimitive((delta: FreDelta) => this.updateReferences(delta));
     }
 
     /**
@@ -42,7 +42,7 @@ export class ReferenceUpdateManager {
             const refWorker = new ReferenceUpdateWorker(nameDelta);
             const astWalker = new AstWalker();
             astWalker.myWorkers.push(refWorker);
-            // TODO wrap in AST.change() when references are added to undo
+            // TODO wrap in FREON.astChanger.change() when references are added to undo
             astWalker.walk(model(delta.unit))
         }
     }

@@ -5,7 +5,7 @@ import type { FreNode } from "../FreNode.js";
 
 import { allOwners } from "./DecoratedModelElement.js";
 import type { DecoratedModelElement } from "./DecoratedModelElement.js";
-import { FreChangeManager } from "../../change-manager/index.js";
+import { AstObserver } from "../../change-manager/index.js";
 import type { PrimType } from "../../language/index.js";
 import { FreLogger } from "../../logging/index.js";
 
@@ -21,7 +21,7 @@ const LOGGER: FreLogger = new FreLogger("MobxDecorators").mute();
  *  2. all FreElements have just 1 owner: when an element is assigned to another property, its previous owner is
  *  set to null, or in case the previous property is a list, it is removed from this list,
  *  2. all observable lists do not contain null or undefined values,
- *  4. all changes in the model are reported to the FreChangeManager, which distributes this information to
+ *  4. all changes in the model are reported to the AstObserver, which distributes this information to
  *  any object that is subscribed to it.
  *
  *  Note that a difference is made only between properties with primitive value (i.e. string | number | boolean) and
@@ -67,7 +67,7 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
             //     console.log("No cycle in Ast, owners: " + allOwners(newValue as any as FreNode).length);
         }
 
-        FreChangeManager.getInstance().setPart(this, propertyKey, newValue, storedValue);
+        AstObserver.getInstance().setPart(this, propertyKey, newValue, storedValue);
         // Clean owner of current part
         if (!!storedValue) {
             storedValue.$$owner = null;
@@ -147,7 +147,7 @@ export function observableprim(target: DecoratedModelElement, propertyKey: strin
             if (oldValue === newValue) {
                 return;
             }
-            FreChangeManager.getInstance().setPrimitive(this, propertyKey, oldValue, newValue);
+            AstObserver.getInstance().setPrimitive(this, propertyKey, oldValue, newValue);
             runInAction(() => {
                 storedObserver.set(newValue);
             });
@@ -155,7 +155,7 @@ export function observableprim(target: DecoratedModelElement, propertyKey: strin
             if (newValue === undefined) {
                 return;
             }
-            FreChangeManager.getInstance().setPrimitive(this, propertyKey, undefined, newValue);
+            AstObserver.getInstance().setPrimitive(this, propertyKey, undefined, newValue);
             storedObserver = observable.box(newValue);
             this[privatePropertyKey] = storedObserver;
         }
@@ -269,7 +269,7 @@ function objectWillChange(
             const newValue = change.newValue;
             if (newValue !== null && newValue !== undefined) {
                 const oldValue = change.object[change.index];
-                FreChangeManager.getInstance().updatePartListElement(newValue, oldValue, change.index);
+                AstObserver.getInstance().updatePartListElement(newValue, oldValue, change.index);
                 if (newValue !== oldValue) {
                     // cleanup old owner reference of new value
                     resetOwner(newValue, oldValue.$$owner, oldValue.$$propertyName, oldValue.$$propertyIndex);
@@ -327,7 +327,7 @@ function objectWillChange(
             }
             // make sure the change is propagated to listeners
             // note we use 'change.added' here because this list might be different from 'added'
-            FreChangeManager.getInstance().updatePartList(listOwner, propertyName, index, removed, change.added);
+            AstObserver.getInstance().updatePartList(listOwner, propertyName, index, removed, change.added);
             break;
     }
     return change;
@@ -352,7 +352,7 @@ function primWillChange(
             const oldValue: PrimType = change.object[change.index];
             if (newValue !== null && newValue !== undefined) {
                 // console.log("change.object: " + target["name"] + ", propertyName: " + propertyKey);
-                FreChangeManager.getInstance().updatePrimListElement(
+                AstObserver.getInstance().updatePrimListElement(
                     target,
                     propertyKey,
                     newValue,
@@ -391,7 +391,7 @@ function primWillChange(
             });
             // make sure the change is propagated to listeners
             // note we use 'change.added' here because this list might be different from 'added'
-            FreChangeManager.getInstance().updatePrimList(listOwner, propertyName, index, removed, change.added);
+            AstObserver.getInstance().updatePrimList(listOwner, propertyName, index, removed, change.added);
             break;
     }
     return change;

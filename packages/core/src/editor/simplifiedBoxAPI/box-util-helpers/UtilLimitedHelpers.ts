@@ -1,5 +1,5 @@
 import type { FreNode } from "../../../ast/index.js";
-import { AST } from "../../../change-manager/index.js";
+import { FREON } from "../../../environment/index.js"
 import { BoxFactory, LimitedDisplay } from "../../boxes/index.js";
 import type { SelectOption , LimitedControlBox, SelectBox } from "../../boxes/index.js";
 import { FreLanguage } from "../../../language/index.js";
@@ -78,7 +78,7 @@ export class UtilLimitedHelpers {
             roleName,
             () => node[propertyName].map((n) => n.name), // node[propertyName] is a list of references, therefore we need to get their names
             (v: string[]) =>
-                AST.change(() => {
+                FREON.astChanger.change(() => {
                     setFunc(v);
                 }),
             possibleValues,
@@ -105,11 +105,11 @@ export class UtilLimitedHelpers {
             (v: string[]) => {
                     if (!!v[0]) {
                         // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + v[0]);
-                        AST.changeNamed(`Limited for property ${propertyName} set to ${v[0]}`, () => {
+                        FREON.astChanger.changeNamed(`Limited for property ${propertyName} set to ${v[0]}`, () => {
                             setFunc(v[0]);
                         });
                     } else {
-                        AST.changeNamed(`Limited for property ${propertyName} set to null`, () => {
+                        FREON.astChanger.changeNamed(`Limited for property ${propertyName} set to null`, () => {
                             node[propertyName] = null;
                         });
                     }
@@ -170,11 +170,11 @@ export class UtilLimitedHelpers {
                 // L.log("==> SET selected option for property " + propertyName + " of " + element["name"] + " to " + option?.label);
                 if (!!option) {
                     // console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
-                    AST.changeNamed(`UtilLimitedHelpers.limitedSelectBox for property ${propertyName} set to ${option.label}`, () => {
+                    FREON.astChanger.changeNamed(`UtilLimitedHelpers.limitedSelectBox for property ${propertyName} set to ${option.label}`, () => {
                         setFunc(option.label);
                     });
                 } else {
-                    AST.changeNamed(`UtilLimitedHelpers.limitedSelectBox for property ${propertyName}  set to null`, () => {
+                    FREON.astChanger.changeNamed(`UtilLimitedHelpers.limitedSelectBox for property ${propertyName}  set to null`, () => {
                         node[propertyName] = null;
                     });
                 }

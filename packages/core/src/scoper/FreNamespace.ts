@@ -317,7 +317,7 @@ export class FreNamespace {
     }
 
     /**
-     * Return the parent namespace, i.e. the namespace associated with a node that is in the line of parent nodes in the AST.
+     * Return the parent namespace, i.e. the namespace associated with a node that is in the line of parent nodes in the FREON.astChanger.
      *
      * @param child
      * @private

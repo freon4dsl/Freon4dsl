@@ -2,8 +2,7 @@
  * This is a series of helper functions for changes in list properties.
  * They support drag-and-drop and cut/copy-paste functionality.
  */
-
-import { AST } from "../../change-manager/index.js"
+import { FREON } from "../../environment/index.js"
 import { jsonAsString } from "../../util/index.js";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import * as Keys from "./Keys.js";
@@ -73,7 +72,7 @@ export function moveListElement(
     if (isList && oldIndex < property.length && targetIndex <= property.length) {
         // Note that because of the Mobx decorators that set the data on the parent of the element,
         // the property must be removed before it is added at a different location, not the other way around!
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             const tmpProp = property[oldIndex];
             property.splice(oldIndex, 1);
             // Make sure the item is added at the correct index
@@ -139,7 +138,7 @@ export function dropListElement(
         // Note that we need not explicitly remove the item from its old position, the mobx decorators do that.
         // Note that because of the placeholder that is shown as last element of a list, the targetIndex may be equal to the property.length.
         if (isList && targetIndex <= property.length) {
-            AST.change(() => {
+            FREON.astChanger.change(() => {
                 property.splice(targetIndex, 0, dropped.element);
             })
         }
@@ -337,7 +336,7 @@ function addListElement(
     } else if (isList && FreLanguage.getInstance().metaConformsToType(newElement, type)) {
         // allow subtyping
         // LOGGER.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             property.splice(index, 0, newElement);
         });
         editor.selectElement(newElement);
@@ -369,7 +368,7 @@ function deleteListElement(listParent: FreNode, propertyName: string, index: num
     // make the change
     if (isList) {
         // console.log('List before: [' + property.length()); //map(x => x.freId()).join(', ') + ']');
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             if (targetIndex < property.length) {
                 property.splice(targetIndex, 1);
             }
@@ -449,7 +448,7 @@ function pasteListElement(
     if (isList) {
         LOGGER.log("List before: [" + property.map((x) => x.freId()).join(", ") + "]");
         let insertedElement = editor.copiedElement;
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             if (targetIndex <= property.length) {
                 property.splice(targetIndex, 0, editor.copiedElement);
             }
