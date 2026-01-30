@@ -93,7 +93,8 @@ export class AstObserver {
      * Reacts to the change of the value of a primitive property
      * @param nodeToChange
      * @param propertyName
-     * @param value
+     * @param oldValue
+     * @param newValue
      */
     public setPrimitive(nodeToChange: FreNode, propertyName: string, oldValue:  string | boolean | number, newValue: string | boolean | number): void {
         LOGGER.log(
