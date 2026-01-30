@@ -1,11 +1,12 @@
-import { AST, FreModelSerializer, FreError, FreModelUnit, ast2string } from "@freon4dsl/core";
+import { FreError, CoreConfig, FREON } from "@freon4dsl/core"
 import { XXunit, XX } from "../freon/language/index.js";
 import { XXEnvironment } from "../freon/config/XXEnvironment.js";
 import { FileHandler } from "../../utils/FileHandler.js";
 import { describe, test, expect, beforeEach } from "vitest";
 
-const reader = XXEnvironment.getInstance().reader;
-const validator = XXEnvironment.getInstance().validator;
+CoreConfig.initialize(XXEnvironment.getInstance(), null)
+const reader = FREON.environment.reader;
+const validator = FREON.environment.validator;
 const handler = new FileHandler();
 const testdir = "src/typer-test8/__inputs__/";
 
@@ -15,11 +16,11 @@ describe("Testing Typer on", () => {
     // TODO make an input file in which a number of NamedTypes are created and used
 
     beforeEach(() => {
-        XXEnvironment.getInstance();
+        // XXEnvironment.getInstance();
     });
 
     test("literal expressions", () => {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const model = new XX();
             const unit1 = reader.readFromString(
                 handler.stringFromFile(testdir + "literals.expr"),
@@ -47,7 +48,7 @@ describe("Testing Typer on", () => {
     });
 
     test("literal expressions with complex types", () => {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const model = new XX();
             const unit1 = reader.readFromString(
                 handler.stringFromFile(testdir + "literalsWithComplexTypes.expr"),
@@ -90,7 +91,7 @@ describe("Testing Typer on", () => {
     });
 
     test("complex expressions with simple types", () => {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const model = new XX();
             const unit1 = reader.readFromString(
                 handler.stringFromFile(testdir + "complexExpWithSimpleTypes.expr"),
@@ -146,7 +147,7 @@ describe("Testing Typer on", () => {
     });
 
     test("complex expressions with complex types", () => {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const model = new XX();
             const unit1 = reader.readFromString(
                 handler.stringFromFile(testdir + "complexExpWithComplexTypes.expr"),
@@ -178,7 +179,7 @@ describe("Testing Typer on", () => {
 
     test("expressions with correct types", () => {
 
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const model = new XX();
             const unit1 = reader.readFromString(
                 handler.stringFromFile(testdir + "correctExps.expr"),

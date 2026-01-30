@@ -42,7 +42,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         super({
             actionName: "all",
             summary:
-                "Generates the TypeScript code for all parts of the work environment for your language, plus some diagrams that show the AST.",
+                "Generates the TypeScript code for all parts of the work environment for your language, plus some diagrams that show the FREON.astChanger.",
             documentation:
                 "Generates the TypeScript code for all parts of the work environment for your language as defined in files in DEFINITIONS_DIR, plus some diagrams that show the AST",
         });

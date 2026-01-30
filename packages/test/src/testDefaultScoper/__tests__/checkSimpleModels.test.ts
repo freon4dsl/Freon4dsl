@@ -1,3 +1,4 @@
+import { CoreConfig, FREON } from "@freon4dsl/core"
 import { DSmodel } from '../freon/language/index.js';
 import { SimpleModelCreator } from "./SimpleModelCreator.js";
 import { DSmodelEnvironment } from "../freon/config/DSmodelEnvironment.js";
@@ -25,8 +26,9 @@ function printDifference(creator: SimpleModelCreator, visibleNames: string[]) {
 }
 
 describe("Testing Default Scoper", () => {
+    CoreConfig.initialize(DSmodelEnvironment.getInstance(), null)
     const creator = new SimpleModelCreator();
-    const environment = DSmodelEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
+    const environment = FREON.environment;
     const scoper = environment.scoper;
     const unparser = environment.writer;
 

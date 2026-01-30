@@ -362,8 +362,8 @@ function describeIWithoutName(): FreLanguageInterface {
         isNamedElement: false,
         isNamespace: false,
         properties: new Map<string, FreLanguageProperty>(),
-        constructor: undefined,
-        creator: undefined,
+        // constructor: undefined,
+        // creator: undefined,
         language: "ScoperTest",
         subConceptNames: ["NodeX", "NodeY", "UnitA", "UnitB"],
     };
@@ -413,8 +413,8 @@ function describeIWithName(): FreLanguageInterface {
         isNamedElement: true,
         isNamespace: false,
         properties: new Map<string, FreLanguageProperty>(),
-        constructor: undefined,
-        creator: undefined,
+        // constructor: undefined,
+        // creator: undefined,
         language: "ScoperTest",
         subConceptNames: ["NodeX", "NodeY", "UnitA", "UnitB"],
     };

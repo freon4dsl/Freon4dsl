@@ -3,14 +3,14 @@ import { AppliedFeature, DemoAttributeRef, Demo, initializeLanguage } from '../f
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe,  test, expect, beforeEach } from "vitest";
 import { isInScope, } from '../../utils/HelperFunctions.js';
-import { FreNamedNode } from '@freon4dsl/core';
+import { FreNamedNode, FREON, CoreConfig } from "@freon4dsl/core"
 
 
 describe("testing Alternative Scopes", () => {
-    DemoEnvironment.getInstance();
+    CoreConfig.initialize(DemoEnvironment.getInstance(), null)
 
     describe("testing IsInScope", () => {
-        let scoper = DemoEnvironment.getInstance().scoper;
+        let scoper = FREON.environment.scoper;
         let model: Demo = new DemoModelCreator().createModelWithAppliedfeature();
         // in correctModel function length is changed into:
         // 'length (Variable1 : Person, VariableNumber2 : Boolean): String =

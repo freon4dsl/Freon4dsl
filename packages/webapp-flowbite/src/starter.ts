@@ -6,15 +6,16 @@ import { configureLoggers } from "./loggers.js"
 // import { LanguageEnvironment } from "@freon4dsl/samples-course-schedule"
 // import { LanguageEnvironment } from "@freon4dsl/samples-scoper-test"
 import { LanguageEnvironment } from "@freon4dsl/samples-prim-projections"
-import { ServerCommunication } from "@freon4dsl/core"
+import { CoreConfig, ServerCommunication } from "@freon4dsl/core"
 
 /**
  * Initialize everything
  */
-WebappConfigurator.getInstance().setEnvironment(
-  LanguageEnvironment.getInstance(),
-  ServerCommunication.getInstance(),
-);
+CoreConfig.initialize(
+    LanguageEnvironment.getInstance(),
+    ServerCommunication.getInstance(),
+)
+WebappConfigurator.getInstance()
 
 ServerCommunication.getInstance().SERVER_URL = "http://localhost:8001/"
 

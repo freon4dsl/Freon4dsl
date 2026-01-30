@@ -1,12 +1,13 @@
-import { ast2string, FreLionwebSerializer, FreModelSerializer, FreModelUnit, FreUtils } from "@freon4dsl/core";
+import { FreModelSerializer, FREON, CoreConfig  } from "@freon4dsl/core"
 import { FileHandler } from "../../utils/FileHandler.js";
 import { OctopusModelEnvironment } from "../freon/config/OctopusModelEnvironment.js";
 import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions.js";
 import { OctopusModel } from "../freon/language/index.js";
 import { describe, expect, test } from "vitest";
 
-const writer = OctopusModelEnvironment.getInstance().writer;
-const reader = OctopusModelEnvironment.getInstance().reader;
+CoreConfig.initialize(OctopusModelEnvironment.getInstance(), null)
+const writer = FREON.environment.writer;
+const reader = FREON.environment.reader;
 
 // const serial: FreLionwebSerializer = new FreLionwebSerializer();
 const serial: FreModelSerializer = new FreModelSerializer();

@@ -5,12 +5,12 @@
 */
 
 
-package Book
+package `Book`
 
-context Period
-def: getNrOfNonworkingDays(): Integer = nrOfDays - nrOfWorkingDays
+context `Period`
+`def`: `getNrOfNonworkingDays`(): `Integer` = `nrOfDays` - `nrOfWorkingDays`
 
-context Period
-def: someAttribute : Integer = nrOfDays + nrOfWorkingDays
+context `Period`
+`def`: `someAttribute` : `Integer` = `nrOfDays` + `nrOfWorkingDays`
 
 endpackage //Book

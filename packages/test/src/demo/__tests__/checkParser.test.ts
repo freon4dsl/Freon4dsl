@@ -1,4 +1,4 @@
-import { AST } from "@freon4dsl/core";
+import { FREON, CoreConfig } from "@freon4dsl/core"
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { Demo, DemoModel } from "../freon/language/index.js";
@@ -7,8 +7,7 @@ import { describe, test, expect, beforeEach } from "vitest";
 
 describe("Testing Parser", () => {
     beforeEach(() => {
-        DemoEnvironment.getInstance();
-        // done();
+        CoreConfig.initialize(DemoEnvironment.getInstance(), null)
     });
 
     test("complete example model unparsed and parsed again", () => {
@@ -41,7 +40,7 @@ describe("Testing Parser", () => {
             // read it back in, in a completely new model
 
             let readModel
-            AST.change( () => {
+            FREON.astChanger.change( () => {
                 readModel = parser.readFromString(
                     fileHandler.stringFromFile(path),
                     "DemoModel",

@@ -1,17 +1,18 @@
 import { describe, test, expect } from "vitest";
 import { CalculatorModelEnvironment } from "../freon/config/CalculatorModelEnvironment.js";
 import {CalculatorModel} from "../freon/language/index.js";
-import {FreModelUnit} from "@freon4dsl/core";
+import { CoreConfig, FreModelUnit } from "@freon4dsl/core"
 
 describe("Parser test", () => {
+    CoreConfig.initialize(CalculatorModelEnvironment.getInstance(), null)
     const reader = CalculatorModelEnvironment.getInstance().reader;
     // const writer = CalculatorModelEnvironment.getInstance().writer;
 
     test(" number 1", () => {
         const sentence: string =
-            `Calculator a
-                input i
-                output o`;
+            "Calculator `a`" +
+                "input `i`" +
+                "output `o`";
         const unit1: FreModelUnit = reader.readFromString(
             sentence,
             "Calculator",

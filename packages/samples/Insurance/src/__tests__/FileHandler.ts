@@ -10,8 +10,8 @@ export class FileHandler {
      */
     public stringFromFile(filepath: string): string {
         // read language file
-        let startPath = './packages/samples/Insurance/src/__inputs__/';
-        let actualPath = startPath + filepath
+        // let startPath = './packages/samples/Insurance/src/__inputs__/';
+        let actualPath =  filepath
         if (!FileUtil.exists(actualPath)) {
             console.error(this, "File '" + actualPath + "' does not exist, exiting.");
             throw new Error(`File '${actualPath}' not found.`);

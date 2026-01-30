@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { FileHandler } from '../../utils/FileHandler.js';
 import { ROOTEnvironment } from '../freon/config/ROOTEnvironment.js';
-import { AST, FreError } from '@freon4dsl/core';
+import { FREON, FreError, CoreConfig } from "@freon4dsl/core"
 import { BBBBBB, ROOT } from "../freon/language/index.js"
 const reader = ROOTEnvironment.getInstance().reader;
 const validator = ROOTEnvironment.getInstance().validator;
@@ -11,12 +11,12 @@ const testdir = "src/ValidTest/__inputs__/";
 describe("Testing Validator on Error Messages", () => {
 
     beforeEach(() => {
-        ROOTEnvironment.getInstance();
+        CoreConfig.initialize(ROOTEnvironment.getInstance(), null);
     });
 
     test("all names empty", () => {
         let unit1: BBBBBB;
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const model = new ROOT();
             model.name = "test";
             unit1 = reader.readFromString(
@@ -43,7 +43,7 @@ describe("Testing Validator on Error Messages", () => {
 
     test("some names empty", () => {
         let unit1: BBBBBB;
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const model = new ROOT();
             model.name = "test";
             unit1 = reader.readFromString(

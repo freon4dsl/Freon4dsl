@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { AST, FreError } from '@freon4dsl/core';
+import { FreError, CoreConfig, FREON } from "@freon4dsl/core"
 import { ROOTEnvironment } from '../freon/config/ROOTEnvironment.js';
 import { AAAAAA, ROOT } from "../freon/language/index.js"
 import { FileHandler } from '../../utils/FileHandler.js';
@@ -12,13 +12,13 @@ const testdir = "src/ValidTest/__inputs__/";
 describe("Testing Validator on Inheritance", () => {
 
     beforeEach(() => {
-        ROOTEnvironment.getInstance();
+        CoreConfig.initialize(ROOTEnvironment.getInstance(), null);
     });
 
     test("rules defined on base concept, should be checked on sub concepts", () => {
         // the rule 'CCprop3 <= 12' is defined for concept CC, and should also be checked on any of its sub concepts
         let unit1: AAAAAA;
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const model = new ROOT();
             unit1 = reader.readFromString(
               handler.stringFromFile(testdir + "valid-test-input1.txt"),
@@ -53,7 +53,7 @@ describe("Testing Validator on Inheritance", () => {
     test("rules defined on interface, should be checked on implementing concepts", () => {
         // the rule 'DDprop3 >= 10' is defined for interface DD, and should also be checked on any of its implementors
         let unit1: AAAAAA;
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const model = new ROOT();
             unit1 = reader.readFromString(
               handler.stringFromFile(testdir + "valid-test-input2.txt"),
@@ -81,7 +81,7 @@ describe("Testing Validator on Inheritance", () => {
     test("rules defined on base interface, should be checked all implementing concepts", () => {
         // the rule 'FFprop3 < 4' is defined for interface FF, and should also be checked on any of its implementors
         let unit1: AAAAAA;
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const model = new ROOT();
             unit1 = reader.readFromString(
               handler.stringFromFile(testdir + "valid-test-input3.txt"),

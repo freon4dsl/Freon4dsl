@@ -4,13 +4,14 @@ import { DemoStdlib } from "../freon/stdlib/DemoStdlib.js";
 import { DemoUnitCreator } from "./DemoUnitCreator.js";
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { describe, test, expect } from "vitest";
-import { FreCompositeScoper } from '@freon4dsl/core';
+import { FreCompositeScoper, FREON, CoreConfig } from "@freon4dsl/core"
 import { isInScope, getVisibleNames } from '../../utils/HelperFunctions.js';
 
 describe("testing Scoper on model units", () => {
     describe("Scoper.getVisibleNodes from DemoModel with Units", () => {
-        let scoper = DemoEnvironment.getInstance().scoper;
-        let stdlib = DemoStdlib.getInstance();
+        CoreConfig.initialize(DemoEnvironment.getInstance(), null)
+        let scoper = FREON.environment.scoper;
+        let stdlib = FREON.environment.stdlib;
         let model: Demo = new DemoModelCreator().createModelWithMultipleUnits();
 
         test("visible elements in model", () => {

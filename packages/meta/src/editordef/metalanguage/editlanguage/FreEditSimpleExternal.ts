@@ -2,7 +2,7 @@ import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.j
 import type { FreEditKeyValuePair } from "./internal.js";
 
 /**
- * Represents a projection item that is not linked to the AST. It is used to introduce extra
+ * Represents a projection item that is not linked to the FREON.astChanger. It is used to introduce extra
  * elements in the editor, like a button, or image.
  */
 export class FreEditSimpleExternal extends FreMetaDefinitionElement {

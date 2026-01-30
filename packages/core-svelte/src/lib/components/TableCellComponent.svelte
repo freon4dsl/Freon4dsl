@@ -22,7 +22,7 @@
         TableRowBox,
         FreCreatePartAction,
         MetaKey,
-        AST,
+        FREON,
         type TableBox,
         isTableBox,
         isElementBox,
@@ -145,7 +145,7 @@
             })
             let execresult: () => void;
             const selectedIndex = (tableBox.hasHeaders ? row -1 : row)
-            AST.changeNamed("ListComponent.Enter", () => {
+            FREON.astChanger.changeNamed("ListComponent.Enter", () => {
                 execresult = action.execute(tableBox, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, selectedIndex)
             })
             // @ts-ignore

@@ -4,7 +4,6 @@ import { langInfo } from "$lib/stores/LanguageInfo.svelte.js"
 import { editorInfo, indexForTab, noUnitAvailable, progressIndicatorShown, resetEditorInfo } from "$lib/stores/ModelInfo.svelte"
 import { replaceProjectionsShown } from "$lib/stores/Projections.svelte.js"
 import {
-    AST,
     BoxFactory,
     type FreEnvironment,
     FreError,
@@ -15,14 +14,13 @@ import {
     type FreModelUnit,
     type FreNode,
     FreProjectionHandler,
-    FreUndoManager,
     type FreUnitIdentifier,
-    InMemoryModel,
-    type IServerCommunication,
+    ModelManager,
     isInMemoryError,
     isNullOrUndefined,
     jsonAsString,
-    notNullOrUndefined
+    notNullOrUndefined,
+    FREON,
 } from "@freon4dsl/core"
 import { runInAction } from "mobx"
 
@@ -37,12 +35,13 @@ export class WebappConfigurator {
     static getInstance(): WebappConfigurator {
         if (WebappConfigurator.instance === null || WebappConfigurator.instance === undefined) {
             WebappConfigurator.instance = new WebappConfigurator()
+            WebappConfigurator.instance.setEnvironment(FREON.environment)
         }
         return WebappConfigurator.instance
     }
 
     langEnv: FreEnvironment | undefined
-    private modelStore: InMemoryModel | undefined
+    private modelStore: ModelManager | undefined
 
     /**
      * Sets the object that will perform the communication with the server, and
@@ -50,11 +49,11 @@ export class WebappConfigurator {
      * @param editorEnvironment
      * @param serverCommunication
      */
-    setEnvironment(editorEnvironment: FreEnvironment, serverCommunication: IServerCommunication): void {
+    setEnvironment(editorEnvironment: FreEnvironment): void {
         // LOGGER.log('setEnvironment')
         this.langEnv = editorEnvironment
         WebappConfigurator.initialize(editorEnvironment)
-        this.modelStore = new InMemoryModel(editorEnvironment, serverCommunication)
+        this.modelStore = FREON.modelManager
         this.modelStore.addCurrentModelListener(this.modelChanged)
 
         // let the editor know how to set the user message,
@@ -92,9 +91,6 @@ export class WebappConfigurator {
             tmp.push(val)
         }
         langInfo.fileExtensions = tmp
-
-        // start the undo manager
-        FreUndoManager.getInstance()
     }
 
     /**
@@ -198,7 +194,7 @@ export class WebappConfigurator {
                 // remember the current unit
                 editorInfo.currentUnit = unitId
                 // alert the undo manager that the current unit has changed
-                FreUndoManager.getInstance().currentUnit = toBeShown
+                FREON.astChanger.setCurrentUnit(toBeShown)
             }
         } else {
             noUnitAvailable.value = true
@@ -439,7 +435,7 @@ export class WebappConfigurator {
             if (notNullOrUndefined(unit)) {
                 // if the element does not yet have a name, try to use the file name
                 if (isNullOrUndefined(unit.name) || unit.name.length === 0) {
-                    AST.changeNamed("unitfromFile", () => {
+                    FREON.astChanger.changeNamed("unitfromFile", () => {
                         if (unit) {
                             unit.name = this.makeUnitName(fileName)
                         }
@@ -503,7 +499,7 @@ export class WebappConfigurator {
         LOGGER.log(`renameModelUnit: from ${oldId.name} to ${newName} Units before: ` + editorInfo.unitIds.map((u: FreUnitIdentifier) => u.name))
         const unit: FreModelUnit | undefined = this.modelStore?.getUnitById(oldId);
         if (notNullOrUndefined(unit)) {
-            AST.changeNamed("Rename Model Unit", () => {
+            FREON.astChanger.changeNamed("Rename Model Unit", () => {
                 unit.name = newName;
             })
             // No need to do anything else. All is triggered through the MobX wiring.
@@ -555,7 +551,7 @@ export class WebappConfigurator {
      * Listeners to model state
      ***********************************************************/
 
-    modelChanged(store: InMemoryModel): void {
+    modelChanged(store: ModelManager): void {
         console.log(`modelChanged: ${store?.model?.name}`)
         if (notNullOrUndefined(store?.model)) {
             editorInfo.modelName = store?.model?.name

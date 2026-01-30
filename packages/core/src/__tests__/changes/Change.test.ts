@@ -1,12 +1,15 @@
 import { runInAction } from "mobx";
+import { CoreConfig, FREON } from "../../environment/index.js"
 import { UndoModel } from "./change-model/UndoModel.js";
 import { UndoUnit } from "./change-model/UndoUnit.js";
 import { UndoPart } from "./change-model/UndoPart.js";
-import { AST, FreDelta, FreTransactionDelta, FreUndoManager } from "../../change-manager/index.js";
+import { FreDelta, FreTransactionDelta, type FreUndoManager } from "../../change-manager/index.js";
 import { FreModelUnit } from "../../ast/index.js";
 import { describe, it, expect, beforeEach } from "vitest";
 
-// expose the private parts of the undo manager for testing purposes only
+/*
+ ** WARNING: expose the private parts of the undo manager for testing purposes only
+ */
 function getUndoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreDelta[] {
     if (!!unit) {
         return manager["undoManagerPerUnit"].get(unit.freId())["undoStack"];
@@ -15,6 +18,9 @@ function getUndoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreD
     }
 }
 
+/*
+ ** WARNING: expose the private parts of the undo manager for testing purposes only
+ */
 function getRedoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreDelta[] {
     if (!!unit) {
         return manager["undoManagerPerUnit"].get(unit.freId())["redoStack"];
@@ -23,6 +29,9 @@ function getRedoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreD
     }
 }
 
+/**
+ * WARNING: These tests are using "under the hood" functionality like `AST` and `FREON.modelManager["undoManager"]`
+ */
 describe("Change and Undo Manager", () => {
     let part1: UndoPart = null;
     let part2: UndoPart = null;
@@ -32,7 +41,8 @@ describe("Change and Undo Manager", () => {
     let part6: UndoPart = null;
     let unit: UndoUnit = null;
     // let model: UndoModel = null;
-    const manager = FreUndoManager.getInstance();
+    CoreConfig.initialize(null, null)
+    const manager: FreUndoManager = FREON.modelManager["undoManager"] as FreUndoManager;
 
     beforeEach(() => {
         manager.cleanAllStacks();
@@ -53,7 +63,7 @@ describe("Change and Undo Manager", () => {
             });
             UndoModel.create({ unit: unit });
         })
-        FreUndoManager.getInstance().currentUnit = unit
+        FREON.astChanger.setCurrentUnit(unit)
     });
 
     it("create model", () => {
@@ -66,7 +76,7 @@ describe("Change and Undo Manager", () => {
 
     it("change, undo, redo, undo on prim", () => {
         // change the value of 'prim'
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             unit.prim = "nieuwe_waarde";
         })
 
@@ -95,7 +105,7 @@ describe("Change and Undo Manager", () => {
         // change the value of 'part'
         const oldPartId = unit.part.freId(); // remember the id of the old value
         const newPart = UndoPart.create({ name: "part42" });
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             unit.part = newPart;
         })
 
@@ -123,7 +133,7 @@ describe("Change and Undo Manager", () => {
 
         // change one of the values in 'numlist'
         const oldValue = unit.numlist[0];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             unit.numlist[0] = 24;
         })
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
@@ -148,7 +158,7 @@ describe("Change and Undo Manager", () => {
         const oldValue1 = unit.numlist[0];
         const oldValue2 = unit.numlist[1];
         const oldValue3 = unit.numlist[2];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             unit.numlist.splice(1, 2);
         })
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
@@ -177,7 +187,7 @@ describe("Change and Undo Manager", () => {
         // change the value of 'partlist'
         const oldValue = unit.partlist[2];
         const newValue = new UndoPart("part90");
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             unit.partlist[2] = newValue;
         })
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
@@ -205,7 +215,7 @@ describe("Change and Undo Manager", () => {
         const oldValue1 = unit.partlist[0];
         const oldValue2 = unit.partlist[1];
         const oldValue3 = unit.partlist[2];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             unit.partlist.splice(1, 2);
         })
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
@@ -236,7 +246,7 @@ describe("Change and Undo Manager", () => {
         const oldValue2 = unit.partlist[1];
         const oldValue3 = unit.partlist[2];
 
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             // change the value of 'prim'
             unit.prim = "nieuwe_waarde";
             // change the value of 'part'

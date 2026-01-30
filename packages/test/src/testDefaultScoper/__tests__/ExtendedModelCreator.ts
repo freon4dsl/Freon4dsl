@@ -1,5 +1,5 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../freon/language/index.js";
-import { AST, FreModelSerializer, FreNodeReference } from "@freon4dsl/core";
+import { FREON, FreModelSerializer, FreNodeReference } from "@freon4dsl/core";
 
 // This class creates a model like SimpleModelCreator,
 // but adds more extensive references
@@ -27,7 +27,7 @@ export class ExtendedModelCreator {
      */
     public createModel(nrOfUnits: number, depth: number): DSmodel {
         let model
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             // reset names
             this.nameNumber = 0;
             this.allNames = [];
@@ -66,7 +66,7 @@ export class ExtendedModelCreator {
         }
         const modelUnits: DSunit[] = [];
         let model
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             for (let i = 0; i < nrOfUnits; i++) {
                 const completeUnit = this.createUnit("model", depth);
                 if (i === primary) {
@@ -88,7 +88,7 @@ export class ExtendedModelCreator {
 
     createUnit(parent: string, depth: number): DSunit {
         let unit
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const unitName = this.createName(parent, "unit");
             const dsPublics: DSpublic[] = [];
             for (let i = 0; i < this.breadth; i++) {
@@ -105,7 +105,7 @@ export class ExtendedModelCreator {
 
     createPublic(parent: string, depth: number): DSpublic {
         let pub
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const partName = this.createName(parent, "public");
             const { dsPublics, dsPrivates } = this.makePublicsAndPrivates(depth, partName);
             pub = DSpublic.create({ name: partName, conceptParts: dsPublics, conceptPrivates: dsPrivates });

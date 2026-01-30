@@ -1,4 +1,4 @@
-import { FreLanguage } from "@freon4dsl/core";
+import { FreLanguage, FREON, CoreConfig } from "@freon4dsl/core"
 import { DemoAttributeType } from "../freon/language/index.js";
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { DemoStdlib } from "../freon/stdlib/DemoStdlib.js";
@@ -16,9 +16,10 @@ import { describe, it, test, expect, beforeEach } from "vitest";
 
 describe("Checking stdlib for Demo", () => {
     let stdlib: DemoStdlib;
+    CoreConfig.initialize(DemoEnvironment.getInstance(), null)
+
     beforeEach(() => {
-        DemoEnvironment.getInstance();
-        stdlib = FreLanguage.getInstance().stdLib as DemoStdlib;
+        stdlib = FREON.environment.stdlib as DemoStdlib;
     });
 
     test("all predefined instances of limited concepts should be found", () => {

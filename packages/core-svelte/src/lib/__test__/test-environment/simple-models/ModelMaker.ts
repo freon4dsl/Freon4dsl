@@ -1,12 +1,12 @@
 import { ElementWithList } from './ElementWithList.js';
 import { SimpleElement } from './SimpleElement.js';
 import { ElementWithOptional } from './ElementWithOptional.js';
-import { AST } from '@freon4dsl/core';
+import { FREON } from '@freon4dsl/core';
 
 export class ModelMaker {
     static makeList(name: string): ElementWithList {
         const owner: ElementWithList = new ElementWithList(name);
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             owner.myList.push(new SimpleElement(name + '_ELEMENT1'));
             owner.myList.push(new SimpleElement(name + '_ELEMENT2'));
             owner.myList.push(new SimpleElement(name + '_ELEMENT3'));
