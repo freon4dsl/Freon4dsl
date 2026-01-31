@@ -43,7 +43,7 @@ describe("Change and Undo Manager", () => {
     let unit: UndoUnit = null;
     // let model: UndoModel = null;
     CoreConfig.initialize(null, null)
-    const manager: FreUndoManager = FREON.modelManager["undoManager"] as FreUndoManager;
+    const manager: FreUndoManager = FREON.astChanger["undoManager"] as FreUndoManager;
 
     beforeEach(() => {
         manager.cleanAllStacks();
