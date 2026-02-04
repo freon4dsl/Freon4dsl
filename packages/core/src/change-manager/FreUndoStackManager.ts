@@ -1,4 +1,8 @@
+import type { DeltaCommand } from "@lionweb/server-delta-shared"
 import { runInAction } from "mobx"
+import { FREON } from "../environment/index.js"
+import { LIONWEB_DELTA } from "../storage/lionweb-delta/FreToLionWebDeltaConverter.js"
+import { notNullOrUndefined } from "../util/index.js"
 import type { FreDelta } from "./FreDelta.js"
 import { FrePartDelta, FrePartListDelta, FrePrimDelta, FrePrimListDelta, FreTransactionDelta } from "./FreDelta.js"
 import type { FreModelUnit } from "../ast/index.js"
@@ -6,7 +10,7 @@ import { modelUnit } from "../ast-utils/index.js"
 import { FreLogger } from "../logging/index.js"
 import { type FreUndoManager } from "./FreUndoManager.js"
 
-const LOGGER: FreLogger = new FreLogger("FreUndoStackManager")
+const LOGGER: FreLogger = new FreLogger("FreUndoStackManager").show()
 
 /**
  * Class FreUndoStackManager holds two sets of stacks of change information on a model unit.
@@ -24,8 +28,8 @@ export class FreUndoStackManager {
 
     private undoStack: FreDelta[] = []
     private redoStack: FreDelta[] = []
-    private inIgnoreState: boolean = false
     private inTransaction: boolean = false
+    private ignoreTransaction = false;
     private currentTransaction: FreTransactionDelta
     private inUndo: boolean = false
     private undoManager: FreUndoManager
@@ -35,21 +39,32 @@ export class FreUndoStackManager {
         this.undoManager = undoManager
     }
 
-    public startTransaction() {
-        this.inTransaction = true
+    public startTransaction(ignore: boolean) {
+        LOGGER.log(`startTransaction ignore: ${ignore}`)
+        this.ignoreTransaction = ignore
+        this.inTransaction = true;
     }
 
     public endTransaction() {
-        this.inTransaction = false
-        this.currentTransaction = null
-    }
-
-    public startIgnore() {
-        this.inIgnoreState = true
-    }
-
-    public endIgnore() {
-        this.inIgnoreState = false
+        LOGGER.log(`endTransaction: ${this.currentTransaction}`)
+        if (!this.inTransaction) {
+            LOGGER.error(`endTransaction while not in a transaction`)
+        }
+        this.inTransaction = false;
+        if (notNullOrUndefined(this.currentTransaction) && !this.ignoreTransaction) {
+            console.log(`SEND DELTA and PUSH UNDO`)
+            if (!this.inUndo) {
+                this.undoStack.push(this.currentTransaction)
+            }
+            if (notNullOrUndefined(FREON.deltaClient)) {
+                const delta: DeltaCommand = LIONWEB_DELTA.convertDeltaToLionWeb(this.currentTransaction)
+                FREON.deltaClient.deltaApiClient.sendCommand(delta)
+            }
+        } else {
+            console.log(`NO DELTA SEND OR STACKED ignore: ${this.ignoreTransaction} tx: ${this.currentTransaction}`)
+        }
+        this.currentTransaction = null;
+        this.ignoreTransaction = false
     }
 
     /**
@@ -64,7 +79,7 @@ export class FreUndoStackManager {
     public executeUndo(): FreDelta | undefined {
         this.inUndo = true // make sure incoming changes are stored on redo stack
         const delta = this.undoStack.pop()
-        LOGGER.log(`executeUndo for unit: '${this.changeSource.name}', delta '${delta?.toString()}`)
+        LOGGER.log(`executeUndo for unit: '${this.changeSource.name}', delta '${delta?.toString()} stack length now is ${this.undoStack.length}`)
         if (!!delta) {
             this.reverseDelta(delta)
         }
@@ -83,7 +98,6 @@ export class FreUndoStackManager {
 
     public addDelta(delta: FreDelta) {
         // LOGGER.log(`addDelta inTransaction '${this.inTransaction}' for unit '${this.changeSource?.name}'`);
-        if (!this.inIgnoreState) {
             if (this.inUndo) {
                 LOGGER.log("addDelta: adding redo to " + this.changeSource?.name)
                 this.addRedo(delta)
@@ -91,9 +105,6 @@ export class FreUndoStackManager {
                 LOGGER.log("addDelta: adding undo to " + this.changeSource?.name)
                 this.addUndo(delta)
             }
-        } else {
-            LOGGER.log("addDelta ignored")
-        }
     }
 
     private addUndo(delta: FreDelta) {
@@ -101,13 +112,13 @@ export class FreUndoStackManager {
         if (this.inTransaction) {
             if (this.currentTransaction === null || this.currentTransaction === undefined) {
                 this.currentTransaction = new FreTransactionDelta(modelUnit(delta.owner), delta.owner, delta.propertyName, delta.index)
-                this.undoStack.push(this.currentTransaction)
+                // this.undoStack.push(this.currentTransaction)
             }
-            this.currentTransaction.internalDeltas.push(delta)
+            this.currentTransaction.internalDeltas.push(delta);
             // LOGGER.log("IN TRANSACTION added undo for " + delta.owner.freLanguageConcept() + "[" + delta.propertyName + "]");
         } else {
-            this.undoStack.push(delta)
-            // LOGGER.log("FreUndoManager: added undo for " + delta.owner.freLanguageConcept() + "[" + delta.propertyName + "]");
+            this.undoStack.push(delta);
+            LOGGER.error("ERROR NO TRANSACTION: added undo for " + delta.owner.freLanguageConcept() + "[" + delta.propertyName + "]");
         }
     }
 
@@ -154,7 +165,7 @@ export class FreUndoStackManager {
             }
         } else if (delta instanceof FreTransactionDelta) {
             // TODO when multiple sources of change are present, then a check is needed whether the state of the unit is such that this delta can be reversed
-            this.undoManager.startTransaction(this.changeSource)
+            this.undoManager.startTransaction(false, this.changeSource)
             for (const sub of delta.internalDeltas.reverse()) {
                 this.reverseDelta(sub)
             }

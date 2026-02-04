@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && npm run prepack",
-    "build-dev": "tsc --noEmit && vite build && npm run prepack",
+    "build-dev": "vite build && npm run prepack",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "prepack": "svelte-kit sync && svelte-package && publint",

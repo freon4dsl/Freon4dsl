@@ -74,12 +74,7 @@ export class FrePartDelta extends FreDelta {
 
     toString(): string {
         return (
-            "PartDelta: set " +
-            DeltaUtil.getElemName(this.owner) +
-            "." +
-            this.propertyName +
-            " to " +
-            DeltaUtil.getElemName(this.newValue)
+            `PartDelta: set ${DeltaUtil.getElemName(this.owner)}.${this.propertyName} to ${DeltaUtil.getElemName(this.newValue)}`
         );
     }
 }
@@ -113,11 +108,11 @@ export class FrePartListDelta extends FreDelta {
     toString(): string {
         const ownerName = DeltaUtil.getElemName(this.owner);
         if (this.removed.length > 0) {
-            return `remove [${this.removed.map((r) => DeltaUtil.getElemName(r))}] from ${ownerName}.${this.propertyName}`;
+            return `PartListDelta: ${ownerName}.${this.propertyName} at ${this.index} remove [${this.removed.map((r) => DeltaUtil.getElemName(r))}]`
         } else if (this.added.length > 0) {
-            return `add [${this.added.map((r) => DeltaUtil.getElemName(r))}] to ${ownerName}.${this.propertyName}`;
+            return `PartListDelta: ${ownerName}.${this.propertyName} at ${this.index} add [${this.added.map((r) => DeltaUtil.getElemName(r))}]`
         }
-        return `change list ${ownerName}.${this.propertyName} from index ${this.index}: removed [${this.removed.map((r) => DeltaUtil.getElemName(r))}], added [${this.added.map((r) => DeltaUtil.getElemName(r))}]`;
+        return `PartListDelta: change list ${ownerName}.${this.propertyName} from index ${this.index}: removed [${this.removed.map((r) => DeltaUtil.getElemName(r))}], added [${this.added.map((r) => DeltaUtil.getElemName(r))}]`
     }
 }
 
@@ -145,9 +140,9 @@ export class FrePrimListDelta extends FreDelta {
     toString(): string {
         const ownerName = DeltaUtil.getElemName(this.owner);
         if (this.removed.length > 0) {
-            return `removed [${this.removed}] from ${ownerName}.${this.propertyName} from index ${this.index}`;
+            return `FrePrimListDelta: ${ownerName}.${this.propertyName} at index ${this.index} remove [${this.removed}] `
         } else if (this.added.length > 0) {
-            return `added [${this.added}] to ${ownerName}.${this.propertyName}`;
+            return `FrePrimListDelta: ${ownerName}.${this.propertyName} at index ${this.index} add [${this.added}]`
         }
         return "FrePrimListDelta<" + ownerName + "[" + this.propertyName + "]>";
     }

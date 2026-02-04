@@ -21,6 +21,7 @@ import {
     jsonAsString,
     notNullOrUndefined,
     FREON,
+    type IModelManager,
 } from "@freon4dsl/core"
 import { runInAction } from "mobx"
 
@@ -41,7 +42,7 @@ export class WebappConfigurator {
     }
 
     langEnv: FreEnvironment | undefined
-    private modelStore: ModelManager | undefined
+    private modelStore: IModelManager | undefined
 
     /**
      * Sets the object that will perform the communication with the server, and
