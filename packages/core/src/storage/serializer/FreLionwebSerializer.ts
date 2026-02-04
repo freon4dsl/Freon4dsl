@@ -41,7 +41,6 @@ export class FreLionwebSerializer implements FreSerializer {
     private nodesfromJson: Map<string, ParsedNode> = new Map<string, ParsedNode>();
 
     constructor() {
-        // this.language = FreLanguage.getInstance();
     }
 
     /**
@@ -604,6 +603,6 @@ function propertyValueToString(value: any): string {
         case "number":
             return "" + value;
         default:
-            return value;
+            return value ?? null;
     }
 }
