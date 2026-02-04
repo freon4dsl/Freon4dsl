@@ -42,7 +42,7 @@
     <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Open model</h3>
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="grid grid-cols-3 mb-3 p-2">
-            {#each serverInfo.allModelNames as model}
+            {#each serverInfo.allModelNames as model, index (index)}
                 <label class={radioLabelClass}>
                     <input type="radio"
                            class="{radioInputClass}" name="models" onchange={() => {modelToOpen = model;}}>
