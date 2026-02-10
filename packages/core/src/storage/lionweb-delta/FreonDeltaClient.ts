@@ -1,7 +1,9 @@
 import { DeltaClient } from "@lionweb/server-delta-client"
-import { FreonChildEvents } from "./FreonChildEvents.js"
-import { FreonPropertyEvents } from "./FreonPropertyEvents.js"
-import { FreonResponseEvents } from "./FreonResponseEvents.js"
+import { adminResponseFunctions } from "./FreonAdminResponses.js"
+import { childEventFunctions } from "./FreonChildEvents.js"
+import { partitionEventFunctions } from "./FreonPartitionEvents.js"
+import { propertyEventFunctions } from "./FreonPropertyEvents.js"
+import { queryResponseFunctions } from "./FreonQueryResponses.js"
 
 export class FreonDeltaClient {
     private _deltaApiClient: DeltaClient
@@ -10,14 +12,14 @@ export class FreonDeltaClient {
     }
 
     constructor() {
-        const propertyEvents = new FreonPropertyEvents()
-        const childEvents = new FreonChildEvents()
-        const responseEvents = new FreonResponseEvents()
         this._deltaApiClient = new DeltaClient({}, [
-            propertyEvents.eventFunctions,
-            childEvents.eventFunctions,
-            responseEvents.eventFunctions
+            propertyEventFunctions,
+            childEventFunctions,
+            partitionEventFunctions,
+            queryResponseFunctions,
+            adminResponseFunctions
         ])
+        this.connect()
     }
 
     async connect(): Promise<void> {

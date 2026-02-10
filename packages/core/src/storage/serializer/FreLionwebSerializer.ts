@@ -29,6 +29,7 @@ type ParsedReference = {
     resolveInfo: string;
 };
 type ParsedNode = {
+    parentId: string | null
     freNode: FreNode;
     children: ParsedChild[];
     references: ParsedReference[];
@@ -40,6 +41,14 @@ export class FreLionwebSerializer implements FreSerializer {
     }
     private nodesfromJson: Map<string, ParsedNode> = new Map<string, ParsedNode>();
 
+    private static theInstance
+    static getInstance(): FreLionwebSerializer {
+        if (FreLionwebSerializer.theInstance === undefined) {
+            FreLionwebSerializer.theInstance = new FreLionwebSerializer()
+        }
+        return FreLionwebSerializer.theInstance
+    }
+    
     constructor() {
     }
 
@@ -51,11 +60,11 @@ export class FreLionwebSerializer implements FreSerializer {
      *
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    toTypeScriptInstance(jsonObject: Object): FreNode {
+    toTypeScriptInstance(jsonObject: Object, parentId?: string): FreNode {
         LOGGER.log("toTypeScriptInstance");
         this.nodesfromJson.clear();
         FreLanguage.getInstance().stdLib.elements.forEach((elem) =>
-            this.nodesfromJson.set(elem.freId(), { freNode: elem, children: [], references: [] }),
+            this.nodesfromJson.set(elem.freId(), { parentId: undefined, freNode: elem, children: [], references: [] }),
         );
         LOGGER.log("Starting ...");
         // TODO Does not work, as there never is an instance of class LwChuld being constructed.
@@ -81,20 +90,24 @@ export class FreLionwebSerializer implements FreSerializer {
             LOGGER.info("resolved children")
         })
         LOGGER.log("toTypeScriptInstance done with root")
-        LOGGER.log("toTypeScriptInstance " + this.findRoot())
-        return this.findRoot();
+        LOGGER.log("toTypeScriptInstance " + this.findRoot(parentId))
+        return this.findRoot(parentId);
     }
 
     /**
      * We assume that there is exactly one unit node.
      * @private
      */
-    private findRoot(): FreNode {
+    private findRoot(parentId?: string | null): FreNode {
+        console.log(`>> finding node with parent id '${parentId}'`)
         // TODO Check next line
         const mapEntries: IterableIterator<ParsedNode> = this.nodesfromJson.values();
         for (const parsedNode of mapEntries) {
+            console.log(`>> chacking node '${parsedNode.freNode.freId()}' with parent '${parsedNode.parentId}'`)
             if (parsedNode.freNode.freIsUnit()) {
                 return parsedNode.freNode;
+            } else if (parentId !== undefined && parsedNode.parentId === parentId) {
+                return parsedNode.freNode
             }
         }
         return null;
@@ -183,7 +196,7 @@ export class FreLionwebSerializer implements FreSerializer {
         const parsedChildren = this.convertChildProperties(conceptMetaPointer.key, node);
         const parsedReferences = this.convertReferenceProperties(conceptMetaPointer.key, node);
         // LOGGER.info(`toTypeScriptInstanceInternal result ${jsonAsString({ freNode: tsObject, children: parsedChildren, references: parsedReferences })}`)
-        return { freNode: tsObject, children: parsedChildren, references: parsedReferences.concat(parsedLimiteds) };
+        return { parentId: node.parent, freNode: tsObject, children: parsedChildren, references: parsedReferences.concat(parsedLimiteds) };
     }
 
     /**

@@ -57,8 +57,15 @@ export class FreUndoStackManager {
                 this.undoStack.push(this.currentTransaction)
             }
             if (notNullOrUndefined(FREON.deltaClient)) {
-                const delta: DeltaCommand = LIONWEB_DELTA.convertDeltaToLionWeb(this.currentTransaction)
-                FREON.deltaClient.deltaApiClient.sendCommand(delta)
+                if (this.currentTransaction instanceof FreTransactionDelta) {
+                    for(const internal of this.currentTransaction.internalDeltas ) {
+                        const delta: DeltaCommand = LIONWEB_DELTA.convertDeltaToLionWeb(internal)
+                        FREON.deltaClient.deltaApiClient.sendCommand(delta)
+                    }
+                } else {
+                    const delta: DeltaCommand = LIONWEB_DELTA.convertDeltaToLionWeb(this.currentTransaction)
+                    FREON.deltaClient.deltaApiClient.sendCommand(delta)
+                }
             }
         } else {
             console.log(`NO DELTA SEND OR STACKED ignore: ${this.ignoreTransaction} tx: ${this.currentTransaction}`)
@@ -97,6 +104,9 @@ export class FreUndoStackManager {
     }
 
     public addDelta(delta: FreDelta) {
+        if (this.ignoreTransaction) {
+            return;
+        }
         // LOGGER.log(`addDelta inTransaction '${this.inTransaction}' for unit '${this.changeSource?.name}'`);
             if (this.inUndo) {
                 LOGGER.log("addDelta: adding redo to " + this.changeSource?.name)

@@ -1,54 +1,54 @@
-import type {
-    // CreateRepositoryAdminRequest,
-    // ListRepositoriesAdminRequest,
-    SubscribeToPartitionContentsRequest,
-} from "@lionweb/server-delta-shared"
+import type { AddPartitionCommand, DeleteRepositoryAdminRequest, ListPartitionsRequest } from "@lionweb/server-delta-shared"
 import { runInAction } from "mobx"
 import type { FreModel, FreModelUnit } from "../ast/index.js"
 import { FREON } from "../environment/CoreConfig.js"
 import { FreLogger } from "../logging/index.js"
+import { notNullOrUndefined } from "../util/index.js"
 import { newSignOnRequest } from "./lionweb-delta/commands.js"
-// import { notNullOrUndefined } from "../util/index.js"
-import { InMemoryError, ModelManager } from "./ModelManager.js"
+import { ModelManagementError, ModelManager } from "./ModelManager.js"
+import { FreLionwebSerializer } from "./serializer/index.js"
 import type { FreUnitIdentifier } from "./server/index.js"
 
 const LOGGER: FreLogger = new FreLogger("DeltaModelManager")
 
 export class DeltaModelManager extends ModelManager {
-
+    subscribe(): void {}
     /**
      * Create a new model on the server and make this the current in memory model.
      * After this call the newly created model can be retrieved using _getModel_.
      * @param name
      */
-    async createModel(name: string): Promise<FreModel | InMemoryError> {
+    async createModel(name: string): Promise<FreModel | ModelManagementError> {
         const result = await super.createModel(name)
         FREON.deltaClient.deltaApiClient.sendRequest(newSignOnRequest(name, "FreonEditor"))
         return result
-    //     LOGGER.log(`createModel ${name}`)
-    //     const createRepository: CreateRepositoryAdminRequest = {
-    //         messageKind: "CreateRepositoryAdminRequest",
-    //         queryId: "query-id",
-    //         repositoryName: "AppDelta",
-    //         additionalInfo: []
-    //     }
-    //     if (notNullOrUndefined(FREON.deltaClient)) {
-    //         await FREON.deltaClient.connect()
-    //         await FREON.deltaClient.deltaApiClient.sendAdminRequest(createRepository)
-    //     }
-    //     // TODO What to return?
-    //     return this.model
+        //     LOGGER.log(`createModel ${name}`)
+        //     const createRepository: CreateRepositoryAdminRequest = {
+        //         messageKind: "CreateRepositoryAdminRequest",
+        //         queryId: "query-id",
+        //         repositoryName: "AppDelta",
+        //         additionalInfo: []
+        //     }
+        //     if (notNullOrUndefined(FREON.deltaClient)) {
+        //         await FREON.deltaClient.connect()
+        //         await FREON.deltaClient.deltaApiClient.sendAdminRequest(createRepository)
+        //     }
+        //     // TODO What to return?
+        //     return this.model
     }
 
     /**
      * Delete current model from the server.
      * After this call the current model is undefined.
      */
-    async deleteModel(): Promise<void | InMemoryError> {
-        const response = await FREON.server.deleteModel(this.model.name)
-        if (response.errors.length > 0) {
-            return new InMemoryError(response.errors[0])
+    async deleteModel(): Promise<void | ModelManagementError> {
+        const request: DeleteRepositoryAdminRequest = {
+            messageKind: "DeleteRepositoryAdminRequest",
+            queryId: "DeleteModel-query",
+            repositoryName: this.model.name,
+            additionalInfo: []
         }
+        FREON.deltaClient.deltaApiClient.sendAdminRequest(request)
         runInAction(() => {
             this.model = undefined
         })
@@ -60,42 +60,24 @@ export class DeltaModelManager extends ModelManager {
      * After this call the newly opened model can be retrieved using _getModel_.
      * * @param name
      */
-    async openModel(name: string): Promise<FreModel | InMemoryError> {
+    async openModel(name: string): Promise<FreModel | ModelManagementError> {
         LOGGER.log(`openModel ${name}`)
-        // const listPartitions: ListPartitionsRequest = {
-        //     messageKind: "ListPartitionsRequest",
-        //     queryId: "query-id",
-        //     additionalInfo: []
-        // }
-        await FREON.deltaClient.connect()
-        FREON.deltaClient.deltaApiClient.sendRequest(newSignOnRequest(name, "FreonEditor"))
-        // FREON.deltaClient.deltaApiClient.sendRequest(listPartitions)
+        const listPartitions: ListPartitionsRequest = {
+            messageKind: "ListPartitionsRequest",
+            queryId: "query-id",
+            additionalInfo: [],
+        }
         FREON.astChanger.change(() => {
             this.model = FREON.environment.newModel(name)
         })
-        const response = await FREON.server.loadUnitList(name)
-        if (response.errors.length > 0) {
-            this.onInMemoryError(response.errors[0])
-            return new InMemoryError(response.errors[0])
-        }
-        for (const unitId of response.result) {
-            LOGGER.log("openModel: delta subscriber to partition: " + unitId.name)
-            const subscribe: SubscribeToPartitionContentsRequest = {
-                messageKind: "SubscribeToPartitionContentsRequest",
-                queryId: "111",
-                partition: unitId.id,
-                additionalInfo: []
-            }
-            FREON.deltaClient.deltaApiClient.sendRequest(subscribe)
-        }
         FREON.astChanger.cleanUndoRedo()
+        // await FREON.deltaClient.connect()
+        FREON.deltaClient.deltaApiClient.sendRequest(newSignOnRequest(name, "FreonEditor"))
+        FREON.deltaClient.deltaApiClient.sendRequest(listPartitions)
         return this.model
-
-        return this.model
-
     }
 
-    async saveModel(): Promise<void | InMemoryError> {
+    async saveModel(): Promise<void | ModelManagementError> {
         LOGGER.log("saveModel(): no-op in delta protocol")
     }
 
@@ -122,15 +104,40 @@ export class DeltaModelManager extends ModelManager {
     //
 
     /**
+     * Create a new unit of type _unitConcept_ with name _name_ and store it on the server.
+     * Returns the created model unit
+     * @param name
+     * @param unitConcept
+     */
+    async createUnit(name: string, unitConcept: string): Promise<FreModelUnit | ModelManagementError> {
+        LOGGER.log(`createUnit ${name} of concept ${unitConcept}`)
+        let newUnit
+        FREON.astChanger.changeNamed(`create unit '${name}'`, () => {
+            newUnit = this.model.newUnit(unitConcept)
+        })
+        if (notNullOrUndefined(newUnit)) {
+            FREON.astChanger.changeNamed("create unit with name", () => {
+                newUnit.name = name
+            })
+            console.log("NEW UNIT: " + JSON.stringify(FreLionwebSerializer.getInstance().convertToJSON(newUnit)))
+            // const command: AddPartitionCommand = {
+            //     messageKind: "AddPartition",
+            //     commandId: "any",
+            //     newPartition: { nodes: FreLionwebSerializer.getInstance().convertToJSON(newUnit) },
+            //     additionalInfo: []
+            // }
+            // FREON.deltaClient.deltaApiClient.sendCommand(command)
+            return newUnit
+        } else {
+            return new ModelManagementError(`Cannot create unit of type '${name}'`)
+        }
+    }
+
+    /**
      * Delete _unit_ from the model.
      * @param unit
      */
-    async deleteUnit(unit: FreModelUnit): Promise<void | InMemoryError> {
-        const response = await FREON.server.deleteModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() })
-        if (response.errors.length > 0) {
-            this.onInMemoryError(response.errors[0])
-            return new InMemoryError(response.errors[0])
-        }
+    async deleteUnit(unit: FreModelUnit): Promise<void | ModelManagementError> {
         FREON.astChanger.change(() => {
             this.model.removeUnit(unit)
         })
@@ -140,17 +147,11 @@ export class DeltaModelManager extends ModelManager {
      * Delete _unit_ from the model.
      * @param unitId
      */
-    async deleteUnitById(_unitId: FreUnitIdentifier): Promise<void | InMemoryError> {
-        // const deletePartition: DeletePartitionCommand = {
-        //     messageKind: "DeletePartition",
-        //     commandId: "dummy",
-        //     deletedPartition: unitId.id,
-        //     additionalInfo: []
-        // }         
-        // const unit: FreModelUnit = this.getUnitById(unitId)
-        // FREON.astChanger.change(() => {
-        //     this.model.removeUnit(unit)
-        // })
+    async deleteUnitById(unitId: FreUnitIdentifier): Promise<void | ModelManagementError> {
+        const unit: FreModelUnit = this.getUnitById(unitId)
+        FREON.astChanger.change(() => {
+            this.model.removeUnit(unit)
+        })
     }
 
     /**
@@ -159,35 +160,34 @@ export class DeltaModelManager extends ModelManager {
      * @param newName
      * @param unit
      */
-    async renameUnit(oldName: string, newName: string, unit: FreModelUnit): Promise<void | InMemoryError> {
+    async renameUnit(oldName: string, newName: string, unit: FreModelUnit): Promise<void | ModelManagementError> {
         // If oldName and newName are the same, no rename is needed
         if (oldName === newName) {
             LOGGER.log(`renameUnit skipped: oldName and newName are the same (${oldName})`)
             return
         }
         LOGGER.log(`renameUnit from ${oldName} to ${newName}`)
-        const response = await FREON.server.renameModelUnit(this.model.name, oldName, newName, unit)
-        if (response.errors.length > 0) {
-            this.onInMemoryError(response.errors[0])
-            return new InMemoryError(response.errors[0])
-        }
+        FREON.astChanger.changeNamed(`Rename unit '${oldName}' to '${newName}'`, () => {
+            unit.name = newName 
+        })
     }
 
     /**
-     * Add _unit_ to the model and save it to the server.
+     * Add NEW _unit_ to the model and save it to the server.
      * Unit should not be in the model when calling this method.
      * @param unit
      */
     async addUnit(unit: FreModelUnit): Promise<void> {
-        const result = await super.addUnit(unit)
-        const subscribe: SubscribeToPartitionContentsRequest = {
-            messageKind: "SubscribeToPartitionContentsRequest",
-            queryId: "111",
-            partition: unit.freId(),
-            additionalInfo: []
+        FREON.astChanger.change(() => {
+            this.model.addUnit(unit)
+        })
+        const addPartition: AddPartitionCommand = {
+            messageKind: "AddPartition",
+            commandId: "111",
+            newPartition: { nodes: FreLionwebSerializer.getInstance().convertToJSON(unit) },
+            additionalInfo: [],
         }
-        FREON.deltaClient.deltaApiClient.sendRequest(subscribe)
-        return result
+        FREON.deltaClient.deltaApiClient.sendCommand(addPartition)
     }
 
     /**
@@ -195,7 +195,12 @@ export class DeltaModelManager extends ModelManager {
      * This is done only when there are unsaved changes.
      * @param unit
      */
-    async saveUnit(_unit: FreModelUnit): Promise<void | InMemoryError> {
+    async saveUnit(_unit: FreModelUnit): Promise<void | ModelManagementError> {
         LOGGER.log(`saveModelUnit`)
     }
+
+    // primChanged = (_delta: FrePrimDelta) => {}
+    // partChanged = (_delta: FrePartDelta) => {}
+    // listElementChanged = (_delta: FrePartDelta | FrePrimDelta) => {}
+    // listChanged = (_delta: FrePartListDelta | FrePrimListDelta) => {}
 }

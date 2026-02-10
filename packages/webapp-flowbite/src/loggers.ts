@@ -15,7 +15,8 @@ export function configureLoggers() {
     // FreLogger.unmute("FreEditor")
     // FreLogger.unmute("TextDropdownComponent")
     // FreLogger.unmute("EditorState")
-    // FreLogger.unmute("ModelManager")
+    FreLogger.unmute("ModelManager")
+    FreLogger.unmute("DeltaModelManager")
     // FreLogger.unmute("TextComponent")
     // FreLogger.unmute("ServerCommunication")
     // // Do not show log messages containing any of these strings

@@ -10,14 +10,14 @@ import type { FreUnitIdentifier } from "./server/index.js"
 
 export type ModelChangedCallbackFunction = (m: IModelManager) => void
 
-export class InMemoryError {
+export class ModelManagementError {
     message: string
     constructor(msg: string) {
         this.message = msg
     }
 }
-export function isInMemoryError(object: unknown): object is InMemoryError {
-    return object instanceof InMemoryError
+export function isModelManagementError(object: unknown): object is ModelManagementError {
+    return object instanceof ModelManagementError
 }
 
 const LOGGER: FreLogger = new FreLogger("ModelManager")
@@ -35,14 +35,17 @@ export class ModelManager implements IModelManager {
                 this.currentModelChanged()
             }
         })
+    }
+
+    subscribe(): void {
         FREON.astObserver.subscribeToPart(this.partChanged)
         FREON.astObserver.subscribeToPrimitive(this.primChanged)
         FREON.astObserver.subscribeToList(this.listChanged)
         FREON.astObserver.subscribeToListElement(this.listElementChanged)
     }
-
-    onInMemoryError = (msg: string, severity?: FreErrorSeverity): void => {
-        console.error("ModelManager.onInMemoryError: " + msg + severity?.toString())
+    
+    onError = (msg: string, severity?: FreErrorSeverity): void => {
+        console.error("ModelManager.onError: " + msg + severity?.toString())
         FREON.environment?.editor.setUserMessage(msg, severity)
     }
 
@@ -51,7 +54,7 @@ export class ModelManager implements IModelManager {
      * After this call the newly created model can be retrieved using _getModel_.
      * @param name
      */
-    async createModel(name: string): Promise<FreModel | InMemoryError> {
+    async createModel(name: string): Promise<FreModel | ModelManagementError> {
         LOGGER.log(`createModel ${name}`)
         runInAction(() => {
             this.model = FREON.environment.newModel(name)
@@ -59,8 +62,8 @@ export class ModelManager implements IModelManager {
         const response = await FREON.server.createModel(name)
         FREON.astChanger.cleanUndoRedo()
         if (response.errors.length !== 0) {
-            this.onInMemoryError(response.errors[0], FreErrorSeverity.Info)
-            return new InMemoryError(response.errors[0])
+            this.onError(response.errors[0], FreErrorSeverity.Info)
+            return new ModelManagementError(response.errors[0])
         }
         return this.model
     }
@@ -69,10 +72,10 @@ export class ModelManager implements IModelManager {
      * Delete current model from the server.
      * After this call the current model is undefined.
      */
-    async deleteModel(): Promise<void | InMemoryError> {
+    async deleteModel(): Promise<void | ModelManagementError> {
         const response = await FREON.server.deleteModel(this.model.name)
         if (response.errors.length > 0) {
-            return new InMemoryError(response.errors[0])
+            return new ModelManagementError(response.errors[0])
         }
         runInAction(() => {
             this.model = undefined
@@ -85,15 +88,15 @@ export class ModelManager implements IModelManager {
      * After this call the newly opened model can be retrieved using _getModel_.
      * * @param name
      */
-    async openModel(name: string): Promise<FreModel | InMemoryError> {
+    async openModel(name: string): Promise<FreModel | ModelManagementError> {
         LOGGER.log("openModel(" + name + ")")
         FREON.astChanger.change(() => {
             this.model = FREON.environment.newModel(name)
         })
         const response = await FREON.server.loadUnitList(name)
         if (response.errors.length > 0) {
-            this.onInMemoryError(response.errors[0])
-            return new InMemoryError(response.errors[0])
+            this.onError(response.errors[0])
+            return new ModelManagementError(response.errors[0])
         }
         for (const unitId of response.result) {
             LOGGER.log("openModel: load model-unit: " + unitId.name)
@@ -106,13 +109,13 @@ export class ModelManager implements IModelManager {
         return this.model
     }
 
-    async saveModel(): Promise<void | InMemoryError> {
+    async saveModel(): Promise<void | ModelManagementError> {
         LOGGER.log("ModelManager.saveModel()")
         // save all units that are 'dirty', i.e. that have been changed after the previous save
         const savedUnits = []
         for (const unit of this.dirtyUnits) {
             const response = await this.saveUnit(unit)
-            if (isInMemoryError(response)) {
+            if (isModelManagementError(response)) {
                 // Clean dirty for units saved so far
                 savedUnits.forEach((saved) => this.dirtyUnits.delete(saved))
                 return response
@@ -134,12 +137,12 @@ export class ModelManager implements IModelManager {
     /**
      * Get a list of all model names that are available on the server.
      */
-    async getModels(): Promise<string[] | InMemoryError> {
+    async getModels(): Promise<string[] | ModelManagementError> {
         LOGGER.log(`getModels`)
         const response = await FREON.server.loadModelList()
         if (response.errors.length > 0) {
-            this.onInMemoryError(response.errors[0], FreErrorSeverity.Info)
-            return new InMemoryError(response.errors[0])
+            this.onError(response.errors[0], FreErrorSeverity.Info)
+            return new ModelManagementError(response.errors[0])
         }
         return response.result
     }
@@ -150,7 +153,7 @@ export class ModelManager implements IModelManager {
      * @param name
      * @param unitConcept
      */
-    async createUnit(name: string, unitConcept: string): Promise<FreModelUnit | InMemoryError> {
+    async createUnit(name: string, unitConcept: string): Promise<FreModelUnit | ModelManagementError> {
         LOGGER.log(`createUnit ${name} of concept ${unitConcept}`)
         const newUnit = this.model.newUnit(unitConcept)
         if (notNullOrUndefined(newUnit)) {
@@ -159,11 +162,11 @@ export class ModelManager implements IModelManager {
             })
             const response = await FREON.server.createModelUnit(this.model.name, newUnit)
             if (response.errors.length > 0) {
-                return new InMemoryError(response.errors[0])
+                return new ModelManagementError(response.errors[0])
             }
             return newUnit
         } else {
-            return new InMemoryError(`Cannot create unit of type '${name}'`)
+            return new ModelManagementError(`Cannot create unit of type '${name}'`)
         }
     }
 
@@ -171,11 +174,11 @@ export class ModelManager implements IModelManager {
      * Delete _unit_ from the model.
      * @param unit
      */
-    async deleteUnit(unit: FreModelUnit): Promise<void | InMemoryError> {
+    async deleteUnit(unit: FreModelUnit): Promise<void | ModelManagementError> {
         const response = await FREON.server.deleteModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() })
         if (response.errors.length > 0) {
-            this.onInMemoryError(response.errors[0])
-            return new InMemoryError(response.errors[0])
+            this.onError(response.errors[0])
+            return new ModelManagementError(response.errors[0])
         }
         FREON.astChanger.change(() => {
             this.model.removeUnit(unit)
@@ -186,11 +189,11 @@ export class ModelManager implements IModelManager {
      * Delete _unit_ from the model.
      * @param unitId
      */
-    async deleteUnitById(unitId: FreUnitIdentifier): Promise<void | InMemoryError> {
+    async deleteUnitById(unitId: FreUnitIdentifier): Promise<void | ModelManagementError> {
         const response = await FREON.server.deleteModelUnit(this.model.name, unitId)
         if (response.errors.length > 0) {
-            this.onInMemoryError(response.errors[0])
-            return new InMemoryError(response.errors[0])
+            this.onError(response.errors[0])
+            return new ModelManagementError(response.errors[0])
         }
         const unit: FreModelUnit = this.getUnitById(unitId)
         FREON.astChanger.change(() => {
@@ -204,7 +207,7 @@ export class ModelManager implements IModelManager {
      * @param newName
      * @param unit
      */
-    async renameUnit(oldName: string, newName: string, unit: FreModelUnit): Promise<void | InMemoryError> {
+    async renameUnit(oldName: string, newName: string, unit: FreModelUnit): Promise<void | ModelManagementError> {
         // If oldName and newName are the same, no rename is needed
         if (oldName === newName) {
             LOGGER.log(`renameUnit skipped: oldName and newName are the same (${oldName})`)
@@ -213,8 +216,8 @@ export class ModelManager implements IModelManager {
         LOGGER.log(`renameUnit from ${oldName} to ${newName}`)
         const response = await FREON.server.renameModelUnit(this.model.name, oldName, newName, unit)
         if (response.errors.length > 0) {
-            this.onInMemoryError(response.errors[0])
-            return new InMemoryError(response.errors[0])
+            this.onError(response.errors[0])
+            return new ModelManagementError(response.errors[0])
         }
     }
 
@@ -281,7 +284,7 @@ export class ModelManager implements IModelManager {
      * This is done only when there are unsaved changes.
      * @param unit
      */
-    async saveUnit(unit: FreModelUnit): Promise<void | InMemoryError> {
+    async saveUnit(unit: FreModelUnit): Promise<void | ModelManagementError> {
         LOGGER.log(`saveModelUnit`)
         if (this.dirtyUnits.has(unit)) {
             const serverResponse = await FREON.server.saveModelUnit(
@@ -296,8 +299,8 @@ export class ModelManager implements IModelManager {
             if (serverResponse.errors.length === 0) {
                 this.dirtyUnits.delete(unit)
             } else {
-                this.onInMemoryError(serverResponse.errors[0])
-                return new InMemoryError(`${serverResponse.errors[0]})`)
+                this.onError(serverResponse.errors[0])
+                return new ModelManagementError(`${serverResponse.errors[0]})`)
             }
         }
     }

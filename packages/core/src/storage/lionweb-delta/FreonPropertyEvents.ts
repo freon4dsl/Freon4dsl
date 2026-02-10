@@ -8,47 +8,48 @@ import { isNullOrUndefined } from "../../util/index.js"
 
 const LOGGER = new FreLogger("FreonPropertyEvents")
 
-export class FreonPropertyEvents {
-    constructor() {}
-
-    PropertyAddedFunction = (msg: PropertyAddedEvent): void => {
-        LOGGER.log("Called PropertyAddedFunction " + msg.messageKind)
-        const node = findNode(msg.node, FREON.modelManager.model)
-        if (isNullOrUndefined(node)) {
-            LOGGER.error(`Node with id ${msg.node} not found in the model`)
-            return
-        }
-        const classifierMP = FreLanguage.getInstance().classifier(node.freLanguageConcept()).key
-        const langProperty = FreLanguage.getInstance().classifierPropertyByKey(classifierMP, msg.property.key)
-        node[langProperty.name] = msg.newValue
+const PropertyAddedFunction = (msg: PropertyAddedEvent): void => {
+    LOGGER.log("Called PropertyAddedFunction " + msg.messageKind)
+    const node = findNode(msg.node, FREON.modelManager.model)
+    if (isNullOrUndefined(node)) {
+        LOGGER.error(`Node with id ${msg.node} not found in the model`)
+        return
     }
-
-    PropertyDeletedFunction = (msg: PropertyDeletedEvent): void => {
-        LOGGER.log("Not Implemented Yet: PropertyDeletedFunction " + msg.messageKind)
-    }
-
-    PropertyChangedFunction = (msg: PropertyChangedEvent): void => {
-        LOGGER.log("LionWeb PropertyChangedFunction " + msg.messageKind)
-        const node = findNode(msg.node, FREON.modelManager.model)
-        if (isNullOrUndefined(node)) {
-            LOGGER.error(`Node with id ${msg.node} not found in the model`)
-            return
-        }
-        const classifierMP = FreLanguage.getInstance().classifier(node.freLanguageConcept()).key
-        const langProperty = FreLanguage.getInstance().classifierPropertyByKey(classifierMP, msg.property.key)
-        node[langProperty.name] = msg.newValue
-    }
-
-    eventFunctions: ReceivingDelta[] = [
-        {
-            messageKind: "PropertyAdded",
-            // @ts-expect-error TS2322
-            processor: this.PropertyAddedFunction,
-        },
-        {
-            messageKind: "PropertyChanged",
-            // @ts-expect-error TS2322
-            processor: this.PropertyChangedFunction,
-        },
-    ]
+    const classifierMP = FreLanguage.getInstance().classifier(node.freLanguageConcept()).key
+    const langProperty = FreLanguage.getInstance().classifierPropertyByKey(classifierMP, msg.property.key)
+    node[langProperty.name] = msg.newValue
 }
+
+const PropertyDeletedFunction = (msg: PropertyDeletedEvent): void => {
+    LOGGER.log("Not Implemented Yet: PropertyDeletedFunction " + msg.messageKind)
+}
+
+const PropertyChangedFunction = (msg: PropertyChangedEvent): void => {
+    LOGGER.log("LionWeb PropertyChangedFunction " + msg.messageKind)
+    const node = findNode(msg.node, FREON.modelManager.model)
+    if (isNullOrUndefined(node)) {
+        LOGGER.error(`Node with id ${msg.node} not found in the model`)
+        return
+    }
+    const classifierMP = FreLanguage.getInstance().classifier(node.freLanguageConcept()).key
+    const langProperty = FreLanguage.getInstance().classifierPropertyByKey(classifierMP, msg.property.key)
+    node[langProperty.name] = msg.newValue
+}
+
+export const propertyEventFunctions: ReceivingDelta[] = [
+    {
+        messageKind: "PropertyAdded",
+        // @ts-expect-error TS2322
+        processor: PropertyAddedFunction,
+    },
+    {
+        messageKind: "PropertyDeleted",
+        // @ts-expect-error TS2322
+        processor: PropertyDeletedFunction,
+    },
+    {
+        messageKind: "PropertyChanged",
+        // @ts-expect-error TS2322
+        processor: PropertyChangedFunction,
+    },
+]
