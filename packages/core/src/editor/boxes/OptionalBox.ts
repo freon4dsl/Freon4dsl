@@ -19,7 +19,7 @@ export class OptionalBox extends Box {
     content: Box = null;
     placeholder: string = 'placeholder';
     /**
-     * The name of the concept of the node attached to this box.
+     * The name of the concept of the parent node attached to this box.
      */
     nodeConcept: string;
     /**
@@ -91,6 +91,8 @@ export class OptionalBox extends Box {
                     self.node[self.propertyName] = 0;
                 });
             }
+            // TODO: find out whether this next line can be removed
+            editor.selectFirstLeafChildBox()
         } else {
             FreUtils.CHECK(!!option?.action, `OptionalBox.executeOption: action missing for ${option?.label}`)
             if (!!option.action) {

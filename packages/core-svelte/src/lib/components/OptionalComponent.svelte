@@ -297,7 +297,7 @@
 			</button>
 			{#if isHovered}
 				<div class='optional-component-tooltip' role="tooltip">
-					{placeholder}
+					Add {placeholder}
 				</div>
 			{/if}
 			{#if dropdownShown}
@@ -325,7 +325,7 @@
 			</button>
 			{#if isHovered}
 				<div class='optional-component-tooltip' role="tooltip">
-					remove optional element
+					Remove {placeholder}
 				</div>
 			{/if}
 		</span>
