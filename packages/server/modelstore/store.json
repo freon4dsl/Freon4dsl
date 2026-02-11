@@ -632,34 +632,14 @@
             ]
         },
         {
-            "name": "OptionalBoxTest1",
-            "folder": "OptionalBoxTest1",
-            "language": "Test1",
+            "name": "Prims2",
+            "folder": "Prims2",
+            "language": "Prims",
             "version": "1",
             "units": [
                 {
-                    "name": "NEWWW",
-                    "file": "NEWWW.json"
-                }
-            ]
-        },
-        {
-            "name": "OptionalTest2",
-            "folder": "SECOND",
-            "language": "Test1",
-            "version": "1",
-            "units": [
-                {
-                    "name": "NEWWW",
-                    "file": "NEWWW.json"
-                },
-                {
-                    "name": "testundefined",
-                    "file": "testundefined.json"
-                },
-                {
-                    "name": "test2",
-                    "file": "test2.json"
+                    "name": "Unit",
+                    "file": "Unit.json"
                 }
             ]
         }

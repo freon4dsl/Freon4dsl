@@ -146,8 +146,8 @@ export class PrimitivePropertyBoxesHelper {
                 let undefinedKeyword: string = this.undefinedKeyword;
                 if (!!boolKeywords) {
                     trueKeyword = boolKeywords.trueKeyword;
-                    falseKeyword = boolKeywords.falseKeyword ? boolKeywords.falseKeyword : "undefined";
-                    undefinedKeyword = boolKeywords.undefinedKeyword ? boolKeywords.undefinedKeyword : "undefined-undefined";
+                    falseKeyword = boolKeywords.falseKeyword ?? "--";
+                    undefinedKeyword = boolKeywords.undefinedKeyword ?? "undefined-undefined";
                 }
                 // get the right displayType
                 let displayTypeToUse2: string = DisplayTypeHelper.getTypeScriptForDisplayType(this.stdBoolDisplayType);
