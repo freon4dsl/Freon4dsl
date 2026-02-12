@@ -359,6 +359,9 @@
     background: var(--color-dark-freon-150);
     color: var(--color-dark-freon-900);
 }
+.optional-component-button.text-mode {
+    color: var(--color-dark-freon-350);
+}
 .delete-icon {
     fill: var(--color-dark-freon-accent-error, currentColor);
 }

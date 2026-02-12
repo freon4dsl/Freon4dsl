@@ -234,7 +234,6 @@
 .text-component-text-error {
     text-decoration-color: var(--color-light-freon-accent-error);
 }
-
 .text-component-placeholder {
     color: var(--color-light-freon-400);
     opacity: 0.5;
@@ -334,6 +333,9 @@
     box-shadow: 1px 1px 1px var(--color-light-freon-accent-optional);
     background: var(--color-light-freon-150);
     color: var(--color-light-freon-900);
+}
+.optional-component-button.text-mode {
+    color: var(--color-light-freon-400);
 }
 .delete-icon { /* color props */
     fill: var(--color-light-freon-accent-button, currentColor);

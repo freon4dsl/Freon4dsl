@@ -326,6 +326,9 @@ dark .error-tooltip {
     background: var(--color-dark-freon-150);
     color: var(--color-dark-freon-900);
 }
+.dark .optional-component-button.text-mode {
+    color: var(--color-dark-freon-350);
+}
 .dark .delete-icon {
     fill: var(--color-dark-freon-accent-error, currentColor);
 }

@@ -32,8 +32,7 @@
     let contentBox: Box = $state()!;
     let contentComponent: RenderComponent | undefined = $state();
     let addButtonComponent: HTMLButtonElement | undefined = $state();
-	// let addButtonTitle: string = '+';
-	// let removeButtonTitle: string = 'X';
+	let showPlaceholderButton: boolean = $state(false);
 	let dropdownShown: boolean = $state(false);
 	let selectedOption: SelectOption | undefined = $state(undefined); // the selected option in the dropdown
 	let filteredOptions: SelectOption[] = $state([]); // the list of filtered options that are shown in the dropdown
@@ -43,7 +42,6 @@
 	/* Functions for adding the optional element */
 	function add() {
 		LOGGER.log('adding')
-		isHovered = false;
 		const allOptions = getOptions();
 		filteredOptions = allOptions;
 		LOGGER.log(`${allOptions.map(opt => opt.label)}`)
@@ -210,7 +208,6 @@
 
 	function onFocusOut() {
 		LOGGER.log('onBlurSpan')
-		isHovered = false;
 		dropdownShown = false;
 	}
 
@@ -227,6 +224,7 @@
         contentBox = box.content;
         isEmpty = box.isEmpty();
 		placeholder = box.placeholder;
+		showPlaceholderButton = box.showPlaceholderButton;
     };
 
     async function setFocus(): Promise<void> {
@@ -245,35 +243,6 @@
         // Evaluated and re-evaluated when the box changes.
         refresh('Box changed ' + box?.id);
     });
-
-	/* Functions and variables for the tooltip */
-	let isHovered = $state(false);
-	let x: number = $state(0);
-	let y: number = $state(0);
-
-	function mouseOver(event: MouseEvent) {
-		LOGGER.log('mouseOver')
-		isHovered = true;
-		x = event.pageX + 5;
-		y = event.pageY + 5;
-	}
-	function mouseMove(event: MouseEvent) {
-		LOGGER.log('mouseMove')
-		x = event.pageX + 5;
-		y = event.pageY + 5;
-	}
-	function mouseLeave() {
-		LOGGER.log('mouseLeave')
-		isHovered = false;
-	}
-	function onFocus() {
-		console.log('onFocus')
-		isHovered = true;
-	}
-	function onBlur() {
-		console.log('onBlur')
-		isHovered = false;
-	}
 </script>
 
 <span class="optional-component {box.cssClass}" {id}
@@ -283,51 +252,47 @@
 >
 	{#if isEmpty}
 		<span class="optional-component-tooltip-anchor">
-			<button class="optional-component-button"
-					onclick={add}
-					onfocus={onFocus}
-					onblur={onBlur}
-					onmouseover={mouseOver}
-					onmouseleave={mouseLeave}
-					onmousemove={mouseMove}
-					aria-label="Add optional component"
-					bind:this={addButtonComponent}>
+		  <button
+			  class="optional-component-button {showPlaceholderButton ? 'text-mode' : ''}"
+			  onclick={add}
+			  aria-label="Add optional component"
+			  bind:this={addButtonComponent}
+		  >
+			  {#if showPlaceholderButton}
+				<span class="optional-component-placeholder">{placeholder}</span>
+			  {:else}
+				<AddIcon />
+			  {/if}
+		  </button>
 
-				<AddIcon/>
-			</button>
-			{#if isHovered}
-				<div class='optional-component-tooltip' role="tooltip">
-					Add {placeholder}
-				</div>
-			{/if}
+		  <div class="optional-component-tooltip" role="tooltip">
+			Add {placeholder}
+		  </div>
+
 			{#if dropdownShown}
-				<DropdownComponent
-					bind:this={dropdownCmp}
-					bind:selected={selectedOption}
-					bind:options={filteredOptions}
-					selectionChanged={itemSelected}
-				/>
-			{/if}
+			<DropdownComponent
+				bind:this={dropdownCmp}
+				bind:selected={selectedOption}
+				bind:options={filteredOptions}
+				selectionChanged={itemSelected}
+			/>
+		  {/if}
 		</span>
+
 	{:else}
 		<span class="optional-component-tooltip-anchor">
-			<button class="optional-component-button"
-					onclick={remove}
-					onfocus={onFocus}
-					onblur={onBlur}
-					onmouseover={mouseOver}
-					onmouseleave={mouseLeave}
-					onmousemove={mouseMove}
-					aria-label="Remove optional component"
-					tabindex="-1"
-			>
-				<DeleteIcon/>
-			</button>
-			{#if isHovered}
-				<div class='optional-component-tooltip' role="tooltip">
-					Remove {placeholder}
-				</div>
-			{/if}
+		  <button
+			  class="optional-component-button"
+			  onclick={remove}
+			  aria-label="Remove optional component"
+			  tabindex="-1"
+		  >
+			<DeleteIcon/>
+		  </button>
+
+		  <div class="optional-component-tooltip" role="tooltip">
+			Remove {placeholder}
+		  </div>
 		</span>
 		<RenderComponent box={contentBox} {editor} bind:this={contentComponent} />
 	{/if}
