@@ -21,13 +21,13 @@ export class ActionBox extends AbstractChoiceBox {
 
     /**
      * This constructor should be private, but must be public to enable the factory method to call it.
-     * @param element
+     * @param node
      * @param role
      * @param placeHolder
      * @param initializer
      */
-    constructor(element: FreNode, role: string, placeHolder: string, initializer?: Partial<ActionBox>) {
-        super(element, role, placeHolder, initializer);
+    constructor(node: FreNode, role: string, placeHolder: string, initializer?: Partial<ActionBox>) {
+        super(node, role, placeHolder, initializer);
     }
 
     /**

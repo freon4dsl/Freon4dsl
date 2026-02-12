@@ -291,11 +291,11 @@ export class FreEditor {
 
     /**
      * Sets 'element' to be the selectedElement, and its first child, which is editable, to the selectedBox.
-     * @param element
+     * @param node
      */
-    selectFirstEditableChildBox(element: FreNode, skip: boolean = false): void {
-        if (this.checkParam(element)) {
-            let first = this.projection.getBox(element).firstEditableChild;
+    selectFirstEditableChildBox(node: FreNode, skip: boolean = false): void {
+        if (this.checkParam(node)) {
+            let first = this.projection.getBox(node).firstEditableChild;
             if (skip && first.role === LEFT_MOST) {
                first = first.nextLeafRight
             }
@@ -305,16 +305,16 @@ export class FreEditor {
                 this._selectedIndex = first.propertyIndex;
                 this._selectedPosition = FreCaret.UNSPECIFIED;
             }
-            this._selectedElement = element;
+            this._selectedElement = node;
             this.selectionChanged();
         }
     }
 
-    private checkParam(element: FreNode): boolean {
+    private checkParam(node: FreNode): boolean {
         if (this.NOSELECT) {
             return false;
         }
-        if (isNullOrUndefined(element)) {
+        if (isNullOrUndefined(node)) {
             // LOGGER.error("FreEditor.selectedElement is null !");
             return false;
         }

@@ -5,8 +5,8 @@ import type { FreNode } from "../../ast/index.js";
 export class EmptyLineBox extends Box {
     kind: string = "EmptyLineBox";
 
-    constructor(element: FreNode, role: string, initializer?: Partial<EmptyLineBox>) {
-        super(element, role);
+    constructor(node: FreNode, role: string, initializer?: Partial<EmptyLineBox>) {
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.selectable = false;
     }

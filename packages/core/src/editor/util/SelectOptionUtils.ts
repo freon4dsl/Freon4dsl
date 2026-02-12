@@ -114,11 +114,11 @@ function addReferenceShortcuts(concept: FreLanguageConcept, result: SelectOption
     // needs the owner.
     const self: Box = box;
     runInAction(() => {
-        const newElement = concept.constructor();
-        newElement["$$owner"] = node;
+        const newNode = concept.constructor();
+        newNode["$$owner"] = node;
         result.push(
             ...editor.environment.scoper
-                .getVisibleNodes(newElement, concept.referenceShortcut.conceptName)
+                .getVisibleNodes(newNode, concept.referenceShortcut.conceptName)
                 .filter((node) => !!node.name && node.name !== "")
                 .map((node) => ({
                     id: concept.trigger + "-" + node.name,

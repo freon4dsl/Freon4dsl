@@ -13,8 +13,8 @@ export class ElementBox extends Box {
         }
     };
 
-    constructor(element: FreNode, role: string, initializer?: Partial<ElementBox>) {
-        super(element, role);
+    constructor(node: FreNode, role: string, initializer?: Partial<ElementBox>) {
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
     }
     

@@ -19,7 +19,7 @@ export class NamedElementSearchWorker implements FreSearchWorker {
 
     // @ts-ignore
     // parameter is present to adhere to signature of super class
-    execAfter(modelelement: FreNode): boolean {
+    execAfter(node: FreNode): boolean {
         // unused
         return false;
     }

@@ -28,12 +28,12 @@ export class RoleProvider {
         return "";
     }
 
-    public static label(element: FreNode, uid: string): string {
-        return RoleProvider.startWithUpperCase(element.freLanguageConcept()) + element.freId() + "-label-" + uid;
+    public static label(node: FreNode, uid: string): string {
+        return RoleProvider.startWithUpperCase(node.freLanguageConcept()) + node.freId() + "-label-" + uid;
     }
 
-    static indent(element: FreNode, uid: string) {
-        return RoleProvider.startWithUpperCase(element.freLanguageConcept()) + element.freId() + "-indent-" + uid;
+    static indent(node: FreNode, uid: string) {
+        return RoleProvider.startWithUpperCase(node.freLanguageConcept()) + node.freId() + "-indent-" + uid;
     }
 
     static cell(owningConceptName: string, propertyName: string, rowIndex: number, columnIndex: number) {
