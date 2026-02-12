@@ -4,7 +4,7 @@ import { AstObserver } from "./AstObserver.js"
 import type { FreDelta, FrePrimDelta, FrePartDelta, FrePartListDelta, FrePrimListDelta } from "./FreDelta.js";
 import { FreUndoStackManager } from "./FreUndoStackManager.js";
 
-const LOGGER = new FreLogger("FreUndoManager").show()
+const LOGGER = new FreLogger("FreUndoManager")
 /**
  * Class FreUndoManager holds the change information on the model.
  * The information is stored per model unit; one stack for undo info, one for redo info.
@@ -143,7 +143,6 @@ export class FreUndoManager {
                 this.getUndoStackManager(this.currentUnit).addDelta(delta);
             } else {
                 // the model has changed => store in model manager
-                // console.log("adding transaction to model")
                 this.modelUndoManager.addDelta(delta);
             }
         } else {

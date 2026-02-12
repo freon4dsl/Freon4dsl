@@ -10,7 +10,7 @@ import { modelUnit } from "../ast-utils/index.js"
 import { FreLogger } from "../logging/index.js"
 import { type FreUndoManager } from "./FreUndoManager.js"
 
-const LOGGER: FreLogger = new FreLogger("FreUndoStackManager").show()
+const LOGGER: FreLogger = new FreLogger("FreUndoStackManager")
 
 /**
  * Class FreUndoStackManager holds two sets of stacks of change information on a model unit.
@@ -58,11 +58,13 @@ export class FreUndoStackManager {
             }
             if (notNullOrUndefined(FREON.deltaClient)) {
                 if (this.currentTransaction instanceof FreTransactionDelta) {
+                    // Send all parts of the transactional delta as individual deltas
                     for(const internal of this.currentTransaction.internalDeltas ) {
                         const delta: DeltaCommand = LIONWEB_DELTA.convertDeltaToLionWeb(internal)
                         FREON.deltaClient.deltaApiClient.sendCommand(delta)
                     }
                 } else {
+                    // We have a single delta
                     const delta: DeltaCommand = LIONWEB_DELTA.convertDeltaToLionWeb(this.currentTransaction)
                     FREON.deltaClient.deltaApiClient.sendCommand(delta)
                 }

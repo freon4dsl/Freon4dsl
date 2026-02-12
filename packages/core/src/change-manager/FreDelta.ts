@@ -48,6 +48,10 @@ export class FrePrimDelta extends FreDelta {
     }
 }
 
+/**
+ * Represents a change of a single values Part (Child)
+ * Note that references are implemented as parts of type FreNodeReference as well.
+ */
 export class FrePartDelta extends FreDelta {
     oldValue: FreNode;
     newValue: FreNode;

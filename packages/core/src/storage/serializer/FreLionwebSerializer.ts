@@ -99,11 +99,9 @@ export class FreLionwebSerializer implements FreSerializer {
      * @private
      */
     private findRoot(parentId?: string | null): FreNode {
-        console.log(`>> finding node with parent id '${parentId}'`)
         // TODO Check next line
         const mapEntries: IterableIterator<ParsedNode> = this.nodesfromJson.values();
         for (const parsedNode of mapEntries) {
-            console.log(`>> chacking node '${parsedNode.freNode.freId()}' with parent '${parsedNode.parentId}'`)
             if (parsedNode.freNode.freIsUnit()) {
                 return parsedNode.freNode;
             } else if (parentId !== undefined && parsedNode.parentId === parentId) {
@@ -235,14 +233,14 @@ export class FreLionwebSerializer implements FreSerializer {
             }
             FreUtils.CHECK(!property.isList, "Lionweb does not support list properties: " + property.name);
             if (property.propertyKind !== "primitive") {
-                console.error("Primitive value found for non primitive property: " + property.name)
-                // continue
+                // Not an error as it can be a limited.
+                // console.error("Primitive value found for non primitive property: " + property.name)
             }
             // console.log(`DESER prop '${property.name}': '${property.type}' value '${jsonProperty.value}'`)
             const propertyConcept = FreLanguage.getInstance().concept(property.type)
             // LIONWEB: Handle Limited references as primitive properties, because limited maps to Enumeration in LionWeb.
             if (notNullOrUndefined(propertyConcept) && propertyConcept.isLimited) {
-                console.log(`DE-SERIALIZING LIMITED PROPERTY ${propertyConcept} for property ${property.name}`)
+                // console.log(`DE-SERIALIZING LIMITED PROPERTY ${propertyConcept} for property ${property.name}`)
                 parsedLimiteds.push({
                     featureName: property.name,
                     isList: property.isList,

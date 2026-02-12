@@ -99,14 +99,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
     }
 
     get referred(): T {
-        LOGGER.log(
-            "FreNodeReference " +
-                this._FRE_pathname +
-                " property " +
-                this.freOwnerDescriptor().propertyName +
-                " owner " +
-                this.freOwnerDescriptor().owner.freLanguageConcept(),
-        );
+        LOGGER.log(`referred: ${this._FRE_pathname} property ${this.freOwnerDescriptor()?.propertyName} owner ${this.freOwnerDescriptor()?.owner?.freLanguageConcept()}`);
         if (!!this._FRE_referred) {
             return this._FRE_referred;
         } else {

@@ -4,6 +4,7 @@ import { childEventFunctions } from "./FreonChildEvents.js"
 import { partitionEventFunctions } from "./FreonPartitionEvents.js"
 import { propertyEventFunctions } from "./FreonPropertyEvents.js"
 import { queryResponseFunctions } from "./FreonQueryResponses.js"
+import { referenceEventFunctions } from "./FreonReferenceEvents.js"
 
 export class FreonDeltaClient {
     private _deltaApiClient: DeltaClient
@@ -17,7 +18,8 @@ export class FreonDeltaClient {
             childEventFunctions,
             partitionEventFunctions,
             queryResponseFunctions,
-            adminResponseFunctions
+            adminResponseFunctions,
+            referenceEventFunctions
         ])
         this.connect()
     }

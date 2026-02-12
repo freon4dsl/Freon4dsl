@@ -17,7 +17,9 @@ const PropertyAddedFunction = (msg: PropertyAddedEvent): void => {
     }
     const classifierMP = FreLanguage.getInstance().classifier(node.freLanguageConcept()).key
     const langProperty = FreLanguage.getInstance().classifierPropertyByKey(classifierMP, msg.property.key)
-    node[langProperty.name] = msg.newValue
+    FREON.astChanger.changeIgnore("PropertyAdded event", () => {
+        node[langProperty.name] = msg.newValue
+    })
 }
 
 const PropertyDeletedFunction = (msg: PropertyDeletedEvent): void => {
@@ -33,7 +35,9 @@ const PropertyChangedFunction = (msg: PropertyChangedEvent): void => {
     }
     const classifierMP = FreLanguage.getInstance().classifier(node.freLanguageConcept()).key
     const langProperty = FreLanguage.getInstance().classifierPropertyByKey(classifierMP, msg.property.key)
-    node[langProperty.name] = msg.newValue
+    FREON.astChanger.changeIgnore("PropertyChanged event", () => {
+        node[langProperty.name] = msg.newValue
+    })
 }
 
 export const propertyEventFunctions: ReceivingDelta[] = [
