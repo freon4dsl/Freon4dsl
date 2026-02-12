@@ -16,12 +16,12 @@ import {
     FreProjectionHandler,
     type FreUnitIdentifier,
     ModelManager,
-    isInMemoryError,
     isNullOrUndefined,
     jsonAsString,
     notNullOrUndefined,
     FREON,
 } from "@freon4dsl/core"
+import { type IModelManager, isInMemoryError } from "@freon4dsl/core/dist/storage/IModelManager.js"
 import { runInAction } from "mobx"
 
 const LOGGER: FreLogger = new FreLogger("Webapp")
@@ -41,7 +41,7 @@ export class WebappConfigurator {
     }
 
     langEnv: FreEnvironment | undefined
-    private modelStore: ModelManager | undefined
+    private modelStore: IModelManager | undefined
 
     /**
      * Sets the object that will perform the communication with the server, and
@@ -551,7 +551,7 @@ export class WebappConfigurator {
      * Listeners to model state
      ***********************************************************/
 
-    modelChanged(store: ModelManager): void {
+    modelChanged(store: IModelManager): void {
         console.log(`modelChanged: ${store?.model?.name}`)
         if (notNullOrUndefined(store?.model)) {
             editorInfo.modelName = store?.model?.name

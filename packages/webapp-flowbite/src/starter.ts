@@ -3,10 +3,10 @@ import { FlowbiteFreonLayout, WebappConfigurator, setDevelopment } from "@freon4
 import { configureExternals } from "./externals.js"
 import { configureLoggers } from "./loggers.js"
 // import { LanguageEnvironment } from "@freon4dsl/samples-insurance"
-// import { LanguageEnvironment } from "@freon4dsl/samples-course-schedule"
+import { LanguageEnvironment } from "@freon4dsl/samples-course-schedule"
 // import { LanguageEnvironment } from "@freon4dsl/samples-scoper-test"
 // import { LanguageEnvironment } from "@freon4dsl/samples-optionalboxtest"
-import { LanguageEnvironment } from "@freon4dsl/samples-prim-projections"
+// import { LanguageEnvironment } from "@freon4dsl/samples-prim-projections"
 import { CoreConfig, ServerCommunication } from "@freon4dsl/core"
 
 /**

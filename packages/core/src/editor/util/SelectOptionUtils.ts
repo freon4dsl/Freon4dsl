@@ -1,4 +1,4 @@
-import { AST } from "../../change-manager/index.js";
+import { FREON } from "../../environment/index.js"
 import {
     type Box,
     type FreEditor,
@@ -48,9 +48,9 @@ export function executeSingleBehavior(
     let execresult: FrePostAction;
 
     const index = -1; // todo get the correct index
-    AST.change(() => {
-        execresult = action.execute(box, label, editor, index);
-    });
+    FREON.astChanger.change(() => {
+        execresult = action.execute(box, label, editor, index)
+    })
     if (!!execresult) {
         execresult();
     }

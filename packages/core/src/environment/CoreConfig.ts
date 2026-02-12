@@ -1,6 +1,7 @@
 import type { IAstChanger } from "../change-manager/IAstChanger.js"
 import { AstChanger, AstObserver, ReferenceUpdateManager } from "../change-manager/index.js"
-import { type IModelManager, type IServerCommunication, ModelManager } from "../storage/index.js"
+import type { IModelManager } from "../storage/IModelManager.js"
+import { type IServerCommunication, ModelManager } from "../storage/index.js"
 import { DummyServerConfiguration } from "../storage/server/DummyServerConfiguration.js"
 import { isNullOrUndefined } from "../util/index.js"
 import type { FreEnvironment } from "./FreEnvironment.js"
