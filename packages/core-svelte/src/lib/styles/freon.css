@@ -1034,3 +1034,12 @@ textarea {
 .boolean-checkbox-component {
     vertical-align: top;
 }
+
+/* The following is added to show an outline around every node/element when it is hovered */
+.element-component:hover {
+    outline: 2px dashed #3F8CFF;
+}
+/* And, ... remove the outline on parent nodes */
+.element-component:has( .element-component:hover):hover {
+    outline: 0px none #3F8CFF;
+}

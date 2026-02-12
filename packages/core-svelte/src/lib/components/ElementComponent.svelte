@@ -12,6 +12,7 @@
     let id: string = $state('');
 
     let childBox: Box | undefined = $state(undefined);
+    let tabbable: number = 0; // todo get the value from the box, depending on the editor configuration
 
     const refresh = (why?: string): void => {
         LOGGER.log('REFRESH ElementComponent (' + why + ')' + box?.node?.freLanguageConcept());
@@ -40,5 +41,7 @@
 </script>
 
 {#if notNullOrUndefined(childBox)}
-    <RenderComponent box={childBox} {editor} />
+    <span class="element-component element-component-{box.node.freLanguageConcept()}" tabindex={tabbable}>
+        <RenderComponent box={childBox} {editor} />
+    </span>
 {/if}
