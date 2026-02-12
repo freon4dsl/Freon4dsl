@@ -1,0 +1,53 @@
+editor default
+
+Unit1 {
+    [
+    Optional Box Test ${self.name}
+    ${self.schedule}
+    ]
+}
+
+EventSchedule {
+    [
+        First scheduled ${eventStart}
+        [? with a window of ${eventWindow}]
+        [? and then repeats ${eventRepeat}]
+        [? limited to ${eventTimeOfDay}]
+        [? stringProp ${stringProp}]
+        [? numberProp ${numberProp} met iets er achter]
+        [? booleanProp ${booleanProp}]
+    ]
+    trigger = "event schedule"
+}
+
+EventStart {
+    [${self.startDay} ]
+}
+
+EventWindow {
+    [
+        ${daysBefore} day(s) before and ${daysAfter}day(s) after
+    ]
+    trigger = "event window"
+}
+
+RepeatCondition {
+    [
+    ${repeatUnit} up to ${maxRepeats} times until ${until}
+    ] trigger = "until: Repeat until a condition occurs"
+}
+
+RepeatCount {
+    [
+        ${repeatCount} time(s)
+    ]
+    trigger = "count: Repeat a specific number of times"
+}
+
+EventTimeOfDay {
+    [
+        starting by ${startTimeAsString}
+    ]
+    trigger = "starting by: Time of day event must start"
+}
+

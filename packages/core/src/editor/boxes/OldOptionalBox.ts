@@ -1,8 +1,9 @@
 import { autorun } from "mobx";
 import type { FreNode } from "../../ast/index.js";
-import { Box, type ActionBox, BoxFactory, type BoolFunctie } from "./internal.js"
+import { FreUtils } from "../../util/index.js";
+import { Box } from "./internal.js";
 
-// todo remove this class when all tests on OptionalBox have been executed
+export type BoolFunctie = () => boolean;
 
 /**
  * OptionalBox holds the content from a projection that is optional. This content is always present in the
@@ -13,11 +14,11 @@ import { Box, type ActionBox, BoxFactory, type BoolFunctie } from "./internal.js
  * there may not be actual content within the FreNode model. The latter is set by the custom action, that is coupled
  * to this OptionalBox, which is triggered by the user.
  */
-export class OptionalOLDBox extends Box {
-    readonly kind = "OptionalBoxOLD";
+export class OldOptionalBox extends Box {
+    readonly kind = "OldOptionalBox";
 
     content: Box = null;
-    placeholder: ActionBox = null;
+    placeholder: Box = null;
     _mustShow: boolean = false; // is set to true by action that does not (yet) change the model, but causes part of the optional to be shown
     condition: () => boolean; // a condition based on the model that determines whether the optional is shown
 
@@ -35,13 +36,15 @@ export class OptionalOLDBox extends Box {
         condition: BoolFunctie,
         box: Box,
         mustShow: boolean,
-        actionText: string,
+        placeholder: Box,
+        initializer?: Partial<OldOptionalBox>,
     ) {
         super(node, role);
+        FreUtils.initializeObject(this, initializer);
         this.content = box;
         box.parent = this;
         // TODO question: should not the role be diff from role of this box? Where is the "action" prefix added?
-        this.placeholder = BoxFactory.action(node, role, actionText);
+        this.placeholder = placeholder;
         this.placeholder.parent = this;
         this.mustShow = mustShow;
         this.condition = condition;
@@ -53,10 +56,10 @@ export class OptionalOLDBox extends Box {
     }
 
     /**
-     * Ensure a refresh is triggered if the condition for showing this optional bix has changed.
+     * Ensure a refresh is triggered if the condition for showing this optional box has changed.
      */
     conditionChanged = () => {
-        // console.log("AUTORUN showByCondition");
+        console.log("AUTORUN showByCondition, this.mustShow: " + this.mustShow);
         this.condition();
         this.isDirty();
     };
@@ -97,6 +100,6 @@ export class OptionalOLDBox extends Box {
     }
 }
 
-export function isOLDOptionalBox(b: Box): b is OptionalOLDBox {
-    return b?.kind === "OptionalBoxOLD"; // b instanceof OptionalBox;
+export function isOldOptionalBox(b: Box): b is OldOptionalBox {
+    return b?.kind === "OldOptionalBox"; // b instanceof OptionalBox;
 }

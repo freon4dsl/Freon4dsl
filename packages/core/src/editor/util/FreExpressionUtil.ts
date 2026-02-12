@@ -26,7 +26,7 @@ import {
     FreUtils,
 } from "../../util/index.js";
 import { NBSP } from "../index.js";
-import { BehaviorExecutionResult } from "./BehaviorUtils.js";
+import { BehaviorExecutionResult } from "./SelectOptionUtils.js";
 
 // const LOGGER = new FreLogger("FreExpressionNodeHelpers");
 // todo maybe moved these functions to BoxUtils?

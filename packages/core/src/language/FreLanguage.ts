@@ -295,7 +295,7 @@ export class FreLanguage {
     }
 
     /**
-     * Get all properties of kind "kind" of classifier "typename"
+     * Get all properties of kind "ptype" of classifier "typename"
      * @param typename
      * @param ptype
      */
