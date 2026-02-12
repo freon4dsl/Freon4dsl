@@ -1,0 +1,69 @@
+<script lang="ts">
+    import { OPTIONAL_LOGGER } from './ComponentLoggers.js';
+
+    /**
+     * This component display an optional part. It either shows the content of the
+     * corresponding OptionalBox, or its placeholder.
+     */
+    import RenderComponent from './RenderComponent.svelte';
+    import { type OptionalBox, type Box, notNullOrUndefined } from '@freon4dsl/core';
+    import { componentId } from '../index.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
+
+    // Props
+    let { editor, box }: FreComponentProps<OptionalBox> = $props();
+
+    const LOGGER = OPTIONAL_LOGGER;
+    let id: string = $state(''); // an id for the html element showing the optional
+    id = notNullOrUndefined(box) ? componentId(box) : 'optional2-for-unknown-box';
+    let childBox: Box = $state()!;
+    let optionalBox: Box = $state()!;
+    let mustShow = $state(false);
+    let showByCondition = $state(false);
+    let contentComponent: RenderComponent | undefined = $state();
+    let placeholderComponent: RenderComponent | undefined = $state();
+
+    const refresh = (why?: string): void => {
+        console.log('REFRESH OptionalBox: ' + why);
+        mustShow = box.mustShow;
+        showByCondition = box.condition();
+        childBox = box.content;
+        optionalBox = box.placeholder;
+    };
+
+    async function setFocus(): Promise<void> {
+        LOGGER.log('setFocus on box ' + box.role);
+        if (
+            mustShow ||
+            (showByCondition &&
+                !!contentComponent &&
+                notNullOrUndefined(box.content.firstEditableChild))
+        ) {
+            box.content.firstEditableChild!.setFocus();
+        } else if (notNullOrUndefined(placeholderComponent)) {
+            box.placeholder.setFocus();
+        } else {
+            LOGGER.error('OptionalComponent2 ' + id + ' has no elements to put focus on');
+        }
+    }
+
+    $effect(() => {
+        // runs after the initial onMount
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
+        // Evaluated and re-evaluated when the box changes.
+        refresh('Refresh optional box changed ' + box?.id);
+    });
+</script>
+
+<span class="optional-component {box.cssClass}" {id}>
+    {#if mustShow || showByCondition}
+        <span class="optional-component-show">
+            <RenderComponent box={childBox} {editor} bind:this={contentComponent} />
+        </span>
+    {:else}
+        <span class="optional-component-hide">
+            <RenderComponent box={optionalBox} {editor} bind:this={placeholderComponent} />
+        </span>
+    {/if}
+</span>

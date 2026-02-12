@@ -44,7 +44,7 @@ export function muteLogs() {
     FreLogger.mute("HorizontalListBox");
     FreLogger.mute("ActionBox");
     FreLogger.mute("FreCommand");
-    FreLogger.mute("BehaviorUtils");
+    FreLogger.mute("SelectOptionUtils");
     FreLogger.mute("ListUtil");
     FreLogger.mute("ArrayUtil");
     FreLogger.mute("Box");

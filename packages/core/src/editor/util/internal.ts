@@ -11,7 +11,7 @@
 export * from "./Keys.js";
 
 // dependent only upon editor
-export * from "./BehaviorUtils.js";
+export * from "./SelectOptionUtils.js";
 export * from "./ActionsUtil.js";
 export * from "./FreEditorUtil.js";
 export * from "./FreCaret.js";
@@ -21,5 +21,5 @@ export * from "./ListUtil.js";
 export * from "./ListElementInfo.js";
 export * from "./MenuItem.js";
 
-// the following depends on BalanceTreeUtils and BehaviorUtils
+// the following depends on BalanceTreeUtils and SelectOptionUtils
 export * from "./FreExpressionUtil.js";

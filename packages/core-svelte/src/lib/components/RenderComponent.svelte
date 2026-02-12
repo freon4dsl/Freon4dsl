@@ -35,7 +35,9 @@
         BoolDisplay,
         LimitedDisplay,
         isActionTextBox,
-        notNullOrUndefined, type ClientRectangle, UndefinedRectangle
+        notNullOrUndefined,
+        type ClientRectangle,
+        UndefinedRectangle
     } from "@freon4dsl/core"
     import MultiLineTextComponent from './MultiLineTextComponent.svelte';
     import EmptyLineComponent from './EmptyLineComponent.svelte';
