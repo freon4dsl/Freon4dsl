@@ -1,0 +1,56 @@
+language OptionalBoxTest
+
+model Test1 {
+    name: identifier;
+    unit: Unit1;
+}
+
+modelunit Unit1 {
+    name: identifier;
+	schedule: EventSchedule;
+}
+
+concept EventSchedule {
+    eventStart?: EventStart;
+    eventWindow?: EventWindow;
+    eventRepeat?: RepeatExpression;
+    eventTimeOfDay?: EventTimeOfDay;
+    stringProp?: string;
+    numberProp?: number;
+    booleanProp?: boolean;
+}
+
+concept EventStart {
+    startDay: number;
+}
+
+concept EventWindow {
+    daysBefore: number;
+    daysAfter: number;
+}
+
+interface RepeatExpression {}
+
+concept RepeatCondition implements RepeatExpression {
+    repeatUnit: RepeatUnit;
+    maxRepeats: number;
+    until?: ScheduleExpression;
+}
+
+interface RepeatUnit {}
+
+concept Daily implements RepeatUnit {}
+
+concept RepeatCount implements RepeatExpression {
+    repeatCount: number;
+}
+
+expression ScheduleExpression   {
+    value: string;
+}
+
+concept EventTimeOfDay {
+    startTimeAsString: string;
+    startHour: number;
+    startMinute: number;
+}

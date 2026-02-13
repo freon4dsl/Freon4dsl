@@ -234,7 +234,6 @@
 .text-component-text-error {
     text-decoration-color: var(--color-light-freon-accent-error);
 }
-
 .text-component-placeholder {
     color: var(--color-light-freon-400);
     opacity: 0.5;
@@ -329,11 +328,20 @@
 /*******************************************************
  *  OptionalComponent
  *******************************************************/
-.optional-component:empty:before {
-    background-color: var(--color-light-freon-accent-optional);
+.optional-component-tooltip { /* color props */
+    border: 1px solid var(--color-light-freon-accent-optional);
+    box-shadow: 1px 1px 1px var(--color-light-freon-accent-optional);
+    background: var(--color-light-freon-150);
+    color: var(--color-light-freon-900);
 }
-.optional-component-hide {
-    color: var(--color-light-freon-150);
+.optional-component-button.text-mode {
+    color: var(--color-light-freon-400);
+}
+.delete-icon { /* color props */
+    fill: var(--color-light-freon-accent-button, currentColor);
+}
+.add-icon { /* color props */
+    fill: var(--color-light-freon-accent-button, currentColor);
 }
 
 /*******************************************************

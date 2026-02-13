@@ -854,31 +854,84 @@
     border-radius: 0.1em;
 }
 
-.optional-component:empty:before {
-    content: attr(data-placeholdertext);
-}
-
+/*******************************************************
+ *  OptionalComponent
+ *******************************************************/
 .optional-component {
-    margin: 0 3px 0 3px;
-    white-space: normal;
-    display: inline-block;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 4px;
+}
+.optional-component-tooltip-anchor {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+.optional-component-tooltip { /* non-colors props */
+    position: absolute;
+    bottom: 100%;   /* above */
+    left: 0;        /* align left edge with button */
+
+    margin-bottom: 3px; /* gap between button and tooltip */
+
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+
+    pointer-events: none;
+    z-index: 1000;
+
+    /* hidden by default */
+    opacity: 0;
+    visibility: hidden;
+    /* to make it feel a bit smoother without being “animated” in a distracting way */
+    transition: opacity 120ms ease, visibility 0s linear 120ms;
+}
+/* rule to show the tooltip */
+.optional-component-tooltip-anchor:hover .optional-component-tooltip,
+.optional-component-tooltip-anchor:focus-within .optional-component-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 120ms ease;
+}
+.optional-component-button { /* non-colors props */
+    /* layout */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* sizing */
+    padding: 0;
+    line-height: 0;
+    font-size: 1.2rem; /* controls icon size */
+    margin-top: 2px;
+
+    /* visuals */
+    cursor: pointer;
+}
+.optional-component-button.text-mode {
+    font-size: 0.85rem;        /* normal readable text */
+    line-height: normal;
+    justify-content: flex-start;
+    padding: 2px 6px;
+    margin-block: 2px; /* vertical spacing between rows */
+    opacity: 0.5;
+}
+.delete-icon { /* non-colors props */
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+}
+.add-icon { /* non-colors props */
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
 }
 
-.optional-component-new:empty:before {
-    content: attr(data-placeholdertext);
-}
-
-.optional-component-show {
-    margin: 0 3px 0 3px;
-    white-space: normal;
-    display: inline-block;
-}
-.optional-component-hide {
-    margin: 3px;
-    white-space: normal;
-    display: inline-block;
-}
-
+/*******************************************************
+ *  RenderComponent
+ *******************************************************/
 .render-component {
     box-sizing: border-box;
     display: flex;
@@ -1002,7 +1055,7 @@
     align-content: center;
     justify-items: center;
     border-width: 1pt;
-    border-style: dot-dot-dash;
+    border-style: dashed;
 }
 
 .grid-cell-component {

@@ -87,8 +87,9 @@ export class TextComponentHelper {
                 // If needed, the afterUpdate function dispatches a 'textUpdate' to the parent TextDropdownComponent
             } else {
                 // nothing left in this component to delete at the right
+                console.log(`handleDelete, caret: ${this._from}-${this._to}`);
                 event.preventDefault();
-                event.stopPropagation();
+                // event.stopPropagation();
             }
         }
     }

@@ -632,14 +632,18 @@
             ]
         },
         {
-            "name": "Prims2",
-            "folder": "Prims2",
-            "language": "Prims",
+            "name": "OptionalTest1",
+            "folder": "SECOND",
+            "language": "Test1",
             "version": "1",
             "units": [
                 {
-                    "name": "Unit",
-                    "file": "Unit.json"
+                    "name": "test1",
+                    "file": "test1.json"
+                },
+                {
+                    "name": "test2",
+                    "file": "test2.json"
                 }
             ]
         }
