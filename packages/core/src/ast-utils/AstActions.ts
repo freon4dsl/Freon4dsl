@@ -87,21 +87,23 @@ export class AstActions {
                             this.editor.setUserMessage("Cannot paste a " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning)
                         }
                     }
-                } else if (isListBox(currentSelection.parent)) {
-                    if (FreLanguage.getInstance().metaConformsToType(tobepasted, element.freLanguageConcept())) {
-                        // allow subtypes
-                        // console.log('pasting in ' + currentSelection.role + ', prop: ' + currentSelection.parent.propertyName);
-                        this.pasteInElement(
-                            element.freOwnerDescriptor().owner,
-                            currentSelection.parent.propertyName,
-                            element.freOwnerDescriptor().propertyIndex + 1,
-                        )
+                } else {
+                    // Walk up the box tree to find a ListBox ancestor
+                    const listBox = this.findListBoxAncestor(currentSelection);
+                    if (listBox) {
+                        if (FreLanguage.getInstance().metaConformsToType(tobepasted, element.freLanguageConcept())) {
+                            // allow subtypes
+                            this.pasteInElement(
+                                element.freOwnerDescriptor().owner,
+                                listBox.propertyName,
+                                element.freOwnerDescriptor().propertyIndex + 1,
+                            )
+                        } else {
+                            this.editor.setUserMessage("Cannot paste a " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning)
+                        }
                     } else {
                         this.editor.setUserMessage("Cannot paste a " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning)
                     }
-                } else {
-                    // todo other pasting options ...
-                    this.editor.setUserMessage("Cannot paste a " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning)
                 }
             } else {
                 this.editor.setUserMessage("Cannot paste a " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning)
@@ -131,6 +133,17 @@ export class AstActions {
                 console.error("deleting of " + tobeDeleted.freId() + " not succeeded, because owner descriptor is empty.")
             }
         }
+    }
+
+    private findListBoxAncestor(box: Box): Box | null {
+        let current: Box | null = box.parent;
+        while (current) {
+            if (isListBox(current)) {
+                return current;
+            }
+            current = current.parent;
+        }
+        return null;
     }
 
     private pasteInElement(element: FreNode, propertyName: string, index?: number) {
