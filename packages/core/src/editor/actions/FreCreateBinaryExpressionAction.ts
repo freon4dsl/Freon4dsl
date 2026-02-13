@@ -1,5 +1,5 @@
 import type { FreBinaryExpression } from "../../ast/index.js";
-import { AST } from "../../change-manager/index.js";
+import { FREON } from "../../environment/index.js"
 import { BTREE, FRE_BINARY_EXPRESSION_LEFT, FreUtils } from "../../util/index.js";
 import type { Selected } from "../../util/index.js";
 import type { Box } from "../boxes/index.js";
@@ -28,7 +28,7 @@ export class FreCreateBinaryExpressionAction extends FreAction {
     execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
         // console.log("FreCreateBinaryExpressionCommand: trigger [" + triggerTypeToString(trigger) + "] part: ");
         let selected: Selected
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             selected = BTREE.insertBinaryExpression(
                 this.expressionBuilder(box, triggerTypeToString(trigger), editor),
                 box,

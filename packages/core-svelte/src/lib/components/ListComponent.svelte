@@ -26,7 +26,7 @@
         FreLogger,
         FreCreatePartAction,
         MetaKey,
-        AST,
+        FREON,
         ENTER, notNullOrUndefined
     } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
@@ -207,7 +207,7 @@
                 boxRoleToSelect: undefined,
             })
             let execresult: () => void;
-            AST.changeNamed("ListComponent.Enter", () => {
+            FREON.astChanger.changeNamed("ListComponent.Enter", () => {
                 execresult = action.execute(box, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, index + 1)
             })
             // @ts-ignore

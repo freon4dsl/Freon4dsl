@@ -1,6 +1,6 @@
 <script lang="ts">
     import { AccordionItem, Accordion, Button } from 'flowbite-svelte';
-    import { AST, PartListReplacerBox } from "@freon4dsl/core";
+    import { FREON, PartListReplacerBox } from "@freon4dsl/core";
     import { type FreComponentProps, RenderComponent } from "@freon4dsl/core-svelte";
     import { Person } from "@freon4dsl/samples-course-schedule";
     import { untrack } from "svelte"
@@ -46,18 +46,18 @@
         untrack( () => initialize() );
     };
     const addPerson = () => {
-        // Note that you need to put any changes to the actual model in a 'AST.change or AST.changeNamed',
+        // Note that you need to put any changes to the actual model in a 'FREON.astChanger.change or FREON.astChanger.changeNamed',
         // because all elements in the model are reactive using mobx.
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             let newPerson: Person = Person.create({});
             box.getPropertyValue().push(newPerson);
         });
     }
 
     const removePerson = (index: number) => {
-        // Note that you need to put any changes to the actual model in a 'AST.change' or
-        // 'AST.changeNamed', because all elements in the AST model are reactive using mobx.
-        AST.change(() => {
+        // Note that you need to put any changes to the actual model in a 'FREON.astChanger.change' or
+        // 'FREON.astChanger.changeNamed', because all elements in the AST model are reactive using mobx.
+        FREON.astChanger.change(() => {
             box.getPropertyValue().splice(index, 1);
         });
     }

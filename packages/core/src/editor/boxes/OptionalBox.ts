@@ -1,3 +1,4 @@
+import { FREON } from "../../environment/index.js"
 import { Box } from "./Box.js"
 import type { SelectOption } from "./SelectOption.js"
 import type { FreEditor } from "../FreEditor.js"
@@ -7,7 +8,6 @@ import { FreUtils, isNullOrUndefined } from "../../util/index.js"
 import { BehaviorExecutionResult, createOptions, executeSingleBehavior } from "../util/index.js"
 import { FreLogger } from "../../logging/index.js"
 import { FreLanguage, type FreLanguageProperty } from "../../language/index.js"
-import { AST } from "../../change-manager/index.js"
 import { isBooleanControlBox } from "./BooleanControlBox.js"
 import { isSelectBox } from "./SelectBox.js"
 
@@ -68,7 +68,7 @@ export class OptionalBox extends Box {
                 const boolBox: Box = this.content.firstEditableChild
                 LOGGER.log(`getOptions: boolBox: ${boolBox?.kind}`)
                 if (isBooleanControlBox(boolBox)) {
-                    AST.change(() => {
+                    FREON.astChanger.change(() => {
                         if (option.id === boolBox.labels.yes) {
                             self.node[self.propertyName] = true
                         } else if (option.id === boolBox.labels.no) {
@@ -82,11 +82,11 @@ export class OptionalBox extends Box {
                 }
             } else if (this.propDef.type === "string") {
                 LOGGER.log("found string")
-                AST.change(() => {
+                FREON.astChanger.change(() => {
                     self.node[self.propertyName] = ""
                 })
             } else if (this.propDef.type === "number") {
-                AST.change(() => {
+                FREON.astChanger.change(() => {
                     self.node[self.propertyName] = 0
                 })
             }
@@ -109,11 +109,11 @@ export class OptionalBox extends Box {
         LOGGER.log(`removeContent ${this.id}`)
         const self: OptionalBox = this
         if (!this.propDef.isList) {
-            AST.change(() => {
+            FREON.astChanger.change(() => {
                 self.node[self.propertyName] = undefined
             })
         } else {
-            AST.change(() => {
+            FREON.astChanger.change(() => {
                 self.node[self.propertyName] = []
             })
         }

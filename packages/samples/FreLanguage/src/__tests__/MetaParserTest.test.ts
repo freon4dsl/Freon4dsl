@@ -1,20 +1,21 @@
 import { FreStructureDef, FreValidatorDef, FreScoperDef, FreTyperDef, FreLanguageX} from "../freon/language/index.js";
-import { FreError } from "@freon4dsl/core"
+import { CoreConfig, FreError } from "@freon4dsl/core"
 import { FreLanguageXEnvironment } from "../freon/config/FreLanguageXEnvironment.js";
 import { describe, test, expect } from "vitest";
 import { FileUtil } from '@freon4dsl/test-helpers';
 
 describe("Fre Language Parser", () => {
+    CoreConfig.initialize(FreLanguageXEnvironment.getInstance(), null)
     const reader = FreLanguageXEnvironment.getInstance().reader;
     const writer = FreLanguageXEnvironment.getInstance().writer;
     const validator = FreLanguageXEnvironment.getInstance().validator;
     const scoper = FreLanguageXEnvironment.getInstance().scoper;
-    const path = './packages/samples/FreLanguage/src/__inputs__/'
+    const path = './src/defs/'
     
     test(" on .ast file", () => {
         const completeModel: FreLanguageX = new FreLanguageX();
-        const input = FileUtil.stringFromFile(path + "LanguageDefinition.ast");
-        const unit1: FreStructureDef = reader.readFromString(input, "FreStructureDef", completeModel, "LanguageDefinition.ast") as FreStructureDef;
+        const input = FileUtil.stringFromFile(path + "MetaStructure.ast");
+        const unit1: FreStructureDef = reader.readFromString(input, "FreStructureDef", completeModel, "MetaStructure.ast") as FreStructureDef;
         expect(unit1).not.toBe(null);
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(FreStructureDef);

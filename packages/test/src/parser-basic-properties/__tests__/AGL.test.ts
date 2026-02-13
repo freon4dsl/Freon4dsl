@@ -1,5 +1,5 @@
-import {FreUtils, ServerCommunication} from "@freon4dsl/core";
-import {TestParserModelEnvironment} from "../freon/config/TestParserModelEnvironment.js";
+import { FREON, CoreConfig, FreUtils, ServerCommunication } from "@freon4dsl/core"
+import { TestConceptsModelEnvironment } from "../../parser-basic-concepts/freon/config/TestConceptsModelEnvironment.js"
 import {FileHandler} from "../../utils/FileHandler.js";
 import {
     RefsTest,
@@ -8,8 +8,9 @@ import {
 import {describe, test, expect, beforeEach} from "vitest";
 
 describe("Parser properties of type", () => {
-    const reader = TestParserModelEnvironment.getInstance().reader;
-    const writer = TestParserModelEnvironment.getInstance().writer;
+    CoreConfig.initialize(TestConceptsModelEnvironment.getInstance(), null)
+    const reader = FREON.environment.reader;
+    const writer = FREON.environment.writer;
     const fileHandler = new FileHandler();
 
     beforeEach(() => {

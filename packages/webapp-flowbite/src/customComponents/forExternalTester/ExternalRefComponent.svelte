@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {AST, RefReplacerBox, FreNodeReference} from "@freon4dsl/core";
+    import {FREON, RefReplacerBox, FreNodeReference} from "@freon4dsl/core";
     import {CC} from "@freon4dsl/samples-external-tester";
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
 
@@ -24,7 +24,7 @@
                 nameOfValue = "<unknown>";
             }
         } else { // the default
-            AST.change(() => {
+            FREON.astChanger.change(() => {
                 value = FreNodeReference.create<CC>('noCC', 'CC');
             });
             nameOfValue = "<unknown>";

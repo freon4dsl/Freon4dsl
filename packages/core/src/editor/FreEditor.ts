@@ -2,8 +2,7 @@ import pkg from 'lodash';
 const { isEqual } = pkg;
 
 import { autorun, makeObservable, observable } from "mobx";
-import { AST } from "../change-manager/index.js";
-import type { FreEnvironment } from "../environment/index.js";
+import { type FreEnvironment, FREON } from "../environment/index.js"
 import { FreNodeReference } from "../ast/index.js";
 import type { FreOwnerDescriptor, FreNode } from "../ast/index.js";
 import { FreLanguage } from "../language/index.js";
@@ -292,11 +291,11 @@ export class FreEditor {
 
     /**
      * Sets 'element' to be the selectedElement, and its first child, which is editable, to the selectedBox.
-     * @param element
+     * @param node
      */
-    selectFirstEditableChildBox(element: FreNode, skip: boolean = false): void {
-        if (this.checkParam(element)) {
-            let first = this.projection.getBox(element).firstEditableChild;
+    selectFirstEditableChildBox(node: FreNode, skip: boolean = false): void {
+        if (this.checkParam(node)) {
+            let first = this.projection.getBox(node).firstEditableChild;
             if (skip && first.role === LEFT_MOST) {
                first = first.nextLeafRight
             }
@@ -306,16 +305,16 @@ export class FreEditor {
                 this._selectedIndex = first.propertyIndex;
                 this._selectedPosition = FreCaret.UNSPECIFIED;
             }
-            this._selectedElement = element;
+            this._selectedElement = node;
             this.selectionChanged();
         }
     }
 
-    private checkParam(element: FreNode): boolean {
+    private checkParam(node: FreNode): boolean {
         if (this.NOSELECT) {
             return false;
         }
-        if (isNullOrUndefined(element)) {
+        if (isNullOrUndefined(node)) {
             // LOGGER.error("FreEditor.selectedElement is null !");
             return false;
         }
@@ -388,7 +387,7 @@ export class FreEditor {
             const parentElement = ownerDescriptor.owner;
             if (propertyIndex !== undefined) {
                 const arrayProperty = (ownerDescriptor.owner as any)[ownerDescriptor.propertyName] as any;
-                AST.changeNamed("deleteBox", () => {
+                FREON.astChanger.changeNamed("deleteBox", () => {
                     arrayProperty.splice(propertyIndex, 1);
                 })
                 const length = arrayProperty.length;
@@ -401,7 +400,7 @@ export class FreEditor {
                     this.selectElement(arrayProperty[propertyIndex]);
                 }
             } else {
-                AST.changeNamed("deleteBox", () => {
+                FREON.astChanger.changeNamed("deleteBox", () => {
                     ownerDescriptor.owner[ownerDescriptor.propertyName] = null;
                 })
                 this.selectElementBox(
@@ -431,7 +430,7 @@ export class FreEditor {
             LOGGER.log("  no property found")
         } else {
             let changedNode: FreNode | undefined = undefined
-            AST.changeNamed("delete text box", () => {
+            FREON.astChanger.changeNamed("delete text box", () => {
                 changedNode = this.deletePropertyForNode(node, propertyName, box.propertyIndex, false)
             })
             // this.selectElement(changedNode)
@@ -449,7 +448,7 @@ export class FreEditor {
         if (propertyInfo.isList && notNullOrUndefined(propertyIndex)) {
             LOGGER.log(`    deletePropertyForNode for list ${propertyName}[${propertyIndex}]`)
             const arrayProperty = node[propertyName] as any[];
-            AST.changeNamed("deleteBox", () => {
+            FREON.astChanger.changeNamed("deleteBox", () => {
                 arrayProperty.splice(propertyIndex, 1);
             })
             return node
@@ -459,7 +458,7 @@ export class FreEditor {
             return  undefined;
         } else if (propertyInfo.propertyKind === "part") {
             LOGGER.log(`    deletePropertyForNode delete single part    `)
-            AST.changeNamed("deleteBox", () => {
+            FREON.astChanger.changeNamed("deleteBox", () => {
                 node[propertyName] = null
             })
             changedNode = node
@@ -479,7 +478,7 @@ export class FreEditor {
             const ref = node[propertyName] as FreNodeReference<any>
             LOGGER.log(`    deletePropertyForNode emptying reference ${ref}`)
             if (notNullOrUndefined(ref)) {
-                AST.changeNamed("deleteBox", () => {
+                FREON.astChanger.changeNamed("deleteBox", () => {
                     ref.name = ""
                 })
                 changedNode = undefined
@@ -511,7 +510,7 @@ export class FreEditor {
                 return changedNode
             } else {
                 LOGGER.log(`    DONE deletePropertyForNode emptying reference`)
-                // AST.changeNamed("deleteBox", () => {
+                // FREON.astChanger.changeNamed("deleteBox", () => {
                 //     ref.name = ""
                 // })
                 return changedNode

@@ -64,16 +64,16 @@ export class UtilPartHelpers {
         return BoxFactory.externalPartList(node, propertyName, externalComponentName, role, children, initializer);
     }
 
-    private static addPlaceholder(children: Box[], element: FreNode, propertyName: string) {
+    private static addPlaceholder(children: Box[], node: FreNode, propertyName: string) {
         return children.concat(
             BoxFactory.action(
-                element,
-                RoleProvider.property(element.freLanguageConcept(), propertyName, "new-list-item"),
+                node,
+                RoleProvider.property(node.freLanguageConcept(), propertyName, "new-list-item"),
                 `+ ${propertyName}`,
                 {
                     propertyName: `${propertyName}`,
                     conceptName: FreLanguage.getInstance().classifierProperty(
-                        element.freLanguageConcept(),
+                        node.freLanguageConcept(),
                         propertyName,
                     ).type,
                 },
@@ -82,7 +82,7 @@ export class UtilPartHelpers {
     }
 
     private static makePartItems(
-        element: FreNode,
+        node: FreNode,
         property: FreNode[],
         propertyName: string,
         boxProviderCache: FreProjectionHandler,
@@ -93,14 +93,14 @@ export class UtilPartHelpers {
         property.forEach((listElem, index) => {
             const myProvider: FreBoxProvider = boxProviderCache.getBoxProvider(listElem);
             const roleName: string = RoleProvider.property(
-                element.freLanguageConcept(),
+                node.freLanguageConcept(),
                 propertyName,
                 "list-item",
                 index,
             );
             let innerBox: ElementBox = myProvider.box;
             if (listJoin !== FreListInfo.NullListInfo) {
-                result.push(...UtilCommon.addListJoin(listJoin, index, numberOfItems, element, roleName, propertyName, innerBox));
+                result.push(...UtilCommon.addListJoin(listJoin, index, numberOfItems, node, roleName, propertyName, innerBox));
             } else {
                 result.push(innerBox);
             }

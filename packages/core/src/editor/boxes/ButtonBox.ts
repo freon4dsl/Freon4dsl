@@ -1,4 +1,4 @@
-import { AST } from "../../change-manager/index.js";
+import { FREON } from "../../environment/index.js"
 import { Box } from "./internal.js";
 import type { FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
@@ -26,7 +26,7 @@ export class ButtonBox extends Box {
             if (action.activeInBoxRoles.includes(this.role)) {
                 // execute the action
                 let postAction: FrePostAction = null;
-                AST.changeNamed("ButtonBox.executeAction", () => {
+                FREON.astChanger.changeNamed("ButtonBox.executeAction", () => {
                     postAction = action.execute(this, "no-label", editor, -1);
                 });
                 if (!!postAction) {

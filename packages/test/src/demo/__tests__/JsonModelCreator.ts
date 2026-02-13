@@ -1,4 +1,4 @@
-import { AST, FreNodeReference } from "@freon4dsl/core";
+import { FREON, FreNodeReference } from "@freon4dsl/core";
 import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, DemoFunction } from "../freon/language/index.js";
 
 export class JsonModelCreator {
@@ -10,7 +10,7 @@ export class JsonModelCreator {
 
     public createCorrectModel(): DemoModel {
         let correctModel
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             correctModel = DemoModel.create({ name: "DemoModel_1" });
 
             const personEnt = DemoEntity.create({ name: "Person" });

@@ -1,4 +1,5 @@
-import { AST, FreNodeReference } from "@freon4dsl/core";
+import { FREON, FreNodeReference, FREON, CoreConfig } from "@freon4dsl/core"
+import { OctopusModelEnvironment } from "../../octopus-small/freon/config/OctopusModelEnvironment.js"
 import {
     DemoMultiplyExpression,
     DemoNumberLiteralExpression,
@@ -20,7 +21,8 @@ import { describe, test, expect } from "vitest";
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
         // const model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
-        const unparser = DemoEnvironment.getInstance().writer;
+        CoreConfig.initialize(DemoEnvironment.getInstance(), null)
+        const unparser = FREON.environment.writer;
 
         test("3", () => {
             let result: string;
@@ -31,7 +33,7 @@ describe("Testing Unparser", () => {
         });
 
         test("multiplication 3 * 10", () => {
-            AST.change( () => {
+            FREON.astChanger.change( () => {
                 let result: string;
                 const mult: DemoMultiplyExpression = new DemoMultiplyExpression();
                 mult.left = makeLiteralExp("3");
@@ -42,7 +44,7 @@ describe("Testing Unparser", () => {
         });
 
         test("multiplication 3 * 'temp'", () => {
-            AST.change( () => {
+            FREON.astChanger.change( () => {
                 let result: string;
                 const mult: DemoMultiplyExpression = new DemoMultiplyExpression();
                 mult.left = makeLiteralExp("3");
@@ -53,7 +55,7 @@ describe("Testing Unparser", () => {
         });
 
         test("multiplication 3 / 4 * 'temp'", () => {
-            AST.change( () => {
+            FREON.astChanger.change( () => {
                 let result: string;
                 const div: DemoDivideExpression = new DemoDivideExpression();
                 div.left = makeLiteralExp("3");
@@ -67,7 +69,7 @@ describe("Testing Unparser", () => {
         });
 
         test("1 + 2 * 'Person'", () => {
-            AST.change( () => {
+            FREON.astChanger.change( () => {
                 let result: string;
                 const variableExpression = new DemoVariableRef();
                 const variable = new DemoVariable();
@@ -90,7 +92,7 @@ describe("Testing Unparser", () => {
         });
 
         test('\'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"\'', () => {
-            AST.change( () => {
+            FREON.astChanger.change( () => {
                 let result: string;
                 const determine = DemoFunction.create({ name: "determine" });
                 const AAP = DemoVariable.create({ name: "AAP" });
@@ -112,7 +114,7 @@ describe("Testing Unparser", () => {
         });
 
         test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 }", () => {
-            AST.change( () => {
+            FREON.astChanger.change( () => {
                 let result: string;
                 let myType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Boolean, "DemoAttributeType");
                 const personEnt = DemoEntity.create({ name: "Person" });
@@ -159,7 +161,7 @@ describe("Testing Unparser", () => {
         });
 
         test("complete example model with simple attribute types", () => {
-            AST.change( () => {
+            FREON.astChanger.change( () => {
                 let result: string = "";
                 const testmodel = new DemoModelCreator().createModelWithMultipleUnits();
                 expect(testmodel.models.length).not.toBe(0);

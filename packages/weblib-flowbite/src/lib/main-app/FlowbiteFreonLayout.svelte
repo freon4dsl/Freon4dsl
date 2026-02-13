@@ -31,7 +31,6 @@
 	import TabContent from '$lib/main-app/TabContent.svelte';
 	import { editorInfo, infoPanelShown } from '$lib/stores';
 	import ErrorMessage from '$lib/dialogs/ErrorMessage.svelte';
-	import { FreUndoManager } from '@freon4dsl/core';
 
 	let transitionParams = {
 		x: 320,

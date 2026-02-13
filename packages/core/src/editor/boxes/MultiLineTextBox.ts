@@ -1,5 +1,5 @@
 import type { FreNode } from "../../ast/index.js";
-import { AST } from "../../change-manager/index.js";
+import { FREON } from "../../environment/index.js"
 import { FreUtils } from "../../util/index.js";
 import { Box } from "./Box.js";
 import { FreLogger } from "../../logging/index.js";
@@ -18,7 +18,7 @@ export class MultiLineTextBox extends Box {
      */
     setText(newValue: string): void {
         LOGGER.log("setText to " + newValue);
-        AST.changeNamed("MultiLineTextBox.setText", () => {
+        FREON.astChanger.changeNamed("MultiLineTextBox.setText", () => {
             this.$setText(newValue);
         })
         this.isDirty();

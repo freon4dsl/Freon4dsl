@@ -1,4 +1,4 @@
-import { AST, FreNodeReference } from '@freon4dsl/core';
+import { FREON, FreNodeReference, CoreConfig } from "@freon4dsl/core"
 import { DSmodel, DSref, DSunit } from "../freon/language/index.js";
 import { SimpleModelCreator } from "./SimpleModelCreator.js";
 import { DSmodelEnvironment } from "../freon/config/DSmodelEnvironment.js";
@@ -27,7 +27,8 @@ function printDifference(creator: SimpleModelCreator, visibleNames: string[]) {
 }
 
 describe("Testing Default Scoper", () => {
-    const environment = DSmodelEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
+    CoreConfig.initialize(DSmodelEnvironment.getInstance(), null)
+    const environment = FREON.environment;
     const creator = new ExtendedModelCreator();
     const scoper = environment.scoper;
     // const unparser = environment.writer;
@@ -88,7 +89,7 @@ describe("Testing Default Scoper", () => {
         let ref4: FreNodeReference<DSref>;
         let otherUnit: DSunit;
 
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             // create extra references
             ref1 = FreNodeReference.create<DSref>(["private9_OF_unit1_OF_model"], "DSprivate");
             ref2 = FreNodeReference.create<DSref>(["public2_OF_unit1_OF_model"], "DSpublic");
@@ -111,7 +112,7 @@ describe("Testing Default Scoper", () => {
         expect(ref4.referred?.name).toBe("public7_OF_private6_OF_public2_OF_unit1_OF_model");
 
         // now add them to the same unit
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             let sameUnit = model.findUnit("unit1_OF_model") as DSunit;
             sameUnit.dsRefs.push(ref1);
             sameUnit.dsRefs.push(ref2);

@@ -37,13 +37,13 @@ export class HorizontalListBox extends ListBox {
     readonly kind: string = "HorizontalListBox";
 
     constructor(
-        element: FreNode,
+        node: FreNode,
         role: string,
         propertyName: string,
         children?: (Box | null)[],
         initializer?: Partial<HorizontalListBox>,
     ) {
-        super(element, role, propertyName, children, initializer);
+        super(node, role, propertyName, children, initializer);
         this.direction = ListDirection.HORIZONTAL;
     }
 }

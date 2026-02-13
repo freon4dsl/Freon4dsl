@@ -60,7 +60,6 @@ export class SvelteTestReferenceChecker extends SvelteTestDefaultWorker implemen
                     `Reference '${referredElem.pathnameToString(this.refSeparator)}' should have type '${referredElem.typeName}', but found type(s) [${possibles.map((elem) => `${elem.freLanguageConcept()}`).join(", ")}]`,
                     modelelement,
                     `${propertyName} of ${locationDescription}`,
-                    `${propertyName}`,
                     FreErrorSeverity.Error,
                 ),
             );
@@ -70,7 +69,6 @@ export class SvelteTestReferenceChecker extends SvelteTestDefaultWorker implemen
                     `Cannot find reference '${referredElem.pathnameToString(this.refSeparator)}'`,
                     modelelement,
                     `${propertyName} of ${locationDescription}`,
-                    `${propertyName}`,
                     FreErrorSeverity.Error,
                 ),
             );

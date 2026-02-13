@@ -1,6 +1,6 @@
 <script lang="ts">
     import {afterUpdate, onMount} from "svelte";
-    import {Box, ExternalPartListBox, FreEditor, FreNode, FreNodeReference, AST} from "@freon4dsl/core";
+    import {Box, ExternalPartListBox, FreEditor, FreNode, FreNodeReference, FREON} from "@freon4dsl/core";
     import {RenderComponent} from "@freon4dsl/core-svelte";
     import {Slot, TimeStamp} from "@freon4dsl/samples-course-schedule";
     import IconButton from "@smui/icon-button";
@@ -156,9 +156,9 @@
     }
 
     const addSlot = (timeStamp: TimeStamp) => {
-        // Note that you need to put any changes to the actual model in a 'AST.change' or 'AST.changeNamed',
+        // Note that you need to put any changes to the actual model in a 'FREON.astChanger.change' or 'FREON.astChanger.changeNamed',
         // because all elements in the model are reactive using mobx.
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             let newSlot: Slot = Slot.create({time: FreNodeReference.create<TimeStamp>(timeStamp, "TimeStamp")});
             box.getPropertyValue().push(newSlot);
         });

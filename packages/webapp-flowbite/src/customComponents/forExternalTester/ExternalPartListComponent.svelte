@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { AST, PartListReplacerBox, type FreNode, notNullOrUndefined } from '@freon4dsl/core';
+    import { FREON, PartListReplacerBox, type FreNode, notNullOrUndefined } from '@freon4dsl/core';
     import {BB} from "@freon4dsl/samples-external-tester";
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
 
@@ -21,9 +21,9 @@
     getValue();
 
     const addChild = () => {
-        // Note that you need to put any changes to the actual model in a 'AST.change or AST.changeNamed',
+        // Note that you need to put any changes to the actual model in a 'FREON.astChanger.change or FREON.astChanger.changeNamed',
         // because all elements in the model are reactive using mobx.
-        AST.changeNamed("ExternalPartListComponent.addChild", () => {
+        FREON.astChanger.changeNamed("ExternalPartListComponent.addChild", () => {
             let newBB: BB = BB.create({name: "new element", numberProp: 100, booleanProp: true});
             value.push(newBB);
         });

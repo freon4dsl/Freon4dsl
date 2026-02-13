@@ -1,4 +1,4 @@
-import { AST } from "../../../change-manager/index.js";
+import { FREON } from "../../../environment/index.js"
 import type { Box } from "../Box.js";
 import type { FreNode } from "../../../ast/index.js";
 import { FreUtils } from "../../../util/index.js";
@@ -31,7 +31,7 @@ export class BooleanReplacerBox extends AbstractExternalPropertyBox {
 
     setPropertyValue(newValue: boolean) {
         if (typeof newValue === "boolean" && this.getPropertyType() === "boolean") {
-            AST.change(() => {
+            FREON.astChanger.change(() => {
                 this.node[this.propertyName] = newValue;
             });
         } else {

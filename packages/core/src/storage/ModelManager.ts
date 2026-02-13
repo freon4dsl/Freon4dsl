@@ -1,65 +1,37 @@
 import { autorun, makeObservable, observable, runInAction } from "mobx"
 import type { FreModel, FreModelUnit } from "../ast/index.js"
-import {
-    AST,
-    FreChangeManager,
-    type FrePartDelta,
-    type FrePartListDelta,
-    type FrePrimDelta,
-    type FrePrimListDelta,
-    FreUndoManager,
-    ReferenceUpdateManager,
-} from "../change-manager/index.js"
-import type { FreEnvironment } from "../environment/index.js"
+import { type FrePartDelta, type FrePartListDelta, type FrePrimDelta, type FrePrimListDelta } from "../change-manager/index.js"
+import { FREON } from "../environment/CoreConfig.js"
 import { FreLogger } from "../logging/index.js"
 import { isNullOrUndefined, notNullOrUndefined } from "../util/index.js"
 import { FreErrorSeverity } from "../validator/index.js"
-import type { FreUnitIdentifier, IServerCommunication } from "./server/index.js"
+import { type IModelManager, InMemoryError, isInMemoryError, type ModelChangedCallbackFunction } from "./IModelManager.js"
+import type { FreUnitIdentifier } from "./server/index.js"
 
-export type ModelChangedCallbackFunction = (m: InMemoryModel) => void
+const LOGGER: FreLogger = new FreLogger("ModelManager")
 
-export class InMemoryError {
-    message: string
-    constructor (msg: string) {
-        this.message = msg
-    }
-}
-export function isInMemoryError(object: unknown): object is InMemoryError {
-    return object instanceof InMemoryError
-}
-
-const LOGGER: FreLogger = new FreLogger("InMemoryModel").mute()
-
-export class InMemoryModel {
-    private languageEnvironment: FreEnvironment
-    private server: IServerCommunication
+export class ModelManager implements IModelManager {
     model: FreModel | undefined = undefined
     // units that have been changed but not saved
     dirtyUnits: Set<FreModelUnit> = new Set()
 
-    constructor(languageEnvironment: FreEnvironment, server: IServerCommunication) {
-        if (languageEnvironment === undefined) {
-            console.trace()
-        }
-        this.languageEnvironment = languageEnvironment
-        this.server = server
+    constructor() {
         makeObservable(this, { model: observable })
-        ReferenceUpdateManager.getInstance() // initialize it
         autorun(() => {
             if (notNullOrUndefined(this.model)) {
                 this.model.getUnits()
                 this.currentModelChanged()
             }
         })
-        FreChangeManager.getInstance().subscribeToPart(this.partChanged)
-        FreChangeManager.getInstance().subscribeToPrimitive(this.primChanged)
-        FreChangeManager.getInstance().subscribeToList(this.listChanged)
-        FreChangeManager.getInstance().subscribeToListElement(this.listElementChanged)
+        FREON.astObserver.subscribeToPart(this.partChanged)
+        FREON.astObserver.subscribeToPrimitive(this.primChanged)
+        FREON.astObserver.subscribeToList(this.listChanged)
+        FREON.astObserver.subscribeToListElement(this.listElementChanged)
     }
 
     onInMemoryError = (msg: string, severity?: FreErrorSeverity): void => {
         console.error("onInMemoryError: " + msg + severity?.toString())
-        this.languageEnvironment?.editor.setUserMessage(msg, severity)
+        FREON.environment?.editor.setUserMessage(msg, severity)
     }
 
     /**
@@ -70,10 +42,10 @@ export class InMemoryModel {
     async createModel(name: string): Promise<FreModel | InMemoryError> {
         LOGGER.log(`createModel ${name}`)
         runInAction(() => {
-            this.model = this.languageEnvironment.newModel(name)
+            this.model = FREON.environment.newModel(name)
         })
-        const response = await this.server.createModel(name)
-        FreUndoManager.getInstance().cleanAllStacks()
+        const response = await FREON.server.createModel(name)
+        FREON.astChanger.cleanUndoRedo()
         if (response.errors.length !== 0) {
             this.onInMemoryError(response.errors[0], FreErrorSeverity.Info)
             return new InMemoryError(response.errors[0])
@@ -86,14 +58,14 @@ export class InMemoryModel {
      * After this call the current model is undefined.
      */
     async deleteModel(): Promise<void | InMemoryError> {
-        const response = await this.server.deleteModel(this.model.name)
+        const response = await FREON.server.deleteModel(this.model.name)
         if (response.errors.length > 0) {
             return new InMemoryError(response.errors[0])
         }
         runInAction(() => {
             this.model = undefined
         })
-        FreUndoManager.getInstance().cleanAllStacks()
+        FREON.astChanger.cleanUndoRedo()
     }
 
     /**
@@ -103,34 +75,34 @@ export class InMemoryModel {
      */
     async openModel(name: string): Promise<FreModel | InMemoryError> {
         LOGGER.log("openModel(" + name + ")")
-        AST.change(() => {
-            this.model = this.languageEnvironment.newModel(name)
+        FREON.astChanger.change(() => {
+            this.model = FREON.environment.newModel(name)
         })
-        const response = await this.server.loadUnitList(name)
-        if  (response.errors.length > 0) {
+        const response = await FREON.server.loadUnitList(name)
+        if (response.errors.length > 0) {
             this.onInMemoryError(response.errors[0])
             return new InMemoryError(response.errors[0])
         }
         for (const unitId of response.result) {
             LOGGER.log("openModel: load model-unit: " + unitId.name)
-            const unit = await this.server.loadModelUnit(this.model.name, unitId)
-            AST.change(() => {
+            const unit = await FREON.server.loadModelUnit(this.model.name, unitId)
+            FREON.astChanger.change(() => {
                 this.model.addUnit(unit.result as FreModelUnit)
             })
         }
-        FreUndoManager.getInstance().cleanAllStacks()
+        FREON.astChanger.cleanUndoRedo()
         return this.model
     }
 
     async saveModel(): Promise<void | InMemoryError> {
-        LOGGER.log("InMemoryModel.saveModel()")
+        LOGGER.log("ModelManager.saveModel()")
         // save all units that are 'dirty', i.e. that have been changed after the previous save
-        const savedUnits =  []
+        const savedUnits = []
         for (const unit of this.dirtyUnits) {
             const response = await this.saveUnit(unit)
             if (isInMemoryError(response)) {
                 // Clean dirty for units saved so far
-                savedUnits.forEach(saved => this.dirtyUnits.delete(saved))
+                savedUnits.forEach((saved) => this.dirtyUnits.delete(saved))
                 return response
             } else {
                 savedUnits.push(unit)
@@ -142,9 +114,9 @@ export class InMemoryModel {
 
     async renameModel(newName: string) {
         LOGGER.log(`renameModel to ${newName}`)
-        await this.server.renameModel(this.model.name, newName);
-        this.model.name = newName;
-        this.currentModelChanged();
+        await FREON.server.renameModel(this.model.name, newName)
+        this.model.name = newName
+        this.currentModelChanged()
     }
 
     /**
@@ -152,12 +124,12 @@ export class InMemoryModel {
      */
     async getModels(): Promise<string[] | InMemoryError> {
         LOGGER.log(`getModels`)
-        const response = await this.server.loadModelList()
+        const response = await FREON.server.loadModelList()
         if (response.errors.length > 0) {
             this.onInMemoryError(response.errors[0], FreErrorSeverity.Info)
             return new InMemoryError(response.errors[0])
         }
-        return response.result 
+        return response.result
     }
 
     /**
@@ -173,7 +145,7 @@ export class InMemoryModel {
             runInAction(() => {
                 newUnit.name = name
             })
-            const response = await this.server.createModelUnit(this.model.name, newUnit)
+            const response = await FREON.server.createModelUnit(this.model.name, newUnit)
             if (response.errors.length > 0) {
                 return new InMemoryError(response.errors[0])
             }
@@ -188,12 +160,12 @@ export class InMemoryModel {
      * @param unit
      */
     async deleteUnit(unit: FreModelUnit): Promise<void | InMemoryError> {
-        const response = await this.server.deleteModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() })
+        const response = await FREON.server.deleteModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() })
         if (response.errors.length > 0) {
             this.onInMemoryError(response.errors[0])
             return new InMemoryError(response.errors[0])
         }
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             this.model.removeUnit(unit)
         })
     }
@@ -203,13 +175,13 @@ export class InMemoryModel {
      * @param unitId
      */
     async deleteUnitById(unitId: FreUnitIdentifier): Promise<void | InMemoryError> {
-        const response = await this.server.deleteModelUnit(this.model.name, unitId)
+        const response = await FREON.server.deleteModelUnit(this.model.name, unitId)
         if (response.errors.length > 0) {
             this.onInMemoryError(response.errors[0])
             return new InMemoryError(response.errors[0])
         }
         const unit: FreModelUnit = this.getUnitById(unitId)
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             this.model.removeUnit(unit)
         })
     }
@@ -227,7 +199,7 @@ export class InMemoryModel {
             return
         }
         LOGGER.log(`renameUnit from ${oldName} to ${newName}`)
-        const response = await this.server.renameModelUnit(this.model.name, oldName, newName, unit)
+        const response = await FREON.server.renameModelUnit(this.model.name, oldName, newName, unit)
         if (response.errors.length > 0) {
             this.onInMemoryError(response.errors[0])
             return new InMemoryError(response.errors[0])
@@ -250,7 +222,7 @@ export class InMemoryModel {
      */
     async addUnit(unit: FreModelUnit): Promise<void> {
         LOGGER.log(`addUnit ${unit?.name}`)
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             this.model.addUnit(unit)
         })
         await this.saveUnit(unit)
@@ -300,7 +272,7 @@ export class InMemoryModel {
     async saveUnit(unit: FreModelUnit): Promise<void | InMemoryError> {
         LOGGER.log(`saveModelUnit`)
         if (this.dirtyUnits.has(unit)) {
-            const serverResponse = await this.server.saveModelUnit(
+            const serverResponse = await FREON.server.saveModelUnit(
                 this.model.name,
                 {
                     name: unit.name,
@@ -335,7 +307,7 @@ export class InMemoryModel {
     primChanged = (delta: FrePrimDelta) => {
         if (this.getUnits().includes(delta.unit)) {
             this.dirtyUnits.add(delta.unit)
-            if (delta.owner.freIsUnit() && delta.propertyName === "name" && typeof(delta.oldValue === "string")) {
+            if (delta.owner.freIsUnit() && delta.propertyName === "name" && typeof (delta.oldValue === "string")) {
                 // Unit name changed !
                 this.renameUnit(delta.oldValue as string, delta.newValue as string, delta.unit)
                 this.currentModelChanged()

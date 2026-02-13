@@ -139,16 +139,16 @@ export class BoxFactory {
     /**
      * Find the Box for the given element id and role in the cache,
      * When not there, create the element and put it in the cache
-     * @param element The element for which the box should be found
+     * @param node The element for which the box should be found
      * @param role    The role of the box
      * @param creator The function with which the box can be createed , if not there
      * @param cache   The cache to use
      */
-    private static find<T extends Box>(element: FreNode, role: string, creator: () => T, cache: BoxCache<T>): T {
+    private static find<T extends Box>(node: FreNode, role: string, creator: () => T, cache: BoxCache<T>): T {
         // 1. Create the box, or find the one that already exists for this element and role
-        const elementId = element.freId();
-        if (!!cache[elementId]) {
-            const box = cache[elementId][role];
+        const nodeId = node.freId();
+        if (!!cache[nodeId]) {
+            const box = cache[nodeId][role];
             if (!!box) {
                 // if (isNumberControlBox(box)) {
                 //     console.log(":: EXISTS " + box.kind + " for entity " + elementId + " role " + role + " already exists");
@@ -159,7 +159,7 @@ export class BoxFactory {
                 // if (isNumberControlBox(newBox)) {
                 //     console.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "            CREATED");
                 // }
-                cache[elementId][role] = newBox;
+                cache[nodeId][role] = newBox;
                 return newBox;
             }
         } else {
@@ -167,8 +167,8 @@ export class BoxFactory {
             // if (isNumberControlBox(newBox)) {
             //     console.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "               CREATED");
             // }
-            cache[elementId] = {};
-            cache[elementId][role] = newBox;
+            cache[nodeId] = {};
+            cache[nodeId][role] = newBox;
             return newBox;
         }
     }

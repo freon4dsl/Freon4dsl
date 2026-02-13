@@ -1,4 +1,5 @@
-import { AST } from "@freon4dsl/core";
+import { FREON, CoreConfig } from "@freon4dsl/core"
+import { AllEnvironment } from "../freon/config/AllEnvironment.js"
 import {
     ConceptWithPrimProps,
     ConceptWithAllProps,
@@ -8,11 +9,12 @@ import {
 import { describe, test, expect } from "vitest";
 
 describe("Checking primitive properties", () => {
+    CoreConfig.initialize(AllEnvironment.getInstance(), null)
     let concept1
     let concept2
     let concept3
     let concept4
-    AST.change( () => {
+    FREON.astChanger.change( () => {
         concept1 = ConceptWithPrimProps.create({
             conceptProp1: "string",
             conceptProp2: ["string", "string2"],

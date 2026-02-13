@@ -1,7 +1,7 @@
 import type { FreNamedNode } from "./FreNamedNode.js";
 import type { FreModelUnit } from "./FreModelUnit.js";
 
-// TODO rethink inheritance from FreNamedElement: no match method needed here
+// TODO rethink inheritance from FreNamedNode: no match method needed here
 export interface FreModel extends FreNamedNode {
     /**
      * Finds a unit of this model based on its name and 'metatype'.

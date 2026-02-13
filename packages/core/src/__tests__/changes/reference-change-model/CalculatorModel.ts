@@ -7,7 +7,7 @@ import {
     type FreModel,
 } from "../../../ast/index.js";
 import { FreLanguage} from "../../../language/index.js";
-import { AST } from "../../../change-manager/index.js";
+import { FREON } from "../../../change-manager/index.js";
 import { FreParseLocation } from '../../../reader/index.js';
 import { matchElementList } from "../../../ast-utils/index.js";
 import { FreUtils } from "../../../util/index.js";
@@ -167,7 +167,7 @@ export class CalculatorModel extends MobxModelElementImpl implements FreModel {
         }
         // we must store the interface in the same place as the old unit, which info is held in FreContainer()
         if (oldUnit.freLanguageConcept() === "Calculator" && oldUnit.freOwnerDescriptor().propertyName === "calc") {
-            AST.changeNamed("removeUnit", () => {
+            FREON.astChanger.changeNamed("removeUnit", () => {
                 const index = this.calc.indexOf(oldUnit as Calculator);
                 this.calc.splice(index, 1, newUnit as Calculator);
             });
@@ -187,7 +187,7 @@ export class CalculatorModel extends MobxModelElementImpl implements FreModel {
             const myMetatype = newUnit.freLanguageConcept();
             switch (myMetatype) {
                 case "Calculator": {
-                    AST.changeNamed("addUnit", () => {
+                    FREON.astChanger.changeNamed("addUnit", () => {
                         this.calc.push(newUnit as Calculator);
                     });
                     return true;
@@ -207,7 +207,7 @@ export class CalculatorModel extends MobxModelElementImpl implements FreModel {
             const myMetatype = oldUnit.freLanguageConcept();
             switch (myMetatype) {
                 case "Calculator": {
-                    AST.changeNamed("removeUnit", () => {
+                    FREON.astChanger.changeNamed("removeUnit", () => {
                         this.calc.splice(this.calc.indexOf(oldUnit as Calculator), 1);
                     });
                     return true;
@@ -229,7 +229,7 @@ export class CalculatorModel extends MobxModelElementImpl implements FreModel {
                 runInAction(() => {
                     unit = Calculator.create({});
                 });
-                AST.changeNamed("newUnit", () => {
+                FREON.astChanger.changeNamed("newUnit", () => {
                     this.calc.push(unit as Calculator);
                 });
                 return unit;

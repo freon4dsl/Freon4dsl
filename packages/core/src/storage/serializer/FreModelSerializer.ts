@@ -12,10 +12,12 @@ import type { FreSerializer } from "./FreSerializer.js";
  * Depends on private keys etc. as defined in MobXModelElement decorators.
  */
 export class FreModelSerializer implements FreSerializer {
-    private language: FreLanguage;
+    private get language(): FreLanguage {
+        return FreLanguage.getInstance()
+    }
 
     constructor() {
-        this.language = FreLanguage.getInstance();
+        // this.language = FreLanguage.getInstance();
     }
 
     /**
@@ -26,7 +28,7 @@ export class FreModelSerializer implements FreSerializer {
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
     public toTypeScriptInstance(jsonObject: Object): FreNode {
-        // Not using AST.change(...) here, because we don't need an undo for this code
+        // Not using FREON.astChanger.change(...) here, because we don't need an undo for this code
         return runInAction( () => {
             return this.toTypeScriptInstanceInternal(jsonObject);
         })

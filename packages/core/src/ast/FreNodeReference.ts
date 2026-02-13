@@ -1,7 +1,7 @@
 import { qualifiedName } from './FreNamedNode.js';
 import type { FreNamedNode } from './FreNamedNode.js';
 import { computed, observable, makeObservable } from "mobx";
-import { FreLanguageEnvironment } from "../environment/index.js";
+import { FREON } from "../environment/index.js"
 import { FreLogger } from "../logging/index.js";
 import { MobxModelElementImpl } from "./decorators/index.js";
 import type { FreParseLocation } from '../reader/index.js';
@@ -110,7 +110,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         if (!!this._FRE_referred) {
             return this._FRE_referred;
         } else {
-            return FreLanguageEnvironment.getInstance().scoper.resolvePathName(this) as T;
+            return FREON.environment.scoper.resolvePathName(this) as T;
         }
     }
 

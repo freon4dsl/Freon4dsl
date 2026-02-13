@@ -1,7 +1,7 @@
 import { LionWebJsonChunk, LionWebJsonNode } from "@lionweb/validation";
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { DemoEntity, DemoFunction, DemoModel } from "../freon/language/index.js";
-import { AST, FreLionwebSerializer, FreModelSerializer } from "@freon4dsl/core";
+import { FREON, FreLionwebSerializer, FreModelSerializer, CoreConfig } from "@freon4dsl/core"
 import { JsonModelCreator } from "./JsonModelCreator.js";
 import { describe, it, test, expect, beforeEach } from "vitest";
 
@@ -11,7 +11,7 @@ const serializers = ["freon", "lionweb"];
 serializers.forEach(serializer => {
 
     describe("Checking Serializer on Demo", () => {
-        DemoEnvironment.getInstance();
+        CoreConfig.initialize(DemoEnvironment.getInstance(), null)
         let initialModel: DemoModel = new JsonModelCreator().model;
 
         // beforeEach(done => {
@@ -29,7 +29,7 @@ serializers.forEach(serializer => {
             }
             // console.log(JSON.stringify(jsonOut));
 
-            AST.change(() => {
+            FREON.astChanger.change(() => {
                 const typescript = (serializer === "freon" ? serial.toTypeScriptInstance(jsonOut) : serial.toTypeScriptInstance(chunk))
                 // console.log("typescript  type: " + typescript["$typename"]);
 
@@ -61,7 +61,7 @@ serializers.forEach(serializer => {
             // console.log(JSON.stringify(jsonOut));
 
             if (!!jsonOut) {
-                AST.change(() => {
+                FREON.astChanger.change(() => {
                     const typescript = serial.toTypeScriptInstance(jsonOut);
                     // console.log("typescript  type: " + typescript["$typename"]);
 

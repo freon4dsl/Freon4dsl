@@ -11,12 +11,12 @@ export class MenuItem {
     // The method that is called when this menu item is chosen.
     // In the handler, sometimes we need to know the element, sometimes we need only the index of the element.
     // For sake of conformity, we always pass both parameters.
-    handler: (element: FreNode, index: number, editor: FreEditor) => void;
+    handler: (node: FreNode, index: number, editor: FreEditor) => void;
 
     constructor(
         label: string,
         shortcut: string,
-        handler: (element: FreNode, index: number, editor: FreEditor) => void,
+        handler: (node: FreNode, index: number, editor: FreEditor) => void,
         subItems?: MenuItem[],
     ) {
         this.label = label;

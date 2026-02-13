@@ -15,9 +15,9 @@ export interface FreTyper {
     /**
      * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
      * Returns undefined when this typer instance cannot determine the outcome.
-     * @param modelelement
+     * @param node
      */
-    inferType(modelelement: FreNode): FreType | undefined;
+    inferType(node: FreNode): FreType | undefined;
 
     /**
      * Returns true if type1 equals type2.

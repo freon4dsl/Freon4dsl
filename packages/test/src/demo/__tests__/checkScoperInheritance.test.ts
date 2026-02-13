@@ -1,3 +1,4 @@
+import { FREON, CoreConfig } from "@freon4dsl/core"
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { DemoEntity, Demo } from "../freon/language/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
@@ -5,7 +6,8 @@ import { getVisibleNames } from '../../utils/HelperFunctions.js';
 import { describe, test, expect, beforeEach } from "vitest";
 
 describe("testing Scoper", () => {
-    let scoper = DemoEnvironment.getInstance().scoper;
+    CoreConfig.initialize(DemoEnvironment.getInstance(), null)
+    let scoper = FREON.environment.scoper;
     let modelCreator = new DemoModelCreator();
     let inheritanceModel: Demo = modelCreator.createInheritanceModel();
 

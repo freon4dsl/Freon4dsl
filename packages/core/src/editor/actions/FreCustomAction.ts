@@ -1,4 +1,4 @@
-import { AST } from "../../change-manager/index.js";
+import { FREON } from "../../environment/index.js"
 import { FreUtils } from "../../util/index.js";
 import type { Box } from "../boxes/index.js";
 import type { FreEditor } from "../FreEditor.js";
@@ -35,7 +35,7 @@ export class FreCustomAction extends FreAction {
         ACTION_LOGGER.log("FreCustomCommand: action [" + this.action + "]");
         const self = this;
         let selected
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             selected = self.action(box, triggerTypeToString(trigger), editor);
         })
         if (!!selected) {

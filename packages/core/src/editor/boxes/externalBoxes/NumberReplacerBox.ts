@@ -1,4 +1,4 @@
-import { AST } from "../../../change-manager/index.js";
+import { FREON } from "../../../environment/index.js"
 import type { Box } from "../Box.js";
 import type { FreNode } from "../../../ast/index.js";
 import { FreUtils } from "../../../util/index.js";
@@ -31,7 +31,7 @@ export class NumberReplacerBox extends AbstractExternalPropertyBox {
 
     setPropertyValue(newValue: number) {
         if (typeof newValue === "number" && this.getPropertyType() === "number") {
-            AST.change(() => {
+            FREON.astChanger.change(() => {
                 this.node[this.propertyName] = newValue;
             });
         } else {

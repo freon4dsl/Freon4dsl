@@ -1,4 +1,4 @@
-import {FreUtils} from "@freon4dsl/core";
+import { FREON, CoreConfig, FreUtils} from "@freon4dsl/core";
 import {FileHandler} from "../../utils/FileHandler.js";
 import {
     PartsInitiatorTest,
@@ -9,8 +9,9 @@ import {describe, test, expect, beforeEach} from "vitest";
 import {TestParserExtraEnvironment} from "../freon/config/TestParserExtraEnvironment.js";
 
 describe("Parser on extra elements", () => {
-    const reader = TestParserExtraEnvironment.getInstance().reader;
-    const writer = TestParserExtraEnvironment.getInstance().writer;
+    CoreConfig.initialize(TestParserExtraEnvironment.getInstance(), null)
+    const reader = FREON.environment.reader;
+    const writer = FREON.environment.writer;
     const fileHandler = new FileHandler();
 
     beforeEach(() => {

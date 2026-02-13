@@ -8,7 +8,7 @@ const LOGGER = new FreLogger("ReferenceUpdateWorker").mute();
 
 /**
  * AST worker that updates the referenced name per node.
- * This worker is used in ReferenceUpdateManager when walking the AST.
+ * This worker is used in ReferenceUpdateManager when walking the FREON.astChanger.
  */
 export class ReferenceUpdateWorker implements AstWorker {
     // The name update, for which we update the references

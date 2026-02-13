@@ -144,7 +144,7 @@ export class TableBoxRowOriented extends TableBox {
     kind = "TableBoxRowOriented";
 
     constructor(
-        element: FreNode,
+        node: FreNode,
         propertyName: string,
         conceptName: string,
         role: string,
@@ -152,7 +152,7 @@ export class TableBoxRowOriented extends TableBox {
         children?: (Box | null)[],
         initializer?: Partial<TableBoxRowOriented>,
     ) {
-        super(element, propertyName, conceptName, role, hasHeaders, children, initializer);
+        super(node, propertyName, conceptName, role, hasHeaders, children, initializer);
         this._direction = TableDirection.HORIZONTAL;
     }
 }
@@ -161,7 +161,7 @@ export class TableBoxColumnOriented extends TableBox {
     kind = "TableBoxColumnOriented";
 
     constructor(
-        element: FreNode,
+        node: FreNode,
         propertyName: string,
         conceptName: string,
         role: string,
@@ -169,7 +169,7 @@ export class TableBoxColumnOriented extends TableBox {
         children?: Box[],
         initializer?: Partial<TableBoxRowOriented>,
     ) {
-        super(element, propertyName, conceptName, role, hasHeaders, children, initializer);
+        super(node, propertyName, conceptName, role, hasHeaders, children, initializer);
         this._direction = TableDirection.VERTICAL;
     }
 }

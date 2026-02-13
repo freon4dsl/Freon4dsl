@@ -1,10 +1,12 @@
-import { AST } from "@freon4dsl/core";
+import { FREON, CoreConfig } from "@freon4dsl/core"
+import { XEnvironment } from "../freon/config/XEnvironment.js"
 import { ConceptA } from "../freon/language/index.js";
 import { describe, test, expect } from "vitest";
 
 describe("Checking circular imports", () => {
+    CoreConfig.initialize(XEnvironment.getInstance(), null)
     let concept1
-    AST.change( () => {
+    FREON.astChanger.change( () => {
         concept1 = ConceptA.create({
             conceptProp1: "string",
             conceptProp2: ["string", "string2"],

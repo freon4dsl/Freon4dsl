@@ -1,3 +1,4 @@
+import { FREON, CoreConfig } from "@freon4dsl/core"
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { DemoModel, DemoAttributeType } from "../freon/language/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
@@ -5,7 +6,8 @@ import { describe, test, expect } from "vitest";
 
 describe("Testing Typer", () => {
     describe("Typer.isType on DemoModel Instance", () => {
-        let typer = DemoEnvironment.getInstance().typer;
+        CoreConfig.initialize(DemoEnvironment.getInstance(), null)
+        let typer = FREON.environment.typer;
         let model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
 
         test("all entities should be types", () => {

@@ -1,7 +1,7 @@
-import { AST } from "../change-manager/index.js";
 import type { FreEditor } from "../editor/index.js";
 import type { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast/index.js";
 import { isFreExpression } from "../ast-utils/index.js";
+import { FREON } from "../environment/index.js"
 import type { IdProvider } from "./IdProvider.js";
 import { SimpleIdProvider } from "./SimpleIdProvider.js";
 
@@ -58,7 +58,7 @@ export class FreUtils {
     }
 
     static setContainer(exp: FreNode, freOwnerDescriptor: FreOwnerDescriptor | null, editor: FreEditor): void {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             if ( notNullOrUndefined(freOwnerDescriptor)) {
                 if (freOwnerDescriptor.propertyIndex === undefined) {
                     freOwnerDescriptor.owner[freOwnerDescriptor.propertyName] = exp;
@@ -80,7 +80,7 @@ export class FreUtils {
             isFreExpression(newExpression),
             "replaceExpression: new element should be a FreExpressionNode, but it isn't",
         );
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             FreUtils.setContainer(newExpression, oldExpression.freOwnerDescriptor(), editor);
         })
     }

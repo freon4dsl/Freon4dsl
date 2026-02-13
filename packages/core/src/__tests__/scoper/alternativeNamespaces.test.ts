@@ -16,7 +16,7 @@ import { initializeLanguage, NodeX, NodeY, UnitA, UnitB } from './scoper-model/i
 import { FreCompositeScoper, } from '../../scoper/index.js';
 import { FreNamedNode } from '../../ast/index.js';
 import { FreLanguage } from '../../language/index.js';
-import { FreLanguageEnvironment } from '../../environment/index.js';
+import { CoreConfig, FreLanguageEnvironment } from "../../environment/index.js"
 import { ReplacementNamespaceScoper } from './scoper-model/ReplacementNamespaceScoper.js';
 
 // !!!!!!!!!!!!!!!!!! model name may not be in fqn. This name is not visible in the model itself!!!!!!!!!!!!!!!!!!
@@ -51,6 +51,7 @@ describe("FreNamespace visibleNames with replacements, but without additions, ",
 	let concept_B_4: NodeX;
 	let concept_B_4_3: NodeX;
 
+    CoreConfig.initialize(null, null)
 	initializeLanguage();
 	const scoper: ReplacementNamespaceScoper = new ReplacementNamespaceScoper();
 	const mainScoper: FreCompositeScoper = new FreCompositeScoper();

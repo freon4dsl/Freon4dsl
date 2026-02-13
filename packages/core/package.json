@@ -1,56 +1,56 @@
 {
-  "name": "@freon4dsl/core",
-  "version": "2.1.0",
-  "description": "The core part of the Freon library, which enables you to build editors for the web",
-  "publishConfig": {
-    "access": "public"
-  }, 
-  "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/freon4dsl/Freon4dsl.git"
-  },
-  "files": [
-    "dist",
-    "src",
-    "!dist/**/*.test.*",
-    "!dist/**/*.spec.*"
-  ],
-  "scripts": {
-    "build": "tsc",
-    "build-dev": "tsc",
-    "build-release": "tsc",
-    "clean": "rm -rf node_modules/ && rm -rf dist/",
-    "cleanup": "bash ../../scripts/cleanup.sh",
-    "format": "prettier --write .",
-    "lint": "eslint",
-    "test": "vitest run",
-    "release-beta": "npm publish --tag beta",
-    "publish-local": "npm publish --registry http://localhost:4873 --tag local",
-    "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
-    "republish-local": "npm run unpublish-local && npm run publish-local",
-    "check-imports": "bash ../../scripts/check-import-extensions.sh"
-  },
-  "engines": {
-    "node": ">=22.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "^24.0.14",
-    "prettier": "^3.6.2",
-    "typescript": "^5.8.3",
-    "vite": "^7.0.4",
-    "vitest": "^3.2.4"
-  },
-  "dependencies": {
-    "lodash": "^4.17.21",
-    "@lionweb/json": "0.7.0-beta.13",
-    "@lionweb/server-shared": "0.3.0",
-    "@lionweb/server-client": "0.3.0",
-    "mobx": "^6.12.3",
-    "reflect-metadata": "^0.2.2",
-    "tslib": "^2.8.1"
-  }
+    "name": "@freon4dsl/core",
+    "version": "2.1.0",
+    "description": "The core part of the Freon library, which enables you to build editors for the web",
+    "publishConfig": {
+        "access": "public"
+    },
+    "license": "MIT",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/freon4dsl/Freon4dsl.git"
+    },
+    "files": [
+        "dist",
+        "src",
+        "!dist/**/*.test.*",
+        "!dist/**/*.spec.*"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "build-dev": "tsc",
+        "build-release": "tsc",
+        "clean": "rm -rf node_modules/ && rm -rf dist/",
+        "cleanup": "bash ../../scripts/cleanup.sh",
+        "format": "prettier --write .",
+        "lint": "eslint",
+        "test": "vitest run",
+        "release-beta": "npm publish --tag beta",
+        "publish-local": "npm publish --registry http://localhost:4873 --tag local",
+        "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+        "republish-local": "npm run unpublish-local && npm run publish-local",
+        "check-imports": "bash ../../scripts/check-import-extensions.sh"
+    },
+    "engines": {
+        "node": ">=22.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^24.0.14",
+        "prettier": "^3.6.2",
+        "typescript": "^5.8.3",
+        "vite": "^7.0.4",
+        "vitest": "^3.2.4"
+    },
+    "dependencies": {
+        "lodash": "^4.17.21",
+        "@lionweb/json": "0.7.0-beta.13",
+        "@lionweb/server-shared": "0.3.0",
+        "@lionweb/server-client": "0.3.0",
+        "mobx": "^6.12.3",
+        "reflect-metadata": "^0.2.2",
+        "tslib": "^2.8.1"
+    }
 }

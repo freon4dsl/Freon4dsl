@@ -28,7 +28,7 @@ export class FreProjectionHandler {
         this.conceptToPropertyProjection = map;
     }
     // 'elementToProvider' stores the boxprovider that is servicing a certain node (of type FreNode).
-    private elementToProvider: Map<string, FreBoxProvider> = new Map<string, FreBoxProvider>();
+    private nodeToProvider: Map<string, FreBoxProvider> = new Map<string, FreBoxProvider>();
     // 'conceptNameToProviderConstructor' holds a list of box provider constructors,
     // such that the right box provider can be instantiated for a certain (type of) FreNode node.
     private conceptNameToProviderConstructor: Map<string, (h: FreProjectionHandler) => FreBoxProvider> = new Map<
@@ -63,7 +63,7 @@ export class FreProjectionHandler {
      * Clears the element provider map, needed whenever a new model is opened
      */
     clear(): void {
-        this.elementToProvider.clear()
+        this.nodeToProvider.clear()
     }
 
     /////////// The main methods ///////////
@@ -71,19 +71,19 @@ export class FreProjectionHandler {
     /**
      * Returns a box for 'element'. Which box is returned is determined by the enabled projections.
      * Internally, one of the box providers in 'elementToProvider' is used.
-     * @param element
+     * @param node
      */
-    getBox(element: FreNode): ElementBox | undefined {
+    getBox(node: FreNode): ElementBox | undefined {
         // todo remove try-catch
         try {
-            if (isNullOrUndefined(element)) {
+            if (isNullOrUndefined(node)) {
                 throw Error("FreProjectionHandler.getBox: element is null/undefined");
             }
         } catch (e) {
             console.error(e.stack);
             return null;
         }
-        return this.getBoxProvider(element)?.box;
+        return this.getBoxProvider(node)?.box;
     }
 
     ////////// Methods for registering the boxproviders ////////////
@@ -115,11 +115,11 @@ export class FreProjectionHandler {
         }
 
         // return if present, else create a new provider based on the language concept
-        let boxProvider: FreBoxProvider = this.elementToProvider.get(node.freId());
+        let boxProvider: FreBoxProvider = this.nodeToProvider.get(node.freId());
         if (isNullOrUndefined(boxProvider)) {
             LOGGER.log("getBoxProvider is null/undefined for type " + node.freLanguageConcept());
             boxProvider = this.conceptNameToProviderConstructor.get(node.freLanguageConcept())(this);
-            this.elementToProvider.set(node.freId(), boxProvider);
+            this.nodeToProvider.set(node.freId(), boxProvider);
             boxProvider.node = node;
         }
         return boxProvider;
@@ -165,7 +165,7 @@ export class FreProjectionHandler {
         console.log(" ============== enabled projections: " + this._enabledProjections);
 
         //  Let all providers know that projection may be changed.
-        for (const provider of this.elementToProvider.values()) {
+        for (const provider of this.nodeToProvider.values()) {
             provider.clearUsedProjection();
         }
         for (const provider of this.headerProviders.values()) {
@@ -209,20 +209,20 @@ export class FreProjectionHandler {
     /**
      * Method that executes the function to create a box for 'element' that is registered
      * in the property 'nodeTypeToBoxMethod' of the custom projection named 'projectionName'.
-     * @param element
+     * @param node
      * @param projectionName
      */
-    executeCustomProjection(element: FreNode, projectionName: string): Box {
+    executeCustomProjection(node: FreNode, projectionName: string): Box {
         let BOX: Box = null;
         let customFunction: (node: FreNode) => Box = null;
         const customToUse = this.customProjections.find((cp) => cp.name === projectionName);
         if (!!customToUse) {
             // bind(customToUse) binds the projection 'customToUse' to the 'this' variable, for use within the custom function
-            customFunction = customToUse.nodeTypeToBoxMethod.get(element.freLanguageConcept())?.bind(customToUse);
+            customFunction = customToUse.nodeTypeToBoxMethod.get(node.freLanguageConcept())?.bind(customToUse);
         }
 
         if (!!customFunction) {
-            BOX = customFunction(element);
+            BOX = customFunction(node);
         }
         return BOX;
     }
