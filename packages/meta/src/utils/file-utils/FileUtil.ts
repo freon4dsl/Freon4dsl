@@ -135,7 +135,7 @@ export class FileUtil {
         const folder = "./" + dir;
         if (FileUtil.exists(folder)) {
             if (fs.readdirSync(folder).length === 0) {
-                fs.rmSync(folder);
+                fs.rmSync(folder, { recursive: true });
             } else {
                 LOGGER.info("Folder has content: [" + folder + "]");
             }
