@@ -96,6 +96,27 @@ export class ServerCommunication implements IServerCommunication {
     private _nodePort = 8001; // process.env.NODE_PORT || 8001;
     private _SERVER_IP = `http://127.0.0.1`;
     private _SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
+    private customHeaders: Record<string, string> = {};
+
+    /**
+     * Set a Bearer token to include in the Authorization header of every request.
+     * Pass null to clear the token.
+     */
+    setAuthToken(token: string | null): void {
+        if (token) {
+            this.customHeaders['Authorization'] = `Bearer ${token}`;
+        } else {
+            delete this.customHeaders['Authorization'];
+        }
+    }
+
+    /**
+     * Set custom headers to include in every request.
+     * Merges with (and can overwrite) previously set headers.
+     */
+    setCustomHeaders(headers: Record<string, string>): void {
+        Object.assign(this.customHeaders, headers);
+    }
 
     onError(msg: string, severity: FreErrorSeverity): void {
         // default implementation
@@ -272,6 +293,7 @@ export class ServerCommunication implements IServerCommunication {
                 method: "get",
                 headers: {
                     "Content-Type": "application/json",
+                    ...this.customHeaders,
                 },
             });
             clearTimeout(timeoutId);
@@ -306,6 +328,7 @@ export class ServerCommunication implements IServerCommunication {
                 method: "put",
                 headers: {
                     "Content-Type": "application/json",
+                    ...this.customHeaders,
                 },
                 body: JSON.stringify(data),
             });

@@ -31,6 +31,34 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     private _nodePort = 3005; // process.env.NODE_PORT || 3005;
     private _SERVER_IP = `http://127.0.0.1`;
     private _SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
+    private customHeaders: Record<string, string> = {};
+
+    /**
+     * Set a Bearer token to include in the Authorization header of every request.
+     * Pass null to clear the token.
+     *
+     * Note: LionWebRepositoryCommunication uses the @lionweb/server-client RepositoryClient
+     * internally, which manages its own HTTP calls. Custom headers set here are stored but
+     * may not automatically propagate to the RepositoryClient. If your deployment requires
+     * auth on the LionWeb repository, you may need to configure the RepositoryClient directly.
+     */
+    setAuthToken(token: string | null): void {
+        if (token) {
+            this.customHeaders['Authorization'] = `Bearer ${token}`;
+        } else {
+            delete this.customHeaders['Authorization'];
+        }
+    }
+
+    /**
+     * Set custom headers to include in every request.
+     * Merges with (and can overwrite) previously set headers.
+     *
+     * See note on {@link setAuthToken} regarding RepositoryClient limitations.
+     */
+    setCustomHeaders(headers: Record<string, string>): void {
+        Object.assign(this.customHeaders, headers);
+    }
 
     onError(msg: string, severity: FreErrorSeverity): void {
         // default implementation
