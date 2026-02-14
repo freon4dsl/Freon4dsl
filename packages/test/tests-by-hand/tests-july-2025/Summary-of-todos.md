@@ -118,7 +118,7 @@ We might want to add a save button at the top toolbar.
 
 ### OR12
 Remove or comment out console.logs in core and core-svelte (a.o. CommonFunctions,
-ListUtil, TableCellComponent, InMemoryModel).
+ListUtil, TableCellComponent, ModelManager).
 
 ### OR13
 When something goes wrong in server communication the user should get a readable error message.

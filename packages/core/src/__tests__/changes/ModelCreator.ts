@@ -1,3 +1,4 @@
+import { FREON } from "../../environment/index.js"
 import {
     CalculatorModel,
     Calculator,
@@ -7,14 +8,13 @@ import {
     NumberLiteralExpression,
     PlusExpression,
 } from "./reference-change-model/internal.js";
-import { AST } from "../../change-manager/index.js";
 import { FreNodeReference } from "../../ast/index.js"
 
 export class ModelCreator {
 
     static createSimpleModel(): CalculatorModel {
         let model: CalculatorModel;
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             let inputField: InputField = InputField.create({name: "x"})
             let outputField: OutputField = OutputField.create({expression:
                 InputFieldReference.create({field: FreNodeReference.create(inputField, "InputField")})})
@@ -30,7 +30,7 @@ export class ModelCreator {
 
     static createModelWithMultipleReferences(): CalculatorModel {
         let model: CalculatorModel;
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             let inputField1: InputField = InputField.create({name: "x"})
             let inputField2: InputField = InputField.create({name: "y"})
             let outputField1: OutputField = OutputField.create({
@@ -66,7 +66,7 @@ export class ModelCreator {
 
     static createModelWithCrossUnitReferences(): CalculatorModel {
         let model: CalculatorModel;
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             let inputField1: InputField = InputField.create({name: "x"})
             let inputField2: InputField = InputField.create({name: "y"})
             let outputField1: OutputField = OutputField.create({
@@ -103,7 +103,7 @@ export class ModelCreator {
 
     static createModelWithClashingNames(): CalculatorModel {
         let model: CalculatorModel;
-        AST.change(()=>{
+        FREON.astChanger.change(()=>{
             let inputField1: InputField = InputField.create({name: "x"})
             let inputField2: InputField = InputField.create({name: "x"})
             let outputField1: OutputField = OutputField.create({expression:

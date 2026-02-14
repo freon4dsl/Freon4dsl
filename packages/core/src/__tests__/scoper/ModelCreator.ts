@@ -1,12 +1,12 @@
+import { FREON } from "../../environment/index.js"
 import { IWithName, NodeY, NodeX, ScoperModel, UnitA, UnitB } from './scoper-model/index.js';
-import { AST } from '../../change-manager/index.js';
 import { FreNodeReference } from '../../ast/index.js';
 
 export class ModelCreator {
 
 	static createSimpleModel(): ScoperModel {
 		let model: ScoperModel;
-		AST.change( () => {
+		FREON.astChanger.change( () => {
 			let children : IWithName[] = [];
 			for (let i = 0; i < 5; i++) {
 				let grandchildren : IWithName[] = [];
@@ -33,7 +33,7 @@ export class ModelCreator {
 
 	static createModel2(): ScoperModel {
 		let model: ScoperModel;
-		AST.change( () => {
+		FREON.astChanger.change( () => {
 			let children : IWithName[] = [];
 			for (let i = 1; i < 3; i++) {
 				let grandchildren : IWithName[] = [];
@@ -68,7 +68,7 @@ export class ModelCreator {
 
 	static createModel3(): ScoperModel {
 		let model: ScoperModel;
-		AST.change( () => {
+		FREON.astChanger.change( () => {
 			let children : IWithName[] = [];
 			for (let i = 1; i < 3; i++) {
 				let grandchildren : IWithName[] = [];

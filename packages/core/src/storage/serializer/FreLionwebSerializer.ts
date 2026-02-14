@@ -35,11 +35,13 @@ type ParsedNode = {
 };
 
 export class FreLionwebSerializer implements FreSerializer {
-    private language: FreLanguage;
+    private get language(): FreLanguage {
+        return FreLanguage.getInstance()
+    }
     private nodesfromJson: Map<string, ParsedNode> = new Map<string, ParsedNode>();
 
     constructor() {
-        this.language = FreLanguage.getInstance();
+        // this.language = FreLanguage.getInstance();
     }
 
     /**
@@ -66,7 +68,7 @@ export class FreLionwebSerializer implements FreSerializer {
         LOGGER.log("SerializationFormatVersion: " + serVersion);
         // First read all nodes without children, and store them in a map.
         const nodes: LionWebJsonNode[] = chunk.nodes;
-        // Not using AST.change(...) here, because we don't need an undo for this code
+        // Not using FREON.astChanger.change(...) here, because we don't need an undo for this code
         runInAction( () => {
             for (const node of nodes) {
                 // LOGGER.log("node: " + object.concept.key + "     with id " + object.id)

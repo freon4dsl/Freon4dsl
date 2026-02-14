@@ -1,4 +1,4 @@
-import {AST} from "@freon4dsl/core";
+import { FREON, CoreConfig } from "@freon4dsl/core"
 import {Demo, DemoUnit} from "../freon/language/index.js";
 import {DemoEnvironment} from "../freon/config/DemoEnvironment.js";
 import {FileHandler} from "../../utils/FileHandler.js";
@@ -6,8 +6,9 @@ import {describe, test, expect} from "vitest";
 
 describe("Test the parser", () => {
     test(": read two units and create a model", () => {
-        const reader = DemoEnvironment.getInstance().reader;
-        const writer = DemoEnvironment.getInstance().writer;
+        CoreConfig.initialize(DemoEnvironment.getInstance(), null)
+        const reader = FREON.environment.reader;
+        const writer = FREON.environment.writer;
         const fileHandler = new FileHandler();
 
         let input = fileHandler.stringFromFile("src/parser_gen/__tests__/ParserInput1.txt");
@@ -35,7 +36,7 @@ describe("Test the parser", () => {
         });
         //
         let model: Demo;
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             const myModels: DemoUnit[] = [];
             myModels.push(unit1);
             myModels.push(unit2);

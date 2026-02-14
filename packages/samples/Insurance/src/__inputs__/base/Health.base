@@ -1,21 +1,21 @@
-Base Products health1 for HealthTheme
-	 InsurancePart hospitalization
+Base Products `health1` for `HealthTheme`
+	 InsurancePart `hospitalization`
      	 risk assessment: 70%
      	 maximum payout: EUR 1500000,00
      	 is approved: JA
-	 InsurancePart medicines
+	 InsurancePart `medicines`
      	 risk assessment: 70%
      	 maximum payout: EUR 250000,00
      	 is approved: JA
-	 InsurancePart dentist
+	 InsurancePart `dentist`
      	 risk assessment: 70%
      	 maximum payout: EUR 350000,00
      	 is approved: JA
-	 InsurancePart eyecare
+	 InsurancePart `eyecare`
      	 risk assessment: 70%
      	 maximum payout: EUR 150000,00
      	 is approved: JA
-	 InsurancePart generalPractitioner
+	 InsurancePart `generalPractitioner`
      	 risk assessment: 70%
      	 maximum payout: EUR 200000,00
      	 is approved: JA

@@ -1,10 +1,11 @@
 import {describe, test, expect} from "vitest";
-import { FreError } from "@freon4dsl/core";
+import { CoreConfig, FreError } from "@freon4dsl/core"
 import { FileUtil } from '@freon4dsl/test-helpers';
 import { FreStructureDef, FreTyperModel, FreTyperDef } from '../freon/language/index.js';
 import { LanguageEnvironment } from '../index.js';
 
 describe("Fre Typer Parser", () => {
+    CoreConfig.initialize(LanguageEnvironment.getInstance(), null)
     const reader = LanguageEnvironment.getInstance().reader;
     const writer = LanguageEnvironment.getInstance().writer;
     const validator = LanguageEnvironment.getInstance().validator;
@@ -12,13 +13,13 @@ describe("Fre Typer Parser", () => {
 
     test(" on .type file", () => {
         const completeModel: FreTyperModel = new FreTyperModel();
-        const languageStr = FileUtil.stringFromFile('./packages/samples/TyperLanguage/src/__inputs__/' + "typer-test/types.ast");
+        const languageStr = FileUtil.stringFromFile('./src/__inputs__/' + "typer-test/types.ast");
         const langUnit: FreStructureDef = reader.readFromString(languageStr, "FreStructureDef", completeModel, "typer-test/types.ast") as FreStructureDef;
         expect(langUnit).not.toBe(null);
         expect(langUnit).not.toBe(undefined);
         expect(langUnit).toBeInstanceOf(FreStructureDef);
 
-        const input = FileUtil.stringFromFile('./packages/samples/TyperLanguage/src/__inputs__/' + "typer-test/type-rules.type");
+        const input = FileUtil.stringFromFile('./src/__inputs__/' + "typer-test/type-rules.type");
         const typeUnit: FreTyperDef = reader.readFromString(input, "FreTyperDef", completeModel, "/typer-test/type-rules.type") as FreTyperDef;
         expect(typeUnit).not.toBe(null);
         expect(typeUnit).not.toBe(undefined);

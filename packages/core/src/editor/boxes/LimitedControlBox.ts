@@ -1,4 +1,4 @@
-import { AST } from "../../change-manager/index.js";
+import { FREON } from "../../environment/index.js"
 import { FreLogger } from "../../logging/index.js";
 import { Box } from "./internal.js";
 import type { FreNode } from "../../ast/index.js";
@@ -31,7 +31,7 @@ export class LimitedControlBox extends Box {
      */
     setNames(newValue: string[]): void {
         LOGGER.log("setNames Limited to " + newValue);
-        AST.changeNamed("LimitedControlBox.setNames", () => {
+        FREON.astChanger.changeNamed("LimitedControlBox.setNames", () => {
             this.$setNames(newValue);
         })
         this.isDirty();

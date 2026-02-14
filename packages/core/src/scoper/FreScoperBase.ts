@@ -1,14 +1,14 @@
 import type { FreNode, FreNamedNode } from '../ast/index.js';
 import { FreLanguage } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
-import type { FreCompositeTyper } from "../typer/index.js";
+// import type { FreCompositeTyper } from "../typer/index.js";
 import type { FreCompositeScoper } from "./FreCompositeScoper.js";
 import type { FreNamespace} from './FreNamespace.js';
 import { PUBLIC_AND_PRIVATE } from './FreNamespace.js';
 import type { FreScoper } from "./FreScoper.js";
 import { notNullOrUndefined } from '../util/index.js';
 import { findEnclosingNamespace, hasCorrectType } from './ScoperUtil.js';
-import { FreLanguageEnvironment } from '../environment/index.js';
+// import { FreLanguageEnvironment } from "../environment/index.js"
 
 const LOGGER = new FreLogger("FreScoperBase");
 
@@ -19,7 +19,7 @@ const LOGGER = new FreLogger("FreScoperBase");
 
 export abstract class FreScoperBase implements FreScoper {
     mainScoper: FreCompositeScoper;
-    myTyper: FreCompositeTyper; // todo see whether this can be replaced by FreLanguageEnvironment.getInstance().typer
+    // myTyper: FreCompositeTyper; // todo see whether this can be replaced by FREON.environment.typer
 
     /**
      * @see FreScoper
@@ -28,7 +28,7 @@ export abstract class FreScoperBase implements FreScoper {
      */
     public getVisibleNodes(node: FreNode, metaType?: string): FreNamedNode[] {
         // console.log('BASE getVisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", metaType: " + metaType);
-        this.myTyper = FreLanguageEnvironment.getInstance().typer;
+        // this.myTyper = FreLanguageEnvironment.getInstance().typer // FREON.environment.typer;
         if (notNullOrUndefined(node)) {
             // Initialize: remember all namespaces that we already included/visited, and add all nodes from the standard library.
             const visitedNamespaces: FreNamespace[] = [];

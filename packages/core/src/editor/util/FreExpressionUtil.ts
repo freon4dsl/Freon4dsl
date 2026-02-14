@@ -1,4 +1,4 @@
-import { AST } from "../../change-manager/index.js";
+import { FREON } from "../../environment/index.js"
 import type {
     Box,
     FreEditor} from "../index.js";
@@ -149,7 +149,7 @@ export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, s
                         triggerTypeToString(action.trigger),
                         innerEditor,
                     );
-                    AST.changeNamed("FreExpressionUtil.createOperatorBox", () => {
+                    FREON.astChanger.changeNamed("FreExpressionUtil.createOperatorBox", () => {
                         newExp.freSetLeft(exp.freLeft());
                         newExp.freSetRight(exp.freRight());
                         FreUtils.replaceExpression(exp, newExp, innerEditor);

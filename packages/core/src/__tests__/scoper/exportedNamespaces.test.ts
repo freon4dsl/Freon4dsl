@@ -18,7 +18,7 @@ import { initializeLanguage, NodeX, NodeY, UnitA, UnitB } from './scoper-model/i
 import { FreCompositeScoper, } from '../../scoper/index.js';
 import { FreNamedNode } from '../../ast/index.js';
 import { FreLanguage } from '../../language/index.js';
-import { FreLanguageEnvironment } from '../../environment/index.js';
+import { CoreConfig, FreLanguageEnvironment, FREON } from "../../environment/index.js"
 import { ExportedNamespacesScoper } from './scoper-model/ExportedNamespacesScoper.js';
 
 function printNames(set: FreNamedNode[]) {
@@ -51,6 +51,8 @@ describe("FreNamespace visibleNames with replacements, but without additions, ",
 	let concept_B_2: NodeX;
 	let concept_B_2_1: NodeX;
 
+    CoreConfig.initialize(null, null)
+    console.error("FREON " + FREON)
 	initializeLanguage();
 	const scoper: ExportedNamespacesScoper = new ExportedNamespacesScoper();
 	const mainScoper: FreCompositeScoper = new FreCompositeScoper();

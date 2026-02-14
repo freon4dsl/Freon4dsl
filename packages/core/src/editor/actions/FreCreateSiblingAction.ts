@@ -44,21 +44,21 @@ export class FreCreateSiblingAction extends FreAction {
         const ownerDescriptor = box.node.freOwnerDescriptor();
         const ownerConcept: string = ownerDescriptor.owner.freLanguageConcept();
         const propName: string = ownerDescriptor.propertyName;
-        let theModelElement = ownerDescriptor.owner[propName];
+        let theNode = ownerDescriptor.owner[propName];
 
-        const newElement: FreNode = FreLanguage.getInstance().concept(this.conceptName)?.creator({});
-        if (newElement === undefined || newElement === null) {
+        const newNode: FreNode = FreLanguage.getInstance().concept(this.conceptName)?.creator({});
+        if (newNode === undefined || newNode === null) {
             // TODO Find out why this happens sometimes
             ACTION_LOGGER.error("FreCreateSiblingCommand: Unexpected new element undefined");
             return EMPTY_POST_ACTION;
         }
         if (FreLanguage.getInstance().classifierProperty(ownerConcept, propName).isList) {
-            theModelElement.splice(ownerDescriptor.propertyIndex + 1, 0, newElement);
+            theNode.splice(ownerDescriptor.propertyIndex + 1, 0, newNode);
         } else {
-            theModelElement = newElement;
+            theNode = newNode;
         }
         if (!!trigger && isString(trigger) && !!this.referenceShortcut) {
-            newElement[this.referenceShortcut.propertyName] = FreLanguage.getInstance().referenceCreator(
+            newNode[this.referenceShortcut.propertyName] = FreLanguage.getInstance().referenceCreator(
                 trigger,
                 this.referenceShortcut.conceptName,
             );
@@ -66,12 +66,12 @@ export class FreCreateSiblingAction extends FreAction {
         const self = this;
         if (!!this.boxRoleToSelect) {
             return function () {
-                editor.selectElementBox(newElement, self.boxRoleToSelect);
+                editor.selectElementBox(newNode, self.boxRoleToSelect);
             };
         } else {
             return function () {
-                editor.selectElement(newElement);
-                editor.selectFirstEditableChildBox(newElement);
+                editor.selectElement(newNode);
+                editor.selectFirstEditableChildBox(newNode);
             };
         }
     }

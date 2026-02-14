@@ -52,50 +52,50 @@ export class FreCreatePartAction extends FreAction {
         );
         const ownerConcept: string = box.node.freLanguageConcept();
         const propName: string = this.propertyName;
-        const theModelElement = box.node[propName];
+        const theNode = box.node[propName];
 
-        const newElement: FreNode = FreLanguage.getInstance().concept(this.conceptName)?.creator({});
-        if (newElement === undefined || newElement === null) {
+        const newNode: FreNode = FreLanguage.getInstance().concept(this.conceptName)?.creator({});
+        if (newNode === undefined || newNode === null) {
             // TODO Find out why this happens sometimes
             ACTION_LOGGER.error("ActionBox action: Unexpected new element undefined");
             return EMPTY_POST_ACTION;
         }
         ACTION_LOGGER.log(
-            `FreCreatePartCommand: setting/adding to ${propName} of ${box.node.freId()} (${box.node.freLanguageConcept()}) to ${newElement.freId()} (${newElement.freLanguageConcept()})`,
+            `FreCreatePartCommand: setting/adding to ${propName} of ${box.node.freId()} (${box.node.freLanguageConcept()}) to ${newNode.freId()} (${newNode.freLanguageConcept()})`,
         );
         if (FreLanguage.getInstance().classifierProperty(ownerConcept, propName).isList) {
             if (index >= 0) {
-                theModelElement.splice(index, 0, newElement);
+                theNode.splice(index, 0, newNode);
             } else {
-                theModelElement.push(newElement);
+                theNode.push(newNode);
             }
         } else {
-            box.node[propName] = newElement;
+            box.node[propName] = newNode;
         }
         if (!!trigger && isString(trigger) && !!this.referenceShortcut) {
-            newElement[this.referenceShortcut.propertyName] = FreLanguage.getInstance().referenceCreator(
+            newNode[this.referenceShortcut.propertyName] = FreLanguage.getInstance().referenceCreator(
                 trigger,
                 this.referenceShortcut.conceptName,
             );
         }
         // Always rebalance for a binary expression
-        if (newElement.freIsBinaryExpression()) {
-            BTREE.balanceTree(newElement as FreBinaryExpression, editor);
+        if (newNode.freIsBinaryExpression()) {
+            BTREE.balanceTree(newNode as FreBinaryExpression, editor);
         }
         return function () {
             // editor.selectElement(newElement);
             // tslint:disable-next-line:max-line-length
             ACTION_LOGGER.log(
                 "CreatePartCommand: newElement:" +
-                newElement.freId() +
+                newNode.freId() +
                 " " +
-                newElement.freLanguageConcept() +
+                newNode.freLanguageConcept() +
                 ", selected element: " +
                 editor.selectedBox.node.freId() +
                 " of kind " +
                 editor.selectedBox.kind,
             );
-            editor.selectFirstEditableChildBox(newElement, true);
+            editor.selectFirstEditableChildBox(newNode, true);
         };
     }
 }

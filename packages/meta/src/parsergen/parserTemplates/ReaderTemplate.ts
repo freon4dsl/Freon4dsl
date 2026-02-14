@@ -10,7 +10,7 @@ export class ReaderTemplate {
         const semanticAnalyser: string = Names.semanticAnalyser(language);
         const syntaxAnalyser: string = Names.syntaxAnalyser(language);
         const imports = new Imports(relativePath)
-        imports.core = new Set([Names.FreReader, Names.modelunit(), Names.FreNode, "AST", Names.notNullOrUndefined])
+        imports.core = new Set([Names.FreReader, Names.modelunit(), Names.FreNode, "FREON", Names.notNullOrUndefined])
         imports.language = new Set([Names.classifier(language.modelConcept)])
         
         // Template starts here
@@ -84,7 +84,7 @@ export class ReaderTemplate {
                 if (this.parser) {
                     let parseResult: ProcessResult<${Names.classifier(language.modelConcept)}>  | undefined;
                     const options = this.parser.optionsDefault();
-                    AST.change( () => {
+                    FREON.astChanger.change( () => {
                         if (this.parser) {
                             if (startRule.length > 0) {
                                 options.parse.goalRuleName = startRule;
@@ -111,7 +111,7 @@ export class ReaderTemplate {
                             }
                         });
                     } else {
-                        AST.change( () => {
+                        FREON.astChanger.change( () => {
                             if (notNullOrUndefined(parseResult)) {
                                 unit = parseResult.asm as unknown as ${Names.modelunit()};
                             }
@@ -128,7 +128,7 @@ export class ReaderTemplate {
                             if (model.getUnits().some((existing) => existing.name === name)) {
                                 throw new Error(\`Unit named '\${name}' already exists.\`);
                             } else {
-                                AST.change( () => {
+                                FREON.astChanger.change( () => {
                                     model.addUnit(u);
                                     const semAnalyser = new ${semanticAnalyser}();
                                     semAnalyser.correct(u);

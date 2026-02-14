@@ -459,8 +459,8 @@ function describeINamedConcept(): FreLanguageInterface {
         isNamedElement: true,
         isNamespace: false,
         properties: new Map<string, FreLanguageProperty>(),
-        constructor: undefined,
-        creator: undefined,
+        // constructor: undefined,
+        // creator: undefined,
         language: "calculator",
         subConceptNames: ["InputField"],
     };

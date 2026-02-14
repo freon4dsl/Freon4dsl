@@ -1,4 +1,4 @@
-import { AST } from "../../../change-manager/index.js";
+import { FREON } from "../../../environment/index.js"
 import { FreLogger } from "../../../logging/index.js";
 import type {
     Box,
@@ -77,7 +77,7 @@ export class UtilRefHelpers {
                     // check whether the label denotes an ambiguous node, if so store the option.node, not the option.label
                     const currentVisibleNodes =  scoper.getVisibleNodes(node, propType).filter((node) => !!node.name && node.name !== option.label)
                     // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + option.label);
-                    AST.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to ${option.label}`, () => {
+                    FREON.astChanger.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to ${option.label}`, () => {
                         if (currentVisibleNodes.length > 1) {
                             setFunc(option.node);
                         } else {
@@ -85,7 +85,7 @@ export class UtilRefHelpers {
                         }
                     });
                 } else {
-                    AST.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to null`, () => {
+                    FREON.astChanger.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to null`, () => {
                         node[propertyName] = null;
                     });
                 }
@@ -237,11 +237,11 @@ export class UtilRefHelpers {
         }
     }
 
-    private static addReferencePlaceholder(children: Box[], element: FreNode, propertyName: string) {
+    private static addReferencePlaceholder(children: Box[], node: FreNode, propertyName: string) {
         return children.concat(
             BoxFactory.action(
-                element,
-                RoleProvider.property(element.freLanguageConcept(), propertyName, "new-list-item"),
+                node,
+                RoleProvider.property(node.freLanguageConcept(), propertyName, "new-list-item"),
                 `+${propertyName}`,
                 {
                     propertyName: `${propertyName}`,
@@ -252,7 +252,7 @@ export class UtilRefHelpers {
     }
 
     private static makeRefItems(
-        element: FreNode,
+        node: FreNode,
         properties: FreNodeReference<FreNamedNode>[],
         propertyName: string,
         scoper: FreScoper,
@@ -262,7 +262,7 @@ export class UtilRefHelpers {
         const numberOfItems = properties.length;
         properties.forEach((listElem, index) => {
             const roleName: string = RoleProvider.property(
-                element.freLanguageConcept(),
+                node.freLanguageConcept(),
                 propertyName,
                 "list-item",
                 index,
@@ -275,9 +275,9 @@ export class UtilRefHelpers {
                 }
                 return BehaviorExecutionResult.EXECUTED;
             };
-            let innerBox = BoxUtil.referenceBox(element, propertyName, setFunc, scoper, index);
+            let innerBox = BoxUtil.referenceBox(node, propertyName, setFunc, scoper, index);
             if (listJoin !== null && listJoin !== undefined) {
-                result.push(...UtilCommon.addListJoin(listJoin, index, numberOfItems, element, roleName, propertyName, innerBox));
+                result.push(...UtilCommon.addListJoin(listJoin, index, numberOfItems, node, roleName, propertyName, innerBox));
             } else {
                 result.push(innerBox);
             }

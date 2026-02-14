@@ -4,7 +4,7 @@
         PartListReplacerBox,
         type FreNode,
         FreNodeReference,
-        AST, isNullOrUndefined, LabelBox, notNullOrUndefined
+        FREON, isNullOrUndefined, LabelBox, notNullOrUndefined
     } from "@freon4dsl/core"
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
     import {Slot, TimeStamp} from "@freon4dsl/samples-course-schedule";
@@ -164,9 +164,9 @@
     }
 
     const addSlot = (timeStamp: TimeStamp) => {
-        // Note that you need to put any changes to the actual model in a 'AST.change' or 'AST.changeNamed',
+        // Note that you need to put any changes to the actual model in a 'FREON.astChanger.change' or 'FREON.astChanger.changeNamed',
         // because all elements in the model are reactive using mobx.
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             let newSlot: Slot = Slot.create({time: FreNodeReference.create<TimeStamp>(timeStamp, "TimeStamp")});
             box.getPropertyValue().push(newSlot);
         });

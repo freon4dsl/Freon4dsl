@@ -1,10 +1,12 @@
+import { FREON, CoreConfig } from "@freon4dsl/core"
 import { VehicleModelEnvironment } from "../freon/config/VehicleModelEnvironment.js";
 import { VehicleModel, VehicleUnit } from "../freon/language/index.js";
 import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions.js";
 import { describe, test } from "vitest";
 
-const writer = VehicleModelEnvironment.getInstance().writer;
-const reader = VehicleModelEnvironment.getInstance().reader;
+CoreConfig.initialize(VehicleModelEnvironment.getInstance(), null)
+const writer = FREON.environment.writer;
+const reader = FREON.environment.reader;
 
 describe("Vehicles parser on", () => {
     test(" test1 ", () => {

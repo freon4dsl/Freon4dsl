@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { AST, PartListReplacerBox, type FreNode, isNullOrUndefined, notNullOrUndefined } from '@freon4dsl/core';
+    import { FREON, PartListReplacerBox, type FreNode, isNullOrUndefined, notNullOrUndefined } from '@freon4dsl/core';
     import {CC} from "@freon4dsl/samples-external-tester";
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
 
@@ -22,18 +22,18 @@
     getValue();
 
     const addChild = () => {
-        // Note that you need to put any changes to the actual model in an 'AST.change or AST.changeNamed',
+        // Note that you need to put any changes to the actual model in an 'FREON.astChanger.change or FREON.astChanger.changeNamed',
         // because all elements in the model are reactive using mobx.
-        AST.changeNamed("addChild", () => {
+        FREON.astChanger.changeNamed("addChild", () => {
             let newCC: CC = CC.create({name: "new element", numberProp: 100});
             value.push(newCC);
         });
     }
 
     const removeChild = () => {
-        // Note that you need to put any changes to the actual model in an 'AST.change or AST.changeNamed',
+        // Note that you need to put any changes to the actual model in an 'FREON.astChanger.change or FREON.astChanger.changeNamed',
         // because all elements in the model are reactive using mobx.
-        AST.changeNamed("removeChild", () => {
+        FREON.astChanger.changeNamed("removeChild", () => {
             value.splice(0, 1);
         });
     }

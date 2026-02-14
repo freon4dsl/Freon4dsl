@@ -15,7 +15,7 @@ export class ModelTemplate {
             .add(Names.FreLanguage)
             .add(Names.FreParseLocation)
             .add(Names.modelunit())
-            .add("AST")
+            .add("FREON")
             .add(Names.notNullOrUndefined)
         imports.language = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType();
@@ -76,7 +76,7 @@ export class ModelTemplate {
                                 .map(
                                     (part) =>
                                         `case "${Names.classifier(part.type)}": {
-                                            AST.changeNamed("addUnit", () => {
+                                            FREON.astChanger.changeNamed("addUnit", () => {
                                                 ${
                                                     part.isList
                                                         ? `this.${part.name}.push(newUnit as ${Names.classifier(part.type)});`
@@ -106,7 +106,7 @@ export class ModelTemplate {
                                 .map(
                                     (part) =>
                                         `case "${Names.classifier(part.type)}": {
-                                            AST.changeNamed("removeUnit", () => {
+                                            FREON.astChanger.changeNamed("removeUnit", () => {
                                                 ${
                                                     part.isList
                                                         ? `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)}), 1);`
@@ -142,7 +142,7 @@ export class ModelTemplate {
                                             unit = ${Names.classifier(part.type)}.create({});
                                         })
                                         if (!unit) throw new Error("Failed to create ${Names.classifier(part.type)}");
-                                        AST.changeNamed("newUnit", () => {
+                                        FREON.astChanger.changeNamed("newUnit", () => {
                                             ${
                                                 part.isList
                                                     ? `this.${part.name}.push(unit as ${Names.classifier(part.type)});`

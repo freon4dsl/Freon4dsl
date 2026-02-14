@@ -1,4 +1,4 @@
-import { AST, FreLanguage } from "@freon4dsl/core";
+import { FreLanguage, FREON, CoreConfig } from "@freon4dsl/core"
 import { TestStartEnvironment } from "../freon/config/TestStartEnvironment.js";
 import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../freon/language/index.js";
 import { TestStartStdlib } from "../freon/stdlib/TestStartStdlib.js";
@@ -6,8 +6,8 @@ import { describe, test, expect, beforeEach } from "vitest";
 import { getVisibleNames } from '../../utils/HelperFunctions.js';
 
 describe("Checking stdlib for Demo", () => {
-    TestStartEnvironment.getInstance();
-    let stdlib: TestStartStdlib = FreLanguage.getInstance().stdLib as TestStartStdlib;
+    CoreConfig.initialize(TestStartEnvironment.getInstance(), null)
+    let stdlib: TestStartStdlib = FREON.environment.stdlib as TestStartStdlib;
     // The stdlib contains the following elements
     // ZZ.ZZinstance1
     // XX.XXinstance1
@@ -65,7 +65,7 @@ describe("Checking scoper for testproject", () => {
     let ZZinstance1: ZZ = stdlib.find("ZZinstance1", "ZZ") as ZZ;
 
     beforeEach(() => {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             model = new BB();
     
             super1 = new AA();
@@ -83,7 +83,7 @@ describe("Checking scoper for testproject", () => {
     });
 
     test("all names in both super1 and super2 should be found", () => {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             model.supers.push(super1);
             model.supers.push(super2);
         })
@@ -97,7 +97,7 @@ describe("Checking scoper for testproject", () => {
     });
 
     test("all names only from super2 should be found", () => {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             model.supers.push(super2);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
@@ -110,7 +110,7 @@ describe("Checking scoper for testproject", () => {
     });
 
     test("all names only from super1 should be found", () => {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             model.supers.push(super1);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
@@ -123,7 +123,7 @@ describe("Checking scoper for testproject", () => {
     });
 
     test("all elements in both super1 and super2 should be found", () => {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             model.supers.push(super1);
             model.supers.push(super2);
         })
@@ -137,7 +137,7 @@ describe("Checking scoper for testproject", () => {
     });
 
     test("all elements only from super2 should be found", () => {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             model.supers.push(super2);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
@@ -150,7 +150,7 @@ describe("Checking scoper for testproject", () => {
     });
 
     test("all elements only from super1 should be found", () => {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             model.supers.push(super1);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;

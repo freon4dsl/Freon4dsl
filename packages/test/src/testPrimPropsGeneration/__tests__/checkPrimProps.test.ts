@@ -1,11 +1,13 @@
-import { AST } from "@freon4dsl/core";
+import { FREON, CoreConfig } from "@freon4dsl/core"
+import { ROOTEnvironment } from "../freon/config/ROOTEnvironment.js"
 import { BB } from "../freon/language/index.js";
 import { describe, test, expect } from "vitest";
 
 describe("Checking generation of primitive properties", () => {
+    CoreConfig.initialize(ROOTEnvironment.getInstance(), null)
     test("initial values in def files should be preserved", () => {
         let concept1
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             concept1 = new BB();
         })
         expect(concept1.BBprop1).toBe("prop1Value");

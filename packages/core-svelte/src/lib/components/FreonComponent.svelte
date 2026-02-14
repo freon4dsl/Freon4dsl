@@ -18,7 +18,7 @@
         notNullOrUndefined,
         isTableRowBox,
         isElementBox,
-        AstActionExecutor,
+        AstActions,
         type FreNode, type ClientRectangle, UndefinedRectangle, FreEditorUtil, isNullOrUndefined
     } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
@@ -77,7 +77,7 @@
                     case 'z': // ctrl-z => UNDO
                         if (!shouldBeHandledByBrowser.value) {
                             LOGGER.log('Ctrl-z: UNDO');
-                            const delta = AstActionExecutor.getInstance(editor).undo();
+                            const delta = AstActions.getInstance(editor).undo();
                             LOGGER.log(`FreonComponent undu '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
                             if (delta !== undefined && !editor.isBoxInTree(editor.selectedBox)) {
                                 FreEditorUtil.selectAfterUndo(editor, delta)
@@ -90,7 +90,7 @@
                     case 'y': // ctrl-y => REDO
                         if (!shouldBeHandledByBrowser.value) {
                             LOGGER.log('Ctrl-y: REDO');
-                            const delta = AstActionExecutor.getInstance(editor).redo();
+                            const delta = AstActions.getInstance(editor).redo();
                             LOGGER.log(`FreonComponent undo '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
                             if (delta !== undefined && !editor.isBoxInTree(editor.selectedBox)) {
                                 FreEditorUtil.selectAfterUndo(editor, delta)
@@ -102,21 +102,21 @@
                     case 'x': // ctrl-x => CUT
                         if (!shouldBeHandledByBrowser.value) {
                             LOGGER.log('Ctrl-x: CUT');
-                            AstActionExecutor.getInstance(editor).cut();
+                            AstActions.getInstance(editor).cut();
                             stopEvent(event);
                         }
                         break;
                     case 'c': // ctrl-c => COPY
                         if (!shouldBeHandledByBrowser.value) {
                             LOGGER.log('Ctrl-c: COPY');
-                            AstActionExecutor.getInstance(editor).copy();
+                            AstActions.getInstance(editor).copy();
                             stopEvent(event);
                         }
                         break;
                     case 'v': // ctrl-v => PASTE
                         if (!shouldBeHandledByBrowser.value) {
                             LOGGER.log('Ctrl-v: PASTE');
-                            AstActionExecutor.getInstance(editor).paste();
+                            AstActions.getInstance(editor).paste();
                             stopEvent(event);
                         } else {
                             LOGGER.log('Ctrl-v: Handled by browser');
@@ -136,7 +136,7 @@
                 switch (event.key) {
                     case 'z': // ctrl-alt-z => REDO
                         if (!shouldBeHandledByBrowser.value) {
-                            AstActionExecutor.getInstance(editor).redo();
+                            AstActions.getInstance(editor).redo();
                             stopEvent(event);
                         }
                         break;
@@ -148,7 +148,7 @@
                 switch (event.key) {
                     case BACKSPACE: // alt-shift-backspace => REDO
                         if (!shouldBeHandledByBrowser.value) {
-                            AstActionExecutor.getInstance(editor).redo();
+                            AstActions.getInstance(editor).redo();
                             stopEvent(event);
                         }
                         break;
@@ -158,7 +158,7 @@
                 switch (event.key) {
                     case BACKSPACE: // alt-backspace => UNDO
                         if (!shouldBeHandledByBrowser.value) {
-                            AstActionExecutor.getInstance(editor).undo();
+                            AstActions.getInstance(editor).undo();
                             stopEvent(event);
                         }
                         break;

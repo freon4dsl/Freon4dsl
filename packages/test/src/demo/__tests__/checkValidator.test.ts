@@ -1,4 +1,4 @@
-import { FreNodeReference, FreError, AST, FreNode, isNullOrUndefined } from "@freon4dsl/core";
+import { FreNodeReference, FreError, FREON, FreNode, isNullOrUndefined, CoreConfig } from "@freon4dsl/core"
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import {
     DemoModel,
@@ -18,13 +18,13 @@ import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.
 import { describe, test, expect, beforeEach } from "vitest";
 
 describe("Testing Validator", () => {
-    DemoEnvironment.getInstance();
+    CoreConfig.initialize(DemoEnvironment.getInstance(), null)
     const model: Demo = new DemoModelCreator().createIncorrectModel();
     const validator = new DemoValidator();
 
     test("multiplication 3 * 10", () => {
         let errors: FreError[];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("10");
@@ -35,7 +35,7 @@ describe("Testing Validator", () => {
 
     test("multiplication 3 * 'temp'", () => {
         let errors: FreError[];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             let mult: DemoMultiplyExpression = new DemoMultiplyExpression();
             mult.left = makeLiteralExp("3");
             mult.right = makeLiteralExp("temp");
@@ -50,7 +50,7 @@ describe("Testing Validator", () => {
 
     test("multiplication (3/4) * 'temp'", () => {
         let errors: FreError[];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             let div: DemoDivideExpression = new DemoDivideExpression();
             div.left = makeLiteralExp("3");
             div.right = makeLiteralExp("4");
@@ -68,7 +68,7 @@ describe("Testing Validator", () => {
 
     test("'self.entities' and 'self.functions' may not empty and model unitName should be valid", () => {
         let errors: FreError[];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const model = new DemoModel();
             model.name = "$%";
             errors = validator.validate(model);
@@ -83,7 +83,7 @@ describe("Testing Validator", () => {
 
     test("incorrect unitName of DemoModel: YY\\XX", () => {
         let errors: FreError[];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             let model = new DemoModel();
             model.name = "YY\\XX";
             errors = validator.validate(model);
@@ -96,7 +96,7 @@ describe("Testing Validator", () => {
 
     test("(1 + 2) * 'Person' should give type error", () => {
         let errors: FreError[];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const variableExpression = new DemoVariableRef();
             const variable = DemoVariable.create({ name: "XXX" });
             const personEnt = DemoEntity.create({ name: "Person" });
@@ -117,7 +117,7 @@ describe("Testing Validator", () => {
 
     test('"Hello Demo" + "Goodbye"\'\' should have 2 errors', () => {
         let errors: FreError[];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             let expression = MakePlusExp("Hello Demo", "Goodbye");
             // "Hello Demo" + "Goodbye"
 
@@ -132,7 +132,7 @@ describe("Testing Validator", () => {
 
     test('\'determine(AAP) : Boolean = "Hello Demo" + "Goodbye"\'\' should have 5 errors', () => {
         let errors: FreError[];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const determine = DemoFunction.create({ name: "determine" });
             const AAP = DemoVariable.create({ name: "AAP" });
             determine.parameters.push(AAP);
@@ -153,7 +153,7 @@ describe("Testing Validator", () => {
 
     test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
         let errors: FreError[];
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const personEnt = DemoEntity.create({ name: "Person", x: "xxx", simpleprop: "simple" });
             const age = DemoAttribute.create({ name: "age" });
             const personName = DemoAttribute.create({ name: "name" });

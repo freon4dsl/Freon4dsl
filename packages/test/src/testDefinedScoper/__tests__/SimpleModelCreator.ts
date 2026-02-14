@@ -1,5 +1,5 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../freon/language/index.js";
-import { AST, FreModelSerializer, AstWalker, FreNode, FreNodeReference } from "@freon4dsl/core";
+import { FREON, FreModelSerializer, AstWalker, FreNode, FreNodeReference } from "@freon4dsl/core";
 
 export class SimpleModelCreator {
     private breadth = 1;
@@ -29,7 +29,7 @@ export class SimpleModelCreator {
         // create a new model
         const modelUnits: DSunit[] = [];
         let model
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             for (let i = 0; i < nrOfUnits; i++) {
                 modelUnits.push(this.createUnit("model", depth));
             }
@@ -68,7 +68,7 @@ export class SimpleModelCreator {
         }
         const modelUnits: DSunit[] = [];
         let model
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             for (let i = 0; i < nrOfUnits; i++) {
                 const completeUnit = this.createUnit("model", depth);
                 if (i === primary) {

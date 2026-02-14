@@ -1,5 +1,5 @@
 import type { FreNode } from "../../../ast/index.js";
-import { AST } from "../../../change-manager/index.js";
+import { FREON } from "../../../environment/index.js"
 import type { MultiLineTextBox} from '../../boxes/index.js';
 import {
     BoolDisplay,
@@ -40,7 +40,7 @@ export class UtilPrimHelper {
                     roleName,
                     () => node[propertyName][index],
                     (v: string) =>
-                        AST.change(() => {
+                        FREON.astChanger.change(() => {
                             node[propertyName][index] = v;
                         }),
                     { placeHolder: `${propertyName}` },
@@ -51,7 +51,7 @@ export class UtilPrimHelper {
                     roleName,
                     () => node[propertyName],
                     (v: string) =>
-                        AST.change(() => {
+                        FREON.astChanger.change(() => {
                             node[propertyName] = v;
                         }),
                     { placeHolder: `${propertyName}` },
@@ -85,7 +85,7 @@ export class UtilPrimHelper {
                   roleName,
                   () => node[propertyName][index],
                   (v: string) =>
-                    AST.change(() => {
+                    FREON.astChanger.change(() => {
                         node[propertyName][index] = v;
                     }),
                   { placeHolder: `${propertyName}` },
@@ -96,7 +96,7 @@ export class UtilPrimHelper {
                   roleName,
                   () => node[propertyName],
                   (v: string) =>
-                    AST.change(() => {
+                    FREON.astChanger.change(() => {
                         node[propertyName] = v;
                     }),
                   { placeHolder: `${propertyName}` },
@@ -194,7 +194,7 @@ export class UtilPrimHelper {
                     }
                 },
                 (v: string) =>
-                    AST.change(() => {
+                    FREON.astChanger.change(() => {
                         node[propertyName][index] = Number.parseInt(v, 10);
                     }),
                 {
@@ -217,7 +217,7 @@ export class UtilPrimHelper {
                     }
                 },
                 (v: string) =>
-                    AST.change(() => {
+                    FREON.astChanger.change(() => {
                         node[propertyName] = Number.parseInt(v, 10);
                     }),
                 {
@@ -246,7 +246,7 @@ export class UtilPrimHelper {
                 roleName,
                 () => node[propertyName][index],
                 (v: number) =>
-                    AST.change(() => {
+                    FREON.astChanger.change(() => {
                         node[propertyName][index] = v;
                     }),
                 {
@@ -260,7 +260,7 @@ export class UtilPrimHelper {
                 roleName,
                 () => node[propertyName],
                 (v: number) =>
-                    AST.change(() => {
+                    FREON.astChanger.change(() => {
                         node[propertyName] = v;
                     }),
                 {
@@ -289,7 +289,7 @@ export class UtilPrimHelper {
                 roleName,
                 () => node[propertyName][index],
                 (v: boolean) =>
-                    AST.change(() => {
+                    FREON.astChanger.change(() => {
                         node[propertyName][index] = v;
                     }),
                 {
@@ -302,7 +302,7 @@ export class UtilPrimHelper {
                 roleName,
                 () => node[propertyName],
                 (v: boolean) =>
-                    AST.change(() => {
+                    FREON.astChanger.change(() => {
                         node[propertyName] = v;
                     }),
                 {
@@ -347,7 +347,7 @@ export class UtilPrimHelper {
                 },
                 // @ts-ignore
                 (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
-                    AST.change(() => {
+                    FREON.astChanger.change(() => {
                         if (option.id === labels.yes) {
                             node[propertyName][index] = true;
                         } else if (option.id === labels.no) {
@@ -383,7 +383,7 @@ export class UtilPrimHelper {
                 },
                 // @ts-ignore
                 (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
-                    AST.change(() => {
+                    FREON.astChanger.change(() => {
                         if (option.id === labels.yes) {
                             node[propertyName] = true;
                         } else if (option.id === labels.no) {
