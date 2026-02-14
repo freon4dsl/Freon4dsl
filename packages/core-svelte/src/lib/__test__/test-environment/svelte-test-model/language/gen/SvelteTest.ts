@@ -7,7 +7,7 @@ import {
     type FreModel,
     FreLanguage,
     type FreParseLocation,
-    AST,
+    FREON,
     FreUtils,
     matchElementList,
 } from "@freon4dsl/core";
@@ -170,7 +170,7 @@ export class SvelteTest extends MobxModelElementImpl implements FreModel {
         }
         // we must store the interface in the same place as the old unit, which info is held in FreContainer()
         if (oldUnit.freLanguageConcept() === "SvelteTestUnit" && oldUnit.freOwnerDescriptor().propertyName === "units") {
-            AST.changeNamed("removeUnit", () => {
+            FREON.astChanger.changeNamed("removeUnit", () => {
                 const index = this.units.indexOf(oldUnit as SvelteTestUnit);
                 this.units.splice(index, 1, newUnit as SvelteTestUnit);
             });
@@ -190,7 +190,7 @@ export class SvelteTest extends MobxModelElementImpl implements FreModel {
             const myMetatype = newUnit.freLanguageConcept();
             switch (myMetatype) {
                 case "SvelteTestUnit": {
-                    AST.changeNamed("addUnit", () => {
+                    FREON.astChanger.changeNamed("addUnit", () => {
                         this.units.push(newUnit as SvelteTestUnit);
                     });
                     return true;
@@ -210,7 +210,7 @@ export class SvelteTest extends MobxModelElementImpl implements FreModel {
             const myMetatype = oldUnit.freLanguageConcept();
             switch (myMetatype) {
                 case "SvelteTestUnit": {
-                    AST.changeNamed("removeUnit", () => {
+                    FREON.astChanger.changeNamed("removeUnit", () => {
                         this.units.splice(this.units.indexOf(oldUnit as SvelteTestUnit), 1);
                     });
                     return true;
@@ -232,7 +232,7 @@ export class SvelteTest extends MobxModelElementImpl implements FreModel {
                 runInAction(() => {
                     unit = SvelteTestUnit.create({});
                 });
-                AST.changeNamed("newUnit", () => {
+                FREON.astChanger.changeNamed("newUnit", () => {
                     this.units.push(unit as SvelteTestUnit);
                 });
                 // @ts-ignore

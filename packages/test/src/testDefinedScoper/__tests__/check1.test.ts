@@ -3,7 +3,7 @@ import { SimpleModelCreator } from "./ModelCreator.js";
 import { DSmodelEnvironment } from "../freon/config/DSmodelEnvironment.js";
 import { describe, test, expect } from "vitest";
 import { getVisibleNames } from '../../utils/HelperFunctions.js';
-import { AST, FreNodeReference } from '@freon4dsl/core';
+import { FreNodeReference, FREON, CoreConfig } from "@freon4dsl/core"
 import { DSref, DSunit } from '../../testDefaultScoper/freon/language/index.js';
 
 function print(prefix: string, visibleNames: string[]) {
@@ -28,7 +28,8 @@ function printDifference(creator: SimpleModelCreator, visibleNames: string[]) {
 
 describe("Testing Defined Scoper, where unit is namespace", () => {
     const creator = new SimpleModelCreator();
-    const environment = DSmodelEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
+    CoreConfig.initialize(DSmodelEnvironment.getInstance(), null)
+    const environment = FREON.environment; // needed to initialize Language, which is needed in the serializer
     const scoper = environment.scoper;
 
     test("model with 1 unit of depth 2: names visible in model are all unit names", () => {
@@ -137,7 +138,7 @@ describe("Testing Defined Scoper, where unit is namespace", () => {
         let ref4: FreNodeReference<DSref>;
         let otherUnit: DSunit;
 
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             // create extra references
             ref1 = FreNodeReference.create<DSref>(["unit1_OF_model", "private9_OF_unit1_OF_model"], "DSprivate");
             ref2 = FreNodeReference.create<DSref>(["unit1_OF_model", "public2_OF_unit1_OF_model"], "DSpublic");
@@ -171,7 +172,7 @@ describe("Testing Defined Scoper, where unit is namespace", () => {
         expect(ref4.referred).toBeUndefined();
 
         // now add them to the same unit
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             let sameUnit = model.findUnit("unit1_OF_model") as DSunit;
             sameUnit.dsRefs.push(ref1);
             sameUnit.dsRefs.push(ref2);

@@ -1,3 +1,4 @@
+import { FREON, CoreConfig } from "@freon4dsl/core"
 import { DSmodel } from '../freon/language/index.js';
 import { SimpleModelCreator } from "./SimpleModelCreator.js";
 import { DSmodelEnvironment } from "../freon/config/DSmodelEnvironment.js";
@@ -26,7 +27,8 @@ function printDifference(creator: SimpleModelCreator, visibleNames: string[]) {
 
 describe("Testing Scoper where all units are namespaces", () => {
     const creator = new SimpleModelCreator();
-    const environment = DSmodelEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
+    CoreConfig.initialize(DSmodelEnvironment.getInstance(), null)
+    const environment = FREON.environment; // needed to initialize Language, which is needed in the serializer
     const scoper = environment.scoper;
     const unparser = environment.writer;
 

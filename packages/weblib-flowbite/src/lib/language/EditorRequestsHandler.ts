@@ -1,6 +1,5 @@
-import type { FreNode, TraceNode } from '@freon4dsl/core';
 import {
-    AstActionExecutor,
+    AstActions,
     FreDelta,
     FreEditorUtil,
     type FreEnvironment,
@@ -8,6 +7,7 @@ import {
     FreErrorSeverity,
     FreLogger,
     type FreModelUnit,
+    type FreNode,
     FreProjectionHandler,
     FreSearcher,
     isActionTextBox,
@@ -15,9 +15,12 @@ import {
     isRtError,
     isTextBox,
     notNullOrUndefined,
-    TextBox
-} from '@freon4dsl/core';
-import { runInAction } from 'mobx';
+    TextBox,
+    type TraceNode,
+} from "@freon4dsl/core"
+import { runInAction } from "mobx"
+import { WebappConfigurator } from "../language/index.js"
+import { editorInfo, infoPanelShown, setUserMessage, userMessageOpen } from "../stores/index.js"
 import {
     activeTab,
     errorsLoading,
@@ -28,28 +31,26 @@ import {
     modelErrors,
     searchResultLoading,
     searchResults,
-    searchTab
-} from '../stores/InfoPanelStore.svelte';
-import { WebappConfigurator } from '../language/index.js';
-import { editorInfo, infoPanelShown, setUserMessage, userMessageOpen } from '../stores/index.js';
-import { TreeNodeData } from '../tree/TreeNodeData.js';
+    searchTab,
+} from "../stores/InfoPanelStore.svelte"
+import { TreeNodeData } from "../tree/TreeNodeData.js"
 
-const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
+const LOGGER = new FreLogger("EditorRequestsHandler") // .mute();
 
 export class EditorRequestsHandler {
-    private static instance: EditorRequestsHandler | null = null;
-    private isPasting: boolean = false;
-    private isCopying: boolean = false;
-    private isCutting: boolean = false;
+    private static instance: EditorRequestsHandler | null = null
+    private isPasting: boolean = false
+    private isCopying: boolean = false
+    private isCutting: boolean = false
 
     static getInstance(): EditorRequestsHandler {
         if (EditorRequestsHandler.instance === null) {
-            EditorRequestsHandler.instance = new EditorRequestsHandler();
+            EditorRequestsHandler.instance = new EditorRequestsHandler()
         }
-        return EditorRequestsHandler.instance;
+        return EditorRequestsHandler.instance
     }
 
-    private langEnv: FreEnvironment | undefined = WebappConfigurator.getInstance().langEnv;
+    private langEnv: FreEnvironment | undefined = WebappConfigurator.getInstance().langEnv
 
     /**
      * Makes sure that the editor shows the current unit using the projections selected by the user
@@ -57,16 +58,16 @@ export class EditorRequestsHandler {
      */
     enableProjections(names: string[]): void {
         // console.log("enabling Projection " + names);
-        const proj: FreProjectionHandler | undefined = this.langEnv?.editor.projection;
+        const proj: FreProjectionHandler | undefined = this.langEnv?.editor.projection
         if (proj instanceof FreProjectionHandler) {
-            proj.enableProjections(names);
+            proj.enableProjections(names)
         }
         // Let the editor know that the projections have changed.
         // TODO: This should go automatically through mobx.
         //       But observing the projections array does not work as expected.
-        runInAction( () => {
+        runInAction(() => {
             if (this.langEnv?.editor) {
-                this.langEnv.editor.forceRecalculateProjection++;
+                this.langEnv.editor.forceRecalculateProjection++
             }
         })
         // redo the validation to set the errors in the new box tree
@@ -75,15 +76,15 @@ export class EditorRequestsHandler {
     }
 
     saveModel = async (): Promise<void> => {
-        await WebappConfigurator.getInstance().saveModel();
+        await WebappConfigurator.getInstance().saveModel()
         if (userMessageOpen.value) {
             return
         }
-        setUserMessage(`Model '${editorInfo.modelName}' saved.`, FreErrorSeverity.Info);
+        setUserMessage(`Model '${editorInfo.modelName}' saved.`, FreErrorSeverity.Info)
     }
 
     redo = (): void => {
-        const delta: FreDelta | undefined = AstActionExecutor.getInstance(this.langEnv!.editor).redo();
+        const delta: FreDelta | undefined = AstActions.getInstance(this.langEnv!.editor).redo()
         // TODO TEST
         if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
@@ -92,7 +93,7 @@ export class EditorRequestsHandler {
     }
 
     undo = (): void => {
-        const delta: FreDelta | undefined = AstActionExecutor.getInstance(this.langEnv!.editor).undo();
+        const delta: FreDelta | undefined = AstActions.getInstance(this.langEnv!.editor).undo()
         LOGGER.log(`undo delta '${delta?.toString()}'`)
         // TODO TEST
         if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
@@ -106,9 +107,9 @@ export class EditorRequestsHandler {
         if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
             // Do not use this.langEnv!.editor.copiedElement, we cannot copy a FreNode into a string.
             // Instead, use the clipboard, if possible.
-            await this.cutPlainText(this.langEnv!.editor.selectedBox);
+            await this.cutPlainText(this.langEnv!.editor.selectedBox)
         } else {
-            AstActionExecutor.getInstance(this.langEnv!.editor).cut();
+            AstActions.getInstance(this.langEnv!.editor).cut()
         }
     }
 
@@ -117,9 +118,9 @@ export class EditorRequestsHandler {
             // Do not use this.langEnv!.editor.copiedElement, we cannot copy a FreNode into a string.
             // Instead, use the clipboard, if possible.
             // TODO
-            await this.copyPlainText(this.langEnv!.editor.selectedBox);
+            await this.copyPlainText(this.langEnv!.editor.selectedBox)
         } else {
-            AstActionExecutor.getInstance(this.langEnv!.editor).copy();
+            AstActions.getInstance(this.langEnv!.editor).copy()
         }
     }
 
@@ -127,129 +128,120 @@ export class EditorRequestsHandler {
         if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
             // Do not use this.langEnv!.editor.copiedElement, we cannot paste a FreNode into a string.
             // Instead, use the clipboard, if possible.
-            await this.pastePlainText(this.langEnv!.editor.selectedBox);
+            await this.pastePlainText(this.langEnv!.editor.selectedBox)
         } else {
-            AstActionExecutor.getInstance(this.langEnv!.editor).paste();
+            AstActions.getInstance(this.langEnv!.editor).paste()
         }
     }
 
     private async pastePlainText(myBox: TextBox) {
-        let canReadClipboard: boolean =
-          typeof navigator !== 'undefined' &&
-          isSecureContext &&
-          !!navigator.clipboard?.readText;
+        const canReadClipboard: boolean = typeof navigator !== "undefined" && isSecureContext && !!navigator.clipboard?.readText
         if (!canReadClipboard) {
-            setUserMessage('Clipboard access not available here. Use Ctrl/Cmd+V instead.', FreErrorSeverity.Warning);
-            return;
+            setUserMessage("Clipboard access not available here. Use Ctrl/Cmd+V instead.", FreErrorSeverity.Warning)
+            return
         }
         try {
             if (this.isPasting) {
-                return;
+                return
             }
-            this.isPasting = true;
+            this.isPasting = true
 
-            const clip: string = await navigator.clipboard.readText(); // user gesture: this click
+            const clip: string = await navigator.clipboard.readText() // user gesture: this click
             if (clip) {
                 // Add the new text at the caret position, while replacing any line break with '\n'
-                myBox.insertAtSelection(clip.replace(/\r\n?/g, '\n'));
+                myBox.insertAtSelection(clip.replace(/\r\n?/g, "\n"))
             } else {
                 // Give a tiny hint if empty
-                setUserMessage('Clipboard is empty (no plain text).', FreErrorSeverity.Info);
+                setUserMessage("Clipboard is empty (no plain text).", FreErrorSeverity.Info)
             }
         } catch {
             // Common reasons: permission denied, cross-origin iframe w/o allow, enterprise policy
-            setUserMessage('Clipboard read was blocked. Grant permission or use Ctrl/Cmd+V.');
+            setUserMessage("Clipboard read was blocked. Grant permission or use Ctrl/Cmd+V.")
         } finally {
-            this.isPasting = false;
+            this.isPasting = false
         }
     }
 
     private async copyPlainText(myBox: TextBox) {
-        let canWriteClipboard: boolean =
-          typeof navigator !== 'undefined' &&
-          isSecureContext &&
-          !!navigator.clipboard?.writeText;
+        const canWriteClipboard: boolean = typeof navigator !== "undefined" && isSecureContext && !!navigator.clipboard?.writeText
 
         if (!canWriteClipboard) {
-            setUserMessage('Clipboard access not available here. Use Ctrl/Cmd+C instead.', FreErrorSeverity.Warning);
-            return;
+            setUserMessage("Clipboard access not available here. Use Ctrl/Cmd+C instead.", FreErrorSeverity.Warning)
+            return
         }
         try {
             if (this.isCopying) {
-                return;
+                return
             }
-            this.isCopying = true;
+            this.isCopying = true
 
-            const selected: string = myBox.getSelectedText();
+            const selected: string = myBox.getSelectedText()
             if (selected) {
-                await navigator.clipboard.writeText(selected.replace(/\r\n?/g, '\n'));
+                await navigator.clipboard.writeText(selected.replace(/\r\n?/g, "\n"))
                 // setUserMessage('Copied to clipboard.', FreErrorSeverity.Info);
             } else {
-                setUserMessage('Nothing selected to copy.', FreErrorSeverity.Info);
+                setUserMessage("Nothing selected to copy.", FreErrorSeverity.Info)
             }
         } catch {
-            setUserMessage('Clipboard write was blocked. Grant permission or use Ctrl/Cmd+C.');
+            setUserMessage("Clipboard write was blocked. Grant permission or use Ctrl/Cmd+C.")
         } finally {
-            this.isCopying = false;
+            this.isCopying = false
         }
     }
 
     private async cutPlainText(myBox: TextBox) {
-        let canWriteClipboard: boolean =
-          typeof navigator !== 'undefined' &&
-          isSecureContext &&
-          !!navigator.clipboard?.writeText;
+        const canWriteClipboard: boolean = typeof navigator !== "undefined" && isSecureContext && !!navigator.clipboard?.writeText
 
         if (!canWriteClipboard) {
-            setUserMessage('Clipboard access not available here. Use Ctrl/Cmd+X instead.', FreErrorSeverity.Warning);
-            return;
+            setUserMessage("Clipboard access not available here. Use Ctrl/Cmd+X instead.", FreErrorSeverity.Warning)
+            return
         }
         try {
             if (this.isCutting) {
-                return;
+                return
             }
-            this.isCutting = true;
+            this.isCutting = true
 
-            const selected: string = myBox.getSelectedText();
+            const selected: string = myBox.getSelectedText()
             if (selected) {
-                await navigator.clipboard.writeText(selected.replace(/\r\n?/g, '\n'));
-                myBox.deleteSelection(); // implement this in TextBox if not present
+                await navigator.clipboard.writeText(selected.replace(/\r\n?/g, "\n"))
+                myBox.deleteSelection() // implement this in TextBox if not present
                 // setUserMessage('Cut to clipboard.', FreErrorSeverity.Info);
             } else {
-                setUserMessage('Nothing selected to cut.', FreErrorSeverity.Info);
+                setUserMessage("Nothing selected to cut.", FreErrorSeverity.Info)
             }
         } catch {
-            setUserMessage('Clipboard write was blocked. Grant permission or use Ctrl/Cmd+X.');
+            setUserMessage("Clipboard write was blocked. Grant permission or use Ctrl/Cmd+X.")
         } finally {
-            this.isCutting = false;
+            this.isCutting = false
         }
     }
 
     validate = (): void => {
         // console.log("validate called");
-        errorsLoading.value = true;
-        activeTab.value = errorTab;
-        infoPanelShown.value = true;
-        WebappConfigurator.getInstance().getErrors();
+        errorsLoading.value = true
+        activeTab.value = errorTab
+        infoPanelShown.value = true
+        WebappConfigurator.getInstance().getErrors()
         // console.log("Errors: " + modelErrors.list.map(err => err.message).join("\n"));
-        errorsLoading.value = false;
+        errorsLoading.value = false
         if (!isNullOrUndefined(modelErrors.list[0])) {
-            const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn;
+            const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn
             if (Array.isArray(nodes)) {
-                WebappConfigurator.getInstance().selectElement(nodes[0]);
+                WebappConfigurator.getInstance().selectElement(nodes[0])
             } else {
-                WebappConfigurator.getInstance().selectElement(nodes);
+                WebappConfigurator.getInstance().selectElement(nodes)
             }
         }
     }
 
     interpret = (): void => {
         // console.log("interpret: called");
-        interpreterResultLoading.value = true;
-        activeTab.value = interpreterTab;
-        infoPanelShown.value = true;
-        const langEnv : FreEnvironment = WebappConfigurator.getInstance().langEnv!;
-        const intp = langEnv?.interpreter;
+        interpreterResultLoading.value = true
+        activeTab.value = interpreterTab
+        infoPanelShown.value = true
+        const langEnv: FreEnvironment = WebappConfigurator.getInstance().langEnv!
+        const intp = langEnv?.interpreter
         if (langEnv && intp) {
             intp.setTracing(true)
             const node: FreNode = langEnv.editor.selectedElement
@@ -266,60 +258,56 @@ export class EditorRequestsHandler {
         } else {
             interpreterTrace.value = new TreeNodeData("No interpreter found")
         }
-        interpreterResultLoading.value = false;
+        interpreterResultLoading.value = false
     }
 
     private makeTreeNode(trace: TraceNode): TreeNodeData {
-        const name: string = trace.toResultString();
+        const name: string = trace.toResultString()
         if (trace.children && trace.children.length > 0) {
-            const children: TreeNodeData[] = [];
+            const children: TreeNodeData[] = []
             for (const child of trace.children) {
-                children.push(this.makeTreeNode(child));
+                children.push(this.makeTreeNode(child))
             }
             // todo remove the type cast when TraceNode has changed its signature
-            return new TreeNodeData(name, trace.node as FreNode, children);
+            return new TreeNodeData(name, trace.node as FreNode, children)
         } else {
-            return new TreeNodeData(name, trace.node as FreNode, undefined);
+            return new TreeNodeData(name, trace.node as FreNode, undefined)
         }
     }
 
     findText(stringToFind: string) {
         // todo loading of errors and search results should also depend on whether something has changed in the unit shown
         // console.log("findText called: " + stringToFind);
-        searchResultLoading.value = true;
-        searchResults.list = [];
-        activeTab.value = searchTab;
-        const searcher = new FreSearcher();
+        searchResultLoading.value = true
+        searchResults.list = []
+        activeTab.value = searchTab
+        const searcher = new FreSearcher()
         if (notNullOrUndefined(editorInfo.currentUnit)) {
             // console.log('has current unit')
-            const unit: FreModelUnit | undefined = WebappConfigurator.getInstance().getUnit(editorInfo.currentUnit);
+            const unit: FreModelUnit | undefined = WebappConfigurator.getInstance().getUnit(editorInfo.currentUnit)
             if (notNullOrUndefined(unit)) {
                 // console.log('found unit')
-                const results: FreNode[] = searcher.findString(
-                    stringToFind,
-                    unit,
-                    WebappConfigurator.getInstance().langEnv!.writer!
-                )
+                const results: FreNode[] = searcher.findString(stringToFind, unit, WebappConfigurator.getInstance().langEnv!.writer!)
                 // console.log(results);
-                this.showSearchResults(results, stringToFind);
+                this.showSearchResults(results, stringToFind)
             }
         }
-        searchResultLoading.value = false;
+        searchResultLoading.value = false
     }
 
     private showSearchResults(results: FreNode[], stringToFind: string) {
-        const itemsToShow: FreError[] = [];
+        const itemsToShow: FreError[] = []
         if (!results || results.length === 0) {
-            itemsToShow.push(new FreError("No results for " + stringToFind, results[0], "", ""));
+            itemsToShow.push(new FreError("No results for " + stringToFind, results[0], "", FreErrorSeverity.Info))
         } else {
             for (const elem of results) {
                 // todo show some part of the text string instead of the element id
-                itemsToShow.push(new FreError(elem.freId(), elem, elem.freId(), ""));
+                itemsToShow.push(new FreError(elem.freId(), elem, elem.freId(), FreErrorSeverity.Info))
             }
         }
-        searchResults.list = itemsToShow;
+        searchResults.list = itemsToShow
 
-        infoPanelShown.value = true;
+        infoPanelShown.value = true
         // console.log(`showSearchResults: ${searchResultLoading.value}, ${infoPanelShown.value}, ${searchResults.list.map(it => it.message).join("\n")}`);
     }
 
@@ -334,19 +322,15 @@ export class EditorRequestsHandler {
     // }
 
     findNamedElement(nameToFind: string, metatypeSelected: string) {
-        LOGGER.log("findNamedElement called");
-        searchResultLoading.value = true;
-        activeTab.value = searchTab;
-        const searcher = new FreSearcher();
-        const unit = WebappConfigurator.getInstance().getUnit(editorInfo.currentUnit!);
+        LOGGER.log("findNamedElement called")
+        searchResultLoading.value = true
+        activeTab.value = searchTab
+        const searcher = new FreSearcher()
+        const unit = WebappConfigurator.getInstance().getUnit(editorInfo.currentUnit!)
         if (unit) {
-            const results: FreNode[] = searcher.findNamedElement(
-              nameToFind,
-              unit,
-              metatypeSelected
-            );
-            this.showSearchResults(results, nameToFind);
+            const results: FreNode[] = searcher.findNamedElement(nameToFind, unit, metatypeSelected)
+            this.showSearchResults(results, nameToFind)
         }
-        searchResultLoading.value = false;
+        searchResultLoading.value = false
     }
 }

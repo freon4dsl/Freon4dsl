@@ -25,9 +25,7 @@ export class FileUtil {
      * @param filepath
      */
     public static stringFromFile(filepath: string): string {
-        // read language file
-        let startPath = './packages/samples/FreLanguage/src/__inputs__/';
-        let actualPath = startPath + filepath
+        let actualPath = filepath
         if (!FileUtil.exists(actualPath)) {
             console.error(this, "File '" + actualPath + "' does not exist, exiting.");
             throw new Error(`File '${actualPath}' not found.`);

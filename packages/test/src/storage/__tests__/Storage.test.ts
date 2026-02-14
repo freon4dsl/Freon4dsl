@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, test } from "vitest";
-import { AST, InMemoryModel, ServerCommunication } from "@freon4dsl/core";
+import { FREON, CoreConfig, ModelManager, ServerCommunication } from "@freon4dsl/core"
 import { RulesModelEnvironment } from "../freon/config/RulesModelEnvironment.js";
 import { Data, Rules, RulesModel } from "../freon/language/index.js";
 import { fillDataUnit, fillRulesUnit, modelToString } from "./StoreModelCreator.js";
@@ -8,40 +8,36 @@ import { fillDataUnit, fillRulesUnit, modelToString } from "./StoreModelCreator.
  * For these test to run, a server should be up and running 
  */
 describe.skip("Store test", () => {
-    let inMemoryModel: InMemoryModel;
-    let env = RulesModelEnvironment.getInstance();
-    let freonServer = new ServerCommunication();
-    const communication = freonServer;
+    CoreConfig.initialize(RulesModelEnvironment.getInstance(), new ServerCommunication())
     let originalModel: RulesModel;
 
     beforeEach(async () => {
-        inMemoryModel = new InMemoryModel(env, communication);
         // Create a model in the server
-        originalModel = (await inMemoryModel.createModel("serverModel")) as RulesModel;
-        let unit1 = (await inMemoryModel.createUnit("data Unit1", "Data")) as Data;
-        let unit2 = (await inMemoryModel.createUnit("rules Unit1", "Rules")) as Rules;
-        AST.change(() => {
+        originalModel = (await FREON.modelManager.createModel("serverModel")) as RulesModel;
+        let unit1 = (await FREON.modelManager.createUnit("data Unit1", "Data")) as Data;
+        let unit2 = (await FREON.modelManager.createUnit("rules Unit1", "Rules")) as Rules;
+        FREON.astChanger.change(() => {
             fillDataUnit(unit1);
             fillRulesUnit(unit2);
         })
-        await inMemoryModel.saveUnit(unit1);
-        await inMemoryModel.saveUnit(unit2);
+        await FREON.modelManager.saveUnit(unit1);
+        await FREON.modelManager.saveUnit(unit2);
     });
 
     afterEach(async () => {
-        await inMemoryModel.deleteModel();
+        await FREON.modelManager.deleteModel();
     });
     
     it("create new model", async () => {
-        const newModel = (await inMemoryModel.createModel(("New Model")) as RulesModel)
-        const retrievedModel = (await inMemoryModel.openModel("New Model")) as RulesModel;
+        const newModel = (await FREON.modelManager.createModel(("New Model")) as RulesModel)
+        const retrievedModel = (await FREON.modelManager.openModel("New Model")) as RulesModel;
         expect(retrievedModel !== undefined).toBeTruthy()
         expect(retrievedModel.freLanguageConcept(), `Model ${retrievedModel.freLanguageConcept()}`).toBe("RulesModel");
         expect(retrievedModel.name, `Model ${retrievedModel.name}`).toBe("New Model");
     })
 
     it("open existing model", async () => {
-        const retrievedModel = (await inMemoryModel.openModel("serverModel")) as RulesModel;
+        const retrievedModel = (await FREON.modelManager.openModel("serverModel")) as RulesModel;
         expect(retrievedModel.getUnits().length === 2);
         expect(retrievedModel.freLanguageConcept(), `Model ${retrievedModel.freLanguageConcept()}`).toBe("RulesModel");
         expect(retrievedModel.name, `Model ${retrievedModel.name}`).toBe("serverModel");
@@ -66,27 +62,27 @@ describe.skip("Store test", () => {
     });
 
     test("delete unit model", async () => {
-        const unit1 = await inMemoryModel.getUnitByName("data Unit1");
+        const unit1 = await FREON.modelManager.getUnitByName("data Unit1");
         expect(unit1).toBeDefined();
-        const unit2 = await inMemoryModel.getUnitByName("rules Unit1");
+        const unit2 = await FREON.modelManager.getUnitByName("rules Unit1");
         expect(unit2).toBeDefined();
-        expect(inMemoryModel.model.getUnits().length).toBe(2);
-        await inMemoryModel.deleteUnit(unit1);
-        expect(inMemoryModel.model.getUnits().length).toBe(1);
+        expect(FREON.modelManager.model.getUnits().length).toBe(2);
+        await FREON.modelManager.deleteUnit(unit1);
+        expect(FREON.modelManager.model.getUnits().length).toBe(1);
 
-        const newInMemoryModel = new InMemoryModel(env, communication);
-        const retrievedModel = (await newInMemoryModel.openModel("serverModel")) as RulesModel;
+        const newModelManager = new ModelManager();
+        const retrievedModel = (await newModelManager.openModel("serverModel")) as RulesModel;
         expect(retrievedModel.getUnits().length === 1);
     })
     
     test("rename  unit", async () => {
-        const unit1 = await inMemoryModel.getUnitByName("data Unit1");
+        const unit1 = await FREON.modelManager.getUnitByName("data Unit1");
         expect(unit1).toBeDefined();
         unit1.name = "data Unit1 has <changed>@#$% !"
-        await freonServer.renameModelUnit(inMemoryModel.model.name, "data Unit1", "data Unit1 has <changed>@#$% !", unit1)
+        await FREON.server.renameModelUnit(FREON.modelManager.model.name, "data Unit1", "data Unit1 has <changed>@#$% !", unit1)
 
-        const newInMemoryModel = new InMemoryModel(env, communication);
-        const retrievedModel = (await newInMemoryModel.openModel("serverModel")) as RulesModel;
+        const newModelManager = new ModelManager();
+        const retrievedModel = (await newModelManager.openModel("serverModel")) as RulesModel;
         expect(retrievedModel.getUnits().length === 2);
         expect(!retrievedModel.getUnits().map(u => u.name).includes("data Unit1"));
         expect(retrievedModel.getUnits().map(u => u.name).includes("data Unit1 has <changed>@#$% !"));

@@ -1,12 +1,13 @@
-import { AST, FreUtils } from "@freon4dsl/core";
+import { FREON, CoreConfig, FreUtils } from "@freon4dsl/core"
 import { FileHandler } from "../../utils/FileHandler.js";
 import { TestConceptsModelEnvironment } from "../freon/config/TestConceptsModelEnvironment.js";
 import { ExpressionTest, TestConceptsModel } from "../freon/language/index.js";
 import { describe, it, test, expect, beforeEach } from "vitest";
 
 describe("Parser concepts of type", () => {
-    const reader = TestConceptsModelEnvironment.getInstance().reader;
-    const writer = TestConceptsModelEnvironment.getInstance().writer;
+    CoreConfig.initialize(TestConceptsModelEnvironment.getInstance(), null)
+    const reader = FREON.environment.reader;
+    const writer = FREON.environment.writer;
     const fileHandler = new FileHandler();
 
     beforeEach(() => {

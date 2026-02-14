@@ -1,3 +1,4 @@
+import { FREON } from "../../../environment/index.js"
 import type { Box } from "../Box.js";
 import type { FreNode, FreNodeReference } from "../../../ast/index.js";
 import { FreUtils, notNullOrUndefined } from '../../../util/index.js';
@@ -33,7 +34,9 @@ export class RefReplacerBox extends AbstractExternalPropertyBox {
 
     setPropertyValue(newValue: FreNodeReference<any>) {
         // todo add checks
-        this.node[this.propertyName] = newValue;
+        FREON.astChanger.change( () => {
+            this.node[this.propertyName] = newValue;
+        })
     }
 }
 

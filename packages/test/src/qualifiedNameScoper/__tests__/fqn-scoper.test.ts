@@ -1,14 +1,16 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { ScoperTryoutEnvironment } from '../freon/config/ScoperTryoutEnvironment.js';
+import { LanguageEnvironment } from "../freon/index.js"
 import { NamedPart, QualifiedName, ScoperTryout, Unit, UnitType1, UnitType2 } from '../freon/language/index.js';
 import { FileHandler } from '../../utils/FileHandler.js';
-import { AST, FreNamedNode, FreNodeReference } from '@freon4dsl/core';
+import { FreNamedNode, FreNodeReference, FREON, CoreConfig } from "@freon4dsl/core"
 import { getVisibleNames } from '../../utils/HelperFunctions.js';
 
 describe("Testing Custom Scoper", () => {
-	const reader = ScoperTryoutEnvironment.getInstance().reader;
-	const writer = ScoperTryoutEnvironment.getInstance().writer;
-	const scoper = ScoperTryoutEnvironment.getInstance().scoper;
+    CoreConfig.initialize(ScoperTryoutEnvironment.getInstance(), null)
+	const reader = FREON.environment.reader;
+	const writer = FREON.environment.writer;
+	const scoper = FREON.environment.scoper;
 	const fileHandler = new FileHandler();
 	let model: ScoperTryout | undefined = undefined;
 
@@ -27,7 +29,7 @@ describe("Testing Custom Scoper", () => {
 	// Unit 'unit1_1' imports 'unit1_2'
 	function startFQN(): QualifiedName {
 		const referenceUnit = new UnitType2('some-id');
-		AST.change(() => {
+		FREON.astChanger.change(() => {
 			model.addUnit(referenceUnit);
 			referenceUnit.name = 'TestRefs1';
 			referenceUnit.imports.push(FreNodeReference.create<Unit>('unit1_1', 'Unit'));
@@ -89,7 +91,7 @@ describe("Testing Custom Scoper", () => {
 
 		// create an empty QualifiedName to check the available names
 		const firstQ: QualifiedName = QualifiedName.create({});
-		AST.change(() => {
+		FREON.astChanger.change(() => {
 			referenceUnit.myReferences.push(firstQ);
 		});
 		// the container of the reference is a UnitType2, namely 'referenceUnit', thus the visibleNodes should equal those
@@ -99,7 +101,7 @@ describe("Testing Custom Scoper", () => {
 	}
 
 	function addPart(firstQ: QualifiedName, nodeToAdd: NamedPart) {
-		AST.change(() => {
+		FREON.astChanger.change(() => {
 			firstQ.part = FreNodeReference.create<NamedPart>(nodeToAdd.name, 'NamedPart');
 		});
 		expect(firstQ.part.referred).not.toBeNull;
@@ -136,7 +138,7 @@ describe("Testing Custom Scoper", () => {
 
 		// create the next QualifiedName (empty) to check the available names
 		const secondQ: QualifiedName = QualifiedName.create({})
-		AST.change( () => {
+		FREON.astChanger.change( () => {
 			firstQ.restName = secondQ;
 		})
 		expect(getVisibleNames(scoper.getVisibleNodes(secondQ))).toStrictEqual([ 'Z_A', 'Z_B' ]);
@@ -151,7 +153,7 @@ describe("Testing Custom Scoper", () => {
 
 		// create the next QualifiedName (empty) to check the available names
 		const thirdQ: QualifiedName = QualifiedName.create({})
-		AST.change( () => {
+		FREON.astChanger.change( () => {
 			secondQ.restName = thirdQ;
 		})
 		expect(getVisibleNames(scoper.getVisibleNodes(thirdQ))).toStrictEqual([ 'Z_A_A', 'Z_A_B' ]);
@@ -166,7 +168,7 @@ describe("Testing Custom Scoper", () => {
 
 		// create the next QualifiedName (empty) to check the available names
 		const fourthQ: QualifiedName = QualifiedName.create({})
-		AST.change( () => {
+		FREON.astChanger.change( () => {
 			thirdQ.restName = fourthQ;
 		})
 		expect(getVisibleNames(scoper.getVisibleNodes(fourthQ))).toStrictEqual([ ]);

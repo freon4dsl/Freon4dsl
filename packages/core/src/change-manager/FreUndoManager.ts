@@ -1,14 +1,15 @@
 import { FreLogger } from "../logging/index.js";
-import { FreChangeManager } from "./FreChangeManager.js";
 import type { FreModelUnit } from "../ast/index.js";
+import { AstObserver } from "./AstObserver.js"
 import type { FreDelta, FrePrimDelta, FrePartDelta, FrePartListDelta, FrePrimListDelta } from "./FreDelta.js";
 import { FreUndoStackManager } from "./FreUndoStackManager.js";
 
-const LOGGER = new FreLogger("FreUndoManager").mute()
+const LOGGER = new FreLogger("FreUndoManager")
 /**
  * Class FreUndoManager holds the change information on the model.
  * The information is stored per model unit; one stack for undo info, one for redo info.
  * Any changes that cannot be attributed to a single unit are stored separately.
+ * NB: Should only be called from AstChanger.
  */
 export class FreUndoManager {
     private static theInstance; // the only instance of this class
@@ -26,7 +27,7 @@ export class FreUndoManager {
     // Note: the implementation depends on the freId() of the units, which is different each time a unit is read from storage
     // We assume the Map is only used during a single run of the tool.
     private undoManagerPerUnit: Map<string, FreUndoStackManager> = new Map<string, FreUndoStackManager>();
-    private modelUndoManager: FreUndoStackManager = new FreUndoStackManager(null);
+    private modelUndoManager: FreUndoStackManager = new FreUndoStackManager(this, null);
     private inTransaction: boolean = false;
     // private unitForTransaction: FreModelUnit = null;
     /**
@@ -86,17 +87,17 @@ export class FreUndoManager {
         }
     }
 
-    public cleanStacks(unit?: FreModelUnit) {
-        LOGGER.log(`cleanStacks for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
-        if (unit === undefined) {
-            unit = this.currentUnit
-        }
-        if (!!unit) {
-            this.getUndoStackManager(unit).cleanStacks();
-        } else {
-            this.modelUndoManager.cleanStacks();
-        }
-    }
+    // public cleanStacks(unit?: FreModelUnit) {
+    //     LOGGER.log(`cleanStacks for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
+    //     if (unit === undefined) {
+    //         unit = this.currentUnit
+    //     }
+    //     if (!!unit) {
+    //         this.getUndoStackManager(unit).cleanStacks();
+    //     } else {
+    //         this.modelUndoManager.cleanStacks();
+    //     }
+    // }
 
     public cleanAllStacks() {
         this.undoManagerPerUnit.forEach((val) => val.cleanStacks());
@@ -161,10 +162,10 @@ export class FreUndoManager {
      * Constructor subscribes to all changes in the model.
      */
     private constructor() {
-        FreChangeManager.getInstance().subscribeToPrimitive((delta: FrePrimDelta) => this.addDelta(delta));
-        FreChangeManager.getInstance().subscribeToPart((delta: FrePartDelta) => this.addDelta(delta));
-        FreChangeManager.getInstance().subscribeToListElement((delta: FrePartDelta | FrePrimDelta) => this.addDelta(delta));
-        FreChangeManager.getInstance().subscribeToList((delta: FrePartListDelta | FrePrimListDelta) => this.addDelta(delta));
+        AstObserver.getInstance().subscribeToPrimitive((delta: FrePrimDelta) => this.addDelta(delta));
+        AstObserver.getInstance().subscribeToPart((delta: FrePartDelta) => this.addDelta(delta));
+        AstObserver.getInstance().subscribeToListElement((delta: FrePartDelta | FrePrimDelta) => this.addDelta(delta));
+        AstObserver.getInstance().subscribeToList((delta: FrePartListDelta | FrePrimListDelta) => this.addDelta(delta));
     }
 
     private addDelta(delta: FreDelta) {
@@ -195,7 +196,7 @@ export class FreUndoManager {
         if (!!unit) {
             let unitManager = this.undoManagerPerUnit.get(unit.freId());
             if (!unitManager) {
-                unitManager = new FreUndoStackManager(unit);
+                unitManager = new FreUndoStackManager(this, unit);
                 this.undoManagerPerUnit.set(unit.freId(), unitManager);
             }
             return unitManager;

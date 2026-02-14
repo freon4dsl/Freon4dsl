@@ -13,19 +13,19 @@ export class ListElementInfo {
     propertyName: string; // the name of the property in which the element is stored by its parent
     propertyIndex: number; // the index within the list
 
-    constructor(element: FreNode | FreNodeReference<FreNamedNode>, componentId: string) {
-        this.element = element;
+    constructor(node: FreNode | FreNodeReference<FreNamedNode>, componentId: string) {
+        this.element = node;
         this.componentId = componentId;
-        if (isFreNode(element)) {
-            this.elementType = { type: element.freLanguageConcept(), isRef: false};
-            this.propertyName = element.freOwnerDescriptor().propertyName;
-            this.propertyIndex = element.freOwnerDescriptor().propertyIndex;
-        } else if (isFreNodeReference(element)) {
-            this.elementType = { type: element.referred?.freLanguageConcept(), isRef: true}
-            this.propertyName = element.referred.freOwnerDescriptor().propertyName;
-            this.propertyIndex = element.referred.freOwnerDescriptor().propertyIndex;
+        if (isFreNode(node)) {
+            this.elementType = { type: node.freLanguageConcept(), isRef: false};
+            this.propertyName = node.freOwnerDescriptor().propertyName;
+            this.propertyIndex = node.freOwnerDescriptor().propertyIndex;
+        } else if (isFreNodeReference(node)) {
+            this.elementType = { type: node.referred?.freLanguageConcept(), isRef: true}
+            this.propertyName = node.referred.freOwnerDescriptor().propertyName;
+            this.propertyIndex = node.referred.freOwnerDescriptor().propertyIndex;
         } else {
-            console.error("ListElementInfo is neoither a FreNode, nor a FreReference: " +JSON.stringify(element))
+            console.error("ListElementInfo is neoither a FreNode, nor a FreReference: " +JSON.stringify(node))
         }
     }
 }

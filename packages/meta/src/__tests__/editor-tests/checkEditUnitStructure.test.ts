@@ -1,3 +1,4 @@
+import { CoreConfig } from "@freon4dsl/core"
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
@@ -24,6 +25,7 @@ import { describe, test, expect } from "vitest";
 import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking FretEditUnit: ", () => {
+    // FreonConfiguration.initialize()
     const testdir: string = resolveTestDir(import.meta.url, "correctDefFiles/");
     let parser: FreEditParser;
     let language: FreMetaLanguage | undefined;

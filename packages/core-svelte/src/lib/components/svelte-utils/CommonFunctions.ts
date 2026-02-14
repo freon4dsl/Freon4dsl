@@ -1,6 +1,6 @@
 import { DummyNode } from './DummyNode.js';
 import {
-    AST,
+    FREON,
     type Box,
     FreEditor,
     FreEditorUtil,
@@ -54,7 +54,7 @@ export function executeCustomKeyboardShortCut(
     const cmd: FreAction = FreEditorUtil.findKeyboardShortcutAction(toFreKey(event), box, editor);
     if (cmd !== null) {
         let postAction: FrePostAction;
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             // todo KeyboardEvent does not have an "action" prop, so what is happening here?
             const action = event['action' as keyof KeyboardEvent];
             if (notNullOrUndefined(action)) {

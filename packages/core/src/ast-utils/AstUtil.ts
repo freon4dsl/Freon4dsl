@@ -91,7 +91,7 @@ export function isSubConcept(src: string, target: string): boolean {
 }
 
 /**
- * Returns true if all elements of 'toBeMatched' occur in 'list'.
+ * Returns true if all nodes of 'toBeMatched' occur in 'list'.
  * @param list
  * @param toBeMatched
  */
@@ -165,8 +165,8 @@ export function matchPrimitiveList(
     return foundMatch;
 }
 
-export function astToString(element: FreNode): string {
-    return JSON.stringify(element, skipReferences, "  " )
+export function astToString(node: FreNode): string {
+    return JSON.stringify(node, skipReferences, "  " )
 }
 
 const ownerprops: string[] = ["$$owner", "$$propertyName", "$$propertyIndex"];

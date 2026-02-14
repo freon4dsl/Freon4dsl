@@ -18,17 +18,17 @@ export class SvelteTestNonOptionalsChecker extends SvelteTestDefaultWorker imple
     errorList: FreError[] = [];
 
     /**
-     * Checks 'modelelement' before checking its children.
+     * Checks 'node' before checking its children.
      * Found errors are pushed onto 'errorlist'.
      * If an error is found, it is considered 'fatal', which means that no other checks on
-     * 'modelelement' are performed.
+     * 'node' are performed.
      *
-     * @param modelelement
+     * @param node
      */
-    public execBeforeSvelteTest(modelelement: SvelteTest): boolean {
-        if (modelelement.name === null || modelelement.name === undefined || modelelement.name?.length === 0) {
+    public execBeforeSvelteTest(node: SvelteTest): boolean {
+        if (node.name === null || node.name === undefined || node.name?.length === 0) {
             this.errorList.push(
-                new FreError("Property 'name' must have a value", modelelement, modelelement.name, "name", FreErrorSeverity.Error),
+                new FreError("Property 'name' must have a value", node, node.name, FreErrorSeverity.Error),
             );
         }
 
@@ -36,17 +36,17 @@ export class SvelteTestNonOptionalsChecker extends SvelteTestDefaultWorker imple
     }
 
     /**
-     * Checks 'modelelement' before checking its children.
+     * Checks 'node' before checking its children.
      * Found errors are pushed onto 'errorlist'.
      * If an error is found, it is considered 'fatal', which means that no other checks on
-     * 'modelelement' are performed.
+     * 'node' are performed.
      *
-     * @param modelelement
+     * @param node
      */
-    public execBeforeSvelteTestUnit(modelelement: SvelteTestUnit): boolean {
-        if (modelelement.name === null || modelelement.name === undefined || modelelement.name?.length === 0) {
+    public execBeforeSvelteTestUnit(node: SvelteTestUnit): boolean {
+        if (node.name === null || node.name === undefined || node.name?.length === 0) {
             this.errorList.push(
-                new FreError("Property 'name' must have a value", modelelement, modelelement.name, "name", FreErrorSeverity.Error),
+                new FreError("Property 'name' must have a value", node, node.name, FreErrorSeverity.Error),
             );
         }
 
@@ -54,17 +54,17 @@ export class SvelteTestNonOptionalsChecker extends SvelteTestDefaultWorker imple
     }
 
     /**
-     * Checks 'modelelement' before checking its children.
+     * Checks 'node' before checking its children.
      * Found errors are pushed onto 'errorlist'.
      * If an error is found, it is considered 'fatal', which means that no other checks on
-     * 'modelelement' are performed.
+     * 'node' are performed.
      *
-     * @param modelelement
+     * @param node
      */
-    public execBeforeSimpleNode(modelelement: SimpleNode): boolean {
-        if (modelelement.name === null || modelelement.name === undefined || modelelement.name?.length === 0) {
+    public execBeforeSimpleNode(node: SimpleNode): boolean {
+        if (node.name === null || node.name === undefined || node.name?.length === 0) {
             this.errorList.push(
-                new FreError("Property 'name' must have a value", modelelement, modelelement.name, "name", FreErrorSeverity.Error),
+                new FreError("Property 'name' must have a value", node, node.name, FreErrorSeverity.Error),
             );
         }
 
@@ -72,17 +72,17 @@ export class SvelteTestNonOptionalsChecker extends SvelteTestDefaultWorker imple
     }
 
     /**
-     * Checks 'modelelement' before checking its children.
+     * Checks 'node' before checking its children.
      * Found errors are pushed onto 'errorlist'.
      * If an error is found, it is considered 'fatal', which means that no other checks on
-     * 'modelelement' are performed.
+     * 'node' are performed.
      *
-     * @param modelelement
+     * @param node
      */
-    public execBeforeOtherType(modelelement: OtherType): boolean {
-        if (modelelement.name === null || modelelement.name === undefined || modelelement.name?.length === 0) {
+    public execBeforeOtherType(node: OtherType): boolean {
+        if (node.name === null || node.name === undefined || node.name?.length === 0) {
             this.errorList.push(
-                new FreError("Property 'name' must have a value", modelelement, modelelement.name, "name", FreErrorSeverity.Error),
+                new FreError("Property 'name' must have a value", node, node.name, FreErrorSeverity.Error),
             );
         }
 

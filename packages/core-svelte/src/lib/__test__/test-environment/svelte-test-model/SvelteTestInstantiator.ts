@@ -1,10 +1,10 @@
 import {OtherType, SimpleNode, SvelteTestUnit} from "$lib/__test__/test-environment/svelte-test-model/language/gen";
-import {AST, type FreNamedNode, type FreNode, FreNodeReference} from "@freon4dsl/core";
+import {FREON, type FreNamedNode, type FreNode, FreNodeReference} from "@freon4dsl/core";
 
 export class SvelteTestInstantiator {
     static makeTestUnit(name: string): SvelteTestUnit {
         let result: SvelteTestUnit | undefined = undefined;
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             const list1: SimpleNode[] = this.makeSimpleNodeList('LIST1');
             const list2: SimpleNode[] = this.makeSimpleNodeList('LIST2');
             const list3: OtherType[] = this.makeOtherTypeList('LIST3');
@@ -30,7 +30,7 @@ export class SvelteTestInstantiator {
 
     static makeSimpleNodeList(name: string): SimpleNode[] {
         const result: SimpleNode[] = [];
-        // AST.change(() => {
+        // FREON.astChanger.change(() => {
             result.push(SimpleNode.create({name: name + '-ELEMENT1'}));
             result.push(SimpleNode.create({name: name + '-ELEMENT2'}));
             result.push(SimpleNode.create({name: name + '-ELEMENT3'}));
@@ -40,7 +40,7 @@ export class SvelteTestInstantiator {
     }
     static makeOtherTypeList(name: string): OtherType[] {
         const result: OtherType[] = [];
-        // AST.change(() => {
+        // FREON.astChanger.change(() => {
         result.push(OtherType.create({name: name + '_OTHER1'}));
         result.push(OtherType.create({name: name + '_OTHER2'}));
         result.push(OtherType.create({name: name + '_OTHER3'}));

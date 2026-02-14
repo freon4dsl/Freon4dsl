@@ -8,10 +8,10 @@ export interface FreValidator {
      * stated in the validation definition. If 'includeChildren' is true, the child
      * nodes of 'modelelement' in the AST are also checked.
      *
-     * @param modelelement
+     * @param node
      * @param includeChildren
      */
-    validate(modelelement: FreNode, includeChildren?: boolean): FreError[];
+    validate(node: FreNode, includeChildren?: boolean): FreError[];
 }
 
 /**

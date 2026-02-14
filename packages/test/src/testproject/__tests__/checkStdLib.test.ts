@@ -1,14 +1,14 @@
-import { AST, FreLanguage } from "@freon4dsl/core";
+import { FREON, CoreConfig } from "@freon4dsl/core"
 import { KK, TestLimited, XX, ZZ } from "../freon/language/index.js";
 import { TestStartEnvironment } from "../freon/config/TestStartEnvironment.js";
 import { TestStartStdlib } from "../freon/stdlib/TestStartStdlib.js";
 import { describe, test, expect } from "vitest";
 
 describe("Checking stdlib for Demo", () => {
+    CoreConfig.initialize(TestStartEnvironment.getInstance(), null)
     let stdlib
-    AST.change( () => {
-        TestStartEnvironment.getInstance();
-        stdlib = FreLanguage.getInstance().stdLib as TestStartStdlib;
+    FREON.astChanger.change( () => {
+        stdlib = FREON.environment.stdlib as TestStartStdlib;
     })
     // The stdlib contains the following elements
     // ZZ.ZZinstance1

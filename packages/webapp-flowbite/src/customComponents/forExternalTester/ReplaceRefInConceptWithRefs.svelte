@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { AST, RefReplacerBox, FreNodeReference, notNullOrUndefined } from '@freon4dsl/core';
+    import { FREON, RefReplacerBox, FreNodeReference, notNullOrUndefined } from '@freon4dsl/core';
     import {CC} from "@freon4dsl/samples-external-tester";
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
 
@@ -24,7 +24,7 @@
                 numberOfValueAsString = (value.referred as CC).numberProp.toString();
             }
         } else { // the default
-            AST.change(() => {
+            FREON.astChanger.change(() => {
                 value = FreNodeReference.create<CC>('\<no CC\>', 'CC');
                 box.setPropertyValue(value);
             });
@@ -51,7 +51,7 @@
             // In short:
             // value.referred.name = nameOfValue; // the referred object has a different name
             // value.name = nameOfValue;          // the reference is to another object
-            AST.change(() => {
+            FREON.astChanger.change(() => {
                 value.name = nameOfValue;          // the reference is to another object
             })
         }

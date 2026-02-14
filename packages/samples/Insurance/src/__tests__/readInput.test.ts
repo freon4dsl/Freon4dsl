@@ -1,6 +1,6 @@
 import { InsuranceModelEnvironment } from "../freon/config/InsuranceModelEnvironment.js";
 import { BaseProduct, InsuranceModel, Part, Product } from "../freon/language/index.js";
-import { FreReader, FreValidator } from "@freon4dsl/core";
+import { CoreConfig, FreReader, FreValidator } from "@freon4dsl/core"
 import { FileUtil } from '@freon4dsl/test-helpers';
 import { describe, test, expect } from "vitest";
 
@@ -12,7 +12,7 @@ const validator: FreValidator = InsuranceModelEnvironment.getInstance().validato
 
 function addPartToModel(model: InsuranceModel, filepath: string) {
     try {
-        const langSpec: string = FileUtil.stringFromFile('./packages/samples/Insurance/src/__inputs__/' + filepath);
+        const langSpec: string = FileUtil.stringFromFile('./src/__inputs__/' + filepath);
         const unit1 = reader.readFromString(langSpec, "Part", model) as Part;
         // use last name of filepath as name of the unit
         unit1.name = filepath.split("/").pop().split(".").shift();
@@ -24,7 +24,7 @@ function addPartToModel(model: InsuranceModel, filepath: string) {
 
 function addProductToModel(model: InsuranceModel, filepath: string) {
     try {
-        const langSpec: string = FileUtil.stringFromFile('./packages/samples/Insurance/src/__inputs__/' + filepath);
+        const langSpec: string = FileUtil.stringFromFile('./src/__inputs__/' + filepath);
         const unit1 = reader.readFromString(langSpec, "Product", model) as Product;
         // use last name of filepath as name of the unit
         unit1.name = filepath.split("/").pop().split(".").shift();
@@ -35,6 +35,7 @@ function addProductToModel(model: InsuranceModel, filepath: string) {
 }
 
 describe("Testing InsuranceModel", () => {
+    CoreConfig.initialize(InsuranceModelEnvironment.getInstance(), null)
     const model: InsuranceModel = new InsuranceModel();
     model.name = "TEST_MODEL";
 
@@ -103,7 +104,7 @@ describe("Testing InsuranceModel", () => {
 
         const errors = validator.validate(model);
         console.log("Errors found (" + errors.length + ")\n" + errors.map(e => e.message + ' in ['
-            + e.locationdescription + ']').join("\n"));
+            + e.locationDescription + ']').join("\n"));
             // + writer.writeToString((e.reportedOn as PiElement).piOwner()) + ']').join("\n"));
     });
 

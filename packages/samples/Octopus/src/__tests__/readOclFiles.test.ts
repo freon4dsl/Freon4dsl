@@ -1,6 +1,6 @@
 import {OclPart, OctopusModel, UmlPart} from "../freon/language/index.js";
 import { OctopusModelEnvironment } from "../freon/config/OctopusModelEnvironment.js";
-import { FreModelSerializer } from "@freon4dsl/core";
+import { CoreConfig, FreModelSerializer } from "@freon4dsl/core"
 import { FileUtil } from '@freon4dsl/test-helpers';
 import {describe, test, expect} from "vitest";
 
@@ -23,12 +23,13 @@ function compareReadAndWrittenOclParts(path: string) {
 
 function readFromFile<T>(filepath: string, metatype: string): T {
     // read language file
-    const langSpec = FileUtil.stringFromFile('./packages/samples/Octopus/src/__inputs__/' + filepath);
+    const langSpec = FileUtil.stringFromFile('./src/__inputs__/' + filepath);
     return reader.readFromString(langSpec, metatype, new OctopusModel()) as T;
 }
 
 describe("Testing Parser for OCl part", () => {
 
+    CoreConfig.initialize(OctopusModelEnvironment.getInstance(), null)
     // TODO use snapshots
     test("Period unparsed and parsed again", () => {
         compareReadAndWrittenOclParts("/Period.ocl");

@@ -1,6 +1,6 @@
 import {OctopusModel, UmlPart} from "../freon/language/index.js";
 import { OctopusModelEnvironment } from "../freon/config/OctopusModelEnvironment.js";
-import { FreModelSerializer } from "@freon4dsl/core"
+import { CoreConfig, FreModelSerializer } from "@freon4dsl/core"
 import {describe, test, expect} from "vitest";
 import { FileUtil } from "@freon4dsl/test-helpers"
 
@@ -11,7 +11,7 @@ const serial: FreModelSerializer = new FreModelSerializer();
 function compareReadAndWrittenUmlParts(filepath: string) {
     try {
         const model: OctopusModel = new OctopusModel();
-        const langSpec: string = FileUtil.stringFromFile('./packages/samples/Octopus/src/__inputs__/' + filepath);
+        const langSpec: string = FileUtil.stringFromFile('./src/__inputs__/' + filepath);
         const unit1 = reader.readFromString(langSpec, "UmlPart", model) as UmlPart;
         unit1.name = "unit1";
         let result: string = writer.writeToString(unit1, 0, false);
@@ -32,6 +32,7 @@ function compareReadAndWrittenUmlParts(filepath: string) {
 }
 
 describe("Testing Parser", () => {
+    CoreConfig.initialize(OctopusModelEnvironment.getInstance(), null)
     // TODO use snapshots
     test("book unparsed and parsed again", () => {
         compareReadAndWrittenUmlParts("Book.uml2");

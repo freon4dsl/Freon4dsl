@@ -1,30 +1,24 @@
-import { AST, ReferenceUpdateManager } from "../../change-manager/index.js";
+import { ReferenceUpdateManager } from "../../change-manager/index.js";
 import { describe, test, expect, beforeEach } from "vitest";
+import { CoreConfig, FREON } from "../../environment/index.js"
 import {
     CalculatorModel,
-    Calculator,
-    InputField,
-    OutputField,
     InputFieldReference,
-    CalcExpression,
-    LiteralExpression,
-    NumberLiteralExpression,
-    BinaryExpression,
     PlusExpression,
-    type INamedConcept,
     initializeLanguage,
 } from "./reference-change-model/internal.js";
 import { ModelCreator } from "./ModelCreator.js";
 
 
 describe("Update references when name changes", () => {
+    CoreConfig.initialize(null, null)
     initializeLanguage();
     // Reference updater needs to be initialized
     ReferenceUpdateManager.getInstance()
 
     test(" for simple model", () => {
         let model: CalculatorModel = ModelCreator.createSimpleModel();
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             model.calc[0].inputFields[0].name = "z"
         })
         expect(model.calc[0].inputFields[0].name).toBe("z");
@@ -33,7 +27,7 @@ describe("Update references when name changes", () => {
 
     test(" for multiple references", () => {
         let model: CalculatorModel = ModelCreator.createModelWithMultipleReferences();
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             model.calc[0].inputFields[1].name = "z"
         })
         expect(model.calc[0].inputFields[1].name).toBe("z");
@@ -46,7 +40,7 @@ describe("Update references when name changes", () => {
 
     test(" for cross-unit references", () => {
         let model: CalculatorModel = ModelCreator.createModelWithCrossUnitReferences();
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             model.calc[0].inputFields[0].name = "z"
             model.calc[0].inputFields[1].name = "t"
         })
@@ -62,7 +56,7 @@ describe("Update references when name changes", () => {
 
     test(" for referred fields with the same name", ()=>{
         let model: CalculatorModel = ModelCreator.createModelWithClashingNames();
-        AST.change(() => {
+        FREON.astChanger.change(() => {
             model.calc[0].inputFields[0].name = "z"
         })
         expect(model.calc[0].inputFields[0].name).toBe("z");

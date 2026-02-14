@@ -1,4 +1,4 @@
-import { AST, FreNodeReference, type FreNode, FreLanguage, notNullOrUndefined } from '@freon4dsl/core';
+import { FREON, FreNodeReference, type FreNode, FreLanguage, notNullOrUndefined } from '@freon4dsl/core';
 import { runInAction } from "mobx";
 import {
     Demo,
@@ -41,7 +41,7 @@ export class DemoModelCreator {
         let result = this.createCorrectModel();
         let unit: DemoModel | undefined = result.models.find((m) => m.name === "CorrectUnit");
 
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const companyEnt = DemoEntity.create({ name: "Company", x: "xxx", simpleprop: "simple" }); // another one with the same unitName
             const VAT_Number = DemoAttribute.create({
                 name: "VAT_Number",
@@ -81,7 +81,7 @@ export class DemoModelCreator {
 
     private makeIfFunction(name: string): DemoFunction {
         let ifFunction
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             ifFunction = DemoFunction.create({
                 name: name,
                 declaredType: FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType"),
@@ -102,7 +102,7 @@ export class DemoModelCreator {
 
     private makeIfFunction2() {
         let ifFunction
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             ifFunction = DemoFunction.create({
                 name: "compare",
                 declaredType: FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType"),
@@ -125,7 +125,7 @@ export class DemoModelCreator {
         let result = this.createIncorrectModel();
         let unit: DemoModel | undefined = result.models.find((m) => m.name === "DemoModel_1");
         // add new attribute to Person entity
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             if (notNullOrUndefined(unit)) {
                 let personent = unit.entities[0]; // Person
                 let personattr = new DemoAttributeWithEntityType();
@@ -173,7 +173,7 @@ export class DemoModelCreator {
 
     public createInheritanceModel(): Demo {
         let model
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             model = Demo.create({ name: "ModelWithInheritance" });
             let inheritanceModel = this.createInheritanceUnit();
             if (notNullOrUndefined(inheritanceModel)) model.models.push(inheritanceModel);
@@ -183,7 +183,7 @@ export class DemoModelCreator {
 
     private createInheritanceUnit() {
         let inheritanceModel
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             inheritanceModel = DemoModel.create({ name: "DemoModel_with_inheritance" });
 
             const vehicleEnt = DemoEntity.create({ name: "Vehicle", x: "xxx", simpleprop: "simple" });
@@ -257,7 +257,7 @@ export class DemoModelCreator {
 
     public createInheritanceWithLoop(): Demo {
         let model = this.createInheritanceModel();
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             let unit = model.models.find((m) => m.name === "DemoModel_with_inheritance");
             // let Vehicle inherit from RaceBike
             if (notNullOrUndefined(unit)) {
@@ -269,7 +269,7 @@ export class DemoModelCreator {
 
     public createIncorrectModel(): Demo {
         let model
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             model = Demo.create({ name: "InCorrectModel" }); // , models: [DemoModel.create({name: "DemoModel_1"})]});
             let unit: DemoModel = DemoModel.create({ name: "DemoModel_1" });
             model.models.push(unit);
@@ -382,7 +382,7 @@ export class DemoModelCreator {
 
     public createCorrectModel(): Demo {
         let model
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             model = Demo.create({ name: "CorrectModel" });
             let unit = this.createCorrectUnit();
             model.models.push(unit);
@@ -392,7 +392,7 @@ export class DemoModelCreator {
 
     private createCorrectUnit() {
         let unit
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             unit = DemoModel.create({ name: "CorrectUnit" });
             const ifFunction = DemoFunction.create({ name: "compare" });
             ifFunction.declaredType = FreNodeReference.create<DemoAttributeType>(
@@ -473,7 +473,7 @@ export class DemoModelCreator {
 
     private makeSchoolEntity(companyEnt: DemoEntity) {
         let schoolEntity
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             schoolEntity = DemoEntity.create({ name: "School", x: "xxx", simpleprop: "simple" });
 
             const founded = DemoAttribute.create({ name: "foundedIn" });
@@ -502,7 +502,7 @@ export class DemoModelCreator {
 
     private makeCompanyEntity() {
         let companyEnt
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             companyEnt = DemoEntity.create({ name: "Company", x: "xxx", simpleprop: "simple" });
             const companyName = DemoAttribute.create({ name: "name" });
             companyName.declaredType = FreNodeReference.create<DemoAttributeType>(
@@ -579,7 +579,7 @@ export class DemoModelCreator {
         AAP: DemoVariable,
         NOOT: DemoVariable,
     ) {
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             personName.declaredType = FreNodeReference.create<DemoAttributeType>(
                 DemoAttributeType.String,
                 "DemoAttributeType",
@@ -609,7 +609,7 @@ export class DemoModelCreator {
     private addComplexExpression1(): DemoExpression {
         // (IF (2 < 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * 'Person'))
         let plusExp
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const ifExpression = new DemoIfExpression();
             ifExpression.condition = MakeLessThenExp("2", "5"); //("<")
             ifExpression.whenTrue = makeLiteralExp("1")!;
@@ -625,7 +625,7 @@ export class DemoModelCreator {
         // ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
 
         let plusExp
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             const varRef = new DemoVariableRef();
             // varRef.referredName = "Variable1";
             varRef.variable = FreNodeReference.create<DemoVariable>(attr, "DemoAttribute");

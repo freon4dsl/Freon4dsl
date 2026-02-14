@@ -1,4 +1,4 @@
-import { FreNode } from "@freon4dsl/core";
+import { FreNode, CoreConfig } from "@freon4dsl/core"
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { DemoModel, DemoFunction, DemoEntity } from "../freon/language/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
@@ -6,7 +6,7 @@ import { describe, test, expect } from "vitest";
 
 describe("Demo Model", () => {
     describe("Checking DemoModel incorrect instance", () => {
-        DemoEnvironment.getInstance()
+        CoreConfig.initialize(DemoEnvironment.getInstance(), null)
         let model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
 
         test("model name should be set", () => {

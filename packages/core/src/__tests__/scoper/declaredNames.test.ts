@@ -3,6 +3,7 @@
  * All tests determine whether the declared nodes of a namespace are correct.
  */
 import { beforeEach, describe, test, expect } from 'vitest';
+import { CoreConfig } from "../../environment/index.js"
 import { ScoperModel } from './scoper-model/ScoperModel.js';
 import { ModelCreator } from './ModelCreator.js';
 import { initializeLanguage, UnitB } from './scoper-model/index.js';
@@ -19,6 +20,7 @@ function printNames(set: Set<FreNamedNode>) {
 
 describe("FreNamespace declaredNames", () => {
 	let model: ScoperModel;
+    CoreConfig.initialize(null, null)
 	initializeLanguage();
 	
 	beforeEach(() => {

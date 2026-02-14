@@ -1,4 +1,4 @@
-import { AST, FreModelSerializer } from "@freon4dsl/core";
+import { FREON, FreModelSerializer } from "@freon4dsl/core";
 import { Demo, DemoModel } from "../freon/language/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 
@@ -7,7 +7,7 @@ export class DemoUnitCreator {
 
     modelToJsonToModel(): Demo {
         let result
-        AST.change( () => {
+        FREON.astChanger.change( () => {
             result = Demo.create({ name: "ReadFromJson" });
             const model = new DemoModelCreator().createModelWithMultipleUnits();
             // convert first unit as complete unit
