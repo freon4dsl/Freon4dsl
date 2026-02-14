@@ -1,0 +1,142 @@
+language festivities
+// Festival planning metamodel
+// (Inspired by a multi-day festival / event production system)
+
+concept Festival {
+  name: string;
+  location: string;
+  startDate: Date;
+  endDate: Date;
+  status: string;
+  schedule: Schedule[];
+  resources: Resources;
+  ticketTypes: TicketType[];
+  compliance: Compliance;
+}
+
+concept Schedule {
+  days: Day[];
+}
+
+concept Day {
+  date: Date;
+  stages: Stage[];
+  logistics: Logistics;
+}
+
+concept Stage {
+  name: string;
+  capacity: number;
+  performances: Performance[];
+}
+
+concept Performance {
+  artist: string;
+  timeSlot: TimeSlot;
+  technicalRequirements: TechnicalRequirements;
+}
+
+concept TimeSlot {
+  startTime: Time;
+  endTime: Time;
+}
+
+concept TechnicalRequirements {
+  powerRequirements: string;
+  soundChannels: string;
+  lightingNeeds: string;
+  specialEffects: string;
+}
+
+concept Logistics {
+  loadInTime: Time;
+  loadOutTime: Time;
+  securityPlanReference: string;
+  cateringArrangements: string;
+}
+
+concept Resources {
+  staff: Staff[];
+  equipment: Equipment[];
+  vendors: Vendor[];
+}
+
+concept Staff {
+  name: string;
+  role: string;
+  skills: string[];
+  availability: Availability[];
+}
+
+concept Availability {
+  start: DateTime;
+  end: DateTime;
+}
+
+concept Equipment {
+  name: string;
+  category: string;
+  quantity: number;
+  assignedStage: Stage;
+}
+
+concept Vendor {
+  name: string;
+  contractStartDate: Date;
+  contractEndDate: Date;
+  servicesProvided: string;
+}
+
+concept TicketType {
+  name: string;
+  price: Money;
+  accessLevel: string;
+  validDays: Date[];
+  capacityLimit: number;
+}
+
+concept Compliance {
+  safetyPlan: SafetyPlan;
+  insurance: Insurance;
+  permits: Permit[];
+}
+
+concept SafetyPlan {
+  documentReference: string;
+  approvalStatus: string;
+  lastReviewDate: Date;
+}
+
+concept Insurance {
+  policyNumber: string;
+  coverageType: string;
+  expiryDate: Date;
+}
+
+concept Permit {
+  permitType: string;
+  issuingAuthority: string;
+  issueDate: Date;
+  expiryDate: Date;
+}
+
+concept Date {
+  year: number;
+  month: number;
+  day: number;
+}
+
+concept Time {
+  hour: number;
+  minute: number;
+}
+
+concept DateTime {
+  date: Date;
+  time: Time;
+}
+
+concept Money {
+  amount: number;
+  currency: string;
+}

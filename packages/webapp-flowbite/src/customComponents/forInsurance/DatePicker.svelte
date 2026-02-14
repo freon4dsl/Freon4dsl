@@ -14,7 +14,7 @@
     }
 
     const onChange = () => {
-        let xx = getValidDate(value)
+        let xx: Date | undefined = getValidDate(value)
         if (xx !== undefined) {
             console.log("Changing value to: " + value)
             box.setPropertyValue(value);
@@ -23,12 +23,36 @@
         }
     }
 
-    function getValidDate(d: string) {
-        let dateArray = d.split("-");
-        let newDate = `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}`;
+    /**
+     * See if the date is in ISO or Dutch format and change it into ISO format for use in the <input> field.
+     * @param d
+     */
+    function getValidDate(d: string): Date | undefined {
+        if (!d) return undefined;
 
-        console.log("In isValidDate: "+ newDate); // 2019-05-15 (YYYY/MM/DD)
-        return new Date(newDate);
+        // ISO format: YYYY-MM-DD
+        const isoRegex = /^\d{4}-\d{2}-\d{2}$/;
+        // Dutch format: DD-MM-YYYY
+        const dutchRegex = /^\d{2}-\d{2}-\d{4}$/;
+
+        let year: number, month: number, day: number;
+
+        if (isoRegex.test(d)) {
+            // Already ISO
+            [year, month, day] = d.split("-").map(Number);
+        } else if (dutchRegex.test(d)) {
+            // Convert Dutch to ISO ordering
+            const [dd, mm, yyyy] = d.split("-").map(Number);
+            year = yyyy;
+            month = mm;
+            day = dd;
+        } else {
+            console.warn("Unknown date format:", d);
+            return undefined;
+        }
+
+        // Construct local date safely (avoids timezone shift)
+        return new Date(year, month - 1, day);
     }
 
     function getValue() {
