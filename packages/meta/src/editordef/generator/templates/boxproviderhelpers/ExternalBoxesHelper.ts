@@ -114,7 +114,7 @@ export class ExternalBoxesHelper {
                     )`;
     }
 
-    private replaceSingleByExternal(
+    public replaceSingleByExternal(
         item: FreEditPropertyProjection,
         property: FreMetaConceptProperty,
         elementVarName: string,
