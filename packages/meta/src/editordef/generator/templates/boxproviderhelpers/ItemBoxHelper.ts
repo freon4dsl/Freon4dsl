@@ -183,13 +183,19 @@ export class ItemBoxHelper {
     ): string {
         let result: string = "";
         if (property.type instanceof FreMetaLimitedConcept) {
-            result += this._myLimitedHelper.generateLimited(
-                property,
-                elementVarName,
-                language,
-                item.listInfo,
-                item.displayType,
-            );
+            if (!!item.externalInfo && !!item.externalInfo.replaceBy && item.externalInfo.replaceBy.length > 0) {
+                // Use external component to replace the limited concept box
+                result += this._myExternalHelper.replaceSingleByExternal(item, property, elementVarName);
+            } else {
+                // Use standard limited concept box
+                result += this._myLimitedHelper.generateLimited(
+                    property,
+                    elementVarName,
+                    language,
+                    item.listInfo,
+                    item.displayType,
+                );
+            }
         } else if (property.isList) {
             let innerResult: string = "";
             if (!!item.listInfo && item.listInfo.isTable) {
