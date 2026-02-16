@@ -73,7 +73,7 @@ export class FreLogger {
         if (!FreLogger.muteAll && this.active) {
             this.logToConsole(FreLogger.FG_BLACK, this.category + ": " + this.message(msg));
         } else if (tagOrTags !== undefined && tagOrTags !== null) {
-            const tags: string[] = typeof tagOrTags === "string" ? [tagOrTags] : (tagOrTags as string[]);
+            const tags: string[] = typeof tagOrTags === "string" ? [tagOrTags] : (Array.isArray(tagOrTags) ? tagOrTags : []);
             for (const tag of tags) {
                 if (!FreLogger.mutedLogs.includes(tag)) {
                     this.logToConsole(FreLogger.FG_BLACK, this.category + "." + tag + ": " + this.message(msg));
