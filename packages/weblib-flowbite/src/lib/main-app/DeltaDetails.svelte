@@ -7,13 +7,11 @@
     const { it } = $props<{ it: ProcessedDelta }>();
 
     let editor = WebappConfigurator.getInstance().langEnv?.editor
-    let originalNode = $derived(WebappConfigurator.getInstance().langEnv?.editor.copiedElement)
-    let originalBox: Box | undefined = $derived.by(() => {
-        if (notNullOrUndefined(originalNode)) {
-            return editor?.projection.getBox(originalNode);
-        }
-        return undefined;
-    });
+    let originalNode = WebappConfigurator.getInstance().langEnv?.editor.copiedElement
+    let originalBox: Box | undefined = undefined
+    if (notNullOrUndefined(originalNode)) {
+        originalBox = editor?.projection.getBox(originalNode);
+    }
 
     let nodeId = originalNode? originalNode.freId() : "unknown";
 </script>
@@ -29,7 +27,7 @@
         Original node:
         <div class="text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded">
             {#if notNullOrUndefined(originalBox)}
-                <RenderComponent box={originalBox} editor={editor} />
+                <RenderComponent box={originalBox} editor={editor} readonly={true} />
             {:else}
                 <div>No box found: {nodeId}</div>
             {/if}

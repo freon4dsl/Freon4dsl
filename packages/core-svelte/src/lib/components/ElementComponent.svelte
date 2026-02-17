@@ -5,7 +5,7 @@
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    let { editor, box }: FreComponentProps<ElementBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<ElementBox> = $props();
 
     const LOGGER = ELEMENT_LOGGER;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,5 +40,5 @@
 </script>
 
 {#if notNullOrUndefined(childBox)}
-    <RenderComponent box={childBox} {editor} />
+    <RenderComponent box={childBox} {editor} {readonly} />
 {/if}

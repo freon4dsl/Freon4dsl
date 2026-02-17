@@ -20,7 +20,7 @@
 
     const LOGGER = RADIO_LOGGER;
 
-    let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<BooleanControlBox> = $props();
 
     let id: string = box.id;
     let trueElement: HTMLInputElement;
@@ -136,6 +136,7 @@
                 onchange={onChange}
                 onkeydown={onKeyDown}
                 bind:this={trueElement}
+                disabled={readonly}
             />
             {box.labels.yes}
         </label>
@@ -156,6 +157,7 @@
                 onchange={onChange}
                 onkeydown={onKeyDown}
                 bind:this={falseElement}
+                disabled={readonly}
             />
             {box.labels.no}
         </label>
@@ -177,6 +179,7 @@
                     onchange={onChange}
                     onkeydown={onKeyDown}
                     bind:this={undefinedElement}
+                    disabled={readonly}
                 />
                 {box.labels.unknown}
             </label>

@@ -8,7 +8,7 @@
     import { Popover, Button } from "flowbite-svelte"
     import DeltaDetails from "$lib/main-app/DeltaDetails.svelte"
 
-    let items: ProcessedDelta[] = $derived(deltaList.deltas);
+    let items: ProcessedDelta[] = deltaList.deltas;
 
     function deltaAsString(d: DeltaEvent): string {
         return d.messageKind.toString();

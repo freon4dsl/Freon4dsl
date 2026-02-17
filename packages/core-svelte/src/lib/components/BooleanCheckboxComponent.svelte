@@ -9,7 +9,7 @@
     import { CHECKBOX_LOGGER } from './ComponentLoggers.js';
 
     // Props
-    let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<BooleanControlBox> = $props();
 
     const LOGGER = CHECKBOX_LOGGER;
 
@@ -92,5 +92,6 @@
         bind:this={inputElement}
         checked={value}
         tabindex="0"
+        disabled={readonly}
     >
 <!--</span>-->

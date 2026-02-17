@@ -3,7 +3,7 @@
     import { BUTTON_LOGGER } from './ComponentLoggers.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    let { editor, box }: FreComponentProps<ButtonBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<ButtonBox> = $props();
 
     const LOGGER = BUTTON_LOGGER;
     LOGGER.show();
@@ -35,11 +35,13 @@
     };
 </script>
 
+
 <button
     class="button-component-ripple button-component {box.cssClass}"
     class:button-component-empty={box.text.length === 0}
     {id}
     onclick={onClick}
+    disabled={readonly}
     bind:this={thisButton}
 >
     <span>{box.text}</span>

@@ -43,6 +43,7 @@
     let {
         editor,
         box,
+        readonly,
         partOfDropdown,
         isEditing = $bindable(),
         text = $bindable(),
@@ -695,10 +696,27 @@
 
 </script>
 
-{#if errMess.length > 0 && box.isFirstInLine}
-    <ErrorMarker {editor} {box} />
-{/if}
-<ErrorTooltip {editor} {box} {hasErr} parentTop={0} parentLeft={0}>
+{#if readonly}
+    <span {id} role="none" class="text-component">
+            <span
+                class="{box?.cssClass} text-box-{boxType} text-component-text {errorCls}"
+                {tabindex}
+                bind:this={spanElement}
+                id="{id}-span"
+                role="textbox"
+            >
+                {#if !!text && text.length > 0}
+                    <span class={errorCls}>{text}</span>
+                {:else}
+                    <span class="{placeHolderStyle} {errorCls}">{placeholder}</span>
+                {/if}
+            </span>
+    </span>
+{:else}
+    {#if errMess.length > 0 && box.isFirstInLine}
+        <ErrorMarker {editor} {readonly} {box} />
+    {/if}
+    <ErrorTooltip {editor} {readonly} {box} {hasErr} parentTop={0} parentLeft={0}>
     <span {id} role="none" bind:this={surroundingElement} class="text-component">
         {#if isEditing}
             <span class="text-component-input-wrapper">
@@ -744,4 +762,5 @@
             </span>
         {/if}
     </span>
-</ErrorTooltip>
+    </ErrorTooltip>
+{/if}
