@@ -13,15 +13,15 @@ import {
     type FreModel,
     type FreModelUnit,
     type FreNode,
+    type IModelManager,
     FreProjectionHandler,
     type FreUnitIdentifier,
-    ModelManager,
     isNullOrUndefined,
     jsonAsString,
     notNullOrUndefined,
     FREON,
+    isInMemoryError,
 } from "@freon4dsl/core"
-import { type IModelManager, isInMemoryError } from "@freon4dsl/core/dist/storage/IModelManager.js"
 import { runInAction } from "mobx"
 
 const LOGGER: FreLogger = new FreLogger("Webapp")
