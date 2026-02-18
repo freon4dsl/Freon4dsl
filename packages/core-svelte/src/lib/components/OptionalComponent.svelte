@@ -246,23 +246,23 @@
 </script>
 
 {#if readonly}
-	<span class="optional-component {box.cssClass}" {id}
+	<span class="optional-component {box.cssClass} readonly" {id}
 		  role="none"
 	>
 	{#if isEmpty}
-		<span class="optional-component-tooltip-anchor">
+		<span class="optional-component-tooltip-anchor readonly" >
 		  <button
-			  class="optional-component-button {showPlaceholderButton ? 'text-mode' : ''}"
+			  class="optional-component-button {showPlaceholderButton ? 'text-mode' : ''} readonly"
 			  aria-label="Add optional component"
 		  >
 			  {#if showPlaceholderButton}
-				<span class="optional-component-placeholder">{placeholder}</span>
+				<span class="optional-component-placeholder readonly">{placeholder}</span>
 			  {:else}
 				<AddIcon />
 			  {/if}
 		  </button>
 
-		  <span class="optional-component-tooltip" role="tooltip">
+		  <span class="optional-component-tooltip readonly" role="tooltip">
 			Add {placeholder}
 		  </span>
 		</span>

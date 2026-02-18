@@ -102,7 +102,7 @@
 
 {#if readonly}
     <span
-        class="grid-cell-component {orientation} {isHeader} {cssClass}"
+        class="grid-cell-component {orientation} {isHeader} {cssClass} readonly"
         style:grid-row={row}
         style:grid-column={column}
         style={cssStyle}

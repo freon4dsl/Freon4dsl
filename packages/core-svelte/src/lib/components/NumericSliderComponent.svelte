@@ -103,7 +103,7 @@
 
 {#if readonly}
 	<span
-		class="numeric-slider-component {box.cssClass}"
+		class="numeric-slider-component {box.cssClass} readonly"
 		{id}
 		role="slider"
 		aria-valuenow={value}
@@ -111,14 +111,14 @@
 	>
 			<input
 				value={value}
-				class="numeric-slider-input"
+				class="numeric-slider-input readonly"
 				max={max}
 				min={min}
 				step={step}
 				disabled
 				type="range"
 			/>
-			<span aria-hidden="true" class="numeric-slider-tooltip">{value}</span>
+			<span aria-hidden="true" class="numeric-slider-tooltip readonly">{value}</span>
 		</span>
 {:else}
 	<span

@@ -38,7 +38,7 @@
 </script>
 
 {#if notNullOrUndefined(child)}
-    <span {style} {id}>
+    <span {style} {id} class:readonly={readonly}>
         <RenderComponent box={child} {editor} {readonly} />
     </span>
 {/if}

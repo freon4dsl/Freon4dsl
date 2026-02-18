@@ -137,7 +137,7 @@
     <span
         style:grid-template-columns={templateColumns}
         style:grid-template-rows={templateRows}
-        class="table-component {cssClass}"
+        class="table-component {cssClass} readonly"
         {id}
         tabIndex={-1}
         bind:this={htmlElement}

@@ -60,7 +60,7 @@
     }
 </script>
 
-<span class="switch-component {box.cssClass}">
+<span class="switch-component {box.cssClass}" class:readonly={readonly}>
     <button
         {id}
         bind:this={switchElement}

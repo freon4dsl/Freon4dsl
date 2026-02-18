@@ -697,18 +697,18 @@
 </script>
 
 {#if readonly}
-    <span {id} role="none" class="text-component">
+    <span {id} role="none" class="text-component readonly">
             <span
-                class="{box?.cssClass} text-box-{boxType} text-component-text {errorCls}"
+                class="{box?.cssClass} text-box-{boxType} text-component-text {errorCls} readonly"
                 {tabindex}
                 bind:this={spanElement}
                 id="{id}-span"
                 role="textbox"
             >
                 {#if !!text && text.length > 0}
-                    <span class={errorCls}>{text}</span>
+                    <span class="{errorCls} readonly">{text}</span>
                 {:else}
-                    <span class="{placeHolderStyle} {errorCls}">{placeholder}</span>
+                    <span class="{placeHolderStyle} {errorCls} readonly">{placeholder}</span>
                 {/if}
             </span>
     </span>

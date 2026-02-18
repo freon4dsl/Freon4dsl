@@ -58,7 +58,7 @@
 
 {#if readonly}
     <span
-        class="layout-component {errorCls} {box.cssClass}"
+        class="layout-component {errorCls} {box.cssClass} readonly"
         {id}
         class:layout-component-horizontal={isHorizontal}
         class:layout-component-vertical={!isHorizontal}

@@ -111,16 +111,16 @@
         role="radiogroup"
         aria-labelledby={ariaLabel}
         {id}
-        class="freon-radio-group limited-radio-component-group  {box.cssClass}"
+        class="freon-radio-group limited-radio-component-group  {box.cssClass} readonly"
         class:freon-radio-group-vertical={!isHorizontal}
     >
             {#each myEnum as nn, i}
-                <span class="freon-radio-item limited-radio-component-single">
+                <span class="freon-radio-item limited-radio-component-single readonly">
                     <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
                     <!-- svelte-ignore a11y_click_events_have_key_events -->
-                    <label class="freon-radio-label limited-radio-component-label"   onclick={onClickLabel}>
+                    <label class="freon-radio-label limited-radio-component-label readonly" onclick={onClickLabel}>
                         <input
-                            class="limited-radio-component-input"
+                            class="limited-radio-component-input readonly"
                             type="radio"
                             id="{id}-{nn}-{i}"
                             name="{id}-group"
@@ -129,6 +129,7 @@
                             value={nn}
                             checked={currentValue === nn}
                             aria-label="radio-control-{nn}"
+                            disabled
                         />
                         {nn}
                     </label>

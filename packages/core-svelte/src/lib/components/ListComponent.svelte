@@ -220,14 +220,14 @@
 
 {#if readonly}
     <span
-        class="{isHorizontal ? 'list-component-horizontal' : 'list-component-vertical'} {box.cssClass}"
+        class="{isHorizontal ? 'list-component-horizontal' : 'list-component-vertical'} {box.cssClass} readonly"
         {id}
         style:grid-template-columns="auto"
         style:grid-template-rows="auto"
     >
         {#each shownElements as box, index (box.id)}
             <span
-                class="list-item"
+                class="list-item readonly"
                 style:grid-column={!isHorizontal ? 1 : index + 1}
                 style:grid-row={isHorizontal ? 1 : index + 1}
                 role="none"

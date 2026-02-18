@@ -172,6 +172,7 @@
     <span
         {id}
         class="render-component {errorCls} {selectedCls}"
+        class:readonly={readonly}
         onclick={onClick}
         bind:this={element}
         role="group"

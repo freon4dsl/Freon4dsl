@@ -41,7 +41,7 @@
 </script>
 
 {#if notNullOrUndefined(childBox)}
-    <span class="fragment-component {cssClass}" {id}>
+    <span class="fragment-component {cssClass}" class:readonly={readonly} {id}>
         <RenderComponent box={childBox} {editor} {readonly} />
     </span>
 {/if}

@@ -49,7 +49,7 @@
     }
 </script>
 
-<span class="inner-switch-component {box.cssClass}">
+<span class="inner-switch-component {box.cssClass}" class:readonly={readonly}>
     <button
         {id}
         bind:this={switchElement}
@@ -59,7 +59,7 @@
         onclick={handleClick}
         disabled={readonly}
     >
-        <span class="inner-switch-component-label">{box.labels.yes}</span>
-        <span class="inner-switch-component-label">{box.labels.no}</span>
+        <span class="inner-switch-component-label" class:readonly={readonly}>{box.labels.yes}</span>
+        <span class="inner-switch-component-label" class:readonly={readonly}>{box.labels.no}</span>
     </button>
 </span>

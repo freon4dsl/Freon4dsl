@@ -20,9 +20,9 @@
     }
 </script>
 
-<span class="expandable-component {box.cssClass}">
+<span class="expandable-component {box.cssClass}" class:readonly={readonly}>
     {#key isExpanded}
-        <button class="expandable-button" onclick={toggleExpanded}>
+        <button class="expandable-button" class:readonly={readonly} onclick={toggleExpanded}>
             <ArrowForward />
         </button>
     {/key}

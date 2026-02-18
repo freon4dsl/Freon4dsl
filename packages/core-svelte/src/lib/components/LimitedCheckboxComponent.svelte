@@ -156,14 +156,15 @@
         role="group"
         aria-labelledby={ariaLabel}
         {id}
-        class="limited-checkbox-component-group"
+        class="limited-checkbox-component-group readonly"
+        class:readonly={readonly}
         class:limited-checkbox-component-vertical={!isHorizontal}
     >
         {#each myEnum as nn, i}
-            <span class="limited-checkbox-component-single">
-                <label class="limited-checkbox-component-label">
+            <span class="limited-checkbox-component-single readonly" class:readonly={readonly}>
+                <label class="limited-checkbox-component-label readonly" class:readonly={readonly}>
                     <input
-                        class="limited-checkbox-component-input"
+                        class="limited-checkbox-component-input readonly" class:readonly={readonly}
                         type="checkbox"
                         id="{id}-{nn}-{i}"
                         value={nn}

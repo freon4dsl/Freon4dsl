@@ -38,6 +38,7 @@
 
 <button
     class="button-component-ripple button-component {box.cssClass}"
+    class:readonly={readonly}
     class:button-component-empty={box.text.length === 0}
     {id}
     onclick={onClick}

@@ -117,13 +117,14 @@
     role="radiogroup"
     aria-labelledby={ariaLabel}
     class="freon-radio-group boolean-radio-component-group {box.cssClass}"
+    class:readonly={readonly}
     class:freon-radio-group-vertical={!isHorizontal}
     {id}
 >
-    <span class="freon-radio-item boolean-radio-component-single">
+    <span class="freon-radio-item boolean-radio-component-single" class:readonly={readonly}>
         <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
         <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
+        <label class="freon-radio-label boolean-radio-component-label" class:readonly={readonly} onclick={onClick}>
             <input
                 type="radio"
                 id="{id}-trueOne"
@@ -141,10 +142,10 @@
             {box.labels.yes}
         </label>
     </span>
-    <span class="freon-radio-item boolean-radio-component-single">
+    <span class="freon-radio-item boolean-radio-component-single" class:readonly={readonly}>
         <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
         <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
+        <label class="freon-radio-label boolean-radio-component-label" class:readonly={readonly} onclick={onClick}>
             <input
                 type="radio"
                 id="{id}-falseOne"
@@ -163,10 +164,10 @@
         </label>
     </span>
     {#if isOptional} 
-        <span class="freon-radio-item boolean-radio-component-single">
+        <span class="freon-radio-item boolean-radio-component-single" class:readonly={readonly}>
             <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
             <!-- svelte-ignore a11y_click_events_have_key_events -->
-            <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
+            <label class="freon-radio-label boolean-radio-component-label" class:readonly={readonly} onclick={onClick}>
                 <input
                     type="radio"
                     id="{id}-undefinedOne"

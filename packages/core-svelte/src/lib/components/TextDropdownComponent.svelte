@@ -531,10 +531,10 @@
     <span
         {id}
         tabindex="-1"
-        class="text-dropdown-component {box.cssClass}"
+        class="text-dropdown-component {box.cssClass} readonly"
         role="none"
     >
-    <span class="text-dropdown-component-text-wrapper">
+    <span class="text-dropdown-component-text-wrapper readonly">
         <TextComponent
             {editor} {readonly}
             box={textBox}

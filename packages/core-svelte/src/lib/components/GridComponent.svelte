@@ -54,6 +54,7 @@
     style:grid-template-columns={templateColumns}
     style:grid-template-rows={templateRows}
     class="grid-component {cssClass}"
+    class:readonly={readonly}
     {id}
     tabIndex={0}
     bind:this={htmlElement}
