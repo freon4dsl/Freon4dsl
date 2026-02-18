@@ -16,16 +16,16 @@
     let nodeId = originalNode? originalNode.freId() : "unknown";
 </script>
 
-<div class="space-y-2">
+<div class="space-y-2 overflow-x-auto text-light-base-900">
     <div>
         Delta:
-        <pre class="text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded">
-{JSON.stringify(it.delta, null, 2)}
-    </pre>
+        <pre class="bg-gray-100 dark:bg-gray-800 p-2 rounded">
+            {JSON.stringify(it.delta, null, 2)}
+        </pre>
     </div>
-    <div>
+    <div id="original-node-{nodeId}">
         Original node:
-        <div class="text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded">
+        <div class="bg-gray-100 dark:bg-gray-800 p-2 rounded">
             {#if notNullOrUndefined(originalBox)}
                 <RenderComponent box={originalBox} editor={editor} readonly={true} />
             {:else}
