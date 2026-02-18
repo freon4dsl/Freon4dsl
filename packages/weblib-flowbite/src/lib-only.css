@@ -54,28 +54,28 @@
 }
 
 /**
-Styling the draggable gutter between the info panel and the editor panel
+Styling the draggable size-slider between the info panel and the editor panel
  */
-.gutter {
-    background: var(--color-light-base-300);
+.size-slider {
+    background: var(--color-light-base-700);
 }
-.dark .gutter {
-    background: var(--color-dark-base-700);
+.dark .size-slider {
+    background: var(--color-dark-base-100);
 }
 
-.gutter:hover {
+.size-slider:hover {
     background: var(--color-light-accent-300);
 }
-.dark .gutter:hover {
+.dark .size-slider:hover {
     background: var(--color-dark-accent-300);
 }
 
 /* Put this AFTER hover rules, because it needs to override those values. */
-.gutter.dragging,
-.gutter.dragging:hover {
+.size-slider.dragging,
+.size-slider.dragging:hover {
     background: var(--color-light-accent-500);
 }
-.dark .gutter.dragging,
-.dark .gutter.dragging:hover {
+.dark .size-slider.dragging,
+.dark .size-slider.dragging:hover {
     background: var(--color-dark-accent-500);
 }

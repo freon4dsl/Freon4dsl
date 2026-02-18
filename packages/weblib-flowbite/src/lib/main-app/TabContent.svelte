@@ -73,7 +73,7 @@
         <!-- Gutter / divider -->
         <!-- svelte-ignore	a11y_no_noninteractive_element_interactions, a11y_no_noninteractive_tabindex	-->
         <div
-            class="gutter h-[calc(100vh-155px)] w-2 cursor-col-resize"
+            class="size-slider h-[calc(100vh-155px)] w-2 cursor-col-resize"
             class:dragging={dragging}
             role="separator"
             aria-orientation="vertical"
