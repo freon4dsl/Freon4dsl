@@ -47,22 +47,22 @@
     <div class="relative" id="delta-results">
         {#if items && items.length > 0}
             <!-- table-like container -->
-            <div class="text-left text-sm text-light-base-500 dark:text-dark-base-40 w-full">
+            <div class="text-left text-sm text-light-base-900 dark:text-dark-base-50 w-full">
                 <div class="divide-y w-full">
                     {#each items as it, idx (it.delta.sequenceNumber)}
                         <details
                             open={openIndex === idx}
-                            class="w-full border-b last:border-b-0 bg-light-base-50 dark:bg-dark-base-800 dark:border-dark-base-700 hover:bg-light-base-50 dark:hover:bg-light-base-600
+                            class="w-full border-b last:border-b-0 bg-light-base-50 dark:bg-dark-base-800 dark:border-dark-base-700 hover:bg-light-base-50 dark:hover:bg-dark-base-900
                                     odd:bg-light-base-50 even:bg-light-base-50 odd:dark:bg-dark-base-800 even:dark:bg-dark-base-700"
                         >
                             <summary
-                                class="w-full whitespace-nowrap font-medium text-light-base-900 dark:text-dark-base-50 p-1.5 list-none cursor-pointer
+                                class="w-full whitespace-nowrap font-medium  p-1.5 list-none cursor-pointer
                                         flex items-center justify-between"
                                 id={"delta-summary-" + idx}
                                 onclick={(ev) => toggleNoDefault(ev, idx)}
                                 onkeydown={(ev) => onKeydown(ev, idx)}
                             >
-                                    <span class="font-medium text-light-base-900 dark:text-dark-base-500">
+                                    <span class="font-medium ">
                                       {deltaAsString(it.delta)}
                                     </span>
 

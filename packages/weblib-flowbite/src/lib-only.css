@@ -52,3 +52,30 @@
 .my-background  {
     background-color: var(--color-light-base-100)
 }
+
+/**
+Styling the draggable gutter between the info panel and the editor panel
+ */
+.gutter {
+    background: var(--color-light-base-300);
+}
+.dark .gutter {
+    background: var(--color-dark-base-700);
+}
+
+.gutter:hover {
+    background: var(--color-light-accent-300);
+}
+.dark .gutter:hover {
+    background: var(--color-dark-accent-300);
+}
+
+/* Put this AFTER hover rules, because it needs to override those values. */
+.gutter.dragging,
+.gutter.dragging:hover {
+    background: var(--color-light-accent-500);
+}
+.dark .gutter.dragging,
+.dark .gutter.dragging:hover {
+    background: var(--color-dark-accent-500);
+}

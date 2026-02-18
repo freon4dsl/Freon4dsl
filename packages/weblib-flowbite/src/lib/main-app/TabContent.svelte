@@ -73,8 +73,8 @@
         <!-- Gutter / divider -->
         <!-- svelte-ignore	a11y_no_noninteractive_element_interactions, a11y_no_noninteractive_tabindex	-->
         <div
-            class="h-[calc(100vh-155px)] w-2 cursor-col-resize bg-light-base-200 dark:bg-dark-base-700 hover:bg-light-base-300 dark:hover:bg-dark-base-600"
-            style={dragging ? "background: rgba(156,163,175,1);" : ""}
+            class="gutter h-[calc(100vh-155px)] w-2 cursor-col-resize"
+            class:dragging={dragging}
             role="separator"
             aria-orientation="vertical"
             aria-label="Resize panels"
@@ -96,8 +96,8 @@
         <div
             id="scroll-container-info"
             class="flex-1 min-w-0 h-[calc(100vh-155px)] relative top-0 overflow-hidden
-         bg-light-base-50 dark:bg-dark-base-800 text-light-base-500 dark:text-dark-base-400 border
-         border-light-base-200 dark:border-dark-base-700 divide-y divide-gray-200 dark:divide-gray-600"
+         bg-light-base-50 dark:bg-dark-base-800 text-light-base-800 dark:text-dark-base-100 border
+         border-light-base-200 dark:border-dark-base-700 divide-y divide-light-base-200 dark:divide-dark-base-700"
         >
             <InfoPanel />
         </div>
