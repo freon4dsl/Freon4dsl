@@ -46,53 +46,50 @@
 {:else }
     <div class="relative" id="delta-results">
         {#if items && items.length > 0}
-            <!-- SHARED SCROLL SURFACE -->
-            <div class="inline-block min-w-max w-full">
-                <!-- table-like container -->
-                <div class="text-left text-sm text-light-base-500 dark:text-dark-base-40 w-full">
-                    <div class="divide-y w-full">
-                        {#each items as it, idx (it.delta.sequenceNumber)}
-                            <details
-                                open={openIndex === idx}
-                                class="w-full border-b last:border-b-0 bg-light-base-50 dark:bg-dark-base-800 dark:border-dark-base-700 hover:bg-light-base-50 dark:hover:bg-light-base-600
+            <!-- table-like container -->
+            <div class="text-left text-sm text-light-base-500 dark:text-dark-base-40 w-full">
+                <div class="divide-y w-full">
+                    {#each items as it, idx (it.delta.sequenceNumber)}
+                        <details
+                            open={openIndex === idx}
+                            class="w-full border-b last:border-b-0 bg-light-base-50 dark:bg-dark-base-800 dark:border-dark-base-700 hover:bg-light-base-50 dark:hover:bg-light-base-600
                                     odd:bg-light-base-50 even:bg-light-base-50 odd:dark:bg-dark-base-800 even:dark:bg-dark-base-700"
-                            >
-                                <summary
-                                    class="w-full block whitespace-nowrap font-medium text-light-base-900 dark:text-dark-base-50 p-1.5 list-none cursor-pointer
+                        >
+                            <summary
+                                class="w-full whitespace-nowrap font-medium text-light-base-900 dark:text-dark-base-50 p-1.5 list-none cursor-pointer
                                         flex items-center justify-between"
-                                    id={"delta-summary-" + idx}
-                                    onclick={(ev) => toggleNoDefault(ev, idx)}
-                                    onkeydown={(ev) => onKeydown(ev, idx)}
-                                >
+                                id={"delta-summary-" + idx}
+                                onclick={(ev) => toggleNoDefault(ev, idx)}
+                                onkeydown={(ev) => onKeydown(ev, idx)}
+                            >
                                     <span class="font-medium text-light-base-900 dark:text-dark-base-500">
                                       {deltaAsString(it.delta)}
                                     </span>
 
-                                    {#if changedNode}
-                                        <button
-                                            class="bg-transparent border-2 border-light-base-600 hover:border-light-base-600
+                                {#if changedNode}
+                                    <button
+                                        class="bg-transparent border-2 border-light-base-600 hover:border-light-base-600
                                                h-7 w-7 rounded-full inline-flex items-center ml-auto mr-1"
-                                            onclick={(ev) => {
+                                        onclick={(ev) => {
                                           ev.stopPropagation();
                                           if (openIndex !== idx) {
                                             toggleNoDefault(ev, idx)
                                           }
                                           goToNode(changedNode);
                                         }}
-                                        >
-                                            <ArrowRightOutline
-                                                class="h-5 w-5 ms-0.5 text-light-accent-900 dark:text-dark-accent-50"
-                                            />
-                                        </button>
-                                    {/if}
-                                </summary>
+                                    >
+                                        <ArrowRightOutline
+                                            class="h-5 w-5 ms-0.5 text-light-accent-900 dark:text-dark-accent-50"
+                                        />
+                                    </button>
+                                {/if}
+                            </summary>
 
-                                <div class="p-1.5" id={"delta-details-" + idx}>
-                                    <DeltaDetails it={it} />
-                                </div>
-                           </details>
-                        {/each}
-                    </div>
+                            <div class="p-1.5" id={"delta-details-" + idx}>
+                                <DeltaDetails it={it} />
+                            </div>
+                        </details>
+                    {/each}
                 </div>
             </div>
         {:else}
