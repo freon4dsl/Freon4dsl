@@ -1,3 +1,4 @@
+import { notNullOrUndefined } from "../util/index.js"
 import type { FreTyper } from "./FreTyper.js";
 import type { FreType } from "./FreType.js";
 
@@ -48,7 +49,7 @@ export class FreTypeOrderedList<T extends FreType> implements Iterable<T> {
 
     includes(p: T, typer: FreTyper): boolean {
         let result: boolean = false;
-        if (!!typer) {
+        if (notNullOrUndefined(typer)) {
             for (const elem of this.elements) {
                 if (typer.equals(elem, p)) {
                     result = true;

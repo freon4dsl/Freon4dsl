@@ -1,7 +1,7 @@
 import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLanguage } from "../../language/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { isIdentifier } from "../../util/index.js"
+import { isIdentifier, isNullOrUndefined } from "../../util/index.js"
 import {
     collectUsedLanguages,
     FreLionwebSerializer,
@@ -53,7 +53,7 @@ export class ServerCommunication implements IServerCommunication {
     static instance: ServerCommunication;
 
     static getInstance(): ServerCommunication {
-        if (!!!ServerCommunication.instance) {
+        if (isNullOrUndefined(ServerCommunication.instance)) {
             ServerCommunication.instance = new ServerCommunication();
         }
         return ServerCommunication.instance;

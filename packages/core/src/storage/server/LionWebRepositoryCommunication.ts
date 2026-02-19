@@ -3,6 +3,7 @@ import type { ClientResponse } from "@lionweb/server-client";
 import type { ListPartitionsResponse } from "@lionweb/server-shared";
 import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
+import { isNullOrUndefined, notNullOrUndefined } from "../../util/index.js"
 import { createLionWebJsonNode, FreLionwebSerializer, type ServerResponse, type VoidServerResponse } from "../index.js"
 import type { FreSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
@@ -18,7 +19,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     static instance: LionWebRepositoryCommunication;
 
     static getInstance(): LionWebRepositoryCommunication {
-        if (!!!LionWebRepositoryCommunication.instance) {
+        if (isNullOrUndefined(LionWebRepositoryCommunication.instance)) {
             LionWebRepositoryCommunication.instance = new LionWebRepositoryCommunication();
         }
         return LionWebRepositoryCommunication.instance;
@@ -149,7 +150,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         LOGGER.log(`loadModelList`);
         const repos = await this.client.dbAdmin.listRepositories();
         const res = repos.body.repositories;
-        if (!!res) {
+        if (notNullOrUndefined(res)) {
             return {
                 result: res.map(repoConfig => repoConfig.name),
                 errors: []
