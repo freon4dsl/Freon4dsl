@@ -17,6 +17,7 @@ const PropertyAddedFunction = (msg: PropertyAddedEvent): void => {
     }
     const classifierMP = FreLanguage.getInstance().classifier(node.freLanguageConcept()).key
     const langProperty = FreLanguage.getInstance().classifierPropertyByKey(classifierMP, msg.property.key)
+    // Administarte old, (pointer) new and delta => liust
     FREON.astChanger.changeIgnore("PropertyAdded event", () => {
         node[langProperty.name] = msg.newValue
     })

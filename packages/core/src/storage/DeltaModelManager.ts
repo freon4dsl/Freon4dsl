@@ -20,14 +20,15 @@ export class DeltaModelManager extends ModelManager {
      */
     async createModel(name: string): Promise<FreModel | ModelManagementError> {
         const result = await super.createModel(name)
-        FREON.deltaClient.deltaApiClient.sendRequest(newSignOnRequest(name, "FreonEditor"))
+        const date = new Date()
+        FREON.deltaClient.deltaApiClient.sendRequest(newSignOnRequest(name, "FreonEditor-" + date.getHours() + ":" + date.getSeconds()))
         return result
         //     LOGGER.log(`createModel ${name}`)
         //     const createRepository: CreateRepositoryAdminRequest = {
         //         messageKind: "CreateRepositoryAdminRequest",
         //         queryId: "query-id",
         //         repositoryName: "AppDelta",
-        //         additionalInfo: []
+        //         additionalInfos: []
         //     }
         //     if (notNullOrUndefined(FREON.deltaClient)) {
         //         await FREON.deltaClient.connect()
@@ -46,7 +47,7 @@ export class DeltaModelManager extends ModelManager {
             messageKind: "DeleteRepositoryAdminRequest",
             queryId: "DeleteModel-query",
             repositoryName: this.model.name,
-            additionalInfo: []
+            additionalInfos: []
         }
         FREON.deltaClient.deltaApiClient.sendAdminRequest(request)
         runInAction(() => {
@@ -65,14 +66,15 @@ export class DeltaModelManager extends ModelManager {
         const listPartitions: ListPartitionsRequest = {
             messageKind: "ListPartitionsRequest",
             queryId: "query-id",
-            additionalInfo: [],
+            additionalInfos: [],
         }
         FREON.astChanger.change(() => {
             this.model = FREON.environment.newModel(name)
         })
         FREON.astChanger.cleanUndoRedo()
         // await FREON.deltaClient.connect()
-        FREON.deltaClient.deltaApiClient.sendRequest(newSignOnRequest(name, "FreonEditor"))
+        const date = new Date()
+        FREON.deltaClient.deltaApiClient.sendRequest(newSignOnRequest(name, "FreonEditor-" + date.getHours() + ":" + date.getSeconds()))
         FREON.deltaClient.deltaApiClient.sendRequest(listPartitions)
         return this.model
     }
@@ -96,7 +98,7 @@ export class DeltaModelManager extends ModelManager {
     //     const listModel: ListRepositoriesAdminRequest = {
     //         messageKind: "ListRepositoriesAdminRequest",
     //         queryId: "admin-query-000",
-    //         additionalInfo: []
+    //         additionalInfos: []
     //     }
     //     FREON.deltaClient.deltaApiClient.sendAdminRequest(listModel)
     //     return new InMemoryError("Fetching models ...")
@@ -124,7 +126,7 @@ export class DeltaModelManager extends ModelManager {
             //     messageKind: "AddPartition",
             //     commandId: "any",
             //     newPartition: { nodes: FreLionwebSerializer.getInstance().convertToJSON(newUnit) },
-            //     additionalInfo: []
+            //     additionalInfos: []
             // }
             // FREON.deltaClient.deltaApiClient.sendCommand(command)
             return newUnit
@@ -185,7 +187,7 @@ export class DeltaModelManager extends ModelManager {
             messageKind: "AddPartition",
             commandId: "111",
             newPartition: { nodes: FreLionwebSerializer.getInstance().convertToJSON(unit) },
-            additionalInfo: [],
+            additionalInfos: [],
         }
         FREON.deltaClient.deltaApiClient.sendCommand(addPartition)
     }

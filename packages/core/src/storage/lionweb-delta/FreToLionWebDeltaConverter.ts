@@ -64,7 +64,7 @@ class FreToLionWebDeltaConverter {
                         messageKind: "DeletePartition",
                         commandId: "comm-id",
                         deletedPartition: removedNode.freId(),
-                        additionalInfo: [],
+                        additionalInfos: [],
                     } as DeletePartitionCommand
                     result.push(lionwebCommand)
                 } else {
@@ -79,7 +79,7 @@ class FreToLionWebDeltaConverter {
                         },
                         deletedChild: removedNode.freId(),
                         index: delta.index,
-                        additionalInfo: [],
+                        additionalInfos: [],
                     } as DeleteChildCommand
                     result.push(lionwebCommand)
                 }
@@ -92,7 +92,7 @@ class FreToLionWebDeltaConverter {
                         messageKind: "AddPartition",
                         commandId: "comm-id",
                         newPartition: { nodes: FreLionwebSerializer.getInstance().convertToJSON(addedNode) },
-                        additionalInfo: [],
+                        additionalInfos: [],
                     } as AddPartitionCommand
                     result.push(lionwebCommand)
                 } else {
@@ -107,7 +107,7 @@ class FreToLionWebDeltaConverter {
                         },
                         newChild: { nodes: FreLionwebSerializer.getInstance().convertToJSON(addedNode) },
                         index: delta.index,
-                        additionalInfo: [],
+                        additionalInfos: [],
                     } as AddChildCommand
                     result.push(lionwebCommand)
                 }
@@ -127,6 +127,8 @@ class FreToLionWebDeltaConverter {
         const result: DeltaCommand[] = []
         if (delta.removed.length > 0) {
             for (const removedNode of delta.removed) {
+                console.log(`convertReferenceListDeltaRemoved owner is ${removedNode["$$owner"]["$id"]}`)
+
                 const lionwebCommand = {
                     messageKind: "DeleteReference",
                     parent: delta.owner.freId(),
@@ -139,7 +141,7 @@ class FreToLionWebDeltaConverter {
                     deletedTarget: (removedNode as unknown as FreNodeReference<FreNamedNode>).referred?.freId() ?? null,
                     deletedResolveInfo: (removedNode as unknown as FreNodeReference<FreNamedNode>).name,
                     index: delta.index,
-                    additionalInfo: [],
+                    additionalInfos: [],
                 } as DeleteReferenceCommand
                 result.push(lionwebCommand)
             }
@@ -159,7 +161,7 @@ class FreToLionWebDeltaConverter {
                         newTarget: (addedNode as unknown as FreNodeReference<FreNamedNode>).referred?.freId() ?? null,
                         newResolveInfo: (addedNode as unknown as FreNodeReference<FreNamedNode>).name,
                         index: delta.index,
-                        additionalInfo: [],
+                        additionalInfos: [],
                     } as AddReferenceCommand
                     result.push(lionwebCommand)
                 }
@@ -191,7 +193,7 @@ class FreToLionWebDeltaConverter {
                     newResolveInfo: newRef.referred.name,
                     newTarget: newRef.referred?.freId() ?? null,
                     index: delta.index ?? 0,
-                    additionalInfo: [],
+                    additionalInfos: [],
                 } as AddReferenceCommand
             } else if (notNullOrUndefined(oldRef) && notNullOrUndefined(newRef)) {
                 return {
@@ -208,7 +210,7 @@ class FreToLionWebDeltaConverter {
                     oldResolveInfo: oldRef.name,
                     oldTarget: oldRef.referred?.freId() ?? null,
                     index: delta.index ?? 0,
-                    additionalInfo: [],
+                    additionalInfos: [],
                 } as ChangeReferenceCommand
             } else if (notNullOrUndefined(oldRef) && isNullOrUndefined(newRef)) {
                 return {
@@ -223,7 +225,7 @@ class FreToLionWebDeltaConverter {
                     deletedResolveInfo: oldRef.name,
                     deletedTarget: oldRef.referred?.freId() ?? null,
                     index: delta.index ?? 0,
-                    additionalInfo: [],
+                    additionalInfos: [],
                 } as DeleteReferenceCommand
             }
         }
@@ -232,7 +234,7 @@ class FreToLionWebDeltaConverter {
     }
 
     private convertPartDelta(delta: FrePartDelta): DeltaCommand {
-        console.log(`convertPartDelta ${delta.toString()}`)
+        LOGGER.log(`convertPartDelta ${delta.toString()}`)
         const propertyDef = FreLanguage.getInstance().classifierProperty(delta.owner.freLanguageConcept(), delta.propertyName)
         if (propertyDef.propertyKind === "reference") {
             return this.convertReferenceDelta(delta)
@@ -243,7 +245,7 @@ class FreToLionWebDeltaConverter {
                     messageKind: "AddPartition",
                     commandId: "command",
                     newPartition: { nodes: this.lionwebSerializer.convertToJSON(delta.newValue) },
-                    additionalInfo: [],
+                    additionalInfos: [],
                 } as AddPartitionCommand
             } else {
                 return {
@@ -257,7 +259,7 @@ class FreToLionWebDeltaConverter {
                     index: 0,
                     newChild: { nodes: this.lionwebSerializer.convertToJSON(delta.newValue) },
                     parent: delta.owner.freId(),
-                    additionalInfo: [],
+                    additionalInfos: [],
                 } as AddChildCommand
             }
         } else if (notNullOrUndefined(delta.newValue)) {
@@ -274,7 +276,7 @@ class FreToLionWebDeltaConverter {
                 replacedChild: null,
                 newChild: { nodes: this.lionwebSerializer.convertToJSON(delta.newValue) },
                 parent: delta.owner.freId(),
-                additionalInfo: [],
+                additionalInfos: [],
             } as ReplaceChildCommand
         } else {
             //  { isNullOrUndefined(delta.newValue)) && notNullOrUndefined(delta.oldValue)
@@ -290,7 +292,7 @@ class FreToLionWebDeltaConverter {
                 },
                 index: delta.index ?? 0,
                 deletedChild: delta.oldValue.freId(),
-                additionalInfo: [],
+                additionalInfos: [],
             } as DeleteChildCommand
         }
     }
@@ -308,7 +310,7 @@ class FreToLionWebDeltaConverter {
                     language: propertyDef.language,
                     version: "2023.1",
                 },
-                additionalInfo: [],
+                additionalInfos: [],
             } as ChangePropertyCommand
         } else if (notNullOrUndefined(delta.newValue)) {
             return {
@@ -321,7 +323,7 @@ class FreToLionWebDeltaConverter {
                     language: propertyDef.language,
                     version: "2023.1",
                 },
-                additionalInfo: [],
+                additionalInfos: [],
             } as AddPropertyCommand
         } else {
             // new value is empty
@@ -334,7 +336,7 @@ class FreToLionWebDeltaConverter {
                     language: propertyDef.language,
                     version: "2023.1",
                 },
-                additionalInfo: [],
+                additionalInfos: [],
             } as DeletePropertyCommand
         }
     }

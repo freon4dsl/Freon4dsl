@@ -36,6 +36,7 @@ const ChildAddedFunction = (msg: ChildAddedEvent): void => {
     }
     const childNode: FreNode = FreLionwebSerializer.getInstance().toTypeScriptInstance(ChunkUtil.deltaChunkToChunk(msg.newChild), msg.parent)
     LOGGER.log("NEW CHILD IS " + childNode?.freLanguageConcept())
+    
     FREON.astChanger.changeIgnore("ChildAdded event", () => {
         if (langProperty.isList) {
             parent[langProperty.name].splice(msg.index, 0, childNode)
@@ -46,7 +47,7 @@ const ChildAddedFunction = (msg: ChildAddedEvent): void => {
 }
 
 const ChildDeletedFunction = (msg: ChildDeletedEvent): void => {
-    LOGGER.log("Called ChildDeletedFunction " + msg.messageKind)
+    LOGGER.log(`Called ChildDeletedFunction from parent ${msg.parent} child ${msg.deletedChild}`)
     const parent = findNode(msg.parent, FREON.modelManager.model!)
     if (isNullOrUndefined(parent)) {
         LOGGER.error(`Node with id ${msg.parent} not found in the model`)

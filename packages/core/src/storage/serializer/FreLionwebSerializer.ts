@@ -382,7 +382,7 @@ export class FreLionwebSerializer implements FreSerializer {
                         const propertyConcept = FreLanguage.getInstance().concept(property.type)
                         // LIONWEB: Handle Limited references as primitive properties, because limited maps to Enumeration in LionWeb.
                         if (notNullOrUndefined(propertyConcept) && propertyConcept.isLimited) {
-                            console.log(`WARNING DE-SERIALIZING LIMITED AS REFERENCE ${propertyConcept} for property ${property.name}`)
+                            // console.log(`WARNING DE-SERIALIZING LIMITED AS REFERENCE ${propertyConcept} for property ${property.name}`)
                             
                         }
                         // New reference format with resolveInfo

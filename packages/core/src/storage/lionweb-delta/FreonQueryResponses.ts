@@ -42,7 +42,7 @@ const ListPartitionsResponseFunction = (msg: ListPartitionsResponse): void => {
             messageKind: "SubscribeToPartitionContentsRequest",
             queryId: "subscribe",
             partition: partition.id,
-            additionalInfo: [],
+            additionalInfos: [],
         }
         FREON.deltaClient.deltaApiClient.sendRequest(subscribe)
     }

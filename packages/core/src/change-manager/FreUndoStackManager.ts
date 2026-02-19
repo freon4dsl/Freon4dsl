@@ -52,7 +52,7 @@ export class FreUndoStackManager {
         }
         this.inTransaction = false;
         if (notNullOrUndefined(this.currentTransaction) && !this.ignoreTransaction) {
-            console.log(`SEND DELTA and PUSH UNDO`)
+            LOGGER.log(`SEND DELTA and PUSH UNDO`)
             if (!this.inUndo) {
                 this.undoStack.push(this.currentTransaction)
             }
@@ -70,7 +70,7 @@ export class FreUndoStackManager {
                 }
             }
         } else {
-            console.log(`NO DELTA SEND OR STACKED ignore: ${this.ignoreTransaction} tx: ${this.currentTransaction}`)
+            LOGGER.log(`NO DELTA SEND OR STACKED ignore: ${this.ignoreTransaction} tx: ${this.currentTransaction}`)
         }
         this.currentTransaction = null;
         this.ignoreTransaction = false

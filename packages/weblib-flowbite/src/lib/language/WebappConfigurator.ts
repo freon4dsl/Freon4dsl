@@ -254,7 +254,7 @@ export class WebappConfigurator {
     }
 
     async renameModel(newName: string) {
-        console.log("rename model")
+        LOGGER.log("rename model")
         const response = await this.modelStore?.renameModel(newName)
         if (isModelManagementError(response)) {
             setUserMessage(response.message, FreErrorSeverity.Error)
@@ -552,7 +552,7 @@ export class WebappConfigurator {
      ***********************************************************/
 
     modelChanged(store: IModelManager): void {
-        console.log(`modelChanged: ${store?.model?.name}`)
+        LOGGER.log(`modelChanged: ${store?.model?.name}`)
         if (notNullOrUndefined(store?.model)) {
             editorInfo.modelName = store?.model?.name
             editorInfo.unitIds = store.getUnitIdentifiers()

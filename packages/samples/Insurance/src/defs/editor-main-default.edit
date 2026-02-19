@@ -37,6 +37,8 @@ InsurancePart{
 
 InsuranceProduct {[
     Insurance Product ${name} ( public name: ${productName} ) USES ${basedOn horizontal separator[, ]}
+        Singe base ${singleBase}
+        Single ref ${singleRef}
         Themes: ${themes horizontal separator[, ]}
         Premium: ${advertisedPremium} per ${nrPremiumDays}
         Insured risks:

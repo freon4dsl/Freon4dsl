@@ -24,7 +24,7 @@ const ReferenceAddedFunction = (msg: ReferenceAddedEvent): void => {
     const langProperty = FreLanguage.getInstance().classifierPropertyByKey(classifierMP, msg.reference.key)
     LOGGER.log(`node ${node.freId()} langProperty ${JSON.stringify(langProperty)}`)
     if (langProperty.isList) {
-        FREON.astChanger.changeIgnore("RegferenceAddedEvent", () => {
+        FREON.astChanger.changeIgnore("ReferenceAddedEvent", () => {
             node[langProperty.name][msg.index] = FreNodeReference.create(msg.newResolveInfo, langProperty.type)
         })
     } else {
@@ -43,9 +43,15 @@ const ReferenceDeletedFunction = (msg: ReferenceDeletedEvent): void => {
     }
     const classifierMP = FreLanguage.getInstance().classifier(node.freLanguageConcept()).key
     const langProperty = FreLanguage.getInstance().classifierPropertyByKey(classifierMP, msg.reference.key)
-    FREON.astChanger.changeIgnore("ReferenceDeletedEvent", () => {
-        node[langProperty.name] = null
-    })
+    if (langProperty.isList) {
+        FREON.astChanger.changeIgnore("ReferenceDeletedEvent", () => {
+            node[langProperty.name].splice(msg.index, 1)
+        })
+    } else {
+        FREON.astChanger.changeIgnore("ReferenceDeletedEvent", () => {
+            node[langProperty.name] = null
+        })
+    }
 }
 
 const ReferenceChangedFunction = (msg: ReferenceChangedEvent): void => {
@@ -57,9 +63,15 @@ const ReferenceChangedFunction = (msg: ReferenceChangedEvent): void => {
     }
     const classifierMP = FreLanguage.getInstance().classifier(node.freLanguageConcept()).key
     const langProperty = FreLanguage.getInstance().classifierPropertyByKey(classifierMP, msg.reference.key)
-    FREON.astChanger.changeIgnore("ReferenceChangedEvent", () => {
-        node[langProperty.name]["name"] = msg.newResolveInfo 
-    })
+    if (langProperty.isList) {
+        FREON.astChanger.changeIgnore("ReferenceChangedEvent", () => {
+            node[langProperty.name][msg.index]["name"] = msg.newResolveInfo
+        })
+    } else {
+        FREON.astChanger.changeIgnore("ReferenceChangedEvent", () => {
+            node[langProperty.name]["name"] = msg.newResolveInfo
+        })
+    }
 }
 
 export const referenceEventFunctions: ReceivingDelta[] = [

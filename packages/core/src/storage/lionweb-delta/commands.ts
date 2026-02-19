@@ -25,7 +25,7 @@ export const newSignOnRequest = (repo: string, clientId: string): SignOnRequest 
         deltaProtocolVersion: "2023.1",
         clientId: clientId,
         queryId: `query-id-${queryId++}`,
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 
@@ -34,7 +34,7 @@ export const newSubscribeToPartitionRequest = (partition: string): SubscribeToPa
         messageKind: "SubscribeToPartitionContentsRequest",
         partition: partition,
         queryId: `query-id-${queryId++}`,
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 
@@ -43,7 +43,7 @@ export const newUnSubscribeToPartitionRequest = (partition: string): Unsubscribe
         messageKind: "UnsubscribeFromPartitionContentsRequest",
         partition: partition,
         queryId: `query-id-${queryId++}`,
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 
@@ -58,7 +58,7 @@ export const newAddPropertyCommand = (nodeid: string, newValue: string, property
             key: propertyKey,
             version: "2023.1",
         },
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 
@@ -73,7 +73,7 @@ export const newChangePropertyCommand = (nodeid: string, newValue: string, prope
             key: propertyKey,
             version: "2023.1",
         },
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 
@@ -87,7 +87,7 @@ export const newDeletePropertyCommand = (nodeid: string, propertyKey: string): D
             key: propertyKey,
             version: "2023.1",
         },
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 
@@ -113,7 +113,7 @@ export const newAddPartitionCommand = (partition: PartitionType): AddPartitionCo
                 },
             ],
         },
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 
@@ -148,7 +148,7 @@ export const newAddChild = (child: NewChild): AddChildCommand => {
                 },
             ],
         },
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 
@@ -184,7 +184,7 @@ export const newAddChildCommand = (
                 },
             ],
         },
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 
@@ -203,7 +203,7 @@ export const deleteChild = (deleteChild: DeleteChildType): DeleteChildCommand =>
         index: deleteChild.index,
         parent: deleteChild.parent,
         deletedChild: deleteChild.id,
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 
@@ -224,7 +224,7 @@ export const addReference = (addRef: AddReferenceType): AddReferenceCommand => {
         index: addRef.index,
         newTarget: addRef.target,
         newResolveInfo: addRef.resolveInfo,
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 
@@ -237,7 +237,7 @@ export const deleteReference = (ref: AddReferenceType): DeleteReferenceCommand =
         deletedTarget: ref.target,
         deletedResolveInfo: ref.resolveInfo,
         index: ref.index,
-        additionalInfo: [],
+        additionalInfos: [],
     }
 }
 

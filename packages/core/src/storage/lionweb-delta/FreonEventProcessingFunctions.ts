@@ -9,11 +9,6 @@ import type {
     ClassifierChangedEvent,
     ErrorEvent,
     NoOpEvent,
-    PartitionAddedEvent,
-    PartitionDeletedEvent,
-    ReferenceAddedEvent,
-    ReferenceChangedEvent,
-    ReferenceDeletedEvent,
 } from "@lionweb/server-delta-shared"
 
 import type { ReceivingDelta } from "@lionweb/server-delta-client"
@@ -21,14 +16,6 @@ import type { ReceivingDelta } from "@lionweb/server-delta-client"
 const ClassifierChangedFunction = (msg: ClassifierChangedEvent): void => {
     console.log("Called ClassifierChangedFunction " + msg.messageKind)
 }
-
-const PartitionAddedFunction = (msg: PartitionAddedEvent): void => {
-        console.log("Called PartitionAddedFunction " + msg.messageKind)
-    }
-
-const PartitionDeletedFunction = (msg: PartitionDeletedEvent): void => {
-        console.log("Called PartitionDeletedFunction " + msg.messageKind)
-    }
 
 const AnnotationAddedFunction = (msg: AnnotationAddedEvent): void => {
         console.log("Called AnnotationAddedFunction " + msg.messageKind)
@@ -58,18 +45,6 @@ const AnnotationMovedAndReplacedInSameParentFunction = (msg: AnnotationMovedAndR
         console.log("Called AnnotationMovedAndReplacedInSameParentFunction " + msg.messageKind)
     }
 
-const ReferenceAddedFunction = (msg: ReferenceAddedEvent): void => {
-        console.log("Called ReferenceAddedFunction " + msg.messageKind)
-    }
-
-const ReferenceDeletedFunction = (msg: ReferenceDeletedEvent): void => {
-        console.log("Called ReferenceDeletedFunction " + msg.messageKind)
-    }
-
-const ReferenceChangedFunction = (msg: ReferenceChangedEvent): void => {
-        console.log("Called ReferenceChangedFunction " + msg.messageKind)
-    }
-
 
 const ErrorFunction = (msg: ErrorEvent): void => {
         console.log("Called ErrorFunction " + msg.messageKind)
@@ -84,31 +59,6 @@ export const eventFunctions: ReceivingDelta[] = [
         messageKind: "ClassifierChanged",
         // @ts-expect-error TS2322
         processor: ClassifierChangedFunction
-    },
-    {
-        messageKind: "PartitionAdded",
-        // @ts-expect-error TS2322
-        processor: PartitionAddedFunction
-    },
-    {
-        messageKind: "PartitionDeleted",
-        // @ts-expect-error TS2322
-        processor: PartitionDeletedFunction
-    },
-    {
-        messageKind: "ReferenceAdded",
-        // @ts-expect-error TS2322
-        processor: ReferenceAddedFunction
-    },
-    {
-        messageKind: "ReferenceChanged",
-        // @ts-expect-error TS2322
-        processor: ReferenceChangedFunction
-    },
-    {
-        messageKind: "ReferenceDeleted",
-        // @ts-expect-error TS2322
-        processor: ReferenceDeletedFunction
     },
     {
         messageKind: "AnnotationAdded",
