@@ -2,15 +2,53 @@
     import { Spinner} from "flowbite-svelte"
     import { deltaResultLoading, WebappConfigurator } from "$lib"
     import { deltaList, type ProcessedDelta } from "$lib/delta-mock/ProcessedDeltaList"
-    import type { DeltaEvent } from "$lib/delta-mock/types"
     import DeltaDetails from "$lib/main-app/DeltaDetails.svelte"
     import { goToNode } from "$lib/ts-utils/CommonFunctions"
     import { ArrowRightOutline } from "flowbite-svelte-icons"
 
     let items: ProcessedDelta[] = deltaList.deltas;
 
-    function deltaAsString(d: DeltaEvent): string {
-        return d.messageKind.toString();
+    /**
+     * Converts a ProcessedDelta into a human-readable description.
+     *
+     * Format:
+     *   "<Message kind> on <Node name>: <PropertyName>[index]"
+     *
+     * Examples:
+     *   "Property changed on Task A: Availability[7]"
+     *   "Node created on Customer"
+     *   "Child removed on Order: Parts"
+     *
+     * Notes:
+     * - The messageKind is converted from camel case (e.g. "PropertyChanged")
+     *   into a spaced, capitalized sentence ("Property changed").
+     * - The node name is only included if present.
+     * - The property name and index are only included if present.
+     * - No trailing punctuation is added when optional parts are missing.
+     */
+    function deltaAsString(d: ProcessedDelta): string {
+        const rawKind = d.delta.messageKind.toString();
+
+        // Insert space before capital letters (camelCase → spaced)
+        const spaced = rawKind.replace(/([a-z])([A-Z])/g, "$1 $2");
+
+        // Capitalise first letter, lowercase the rest
+        const kind =
+            spaced.charAt(0).toUpperCase() +
+            spaced.slice(1).toLowerCase();
+
+        const nodePart = d.nodeName ? ` on ${d.nodeName}` : "";
+
+        let propertyPart = "";
+        if (d.propertyName) {
+            const indexPart =
+                d.propertyIndex !== undefined
+                    ? `[${d.propertyIndex}]`
+                    : "";
+            propertyPart = `: ${d.propertyName}${indexPart}`;
+        }
+
+        return `${kind}${nodePart}${propertyPart}`;
     }
 
     // one-open-at-a-time
@@ -63,7 +101,7 @@
                                 onkeydown={(ev) => onKeydown(ev, idx)}
                             >
                                     <span class="font-medium ">
-                                      {deltaAsString(it.delta)}
+                                      {deltaAsString(it)}
                                     </span>
 
                                 {#if changedNode}

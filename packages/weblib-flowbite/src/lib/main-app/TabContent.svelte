@@ -95,7 +95,7 @@
         <!-- Right pane (Info) -->
         <div
             id="scroll-container-info"
-            class="flex-1 min-w-0 h-[calc(100vh-155px)] relative top-0 overflow-hidden
+            class="flex-1 min-w-0 h-[calc(100vh-155px)] relative top-0 overflow-y-auto
          bg-light-base-50 dark:bg-dark-base-800 text-light-base-800 dark:text-dark-base-100 border
          border-light-base-200 dark:border-dark-base-700 divide-y divide-light-base-200 dark:divide-dark-base-700"
         >

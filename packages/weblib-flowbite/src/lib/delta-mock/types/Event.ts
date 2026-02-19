@@ -1,7 +1,7 @@
 import type { String } from "./DeltaTypes.js";
 import type { Number } from "./DeltaTypes.js";
 import type { CommandSource } from "./DeltaTypes.js";
-import type { AdditionalInfo } from "./DeltaTypes.js";
+import type { additionalInfos } from "./DeltaTypes.js";
 import type { LionWebId } from "./Chunks.js";
 import type { LionWebJsonMetaPointer } from "./Chunks.js";
 import type { LionWebDeltaJsonChunk } from "./DeltaTypes.js";
@@ -12,7 +12,7 @@ export type DeltaEvent = {
     messageKind: EventMessageKind;
     sequenceNumber: Number;
     originCommands: CommandSource[];
-    additionalInfo: AdditionalInfo[];
+    additionalInfos: additionalInfos[];
 };
 
 /**
