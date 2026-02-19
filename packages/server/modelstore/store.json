@@ -646,6 +646,18 @@
                     "file": "test2.json"
                 }
             ]
+        },
+        {
+            "name": "Festival1",
+            "folder": "Festival1",
+            "language": "FestivalPlan",
+            "version": "1",
+            "units": [
+                {
+                    "name": "PinkPop2026",
+                    "file": "PinkPop2026.json"
+                }
+            ]
         }
     ]
 }

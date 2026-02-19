@@ -2,6 +2,7 @@ import type { Box } from "../Box.js";
 import type { FreNode } from "../../../ast/index.js";
 import { FreUtils, notNullOrUndefined } from '../../../util/index.js';
 import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox.js";
+import { FREON } from "../../../environment"
 
 /**
  * This class represents an external component that replaces the native projection of a single model property, like "note: NoteConcept".
@@ -29,7 +30,9 @@ export class PartReplacerBox extends AbstractExternalPropertyBox {
     }
 
     setPropertyValue(newValue: FreNode) {
-        this.node[this.propertyName] = newValue;
+        FREON.astChanger.change(() => {
+            this.node[this.propertyName] = newValue;
+        })
     }
 }
 

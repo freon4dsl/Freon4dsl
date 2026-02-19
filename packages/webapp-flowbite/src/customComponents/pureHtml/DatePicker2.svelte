@@ -1,12 +1,10 @@
 <script lang="ts">
-    export type DateValue = {
-        year: number
-        month: number
-        day: number
-    }
+    import Date from "@freon4dsl/samples-festival-planning"
+    import type { FreComponentProps } from "@freon4dsl/core-svelte"
+    import { PartReplacerBox } from "@freon4dsl/core"
 
     interface Props {
-        value?: DateValue | null;
+        value?: Date | null;
         label?: string;
         hint?: string;
         placeholder?: string; // note: native date inputs ignore placeholder in most browsers
@@ -17,22 +15,13 @@
         error?: string; // set from outside if you want
     }
 
-    let {
-        value = $bindable(null),
-        label = "Date",
-        hint = "",
-        placeholder = "",
-        disabled = false,
-        required = false,
-        min = undefined,
-        max = undefined,
-        error = ""
-    }: Props = $props();
+    // Props
+    let { editor, box }: FreComponentProps<PartReplacerBox> = $props();
 
     let isoString = $state("")
     let id = `date-${Math.random().toString(36).slice(2)}`
 
-    function toIso(date: DateValue | null): string {
+    function toIso(date: Date | null): string {
         if (!date) return ""
         const y = String(date.year).padStart(4, "0")
         const m = String(date.month).padStart(2, "0")
@@ -40,7 +29,7 @@
         return `${y}-${m}-${d}`
     }
 
-    function fromIso(iso: string): DateValue | null {
+    function fromIso(iso: string): Date | null {
         if (!iso) return null
         const [y, m, d] = iso.split("-").map(Number)
         return { year: y, month: m, day: d }
@@ -59,6 +48,20 @@
         if (disabled) return
         value = null
     }
+
+    // The following three functions need to be included for the editor to function properly.
+    // Please, set the focus to the first editable/selectable element in this component.
+    async function setFocus(): Promise<void> {
+        inputElement.focus();
+    }
+    const refresh = (why?: string): void => {
+        // do whatever needs to be done to refresh the elements that show information from the model
+        getValue();
+    };
+    $effect(() => {
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
+    });
 </script>
 
 <div class="date-field" data-has-error={error ? "true" : "false"} data-disabled={disabled ? "true" : "false"}>
@@ -90,16 +93,6 @@
             placeholder={placeholder}
         />
     </div>
-
-    {#if hint || error}
-        <div class="help" id={`${id}-help`}>
-            {#if error}
-                <div class="error">{error}</div>
-            {:else}
-                <div class="hint">{hint}</div>
-            {/if}
-        </div>
-    {/if}
 </div>
 
 <style>

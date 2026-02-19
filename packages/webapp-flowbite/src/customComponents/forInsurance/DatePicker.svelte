@@ -99,22 +99,30 @@
     .datepicker {
         position: relative;
         max-width: 24rem;
+        margin: 0 0.5rem;
     }
     .datepicker-input {
-        background-color: rgb(249 250 251);
-        border-width: 1px;
-        border-color: rgb(209 213 219);
-        color: rgb(17 24 39);
-        font-size: 0.875rem; /* 14px */
-        line-height: 1.25rem; /* 20px */
-        border-radius: 0.5rem; /* 8px */
-        display: block;
-        width: 100%;
-        padding-inline-start: 2.5rem; /* 40px */
-        padding: 0.625rem; /* 10px */
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        border: 1px solid var(--color-light-base-300);
+        background-color: var(--color-light-base-100);
+        color: var(--color-light-base-900);
+        transition: border-color 0.15s, box-shadow 0.15s;
     }
+
     .datepicker-input:focus {
-        --tw-ring-color: rgb(59 130 246);
-        border-color: rgb(59 130 246);
+        outline: none;
+        border-color: var(--color-light-accent-400);
+        box-shadow: 0 0 0 2px var(--color-light-accent-200);
     }
+
+    .datepicker-input::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+
+    .datepicker-input::-webkit-calendar-picker-indicator:hover {
+        opacity: 1;
+    }
+
 </style>

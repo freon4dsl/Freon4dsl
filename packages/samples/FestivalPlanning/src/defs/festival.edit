@@ -1,0 +1,51 @@
+// -------------------- Editors for modelunits --------------------
+editor default
+
+global {
+    external {
+        DateRangePicker
+    }
+}
+
+FestivalOverview {[
+Festival overview
+
+    Name: ${self.name}
+    Location: ${self.location}
+    [fragment startAndEndDate]
+    Status: ${self.status radio}
+]
+fragment startAndEndDate [
+    Dates: ${self.dates replace=DateRangePicker}
+]}
+
+Schedule {[
+Schedule
+
+    ${self.days}
+]}
+
+Resources {[
+Resources
+
+    Staff:
+    ${self.staff}
+
+    Equipment:
+    ${self.equipment}
+
+    Vendors:
+    ${self.vendors}
+]}
+
+TicketCatalog {[
+Tickets
+
+    ${self.ticketTypes}
+]}
+
+ComplianceDossier {[
+Compliance
+
+    ${self.compliance}
+]}

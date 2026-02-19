@@ -2,24 +2,54 @@ language festivities
 // Festival planning metamodel
 // (Inspired by a multi-day festival / event production system)
 
-concept Festival {
-  name: string;
-  location: string;
-  startDate: Date;
-  endDate: Date;
-  status: string;
-  schedule: Schedule[];
-  resources: Resources;
-  ticketTypes: TicketType[];
-  compliance: Compliance;
+// Root model that ties the separate modelunits together
+model FestivalPlan {
+    festival: FestivalOverview;
+    schedule: Schedule;
+    resources: Resources;
+    tickets: TicketCatalog;
+    compliance: ComplianceDossier;
 }
 
-concept Schedule {
-  days: Day[];
+// -------------------- Modelunits --------------------
+
+modelunit FestivalOverview {
+    name: identifier;
+    location: string;
+    dates: DateRange;
+    status: FestivalStatus;
+
+    file-extension = "fes";
+}
+
+modelunit Schedule {
+    days: Day[];
+
+    file-extension = "sch";
+}
+
+modelunit Resources {
+    staff: Staff[];
+    equipment: Equipment[];
+    vendors: Vendor[];
+
+    file-extension = "res";
+}
+
+modelunit TicketCatalog {
+    ticketTypes: TicketType[];
+
+    file-extension = "tix";
+}
+
+modelunit ComplianceDossier {
+    compliance: Compliance;
+
+    file-extension = "cmp";
 }
 
 concept Day {
-  date: Date;
+  date: DateValue;
   stages: Stage[];
   logistics: Logistics;
 }
@@ -37,8 +67,8 @@ concept Performance {
 }
 
 concept TimeSlot {
-  startTime: Time;
-  endTime: Time;
+  startTime: TimeValue;
+  endTime: TimeValue;
 }
 
 concept TechnicalRequirements {
@@ -49,16 +79,10 @@ concept TechnicalRequirements {
 }
 
 concept Logistics {
-  loadInTime: Time;
-  loadOutTime: Time;
+  loadInTime: TimeValue;
+  loadOutTime: TimeValue;
   securityPlanReference: string;
   cateringArrangements: string;
-}
-
-concept Resources {
-  staff: Staff[];
-  equipment: Equipment[];
-  vendors: Vendor[];
 }
 
 concept Staff {
@@ -82,8 +106,8 @@ concept Equipment {
 
 concept Vendor {
   name: string;
-  contractStartDate: Date;
-  contractEndDate: Date;
+  contractStartDate: DateValue;
+  contractEndDate: DateValue;
   servicesProvided: string;
 }
 
@@ -91,7 +115,7 @@ concept TicketType {
   name: string;
   price: Money;
   accessLevel: string;
-  validDays: Date[];
+  validDays: DateValue[];
   capacityLimit: number;
 }
 
@@ -104,39 +128,57 @@ concept Compliance {
 concept SafetyPlan {
   documentReference: string;
   approvalStatus: string;
-  lastReviewDate: Date;
+  lastReviewDate: DateValue;
 }
 
 concept Insurance {
   policyNumber: string;
   coverageType: string;
-  expiryDate: Date;
+  expiryDate: DateValue;
 }
 
 concept Permit {
   permitType: string;
   issuingAuthority: string;
-  issueDate: Date;
-  expiryDate: Date;
+  issueDate: DateValue;
+  expiryDate: DateValue;
 }
 
-concept Date {
+concept DateRange {
+  start: DateValue;
+  end: DateValue;
+}
+
+concept DateValue {
   year: number;
   month: number;
   day: number;
 }
 
-concept Time {
+concept TimeValue {
   hour: number;
   minute: number;
 }
 
 concept DateTime {
-  date: Date;
-  time: Time;
+  date: DateValue;
+  time: TimeValue;
 }
 
 concept Money {
   amount: number;
   currency: string;
+}
+
+limited FestivalStatus {
+    name: identifier;
+    label: string;
+
+    Draft        = { name: "Draft",        label: "Draft" }
+    Planning     = { name: "Planning",     label: "Planning" }
+    Confirmed    = { name: "Confirmed",    label: "Confirmed" }
+    OnSale       = { name: "OnSale",       label: "On sale" }
+    Active       = { name: "Active",       label: "Live / In progress" }
+    Completed    = { name: "Completed",    label: "Completed" }
+    Cancelled    = { name: "Cancelled",    label: "Cancelled" }
 }
