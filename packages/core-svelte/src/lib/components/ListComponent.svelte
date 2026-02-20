@@ -195,6 +195,21 @@
             : false;
     };
 
+    /**
+     * Determines whether the drag handle should be hidden for a given box.
+     * Checks the box's hideDragHandle property and external box params.
+     */
+    function shouldHideDragHandle(b: Box): boolean {
+        // Check box property
+        if (b.hideDragHandle) return true;
+
+        // Check external box param
+        if ('findParam' in b && typeof (b as any).findParam === 'function') {
+            if ((b as any).findParam("hideDragHandle") === "true") return true;
+        }
+        return false;
+    }
+
     const onKeyDown = (event: KeyboardEvent, index: number) => {
         if (event.key === ENTER) {
             // Create a new list element after the node at index
@@ -266,7 +281,7 @@
             oncontextmenu={(event) => showContextMenu(event, index)}
             role="none"
         >
-            {#if !isActionBox(box)}
+            {#if !isActionBox(box) && !shouldHideDragHandle(box)}
             <span class="drag-handle"
                   draggable="true"
                   ondragstart={(event) => dragstart(event, id, index)}
