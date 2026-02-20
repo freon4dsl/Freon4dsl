@@ -1,28 +1,28 @@
 OptionalPrimitivesTest `TEST4` {
 	 prims
-	    OptionalPrim <no-value>   `aName`       <no-value>  ""
-	    OptionalPrim true         `aName`       <no-value>  ""
-	    OptionalPrim false        `aName`       <no-value>  ""
-	    OptionalPrim <no-value>   `aName`       234         ""
-	    OptionalPrim true         `aName`       234         ""
-	    OptionalPrim false        `aName`       234         ""
-	    OptionalPrim <no-value>   `aName`       <no-value>  "strLit"
-	    OptionalPrim true         `aName`       <no-value>  "strLit"
-	    OptionalPrim false        `aName`       <no-value>  "strLit"
-	    OptionalPrim <no-value>   `aName`       234         "strLit"
-	    OptionalPrim true         `aName`       234         "strLit"
-	    OptionalPrim false        `aName`       234         "strLit"
+	    OptionalPrim <no-value>   `aName1`       <no-value>  <no-value>
+	    OptionalPrim true         `aName2`       <no-value>  <no-value>
+	    OptionalPrim false        `aName3`       <no-value>  <no-value>
+	    OptionalPrim <no-value>   `aName4`       234         <no-value>
+	    OptionalPrim true         `aName5`       234         <no-value>
+	    OptionalPrim false        `aName6`       234         <no-value>
+	    OptionalPrim <no-value>   `aName7`       <no-value>  "strLit"
+	    OptionalPrim true         `aName8`       <no-value>  "strLit"
+	    OptionalPrim false        `aName9`       <no-value>  "strLit"
+	    OptionalPrim <no-value>   `aName10`       234         "strLit"
+	    OptionalPrim true         `aName11`       234         "strLit"
+	    OptionalPrim false        `aName12`       234         "strLit"
 	 primExtras
-	    OptionalPrimsWithExtraText              ident `aName`   str ""
-	    OptionalPrimsWithExtraText bool true    ident `aName`   str ""
-	    OptionalPrimsWithExtraText bool false   ident `aName`   str ""
-	    OptionalPrimsWithExtraText              ident `aName`   num 234  str ""
-	    OptionalPrimsWithExtraText bool true    ident `aName`   num 234  str ""
-	    OptionalPrimsWithExtraText bool false   ident `aName`   num 234  str ""
-	    OptionalPrimsWithExtraText              ident `aName`            str "strLit"
-	    OptionalPrimsWithExtraText bool true    ident `aName`            str "strLit"
-	    OptionalPrimsWithExtraText bool false   ident `aName`            str "strLit"
-	    OptionalPrimsWithExtraText              ident `aName`   num 234  str "strLit"
-	    OptionalPrimsWithExtraText bool true    ident `aName`   num 234  str "strLit"
-	    OptionalPrimsWithExtraText bool false   ident `aName`   num 234  str "strLit"
+	    OptionalPrimsWithExtraText              ident `bName1`
+	    OptionalPrimsWithExtraText bool true    ident `bName2`   str ""
+	    OptionalPrimsWithExtraText bool false   ident `bName3`   str ""
+	    OptionalPrimsWithExtraText              ident `bName4`   num 234  str ""
+	    OptionalPrimsWithExtraText bool true    ident `bName5`   num 234  str ""
+	    OptionalPrimsWithExtraText bool false   ident `bName6`   num 234  str ""
+	    OptionalPrimsWithExtraText              ident `bName7`            str "strLit"
+	    OptionalPrimsWithExtraText bool true    ident `bName8`            str "strLit"
+	    OptionalPrimsWithExtraText bool false   ident `bName9`            str "strLit"
+	    OptionalPrimsWithExtraText              ident `bName10`   num 234  str "strLit"
+	    OptionalPrimsWithExtraText bool true    ident `bName11`   num 234  str "strLit"
+	    OptionalPrimsWithExtraText bool false   ident `bName12`   num 234  str "strLit"
 	 }

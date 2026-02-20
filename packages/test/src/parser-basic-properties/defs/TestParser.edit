@@ -1,8 +1,7 @@
 editor default
 
 // for testing primitives
-Prim {
-[
+Prim {[
 Prim {
     primIdentifier ${primIdentifier}
     primNumber ${primNumber}
@@ -13,8 +12,7 @@ Prim {
     primListString ${primListString separator[,]}
     primListBoolean ${primListBoolean separator[,]}
 }
-]
-}
+]}
 
 PrimsWithExtraText {
      [
@@ -62,6 +60,8 @@ PrimsWithInitiator {
 PrimKeyword {
      [ PrimWithKeywordProj ${self.primBoolean [<BOOL>]} ]
 }
+
+
 // for optional primitives
 
 OptionalPrim {
