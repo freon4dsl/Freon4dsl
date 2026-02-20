@@ -1,25 +1,18 @@
 <script lang="ts">
     import { onMount } from "svelte"
-    import { PartReplacerBox, notNullOrUndefined } from "@freon4dsl/core"
-    import type { FreNode } from "@freon4dsl/core"
+    import { PartReplacerBox, notNullOrUndefined, type FreNode } from "@freon4dsl/core"
     import type { FreComponentProps } from "@freon4dsl/core-svelte"
     import { runInAction } from "mobx"
 
     /**
-     * Note that this component only works when the following two concepts are used in the .ast definition.
-     * concept DateRange {
-     *     start: DateValue;
-     *     end: DateValue;
+     * Note that this component only works when the following concept is used in the .ast definition.
+     * concept DateRangeString {
+     *     start: string;  // ISO "YYYY-MM-DD"
+     *     end: string;    // ISO "YYYY-MM-DD"
      * }
-     *
-     * concept DateValue {
-     *     year: number;
-     *     month: number;
-     *     day: number;
-     * }
-     * Import these types from ".../freon/index.js"
+     * Import it from "...freon/index.js"
      */
-    import { DateValue, DateRange } from "@freon4dsl/samples-festival-planning"
+    import { DateRangeString } from "@freon4dsl/samples-festival-planning"
 
     // Props
     let { box }: FreComponentProps<PartReplacerBox> = $props()
@@ -37,45 +30,33 @@
         event.stopPropagation()
     }
 
-    function toIso(date: DateValue | null | undefined): string {
-        if (!date) return ""
-        const y = String(date.year).padStart(4, "0")
-        const m = String(date.month).padStart(2, "0")
-        const d = String(date.day).padStart(2, "0")
+    function isIsoDate(s: string): boolean {
+        return /^\d{4}-\d{2}-\d{2}$/.test(s)
+    }
+
+    function toJsDate(iso: string): globalThis.Date {
+        const [y, m, d] = iso.split("-").map(Number)
+        return new globalThis.Date(y, m - 1, d)
+    }
+
+    function fromJsDate(dt: globalThis.Date): string {
+        const y = String(dt.getFullYear()).padStart(4, "0")
+        const m = String(dt.getMonth() + 1).padStart(2, "0")
+        const d = String(dt.getDate()).padStart(2, "0")
         return `${y}-${m}-${d}`
     }
 
-    function fromIso(iso: string): DateValue | null {
-        if (!iso) return null
-        const [y, m, d] = iso.split("-").map(Number)
-        return DateValue.create({ year: y, month: m, day: d })
-    }
-
-    function toJsDate(d: DateValue): globalThis.Date {
-        // local date, avoids UTC shifting surprises for "date-only" values
-        return new globalThis.Date(d.year, d.month - 1, d.day)
-    }
-
-    function fromJsDate(dt: globalThis.Date): DateValue {
-        return DateValue.create({
-            year: dt.getFullYear(),
-            month: dt.getMonth() + 1,
-            day: dt.getDate(),
-        })
-    }
-
-    function addDays(d: DateValue, days: number): DateValue {
-        const js = toJsDate(d)
+    function addDays(iso: string, days: number): string {
+        const js = toJsDate(iso)
         js.setDate(js.getDate() + days)
         return fromJsDate(js)
     }
 
-    function isAfter(a: DateValue, b: DateValue): boolean {
-        // true if a > b (strictly after)
-        return toJsDate(a).getTime() > toJsDate(b).getTime()
+    function isAfter(aIso: string, bIso: string): boolean {
+        return toJsDate(aIso).getTime() > toJsDate(bIso).getTime()
     }
 
-    function normalizeRange(start: DateValue, end: DateValue): { start: DateValue; end: DateValue } {
+    function normalizeRange(start: string, end: string): { start: string; end: string } {
         // enforce end > start; if not, push end to start + 1 day
         if (!isAfter(end, start)) {
             return { start, end: addDays(start, 1) }
@@ -83,35 +64,51 @@
         return { start, end }
     }
 
-    function getRangeFromModel(): { start: DateValue; end: DateValue } {
+    function todayIso(): string {
+        return new globalThis.Date().toISOString().slice(0, 10)
+    }
+
+    function getRangeFromModel(): { start: string; end: string } {
         const v: FreNode | undefined = box.getPropertyValue()
 
-        if (notNullOrUndefined(v) && v.freLanguageConcept() === "DateRange") {
-            const r = v as unknown as DateRange
-            // assuming start/end always exist
-            return normalizeRange(r.start, r.end)
+        if (notNullOrUndefined(v) && v.freLanguageConcept() === "DateRangeString") {
+            const r = v as unknown as DateRangeString
+            const s = (r.start ?? "").trim()
+            const e = (r.end ?? "").trim()
+
+            if (isIsoDate(s) && isIsoDate(e)) {
+                return normalizeRange(s, e)
+            }
+
+            // If model contains non-ISO strings, fall back to safe defaults
+            const t = todayIso()
+            return { start: t, end: addDays(t, 1) }
         }
 
         // default: today .. tomorrow
-        const todayIso = new globalThis.Date().toISOString().slice(0, 10)
-        const today = fromIso(todayIso) ?? DateValue.create({ year: 2000, month: 1, day: 1 })
-        return { start: today, end: addDays(today, 1) }
+        const t = todayIso()
+        return { start: t, end: addDays(t, 1) }
     }
 
-    function commitRange(start: DateValue, end: DateValue) {
+    function commitRange(start: string, end: string) {
+        if (!isIsoDate(start) || !isIsoDate(end)) return
+
         const normalized = normalizeRange(start, end)
-        const wasCorrected = !isAfter(end, start) // i.e. we had to push end forward
+        const wasCorrected = !isAfter(end, start)
+
         // write to model
-        let newRange: DateRange | undefined = undefined;
+        let newRange: DateRangeString | undefined = undefined
         runInAction(() => {
-            newRange = DateRange.create(normalized)
-        });
+            newRange = DateRangeString.create(normalized)
+        })
         if (notNullOrUndefined(newRange)) {
             box.setPropertyValue(newRange)
         }
+
         // keep UI consistent immediately
-        startIso = toIso(normalized.start)
-        endIso = toIso(normalized.end)
+        startIso = normalized.start
+        endIso = normalized.end
+
         if (wasCorrected) {
             endAutoCorrected = true
             if (autoCorrectTimer) window.clearTimeout(autoCorrectTimer)
@@ -122,17 +119,13 @@
     }
 
     const onStartInput = () => {
-        const s = fromIso(startIso)
-        const e = fromIso(endIso)
-        if (!s || !e) return
-        commitRange(s, e)
+        if (!startIso || !endIso) return
+        commitRange(startIso, endIso)
     }
 
     const onEndInput = () => {
-        const s = fromIso(startIso)
-        const e = fromIso(endIso)
-        if (!s || !e) return
-        commitRange(s, e)
+        if (!startIso || !endIso) return
+        commitRange(startIso, endIso)
     }
 
     // Freon hooks
@@ -143,11 +136,9 @@
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const refresh = (_why?: string): void => {
         const { start, end } = getRangeFromModel()
-        const s = toIso(start)
-        const e = toIso(end)
 
-        if (startIso !== s) startIso = s
-        if (endIso !== e) endIso = e
+        if (startIso !== start) startIso = start
+        if (endIso !== end) endIso = end
     }
 
     $effect(() => {
@@ -181,6 +172,7 @@
         bind:this={endInput}
     />
 </div>
+
 {#if endAutoCorrected}
     <div class="text-sm opacity-80 mt-1">
         End date was adjusted to be after the start date.
@@ -224,6 +216,7 @@
     .datepicker-input::-webkit-calendar-picker-indicator:hover {
         opacity: 1;
     }
+
     .datepicker-input.autocorrected {
         border-color: var(--color-light-accent-500);
         box-shadow: 0 0 0 2px var(--color-light-accent-200);

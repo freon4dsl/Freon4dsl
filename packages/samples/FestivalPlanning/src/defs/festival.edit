@@ -3,7 +3,13 @@ editor default
 
 global {
     external {
-        DateRangePicker
+        DatePicker,
+        DateRangePicker,
+        TimeRangePicker,
+        TimePicker,
+        AvailabilityPicker,
+        HorizontalAccordion,
+        VerticalAccordion
     }
 }
 
@@ -22,7 +28,7 @@ fragment startAndEndDate [
 Schedule {[
 Schedule
 
-    ${self.days}
+    ${self.days replace=HorizontalAccordion}
 ]}
 
 Resources {[
@@ -48,4 +54,29 @@ ComplianceDossier {[
 Compliance
 
     ${self.compliance}
+]}
+
+Day {[
+  Date: ${self.date replace=DatePicker}
+  Stages: ${self.stages replace=VerticalAccordion}
+  Logistics: ${self.logistics}
+]}
+
+Performance {[
+  Artist: ${self.artist}
+  On from ${self.timeSlot replace=TimeRangePicker}
+  TechnicalRequirements: ${self.technicalRequirements}
+]}
+
+Logistics {[
+  Load in at: ${self.loadInTime replace=TimePicker} Load out at: ${self.loadOutTime replace=TimePicker}
+  Security plan: ${self.securityPlanReference}
+  Catering: ${self.cateringArrangements}
+]}
+
+Staff {[
+  Name: ${self.name}
+  Role: ${self.role}
+  Skills: ${self.skills}
+  Availability: ${self.availability replace=AvailabilityPicker}
 ]}

@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 44,
+    "currentPostfix": 45,
     "models": [
         {
             "folder": "modelstore",
@@ -656,6 +656,14 @@
                 {
                     "name": "PinkPop2026",
                     "file": "PinkPop2026.json"
+                },
+                {
+                    "name": "pink1",
+                    "file": "pink1.json"
+                },
+                {
+                    "name": "StaffNeeded",
+                    "file": "StaffNeeded.json"
                 }
             ]
         }

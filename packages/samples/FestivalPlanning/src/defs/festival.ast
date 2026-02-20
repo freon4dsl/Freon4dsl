@@ -62,13 +62,8 @@ concept Stage {
 
 concept Performance {
   artist: string;
-  timeSlot: TimeSlot;
+  timeSlot: StringTimeRange;
   technicalRequirements: TechnicalRequirements;
-}
-
-concept TimeSlot {
-  startTime: TimeValue;
-  endTime: TimeValue;
 }
 
 concept TechnicalRequirements {
@@ -90,11 +85,6 @@ concept Staff {
   role: string;
   skills: string[];
   availability: Availability[];
-}
-
-concept Availability {
-  start: DateTime;
-  end: DateTime;
 }
 
 concept Equipment {
@@ -142,27 +132,6 @@ concept Permit {
   issuingAuthority: string;
   issueDate: DateValue;
   expiryDate: DateValue;
-}
-
-concept DateRange {
-  start: DateValue;
-  end: DateValue;
-}
-
-concept DateValue {
-  year: number;
-  month: number;
-  day: number;
-}
-
-concept TimeValue {
-  hour: number;
-  minute: number;
-}
-
-concept DateTime {
-  date: DateValue;
-  time: TimeValue;
 }
 
 concept Money {

@@ -1,12 +1,18 @@
 import { setCustomComponents } from "@freon4dsl/core-svelte"
+import StructuredDatePicker from "./customComponents/pureHtml/StructuredDatePicker.svelte"
 import StructuredDateRangePicker from "./customComponents/pureHtml/StructuredDateRangePicker.svelte"
+import HorizontalAccordion from "./customComponents/pureHtml/HorizontalAccordion.svelte"
+import StructuredTimePicker from "./customComponents/pureHtml/StructuredTimePicker.svelte"
+import StructuredTimeRangePicker from "./customComponents/pureHtml/StructuredTimeRangePicker.svelte"
+import VerticalAccordion from "./customComponents/pureHtml/VerticalAccordion.svelte"
+import AvailabilityPicker from "./customComponents/pureHtml/AvailabilityPicker.svelte"
 
 // // For InsuranceModel:
 // import ShowAnimatedGif from "./customComponents/forInsurance/ShowAnimatedGif.svelte";
 // import FB_Card_Component from "./customComponents/forInsurance/FB_Card_Component.svelte";
 // import FB_Accordion from "./customComponents/forInsurance/FB_Accordion.svelte";
 // import FB_Dialog from "./customComponents/forInsurance/FB_Dialog.svelte";
-// import DatePicker from "./customComponents/forInsurance/StructuredDatePicker.svelte";
+// import DatePicker from "./customComponents/forInsurance/DatePicker.svelte";
 
 // For ExternalTester:
 // import BooleanWrapperComponent from "./customComponents/forExternalTester/BooleanWrapperComponent.svelte";
@@ -55,6 +61,12 @@ export function configureExternals() {
     // For Festival:
     setCustomComponents([
         { component: StructuredDateRangePicker, knownAs: "DateRangePicker" },
+        { component: StructuredDatePicker, knownAs: "DatePicker" },
+        { component: StructuredTimeRangePicker, knownAs: "TimeRangePicker" },
+        { component: StructuredTimePicker, knownAs: "TimePicker" },
+        { component: AvailabilityPicker, knownAs: "AvailabilityPicker" },
+        { component: HorizontalAccordion, knownAs: "HorizontalAccordion" },
+        { component: VerticalAccordion, knownAs: "VerticalAccordion" },
     ])
     // For InsuranceModel:
     // setCustomComponents([
