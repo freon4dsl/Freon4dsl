@@ -27,7 +27,7 @@ export class FreModelSerializer implements FreSerializer {
      *
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    public toTypeScriptInstance(jsonObject: Object): FreNode {
+    public toTypeScriptInstance(jsonObject: object): FreNode {
         // Not using FREON.astChanger.change(...) here, because we don't need an undo for this code
         return runInAction( () => {
             return this.toTypeScriptInstanceInternal(jsonObject);
@@ -39,7 +39,7 @@ export class FreModelSerializer implements FreSerializer {
      *
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    private toTypeScriptInstanceInternal(jsonObject: Object): FreNode {
+    private toTypeScriptInstanceInternal(jsonObject: object): FreNode {
         if (jsonObject === null) {
             throw new Error("Cannot read json: jsonObject is null.");
         }
@@ -125,10 +125,10 @@ export class FreModelSerializer implements FreSerializer {
     /**
      * Create JSON Object, storing references as names.
      */
-    public convertToJSON(tsObject: FreNode, publicOnly?: boolean): Object {
+    public convertToJSON(tsObject: FreNode, publicOnly?: boolean): object {
         const typename = tsObject.freLanguageConcept();
         // console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
-        let result: Object;
+        let result: object;
         if (publicOnly !== undefined && publicOnly) {
             // convert all units and all public concepts
             if (this.language.concept(typename)?.isPublic || !!this.language.unit(typename)) {
@@ -141,8 +141,8 @@ export class FreModelSerializer implements FreSerializer {
         return result;
     }
 
-    private convertToJSONinternal(tsObject: FreNode, publicOnly: boolean, typename: string): Object {
-        const result: Object = { $typename: typename };
+    private convertToJSONinternal(tsObject: FreNode, publicOnly: boolean, typename: string): object {
+        const result: object = { $typename: typename };
         // console.log("typename: " + typename);
         for (const p of this.language.allConceptProperties(typename)) {
             // console.log(">>>> start converting property " + p.name + " of type " + p.propertyKind);
@@ -158,38 +158,41 @@ export class FreModelSerializer implements FreSerializer {
         return result;
     }
 
-    private convertPropertyToJSON(p: FreLanguageProperty, tsObject: FreNode, publicOnly: boolean, result: Object) {
+    private convertPropertyToJSON(p: FreLanguageProperty, tsObject: FreNode, publicOnly: boolean, result: object) {
         switch (p.propertyKind) {
-            case "part":
-                const value = tsObject[p.name];
+            case "part": {
+                const value = tsObject[p.name]
                 if (p.isList) {
-                    const parts: Object[] = tsObject[p.name];
-                    result[p.name] = [];
+                    const parts: Object[] = tsObject[p.name]
+                    result[p.name] = []
                     for (let i: number = 0; i < parts.length; i++) {
-                        result[p.name][i] = this.convertToJSON(parts[i] as FreNode, publicOnly);
+                        result[p.name][i] = this.convertToJSON(parts[i] as FreNode, publicOnly)
                     }
                 } else {
                     // single value
-                    result[p.name] = !!value ? this.convertToJSON(value as FreNode, publicOnly) : null;
+                    result[p.name] = !!value ? this.convertToJSON(value as FreNode, publicOnly) : null
                 }
-                break;
-            case "reference":
+                break
+            }
+            case "reference": {
                 if (p.isList) {
-                    const references: Object[] = tsObject[p.name];
-                    result[p.name] = [];
+                    const references: Object[] = tsObject[p.name]
+                    result[p.name] = []
                     for (let i: number = 0; i < references.length; i++) {
-                        result[p.name][i] = references[i]["name"];
+                        result[p.name][i] = references[i]["name"]
                     }
                 } else {
                     // single reference
-                    const value1 = tsObject[p.name];
-                    result[p.name] = !!value1 ? tsObject[p.name]["name"] : null;
+                    const value1 = tsObject[p.name]
+                    result[p.name] = !!value1 ? tsObject[p.name]["name"] : null
                 }
-                break;
-            case "primitive":
-                const value2 = tsObject[p.name];
-                result[p.name] = value2;
-                break;
+                break
+            }
+            case "primitive": {
+                const value2 = tsObject[p.name]
+                result[p.name] = value2
+                break
+            }
             default:
                 break;
         }

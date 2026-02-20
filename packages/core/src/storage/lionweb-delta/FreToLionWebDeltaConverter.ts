@@ -19,7 +19,7 @@ import { FreLionwebSerializer } from "../../storage/index.js"
 import { isNullOrUndefined, notNullOrUndefined } from "../../util/index.js"
 import { type FreDelta, FrePartDelta, FrePartListDelta, FrePrimDelta, FreTransactionDelta } from "../../change-manager/FreDelta.js"
 
-const LOGGER = new FreLogger("LionWebDelta").show()
+const LOGGER = new FreLogger("LionWebDelta")
 
 class FreToLionWebDeltaConverter {
     private _lionwebSerializer

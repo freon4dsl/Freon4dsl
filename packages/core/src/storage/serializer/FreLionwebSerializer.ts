@@ -137,20 +137,20 @@ export class FreLionwebSerializer implements FreSerializer {
                 LOGGER.info(`resolved child `)
             }
             for (const reference of parsedNode.references) {
-                console.log(`resolving reference ` + jsonAsString(reference))
+                // console.log(`resolving reference ` + jsonAsString(reference))
                 const resolvedReference: ParsedNode = this.nodesfromJson.get(reference.referredId);
                 if (isNullOrUndefined(resolvedReference)) {
-                    console.log("Reference cannot be resolved: " + reference.referredId);
+                    // console.log("Reference cannot be resolved: " + reference.referredId);
                     // continue;
                 }
                 // TODO Create with id or resolveInfo
-                console.log(
-                    `Found lw ref [${reference.resolveInfo}, ${reference.referredId}] for parsedNode ${parsedNode.freNode?.freId()} ${parsedNode.freNode?.freLanguageConcept()}`,
-                )
-                console.log(
-                    `       reference ${reference.featureName}`,
-                )
-                const freonRef: FreNodeReference<any> = FreNodeReference.createFromLionWeb(
+                // console.log(
+                //     `Found lw ref [${reference.resolveInfo}, ${reference.referredId}] for parsedNode ${parsedNode.freNode?.freId()} ${parsedNode.freNode?.freLanguageConcept()}`,
+                // )
+                // console.log(
+                //     `       reference ${reference.featureName}`,
+                // )
+                const freonRef: FreNodeReference<FreNamedNode> = FreNodeReference.createFromLionWeb(
                     reference.resolveInfo,
                     reference.referredId,
                     reference.typeName,
@@ -297,7 +297,7 @@ export class FreLionwebSerializer implements FreSerializer {
         return parsedLimiteds
     }
 
-    private convertMetaPointer(jsonObject: LionWebJsonMetaPointer, parent: Object): LionWebJsonMetaPointer {
+    private convertMetaPointer(jsonObject: LionWebJsonMetaPointer, parent: object): LionWebJsonMetaPointer {
         if (isNullOrUndefined(jsonObject)) {
             throw new Error(`Cannot read json 6: not a MetaPointer: ${jsonAsString(parent)}.`);
         }
@@ -517,35 +517,34 @@ export class FreLionwebSerializer implements FreSerializer {
             return;
         }
         switch (p.propertyKind) {
-            case "part":
-                const value = parentNode[p.name];
+            case "part": {
+                const value = parentNode[p.name]
                 if (value === null || value === undefined) {
-                    LOGGER.log("PART is null: " + parentNode["name"] + "." + p.name);
-                    break;
+                    LOGGER.log("PART is null: " + parentNode["name"] + "." + p.name)
+                    break
                 }
                 const child: LionWebJsonContainment = {
                     containment: this.createMetaPointer(p.key, p.language),
                     children: [],
-                };
+                }
                 if (p.isList) {
-                    const parts: FreNode[] = parentNode[p.name];
+                    const parts: FreNode[] = parentNode[p.name]
                     for (const part of parts) {
-                        child.children.push(this.convertToJSONinternal(part, idMap).id);
+                        child.children.push(this.convertToJSONinternal(part, idMap).id)
                     }
                 } else {
                     // single value
-                    child.children.push(
-                        (!!value ? this.convertToJSONinternal(value as FreNode, idMap) : null).id,
-                    );
+                    child.children.push((notNullOrUndefined(value) ? this.convertToJSONinternal(value as FreNode, idMap) : null).id)
                 }
-                result.containments.push(child);
-                break;
-            case "reference":
-                const propertyConcept = FreLanguage.getInstance().concept(p.type) 
+                result.containments.push(child)
+                break
+            }
+            case "reference": {
+                const propertyConcept = FreLanguage.getInstance().concept(p.type)
                 // LIONWEB: Handle Limited references as primitive properties, because limited maps to Enumeration in LionWeb.
                 if (notNullOrUndefined(propertyConcept) && propertyConcept.isLimited) {
                     // console.log(`SERIALIZING LIMITED ${propertyConcept} for property ${p.name}`)
-                    const limitedRefValue = parentNode[p.name];
+                    const limitedRefValue = parentNode[p.name]
                     if (p.isList) {
                         LOGGER.error(`Limited list is not supported by LionWeb, stored JSON will be incompatible with LionWeb.`)
                         // const limitedValue = (limitedRefValue as FreNodeReference<any>[])?.map(l => l.name)
@@ -557,9 +556,9 @@ export class FreLionwebSerializer implements FreSerializer {
                         //     value: propertyValueToString(limitedValue),
                         // })
                     } else {
-                        const name = (limitedRefValue as FreNodeReference<any>)?.name
-                        console.log(`   limitedref for property ${p.name}  is ${name}`)
-                        console.log(`   metapointer ${p.key}, ${p.language}`)
+                        const name = (limitedRefValue as FreNodeReference<never>)?.name
+                        // console.log(`   limitedref for property ${p.name}  is ${name}`)
+                        // console.log(`   metapointer ${p.key}, ${p.language}`)
                         result.properties.push({
                             property: this.createMetaPointer(p.key, p.language),
                             value: propertyValueToString(name),
@@ -570,50 +569,52 @@ export class FreLionwebSerializer implements FreSerializer {
                 const lwReference: LionWebJsonReference = {
                     reference: this.createMetaPointer(p.key, p.language),
                     targets: [],
-                };
+                }
                 if (p.isList) {
-                    const references: FreNodeReference<FreNamedNode>[] = parentNode[p.name];
-                    LOGGER.log("References for " + p.name + ": " + references);
+                    const references: FreNodeReference<FreNamedNode>[] = parentNode[p.name]
+                    LOGGER.log("References for " + p.name + ": " + references)
                     for (const ref of references) {
                         if (ref === null || ref === undefined) {
-                            LOGGER.log("REF NULL for " + p.name);
-                            break;
+                            LOGGER.log("REF NULL for " + p.name)
+                            break
                         }
-                        const referredId = ref?.referred?.freId();
+                        const referredId = ref?.referred?.freId()
                         if (!!ref.name || !!referredId) {
                             lwReference.targets.push({
                                 resolveInfo: ref.name,
                                 reference: referredId ?? null,
-                            });
+                            })
                         }
                     }
                 } else {
                     // single reference
-                    const ref: FreNodeReference<FreNamedNode> = parentNode[p.name];
+                    const ref: FreNodeReference<FreNamedNode> = parentNode[p.name]
                     if (ref === null || ref === undefined) {
-                        LOGGER.log("REF NULL for " + p.name + " parant " + parentNode["name"]);
-                        break;
+                        LOGGER.log("REF NULL for " + p.name + " parant " + parentNode["name"])
+                        break
                     }
-                    const referredId = ref?.referred?.freId();
-                    if (!!ref.name || !!referredId) {
-                        const referenceProp = ref?.referred?.freId();
+                    const referredId = ref?.referred?.freId()
+                    if (notNullOrUndefined(ref.name) || notNullOrUndefined(referredId)) {
+                        const referenceProp = ref?.referred?.freId()
                         lwReference.targets.push({
-                            resolveInfo: !!ref ? ref["name"] : null,
+                            resolveInfo: notNullOrUndefined(ref) ? ref["name"] : null,
                             reference: referenceProp ?? null,
-                        });
+                        })
                     }
                 }
-                result.references.push(lwReference);
-                break;
-            case "primitive":
-                const value2 = parentNode[p.name];
+                result.references.push(lwReference)
+                break
+            }
+            case "primitive": {
+                const value2 = parentNode[p.name]
                 result.properties.push({
                     property: this.createMetaPointer(p.key, p.language),
                     value: propertyValueToString(value2),
-                });
-                break;
+                })
+                break
+            }
             default:
-                break;
+                break
         }
     }
 }

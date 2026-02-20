@@ -3,7 +3,7 @@ import type { FreNodeReference } from "../ast/index.js";
 import  { type FreNode, type FreModel, type FreModelUnit } from "../ast/index.js";
 import { EmptyStdLib } from "../stdlib/index.js";
 import type { FreStdlib } from "../stdlib/index.js";
-import { isNullOrUndefined } from "../util/index.js";
+import { isNullOrUndefined, notNullOrUndefined } from "../util/index.js";
 // import { FreLogger } from "../logging";
 // const LOGGER = new FreLogger("Language");
 
@@ -170,19 +170,19 @@ export class FreLanguage {
 
     classifier(typeName: string): FreLanguageClassifier | undefined {
         const concept1 = this.concepts.get(typeName);
-        if (!!concept1) {
+        if (notNullOrUndefined(concept1)) {
             return concept1;
         } else {
             const intf = this.interfaces.get(typeName);
-            if (!!intf) {
+            if (notNullOrUndefined(intf)) {
                 return intf;
             } else {
                 const unit1 = this.units.get(typeName);
-                if (!!unit1) {
+                if (notNullOrUndefined(unit1)) {
                     return unit1;
                 } else {
                     const model = this.modelOfType(typeName);
-                    if (!!model) {
+                    if (notNullOrUndefined(model)) {
                         return model;
                     }
                 }
@@ -194,20 +194,20 @@ export class FreLanguage {
 
     classifierByKey(key: string): FreLanguageClassifier | undefined {
         const concept1 = this.conceptByKey(key);
-        if (!!concept1) {
+        if (notNullOrUndefined(concept1)) {
             return concept1;
         } else {
             const intf = this.interfaceByKey(key);
-            if (!!intf) {
+            if (notNullOrUndefined(intf)) {
                 return intf;
             } else {
                 const unit1 = this.unitByKey(key);
-                if (!!unit1) {
+                if (notNullOrUndefined(unit1)) {
                     return unit1;
                 } else {
                     // TODO By Id for models
                     const model = this.modelOfType(key);
-                    if (!!model) {
+                    if (notNullOrUndefined(model)) {
                         return model;
                     }
                 }
@@ -255,11 +255,11 @@ export class FreLanguage {
     classifierProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
         // LOGGER.log("CLASSIFIERPROPERTY " + typeName + "." + propertyName);
         const concept1 = this.concepts.get(typeName);
-        if (!!concept1) {
+        if (notNullOrUndefined(concept1)) {
             return concept1.properties.get(propertyName);
         } else {
             const intf = this.interfaces.get(typeName);
-            if (!!intf) {
+            if (notNullOrUndefined(intf)){
                 return intf.properties.get(propertyName);
             } else {
                 const unit1 = this.units.get(typeName);

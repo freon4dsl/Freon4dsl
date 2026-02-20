@@ -21,7 +21,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
             reference: referredId,
             resolveInfo: resolveInfo
         }
-        console.log(`REFERENCE READ set to [${result.lionWeb.resolveInfo}, ${result.lionWeb.reference}]`)
+        // console.log(`REFERENCE READ set to [${result.lionWeb.resolveInfo}, ${result.lionWeb.reference}]`)
         result.name = resolveInfo
         result.typeName = typeName
         return result
