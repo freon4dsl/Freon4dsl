@@ -1,5 +1,6 @@
-import { qualifiedName } from './FreNamedNode.js';
-import type { FreNamedNode } from './FreNamedNode.js';
+import type { LionWebJsonReferenceTarget } from "@lionweb/json"
+import { notNullOrUndefined } from "../util/index.js"
+import { qualifiedName, type  FreNamedNode } from './FreNamedNode.js';
 import { computed, observable, makeObservable } from "mobx";
 import { FREON } from "../environment/index.js"
 import { FreLogger } from "../logging/index.js";
@@ -12,6 +13,20 @@ const LOGGER = new FreLogger("FreNodeReference").mute();
  * References can be set with either a referred object, or with a name.
  */
 export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementImpl {
+    lionWeb: LionWebJsonReferenceTarget | null = null
+
+    public static createFromLionWeb<T extends FreNamedNode>(resolveInfo: string, referredId: string, typeName: string): FreNodeReference<T> {
+        const result = new FreNodeReference(null, typeName)
+        result.lionWeb = {
+            reference: referredId,
+            resolveInfo: resolveInfo
+        }
+        console.log(`REFERENCE READ set to [${result.lionWeb.resolveInfo}, ${result.lionWeb.reference}]`)
+        result.name = resolveInfo
+        result.typeName = typeName
+        return result
+    }
+
     /**
      * Returns a new instance which refers to a node named 'name' of type T, or
      * to the node 'name' itself.
@@ -20,29 +35,29 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
      * @param typeName
      */
     public static create<T extends FreNamedNode>(name: string | string[] | T, typeName: string): FreNodeReference<T> {
-        const result = new FreNodeReference(null, typeName);
+        const result = new FreNodeReference(null, typeName)
         if (Array.isArray(name)) {
-            result.pathname = name;
+            result.pathname = name
         } else if (typeof name === "string") {
-            result.name = name;
+            result.name = name
         } else if (typeof name === "object") {
-            result.referred = name;
+            result.referred = name
         }
-        result.typeName = typeName;
-        return result;
+        result.typeName = typeName
+        return result
     }
 
     public copy<T extends FreNamedNode>(): FreNodeReference<T> {
-        return FreNodeReference.create<T>(this._FRE_pathname, this.typeName);
+        return FreNodeReference.create<T>(this._FRE_pathname, this.typeName)
     }
 
-    private _FRE_pathname: string[] = [];
-    private _FRE_referred: T = null;
+    private _FRE_pathname: string[] = []
+    private _FRE_referred: T = null
 
     // Needed for the scoper to work
-    public typeName: string = "";
+    public typeName: string = ""
 
-    public parseLocation: FreParseLocation; // if relevant, the location of this element within the source from which it is parsed
+    public parseLocation: FreParseLocation // if relevant, the location of this element within the source from which it is parsed
 
     /**
      * The constructor is private, use the create() method
@@ -51,68 +66,70 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
      * @param typeName
      */
     private constructor(referredElement: T, typeName: string) {
-        super();
-        this.referred = referredElement;
-        this.typeName = typeName;
+        super()
+        this.referred = referredElement
+        this.typeName = typeName
         makeObservable<FreNodeReference<T>, "_FRE_pathname" | "_FRE_referred">(this, {
             _FRE_referred: observable,
             _FRE_pathname: observable,
             referred: computed,
             // name: computed,
             // pathname: computed
-        });
+        })
     }
 
     set name(value: string) {
-        this._FRE_pathname = [value];
-        this._FRE_referred = null;
+        this._FRE_pathname = [value]
+        this._FRE_referred = null
     }
 
     get name(): string {
-        return this._FRE_pathname[this._FRE_pathname.length - 1];
+        return this._FRE_pathname[this._FRE_pathname.length - 1]
     }
 
     set pathname(value: string[]) {
-        this._FRE_pathname = value;
-        this._FRE_referred = null;
+        this._FRE_pathname = value
+        this._FRE_referred = null
     }
 
     get pathname(): string[] {
-        const result: string[] = [];
+        const result: string[] = []
         for (const elem of this._FRE_pathname) {
-            result.push(elem);
+            result.push(elem)
         }
-        return result;
+        return result
     }
 
     pathnameToString(separator: string): string {
-        let result: string = "";
+        let result: string = ""
         for (let index = 0; index < this._FRE_pathname.length; index++) {
-            const str = this._FRE_pathname[index];
+            const str = this._FRE_pathname[index]
             if (index === this._FRE_pathname.length - 1) {
-                result += str;
+                result += str
             } else {
-                result += str + separator;
+                result += str + separator
             }
         }
-        return result;
+        return result
     }
 
     get referred(): T {
-        LOGGER.log(`referred: ${this._FRE_pathname} property ${this.freOwnerDescriptor()?.propertyName} owner ${this.freOwnerDescriptor()?.owner?.freLanguageConcept()}`);
-        if (!!this._FRE_referred) {
-            return this._FRE_referred;
+        LOGGER.log(
+            `referred: ${this._FRE_pathname} property ${this.freOwnerDescriptor()?.propertyName} owner ${this.freOwnerDescriptor()?.owner?.freLanguageConcept()}`,
+        )
+        if (notNullOrUndefined(this._FRE_referred)) {
+            return this._FRE_referred
         } else {
-            return FREON.environment.scoper.resolvePathName(this) as T;
+            return FREON.environment.scoper.resolvePathName(this) as T
         }
     }
 
     set referred(referredElement) {
-        if (!!referredElement) {
+        if (notNullOrUndefined(referredElement)) {
             // this._FRE_pathname.push(referredElement.name);
-            this._FRE_pathname = qualifiedName(referredElement);
+            this._FRE_pathname = qualifiedName(referredElement)
         }
-        this._FRE_referred = referredElement;
+        this._FRE_referred = referredElement
     }
 
     /**
@@ -120,10 +137,10 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
      * @param toBeMatched
      */
     match(toBeMatched: Partial<FreNodeReference<T>>): boolean {
-        return toBeMatched.name === this.name;
+        return toBeMatched.name === this.name
     }
 }
 
-export function isFreNodeReference(n: any): n is FreNodeReference<FreNamedNode> {
+export function isFreNodeReference(n: object): n is FreNodeReference<FreNamedNode> {
     return n instanceof FreNodeReference 
 }

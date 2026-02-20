@@ -56,11 +56,11 @@ export class FreLionwebSerializer implements FreSerializer {
      * Convert a JSON object formerly JSON-ified by this very class and turn it into
      * a TypeScript object (being an instance of TypeScript class).
      * Works recursively.
-     * THis methos assumes that the _jsonObject_ is a LionWeb chunk, representing one model unit.
+     * THis method assumes that the _jsonObject_ is a LionWeb chunk, representing one model unit.
      *
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    toTypeScriptInstance(jsonObject: Object, parentId?: string): FreNode {
+    toTypeScriptInstance(jsonObject: object, parentId?: string): FreNode {
         LOGGER.log("toTypeScriptInstance");
         this.nodesfromJson.clear();
         FreLanguage.getInstance().stdLib.elements.forEach((elem) =>
@@ -95,7 +95,8 @@ export class FreLionwebSerializer implements FreSerializer {
     }
 
     /**
-     * We assume that there is exactly one unit node.
+     * Return either the first model unit encountered, or the node with id `parentId`
+     * 
      * @private
      */
     private findRoot(parentId?: string | null): FreNode {
@@ -136,15 +137,22 @@ export class FreLionwebSerializer implements FreSerializer {
                 LOGGER.info(`resolved child `)
             }
             for (const reference of parsedNode.references) {
-                // LOGGER.info(`resolving reference ` + jsonAsString(reference))
-                // const resolvedReference: ParsedNode = this.nodesfromJson.get(reference.referredId);
-                // if (isNullOrUndefined(resolvedReference)) {
-                //     LOGGER.error("Reference cannot be resolved: " + reference.referredId);
-                //     continue;
-                // }
-                // TOIDO Create with id or resolveInfo
-                const freonRef: FreNodeReference<any> = FreNodeReference.create(
+                console.log(`resolving reference ` + jsonAsString(reference))
+                const resolvedReference: ParsedNode = this.nodesfromJson.get(reference.referredId);
+                if (isNullOrUndefined(resolvedReference)) {
+                    console.log("Reference cannot be resolved: " + reference.referredId);
+                    // continue;
+                }
+                // TODO Create with id or resolveInfo
+                console.log(
+                    `Found lw ref [${reference.resolveInfo}, ${reference.referredId}] for parsedNode ${parsedNode.freNode?.freId()} ${parsedNode.freNode?.freLanguageConcept()}`,
+                )
+                console.log(
+                    `       reference ${reference.featureName}`,
+                )
+                const freonRef: FreNodeReference<any> = FreNodeReference.createFromLionWeb(
                     reference.resolveInfo,
+                    reference.referredId,
                     reference.typeName,
                 );
                 // freonRef.referred = resolvedReference.freNode;
@@ -241,13 +249,18 @@ export class FreLionwebSerializer implements FreSerializer {
             // LIONWEB: Handle Limited references as primitive properties, because limited maps to Enumeration in LionWeb.
             if (notNullOrUndefined(propertyConcept) && propertyConcept.isLimited) {
                 // console.log(`DE-SERIALIZING LIMITED PROPERTY ${propertyConcept} for property ${property.name}`)
-                parsedLimiteds.push({
-                    featureName: property.name,
-                    isList: property.isList,
-                    typeName: property.type,
-                    referredId: null,
-                    resolveInfo: jsonProperty.value,
-                });
+                if (isNullOrUndefined(jsonProperty.value)) {
+                    // TODO Simplify limiteds
+                    // ignore this, as it has no value, otherwise we get LionWeb null-bnull referemve target
+                } else {
+                    parsedLimiteds.push({
+                        featureName: property.name,
+                        isList: property.isList,
+                        typeName: property.type,
+                        referredId: null,
+                        resolveInfo: jsonProperty.value,
+                    })
+                }
                 continue
             }
 
@@ -531,7 +544,7 @@ export class FreLionwebSerializer implements FreSerializer {
                 const propertyConcept = FreLanguage.getInstance().concept(p.type) 
                 // LIONWEB: Handle Limited references as primitive properties, because limited maps to Enumeration in LionWeb.
                 if (notNullOrUndefined(propertyConcept) && propertyConcept.isLimited) {
-                    console.log(`SERIALIZING LIMITED ${propertyConcept} for property ${p.name}`)
+                    // console.log(`SERIALIZING LIMITED ${propertyConcept} for property ${p.name}`)
                     const limitedRefValue = parentNode[p.name];
                     if (p.isList) {
                         LOGGER.error(`Limited list is not supported by LionWeb, stored JSON will be incompatible with LionWeb.`)

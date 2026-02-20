@@ -46,8 +46,6 @@ class FreToLionWebDeltaConverter {
         } else if (delta instanceof FrePartListDelta) {
             lionwebCommand = this.convertPartListDelta(delta)
         }
-        // console.log(`Getting ${JSON.stringify(delta)}`)
-        // console.log(`Command to send is ${JSON.stringify(lionwebCommand)}`)
         return lionwebCommand
     }
 
@@ -127,8 +125,6 @@ class FreToLionWebDeltaConverter {
         const result: DeltaCommand[] = []
         if (delta.removed.length > 0) {
             for (const removedNode of delta.removed) {
-                console.log(`convertReferenceListDeltaRemoved owner is ${removedNode["$$owner"]["$id"]}`)
-
                 const lionwebCommand = {
                     messageKind: "DeleteReference",
                     parent: delta.owner.freId(),
@@ -138,8 +134,8 @@ class FreToLionWebDeltaConverter {
                         language: propertyDef.language,
                         version: "2023.1",
                     },
-                    deletedTarget: (removedNode as unknown as FreNodeReference<FreNamedNode>).referred?.freId() ?? null,
-                    deletedResolveInfo: (removedNode as unknown as FreNodeReference<FreNamedNode>).name,
+                    deletedTarget: (removedNode as unknown as FreNodeReference<FreNamedNode>).lionWeb?.reference ?? null,
+                    deletedResolveInfo: (removedNode as unknown as FreNodeReference<FreNamedNode>).lionWeb?.resolveInfo ?? null,
                     index: delta.index,
                     additionalInfos: [],
                 } as DeleteReferenceCommand
@@ -163,7 +159,14 @@ class FreToLionWebDeltaConverter {
                         index: delta.index,
                         additionalInfos: [],
                     } as AddReferenceCommand
-                    result.push(lionwebCommand)
+                    result.push(lionwebCommand);
+                    // add the lionweb resolveInfo and referred to the in memory reference 
+                    const addedRef = (addedNode as unknown as FreNodeReference<FreNamedNode>)
+                        addedRef.lionWeb = {
+                            resolveInfo: addedRef.name ?? null,
+                            reference: addedRef.referred?.freId() ?? null
+                        }
+                    console.log(`REFERENCE set to [${addedRef.lionWeb.resolveInfo}, ${addedRef.lionWeb.reference}]`)
                 }
         }
         if (result.length === 1) {
@@ -181,6 +184,13 @@ class FreToLionWebDeltaConverter {
         LOGGER.log(`convertReferenceDelta ${delta.toString()}`)
         if ((isNullOrUndefined(newRef) ||newRef instanceof FreNodeReference) && (isNullOrUndefined(oldRef) || oldRef instanceof FreNodeReference)) {
             if (isNullOrUndefined(oldRef) && notNullOrUndefined(newRef)) {
+                // add the lionweb resolveInfo and referred to the in memory reference
+                const addedRef = newRef as unknown as FreNodeReference<FreNamedNode>
+                addedRef.lionWeb = {
+                    resolveInfo: addedRef.name ?? null,
+                    reference: addedRef.referred?.freId() ?? null,
+                }
+                console.log(`REFERENCE ADD set to [${addedRef.lionWeb.resolveInfo}, ${addedRef.lionWeb.reference}]`)
                 return {
                     messageKind: "AddReference",
                     commandId: "",
@@ -196,6 +206,12 @@ class FreToLionWebDeltaConverter {
                     additionalInfos: [],
                 } as AddReferenceCommand
             } else if (notNullOrUndefined(oldRef) && notNullOrUndefined(newRef)) {
+                // add the lionweb resolveInfo and referred to the in memory reference
+                newRef.lionWeb = {
+                    resolveInfo: newRef.name ?? null,
+                    reference: newRef.referred?.freId() ?? null,
+                }
+                console.log(`REFERENCE CHANGE set to [${newRef.lionWeb.resolveInfo}, ${newRef.lionWeb.reference}]`)
                 return {
                     messageKind: "ChangeReference",
                     commandId: "",
@@ -207,8 +223,8 @@ class FreToLionWebDeltaConverter {
                     },
                     newResolveInfo: newRef.name,
                     newTarget: newRef.referred?.freId() ?? null,
-                    oldResolveInfo: oldRef.name,
-                    oldTarget: oldRef.referred?.freId() ?? null,
+                    oldResolveInfo: oldRef.lionWeb?.resolveInfo ?? null,
+                    oldTarget: oldRef.lionWeb?.reference ?? null,
                     index: delta.index ?? 0,
                     additionalInfos: [],
                 } as ChangeReferenceCommand
@@ -222,8 +238,8 @@ class FreToLionWebDeltaConverter {
                         language: propertyDef.language,
                         version: "2023.1",
                     },
-                    deletedResolveInfo: oldRef.name,
-                    deletedTarget: oldRef.referred?.freId() ?? null,
+                    deletedResolveInfo: oldRef.lionWeb?.resolveInfo ?? null,
+                    deletedTarget: oldRef.lionWeb?.reference ?? null,
                     index: delta.index ?? 0,
                     additionalInfos: [],
                 } as DeleteReferenceCommand
