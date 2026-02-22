@@ -39,8 +39,8 @@ export class ConceptUtils {
     private static initializer(freProp: FreMetaPrimitiveProperty): string {
         const myType: FreMetaClassifier = freProp.type
         if (freProp.isOptional) { 
-            if (myType === FreMetaPrimitiveType.identifier || myType === FreMetaPrimitiveType.string) {
-                // initialize optional string property to empty string
+            if (myType === FreMetaPrimitiveType.identifier) {
+                // should never occur, as identifiers may not be optional, but still we initialize it to empty string
                 return `this.${freProp.name} = \"\"`
             } else {
                 // do not initialize an optional property
