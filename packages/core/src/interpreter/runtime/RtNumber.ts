@@ -29,8 +29,8 @@ export class RtNumber extends RtObject {
         } else if (isRtError(other)) {
             return other;
         }
-        // @ts-ignore TS assumes other is of type 'never', but that is incorrect.
-        return new RtError("RtNumber.divide: no divide found for " + other.rtType);
+        // NB TS thinks incorrectly that type of other is "never".
+        return new RtError("RtNumber.divide: no divide found for " + (other as RtObject).rtType);
     }
 
     multiply(other: RtObject): RtObject {
@@ -43,8 +43,8 @@ export class RtNumber extends RtObject {
         } else if (isRtError(other)) {
             return other;
         }
-        // @ts-ignore TS assumes other is of type 'never', but that is incorrect.
-        return new RtError("RtNumber.divide: no divide found for " + this + " * " + other.rtType);
+        // TS assumes other is of type 'never', but that is incorrect.
+        return new RtError("RtNumber.divide: no divide found for " + this + " * " + (other as RtObject).rtType);
     }
 
     minus(other: RtObject): RtObject {
@@ -58,8 +58,8 @@ export class RtNumber extends RtObject {
         } else if (isRtError(other)) {
             return other;
         }
-        // @ts-ignore TS assumes other is of type 'never', but that is incorrect.
-        return new RtError("No minus found for " + other.rtType);
+        // TS assumes other is of type 'never', but that is incorrect.
+        return new RtError("No minus found for " + (other as RtObject).rtType);
     }
 
     divide(other: RtObject): RtObject {
@@ -72,8 +72,8 @@ export class RtNumber extends RtObject {
         } else if (isRtError(other)) {
             return other;
         }
-        // @ts-ignore TS assumes other is of type 'never', but that is incorrect.
-        return new RtError("RtNumber.divide: no divide found for " + other.rtType);
+        // TS assumes other is of type 'never', but that is incorrect.
+        return new RtError("RtNumber.divide: no divide found for " + (other as RtObject).rtType);
     }
 
     equals(other: RtObject): RtBoolean {
@@ -89,6 +89,6 @@ export class RtNumber extends RtObject {
     }
 }
 
-export function isRtNumber(obj: any): obj is RtNumber {
+export function isRtNumber(obj: object): obj is RtNumber {
     return obj instanceof RtNumber;
 }

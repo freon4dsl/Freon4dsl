@@ -263,11 +263,11 @@ export class FreLanguage {
                 return intf.properties.get(propertyName);
             } else {
                 const unit1 = this.units.get(typeName);
-                if (!!unit1) {
+                if (notNullOrUndefined(unit1)) {
                     return unit1.properties.get(propertyName);
                 } else {
                     const model = this.modelOfType(typeName);
-                    if (!!model) {
+                    if (notNullOrUndefined(model)) {
                         return model.properties.get(propertyName);
                     }
                 }
@@ -302,7 +302,7 @@ export class FreLanguage {
     public getPropertiesOfKind(typename: string, ptype: PropertyKind): FreLanguageProperty[] {
         const classifier: FreLanguageClassifier | undefined = FreLanguage.getInstance().classifier(typename);
         const foundProperties: FreLanguageProperty[] = [];
-        if (!!classifier) {
+        if (notNullOrUndefined(classifier)) {
             for (const prop of classifier.properties.values()) {
                 if (prop.propertyKind === ptype) {
                     foundProperties.push(prop);
@@ -323,7 +323,7 @@ export class FreLanguage {
             return element[prop.name];
         } else {
             const value = element[prop.name];
-            if (!!value) {
+            if (notNullOrUndefined(value)) {
                 return [value];
             } else {
                 return [];
@@ -339,7 +339,7 @@ export class FreLanguage {
             return element[prop.name];
         } else {
             const value = element[prop.name];
-            if (!!value) {
+            if (notNullOrUndefined(value)) {
                 return [value];
             } else {
                 return [];
@@ -400,7 +400,7 @@ export class FreLanguage {
     }
 
     addModel(model: FreLanguageModel) {
-        if (!!this.pmodel) {
+        if (notNullOrUndefined(this.pmodel)) {
             console.error(
                 "Language: adding model of type " +
                     model?.typeName +
@@ -450,11 +450,11 @@ export class FreLanguage {
 
     subConcepts(typeName: string): string[] {
         const concept = this.concept(typeName);
-        if (!!concept) {
+        if (notNullOrUndefined(concept)) {
             return concept.subConceptNames;
         }
         const intface = this.interface(typeName);
-        if (!!intface) {
+        if (notNullOrUndefined(intface)) {
             return intface.subConceptNames;
         }
         return [];

@@ -1,10 +1,11 @@
 import { runInAction } from "mobx";
 import { FreUndoManager } from "../../change-manager/FreUndoManager.js"
 import { CoreConfig, FREON } from "../../environment/index.js"
+import { notNullOrUndefined } from "../../util/index.js"
 import { UndoModel } from "./change-model/UndoModel.js";
 import { UndoUnit } from "./change-model/UndoUnit.js";
 import { UndoPart } from "./change-model/UndoPart.js";
-import { FreDelta, FreTransactionDelta } from "../../change-manager/index.js";
+import { FreDelta, FreTransactionDelta } from "../../change-manager/index.js"
 import { FreModelUnit } from "../../ast/index.js";
 import { describe, it, expect, beforeEach } from "vitest";
 
@@ -12,7 +13,7 @@ import { describe, it, expect, beforeEach } from "vitest";
  ** WARNING: expose the private parts of the undo manager for testing purposes only
  */
 function getUndoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreDelta[] {
-    if (!!unit) {
+    if (notNullOrUndefined(unit)) {
         return manager["undoManagerPerUnit"].get(unit.freId())["undoStack"];
     } else {
         return manager["modelUndoManager"]["undoStack"];
@@ -23,10 +24,10 @@ function getUndoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreD
  ** WARNING: expose the private parts of the undo manager for testing purposes only
  */
 function getRedoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreDelta[] {
-    if (!!unit) {
-        return manager["undoManagerPerUnit"].get(unit.freId())["redoStack"];
+    if (notNullOrUndefined(unit)) {
+        return manager["undoManagerPerUnit"].get(unit.freId())["redoStack"]
     } else {
-        return manager["modelUndoManager"]["redoStack"];
+        return manager["modelUndoManager"]["redoStack"]
     }
 }
 
@@ -62,7 +63,9 @@ describe("Change and Undo Manager", () => {
                 part: part1,
                 partlist: [part2, part3, part4, part5, part6],
             });
-            UndoModel.create({ unit: unit });
+            FREON.astChanger.changeNamed("before test", () => {
+                UndoModel.create({ unit: unit })
+            })
         })
         FREON.astChanger.setCurrentUnit(unit)
     });

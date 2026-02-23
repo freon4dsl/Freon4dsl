@@ -3,8 +3,8 @@ import type { InterpreterTracer } from "./InterpreterTracer.js";
 import type { RtObject } from "./runtime/index.js";
 import type { FreNode } from '../ast/index.js';
 
-export type ConceptFunction = (node: Object) => string;
-export type OwningPropertyFunction = (node: Object) => string;
+export type ConceptFunction = (node: object) => string;
+export type OwningPropertyFunction = (node: object) => string;
 export type EvaluateFunction<TNode extends FreNode = FreNode> =
     (node: TNode, ctx: InterpreterContext) => RtObject;
 export type InitFunction = (i: IMainInterpreter) => void;
@@ -18,7 +18,7 @@ export interface IMainInterpreter {
     /**
      * Evaluate `node` with context `ctx` and return the  value.
      */
-    evaluate(node: Object, ctx: InterpreterContext): RtObject;
+    evaluate(node: object, ctx: InterpreterContext): RtObject;
 
     /**
      * Get the tracer instance that is filled by `evaluate`.

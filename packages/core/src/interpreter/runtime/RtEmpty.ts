@@ -21,6 +21,6 @@ export class RtEmpty extends RtObject {
     }
 }
 
-export function isRtEmpty(object: any): object is RtEmpty {
+export function isRtEmpty(object: object): object is RtEmpty {
     return object !== undefined && object !== null && object["_type"] === "RtEmpty";
 }

@@ -123,7 +123,7 @@ export class FreModelSerializer implements FreSerializer {
     }
 
     /**
-     * Create JSON Object, storing references as names.
+     * Create JSON object, storing references as names.
      */
     public convertToJSON(tsObject: FreNode, publicOnly?: boolean): object {
         const typename = tsObject.freLanguageConcept();
@@ -163,20 +163,20 @@ export class FreModelSerializer implements FreSerializer {
             case "part": {
                 const value = tsObject[p.name]
                 if (p.isList) {
-                    const parts: Object[] = tsObject[p.name]
+                    const parts: object[] = tsObject[p.name]
                     result[p.name] = []
                     for (let i: number = 0; i < parts.length; i++) {
                         result[p.name][i] = this.convertToJSON(parts[i] as FreNode, publicOnly)
                     }
                 } else {
                     // single value
-                    result[p.name] = !!value ? this.convertToJSON(value as FreNode, publicOnly) : null
+                    result[p.name] = notNullOrUndefined(value) ? this.convertToJSON(value as FreNode, publicOnly) : null
                 }
                 break
             }
             case "reference": {
                 if (p.isList) {
-                    const references: Object[] = tsObject[p.name]
+                    const references: object[] = tsObject[p.name]
                     result[p.name] = []
                     for (let i: number = 0; i < references.length; i++) {
                         result[p.name][i] = references[i]["name"]
@@ -184,7 +184,7 @@ export class FreModelSerializer implements FreSerializer {
                 } else {
                     // single reference
                     const value1 = tsObject[p.name]
-                    result[p.name] = !!value1 ? tsObject[p.name]["name"] : null
+                    result[p.name] = notNullOrUndefined(value1) ? tsObject[p.name]["name"] : null
                 }
                 break
             }

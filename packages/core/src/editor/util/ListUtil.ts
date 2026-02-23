@@ -3,7 +3,7 @@
  * They support drag-and-drop and cut/copy-paste functionality.
  */
 import { FREON } from "../../environment/index.js"
-import { jsonAsString } from "../../util/index.js";
+import { jsonAsString, notNullOrUndefined } from "../../util/index.js";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import * as Keys from "./Keys.js";
 import { MetaKey } from "./Keys.js";
@@ -110,7 +110,7 @@ export function dropListElement(
     targetPropertyName: string,
     targetIndex: number,
 ) {
-    if (!!dropped.element) {
+    if (notNullOrUndefined(dropped.element)) {
         // First, check whether the types allow a drop
         if (!FreLanguage.getInstance().dragMetaConformsToType(dropped.elementType, targetMetaType)) {
             // check if item may be dropped here
@@ -170,8 +170,7 @@ export function getContextMenuOptions(
     const errorItem: MenuItem = new MenuItem(
         "No options available",
         "",
-        // @ts-ignore
-        (element: FreNode, index: number, editor: FreEditor) => {},
+        (_element: FreNode, _index: number, _editor: FreEditor) => {},
     );
     if (clsOtIntf === undefined || clsOtIntf === null) {
         console.error("Unexpected: Cannot find class or interface for [" + conceptName + "]");
@@ -195,65 +194,56 @@ export function getContextMenuOptions(
                     new MenuItem(
                         creatableConceptname,
                         "",
-                        // @ts-ignore
-                        (element: FreNode, index: number, editor: FreEditor) =>
-                            addListElement(editor, listParent, propertyName, index, creatableConceptname, true),
+                        (_element: FreNode, index: number, _editor: FreEditor) =>
+                            addListElement(_editor, listParent, propertyName, index, creatableConceptname, true),
                     ),
                 );
                 submenuItemsAfter.push(
                     new MenuItem(
                         creatableConceptname,
                         "",
-                        // @ts-ignore
-                        (element: FreNode, index: number, editor: FreEditor) =>
+                        (_element: FreNode, index: number, editor: FreEditor) =>
                             addListElement(editor, listParent, propertyName, index, creatableConceptname, false),
                     ),
                 );
             });
-        // @ts-ignore
         addBefore = new MenuItem(
             `Add before ${contextMsg}`,
             '', //"Ctrl+A",
-            // @ts-ignore
-            (element: FreNode, index: number, editor: FreEditor) => {},
+            (_element: FreNode, _index: number, _editor: FreEditor) => {},
+            
             submenuItemsBefore,
         );
-        // @ts-ignore
         addAfter = new MenuItem(
             `Add after ${contextMsg}`,
           '', //"Ctrl+I",
-            // @ts-ignore
-            (element: FreNode, index: number, editor: FreEditor) => {},
+            (_element: FreNode, _index: number, _editor: FreEditor) => {},
             submenuItemsAfter,
         );
     } else {
         addBefore = new MenuItem(
             `Add before ${contextMsg}`,
           '', //"Ctrl+A",
-            // @ts-ignore
-            (element: FreNode, index: number, editor: FreEditor) =>
+            (_element: FreNode, index: number, editor: FreEditor) =>
                 addListElement(editor, listParent, propertyName, index, conceptName, true),
         );
         addAfter = new MenuItem(
             `Add after ${contextMsg}`,
           '', //"Ctrl+I",
-            // @ts-ignore
-            (element: FreNode, index: number, editor: FreEditor) =>
+            (_element: FreNode, index: number, editor: FreEditor) =>
                 addListElement(editor, listParent, propertyName, index, conceptName, false),
         );
     }
     const pasteBefore = new MenuItem(
         "Paste before",
         "",
-        // @ts-ignore
-        (element: FreNode, index: number, editor: FreEditor) =>
+        (_element: FreNode, index: number, editor: FreEditor) =>
             pasteListElement(listParent, propertyName, index, editor, true),
     );
     const pasteAfter = new MenuItem(
         "Paste after",
         "",
-        // @ts-ignore
-        (element: FreNode, index: number, editor: FreEditor) =>
+        (_element: FreNode, index: number, editor: FreEditor) =>
             pasteListElement(listParent, propertyName, index, editor, false),
     );
 
@@ -272,28 +262,24 @@ export function getContextMenuOptions(
             new MenuItem(
                 "Delete",
                 "",
-                // @ts-ignore
-                (element: FreNode, index: number, editor: FreEditor) =>
+                (element: FreNode, index: number, _editor: FreEditor) =>
                     deleteListElement(listParent, propertyName, index, element),
             ),
             new MenuItem(
                 "---",
                 "",
-                // @ts-ignore
-                (element: FreNode, index: number, editor: FreEditor) => console.log("this is not an option"),
+                (_element: FreNode, _index: number, _editor: FreEditor) => console.log("this is not an option"),
             ),
             new MenuItem(
                 "Cut",
                 "",
-                // @ts-ignore
-                (element: FreNode, index: number, editor: FreEditor) =>
+                (element: FreNode, _index: number, editor: FreEditor) =>
                     cutListElement(listParent, propertyName, element, editor),
             ),
             new MenuItem(
                 "Copy",
                 "",
-                // @ts-ignore
-                (element: FreNode, index: number, editor: FreEditor) => copyListElement(element, editor),
+                (element: FreNode, _index: number, editor: FreEditor) => copyListElement(element, editor),
             ),
             pasteBefore,
             pasteAfter,
