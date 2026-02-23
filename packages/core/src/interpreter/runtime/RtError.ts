@@ -1,3 +1,4 @@
+import { isNullOrUndefined, notNullOrUndefined } from "../../util/index.js"
 import { RtBoolean } from "./RtBoolean.js";
 import { RtObject } from "./RtObject.js";
 
@@ -15,9 +16,8 @@ export class RtError extends RtObject {
         return this._message;
     }
 
-    // @ts-ignore
     // parameter is present to adhere to signature of super class
-    equals(other: RtObject): RtBoolean {
+    equals(_other: RtObject): RtBoolean {
         return RtBoolean.FALSE;
     }
 
@@ -26,7 +26,10 @@ export class RtError extends RtObject {
     }
 }
 
-export function isRtError(obj: any): obj is RtError {
-    const _type = (obj as any)?._type;
-    return !!_type && _type === "RtError";
+export function isRtError(obj: object): obj is RtError {
+    if (isNullOrUndefined(obj)) {
+        return false
+    } 
+    const _type = obj["._type"];
+    return notNullOrUndefined(_type) && _type === "RtError";
 }

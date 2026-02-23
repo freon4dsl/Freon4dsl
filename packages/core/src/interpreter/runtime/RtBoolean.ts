@@ -44,7 +44,6 @@ export class RtBoolean extends RtObject {
     }
 }
 
-export function isRtBoolean(object: any): object is RtBoolean {
-    const _type = object?._type;
-    return !!_type && _type === "RtBoolean";
+export function isRtBoolean(object: object): object is RtBoolean {
+    return object instanceof RtBoolean;
 }

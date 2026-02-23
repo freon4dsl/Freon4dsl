@@ -1,7 +1,7 @@
 import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLanguage } from "../../language/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { isIdentifier } from "../../util/index.js"
+import { isIdentifier, isNullOrUndefined } from "../../util/index.js"
 import {
     collectUsedLanguages,
     FreLionwebSerializer,
@@ -24,11 +24,11 @@ export type ParameterType = {
 }
 
 export class ServerCommunication implements IServerCommunication {
-    get nodePort(): any {
+    get nodePort(): number {
         return this._nodePort;
     }
 
-    set nodePort(value: any) {
+    set nodePort(value: number) {
         this._nodePort = value;
         this.SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
     }
@@ -53,7 +53,7 @@ export class ServerCommunication implements IServerCommunication {
     static instance: ServerCommunication;
 
     static getInstance(): ServerCommunication {
-        if (!!!ServerCommunication.instance) {
+        if (isNullOrUndefined(ServerCommunication.instance)) {
             ServerCommunication.instance = new ServerCommunication();
         }
         return ServerCommunication.instance;
@@ -84,7 +84,6 @@ export class ServerCommunication implements IServerCommunication {
         }
         if (params.oldName !== undefined) {
             result += `${(first?"":"&")}oldName=${encodeURIComponent(params.oldName)}`
-            first = false
         }
         if (result.length > 0) {
             return "?" + result;
@@ -102,9 +101,8 @@ export class ServerCommunication implements IServerCommunication {
         console.error(`ServerCommunication ${severity}: ${msg}`);
     }
 
-    // @ts-ignore
     // parameters present to adhere to interface
-    async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<ServerReturn<string[]>> {
+    async generateIds(_quantity: number, _callback: (strings: string[]) => void): Promise<ServerResponse<string[]>> {
         return null;
     }
 
@@ -119,7 +117,7 @@ export class ServerCommunication implements IServerCommunication {
         LOGGER.log(`ServerCommunication.saveModelUnit ${modelName}/${unitId.name}`);
         if (isIdentifier(unitId.name)) {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit);
-            let output = {
+            const output = {
                 serializationFormatVersion: "2023.1",
                 languages: collectUsedLanguages(model),
                 nodes: model,
@@ -149,7 +147,7 @@ export class ServerCommunication implements IServerCommunication {
     async deleteModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
-            const response = await this.getWithTimeout<any>(`deleteModelUnit`, {model:modelName, unit: unit.name});
+            const response = await this.getWithTimeout<never>(`deleteModelUnit`, {model:modelName, unit: unit.name});
             if (response.errors.length > 0) {
                 response.errors[0] = `Server cannot delete model unit '${unit.name}' (${response.errors[0]})`
             }
@@ -165,7 +163,7 @@ export class ServerCommunication implements IServerCommunication {
     async deleteModel(modelName: string): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.deleteModel ${modelName}`);
         if (!!modelName && modelName.length > 0) {
-            const response = await this.getWithTimeout<any>(`deleteModel`, { model: modelName });
+            const response = await this.getWithTimeout<never>(`deleteModel`, { model: modelName });
             if (response.errors.length > 0) {
                 response.errors[0] = `Server cannot delete model '${modelName}' (${response.errors[0]})`
             }
@@ -194,7 +192,7 @@ export class ServerCommunication implements IServerCommunication {
      */
     async loadUnitList(modelName: string): Promise<ServerResponse<FreUnitIdentifier[]>> {
         LOGGER.log(`ServerCommunication.loadUnitList`);
-        let response = await this.getWithTimeout<string[]>(`getUnitList`, {model: modelName });
+        const response = await this.getWithTimeout<string[]>(`getUnitList`, {model: modelName });
         if (response.errors.length > 0) {
             return {
                 result: null,
@@ -223,7 +221,7 @@ export class ServerCommunication implements IServerCommunication {
     async loadModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<ServerResponse<FreNode>> {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
-            const response = await this.getWithTimeout<Object>(`getModelUnit`, {model: modelName, unit: unit.name});
+            const response = await this.getWithTimeout<object>(`getModelUnit`, {model: modelName, unit: unit.name});
             if (response.errors.length > 0) {
                 return {
                     result: null,
@@ -296,7 +294,7 @@ export class ServerCommunication implements IServerCommunication {
         return void 0;
     }
 
-    private async saveWithTimeout(method: string, data: Object, params: ParameterType): Promise<VoidServerResponse> {
+    private async saveWithTimeout(method: string, data: object, params: ParameterType): Promise<VoidServerResponse> {
         const parameters = ServerCommunication.findParams(params);
         try {
             const controller = new AbortController();
@@ -342,7 +340,6 @@ export class ServerCommunication implements IServerCommunication {
         return { errors: [] }
     }
 
-    // @ts-ignore
     async createModel(modelName: string): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.createModel ${modelName}`)
         const language = FreLanguage.getInstance().name
@@ -354,7 +351,6 @@ export class ServerCommunication implements IServerCommunication {
         return response
     }
 
-    // @ts-ignore
     async createModelUnit(modelName: string, unit: FreModelUnit): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.createModelUnit ${modelName}::${unit.name}`)
         const response = await this.saveModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)

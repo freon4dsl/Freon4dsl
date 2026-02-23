@@ -12,7 +12,7 @@ const INDENT_INDIRECT = "|   ";
 export class TraceNode {
     tracer: InterpreterTracer;
     value: RtObject;
-    node: Object;
+    node: object;
     parent: TraceNode;
     children: TraceNode[] = [];
     ctx: InterpreterContext;
@@ -99,7 +99,7 @@ export class InterpreterTracer {
      * Start tracing `node` with context `ctx`.
      * This trace will be a child of the current traced node.
      */
-    start(node: Object, ctx?: InterpreterContext) {
+    start(node: object, ctx?: InterpreterContext) {
         const newTrace = new TraceNode(this);
         newTrace.node = node;
         newTrace.parent = this.current;
@@ -110,7 +110,7 @@ export class InterpreterTracer {
         this.current = newTrace;
     }
 
-    push(node: Object, value: RtObject) {
+    push(node: object, value: RtObject) {
         if (this.current.node !== node) {
             console.error("INCORRECT ELEMENT IN TRACE");
             throw new Error("INCORRECT ELEMENT IN TRACE");

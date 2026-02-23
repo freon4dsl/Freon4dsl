@@ -45,7 +45,7 @@ export function resolvePathStartingInNamespace(baseNamespace: FreNamespace, curr
 	let result: FreNamedNode = undefined;
 	// Loop over the set of names in the pathname.
 	for (let index = 0; index < pathname.length; index++) {
-		let publicOnly = baseNamespace !== currentNamespace; // everything in the namespace that this reference is in, is visible
+		const publicOnly = baseNamespace !== currentNamespace; // everything in the namespace that this reference is in, is visible
 		if (index !== pathname.length - 1) {
 			// Search the next name of pathname in the 'previousNamespace'.
 			// Do not use the 'typeName' information, because we are searching for another namespace, not for an element of type 'typeName'.
