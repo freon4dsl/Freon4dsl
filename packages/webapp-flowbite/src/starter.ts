@@ -1,4 +1,3 @@
-import { FreonDeltaClient } from "@freon4dsl/core/dist/storage/lionweb-delta/FreonDeltaClient.js"
 import { mount } from 'svelte'
 import { FlowbiteFreonLayout, WebappConfigurator, setDevelopment } from "@freon4dsl/weblib-flowbite"
 import { configureExternals } from "./externals.js"
@@ -7,7 +6,7 @@ import { LanguageEnvironment } from "@freon4dsl/samples-insurance"
 // import { LanguageEnvironment } from "@freon4dsl/samples-course-schedule"
 // import { LanguageEnvironment } from "@freon4dsl/samples-scoper-test"
 // import { LanguageEnvironment } from "@freon4dsl/samples-prim-projections"
-import { CoreConfig, FREON, LionWebRepositoryCommunication, ServerCommunication } from "@freon4dsl/core"
+import { CoreConfig, FREON, FreonDeltaClient, LionWebRepositoryCommunication, ServerCommunication } from "@freon4dsl/core"
 
 /**
  * Initialize everything
