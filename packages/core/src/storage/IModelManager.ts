@@ -1,52 +1,51 @@
 import type { FreModel, FreModelUnit } from "../ast/index.js"
 import { type FreErrorSeverity } from "../validator/index.js"
-import { type ModelManagementError, type ModelChangedCallbackFunction } from "./ModelManager.js"
 import type { FreUnitIdentifier } from "./server/index.js"
 
 export type ModelChangedCallbackFunction = (m: IModelManager) => void
 
-export class InMemoryError {
+export class ModelManagementError {
     message: string
     constructor(msg: string) {
         this.message = msg
     }
 }
-export function isInMemoryError(object: unknown): object is InMemoryError {
-    return object instanceof InMemoryError
+export function isModelManagementError(object: unknown): object is ModelManagementError {
+    return object instanceof ModelManagementError
 }
 
 export interface IModelManager {
     model: FreModel | undefined
-    onInMemoryError: (msg: string, severity?: FreErrorSeverity) => void
+    onError: (msg: string, severity?: FreErrorSeverity) => void
 
     /**
      * Create a new model on the server and make this the current in memory model.
      * After this call the newly created model can be retrieved using _getModel_.
      * @param name
      */
-    createModel(name: string): Promise<FreModel | InMemoryError>
+    createModel(name: string): Promise<FreModel | ModelManagementError>
 
     /**
      * Delete current model from the server.
      * After this call the current model is undefined.
      */
-    deleteModel(): Promise<void | InMemoryError>
+    deleteModel(): Promise<void | ModelManagementError>
 
     /**
      * Open an existing model on the server as the in memory model.
      * After this call the newly opened model can be retrieved using _getModel_.
      * * @param name
      */
-    openModel(name: string): Promise<FreModel | InMemoryError>
+    openModel(name: string): Promise<FreModel | ModelManagementError>
 
-    saveModel(): Promise<void | InMemoryError>
+    saveModel(): Promise<void | ModelManagementError>
 
     renameModel(newName: string): Promise<void>
 
     /**
      * Get a list of all model names that are available on the server.
      */
-    getModels(): Promise<string[] | InMemoryError>
+    getModels(): Promise<string[] | ModelManagementError>
 
     /**
      * Create a new unit of type _unitConcept_ with name _name_ and store it on the server.
@@ -54,19 +53,19 @@ export interface IModelManager {
      * @param name
      * @param unitConcept
      */
-    createUnit(name: string, unitConcept: string): Promise<FreModelUnit | InMemoryError>
+    createUnit(name: string, unitConcept: string): Promise<FreModelUnit | ModelManagementError>
 
     /**
      * Delete _unit_ from the model.
      * @param unit
      */
-    deleteUnit(unit: FreModelUnit): Promise<void | InMemoryError>
+    deleteUnit(unit: FreModelUnit): Promise<void | ModelManagementError>
 
     /**
      * Delete _unit_ from the model.
      * @param unitId
      */
-    deleteUnitById(unitId: FreUnitIdentifier): Promise<void | InMemoryError>
+    deleteUnitById(unitId: FreUnitIdentifier): Promise<void | ModelManagementError>
 
     /**
      *
@@ -74,7 +73,7 @@ export interface IModelManager {
      * @param newName
      * @param unit
      */
-    renameUnit(oldName: string, newName: string, unit: FreModelUnit): Promise<void | InMemoryError>
+    renameUnit(oldName: string, newName: string, unit: FreModelUnit): Promise<void | ModelManagementError>
 
     /**
      * Find a unit with name equal to _name_
@@ -109,7 +108,7 @@ export interface IModelManager {
      * This is done only when there are unsaved changes.
      * @param unit
      */
-    saveUnit(unit: FreModelUnit): Promise<void | InMemoryError>
+    saveUnit(unit: FreModelUnit): Promise<void | ModelManagementError>
 
     /**
      * Save the unit with id _unitId_ to server.

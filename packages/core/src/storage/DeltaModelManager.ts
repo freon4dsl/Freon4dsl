@@ -5,7 +5,8 @@ import { FREON } from "../environment/CoreConfig.js"
 import { FreLogger } from "../logging/index.js"
 import { notNullOrUndefined } from "../util/index.js"
 import { newSignOnRequest } from "./lionweb-delta/commands.js"
-import { ModelManagementError, ModelManager } from "./ModelManager.js"
+import { ModelManagementError } from "./IModelManager.js"
+import { ModelManager } from "./ModelManager.js"
 import { FreLionwebSerializer } from "./serializer/index.js"
 import type { FreUnitIdentifier } from "./server/index.js"
 
@@ -47,7 +48,7 @@ export class DeltaModelManager extends ModelManager {
             messageKind: "DeleteRepositoryAdminRequest",
             queryId: "DeleteModel-query",
             repositoryName: this.model.name,
-            additionalInfos: []
+            additionalInfos: [],
         }
         FREON.deltaClient.deltaApiClient.sendAdminRequest(request)
         runInAction(() => {
@@ -170,7 +171,7 @@ export class DeltaModelManager extends ModelManager {
         }
         LOGGER.log(`renameUnit from ${oldName} to ${newName}`)
         FREON.astChanger.changeNamed(`Rename unit '${oldName}' to '${newName}'`, () => {
-            unit.name = newName 
+            unit.name = newName
         })
     }
 
