@@ -15,6 +15,10 @@ import { LayoutBox, ListDirection } from "./LayoutBox.js";
 export abstract class ListBox extends LayoutBox {
     readonly kind: string = "ListBox";
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
+    // Controls whether drag-and-drop reordering is enabled for this list.
+    // When false, drag handles are hidden and items cannot be reordered.
+    // Defaults to true. Can be set to false via initializer: { canDragAndDrop: false }
+    canDragAndDrop: boolean = true;
 
     protected constructor(
         node: FreNode,
@@ -37,13 +41,13 @@ export class HorizontalListBox extends ListBox {
     readonly kind: string = "HorizontalListBox";
 
     constructor(
-        element: FreNode,
+        node: FreNode,
         role: string,
         propertyName: string,
         children?: (Box | null)[],
         initializer?: Partial<HorizontalListBox>,
     ) {
-        super(element, role, propertyName, children, initializer);
+        super(node, role, propertyName, children, initializer);
         this.direction = ListDirection.HORIZONTAL;
     }
 }

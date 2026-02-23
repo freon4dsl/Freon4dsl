@@ -34,6 +34,8 @@ export abstract class Box {
     selectable: boolean = true; // todo because most boxes are not selectable the default could be set to false
     // Is this box currently not shown in the editor?
     isVisible: boolean = true;
+    // Should the drag handle be hidden for this box in a list?
+    hideDragHandle: boolean = false;
     parent: Box = null;
 
     // Indication whether the 'node' which this box projects has any validation errors. Adds a CSS class
@@ -108,7 +110,7 @@ export abstract class Box {
 
     i: number = 0
     protected constructor(node: FreNode, role: string) {
-        FreUtils.CHECK(!!node, "Element cannot be empty in Box constructor");
+        FreUtils.CHECK(!!node, "'node' cannot be empty in Box constructor");
         this.node = node;
         this.role = role;
         this.$id = FreUtils.BOX_ID(); // uuid.v4();

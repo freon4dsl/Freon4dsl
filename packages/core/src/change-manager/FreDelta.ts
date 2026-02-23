@@ -98,7 +98,7 @@ export class FrePartListDelta extends FreDelta {
         super(unit, owner, propertyName, index);
         for (const r of removed) {
             if (r instanceof MobxModelElementImpl) {
-                // TODO adjust this test when FreElementBaseImpl is used in generation
+                // TODO adjust this test when FreNodeBaseImpl is used in generation
                 this.removed.push(r as FreNodeBaseImpl);
             }
         }

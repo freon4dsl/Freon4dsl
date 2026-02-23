@@ -13,7 +13,7 @@ const LOGGER: FreLogger = new FreLogger("AstObserver").mute();
 
 /**
  * This class dispatches all changes in a model to all its subscribers.
- * Note that changes in standalone FreElements, i.e. those that are not part of a model,
+ * Note that changes in a standalone FreNode, i.e. those that are not part of a model,
  * are not distributed.
  */
 

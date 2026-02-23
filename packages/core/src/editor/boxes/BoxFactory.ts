@@ -17,17 +17,15 @@ import {
     HorizontalLayoutBox,
     VerticalLayoutBox,
     TableCellBox,
-    OptionalBox,
     LimitedControlBox,
     ButtonBox,
     NumberDisplay,
     type AbstractExternalBox,
     PartListReplacerBox,
     isPartListReplacerBox,
-    ReferenceBox, MultiLineTextBox
-} from './internal.js';
+    ReferenceBox, MultiLineTextBox, OptionalBox
+} from "./internal.js"
 import type { SelectOption } from "./internal.js";
-import type { BoolFunctie } from "./internal.js";
 
 type RoleCache<T extends Box> = {
     [role: string]: T;
@@ -49,7 +47,6 @@ let limitedCache: BoxCache<LimitedControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
 let referenceCache: BoxCache<ReferenceBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
-// let optionalCache: BoxCache<OptionalBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
 // let svgCache: BoxCache<SvgBox> = {};
 let horizontalLayoutCache: BoxCache<HorizontalLayoutBox> = {};
@@ -142,16 +139,16 @@ export class BoxFactory {
     /**
      * Find the Box for the given element id and role in the cache,
      * When not there, create the element and put it in the cache
-     * @param element The element for which the box should be found
+     * @param node The element for which the box should be found
      * @param role    The role of the box
      * @param creator The function with which the box can be createed , if not there
      * @param cache   The cache to use
      */
-    private static find<T extends Box>(element: FreNode, role: string, creator: () => T, cache: BoxCache<T>): T {
+    private static find<T extends Box>(node: FreNode, role: string, creator: () => T, cache: BoxCache<T>): T {
         // 1. Create the box, or find the one that already exists for this element and role
-        const elementId = element.freId();
-        if (!!cache[elementId]) {
-            const box = cache[elementId][role];
+        const nodeId = node.freId();
+        if (!!cache[nodeId]) {
+            const box = cache[nodeId][role];
             if (!!box) {
                 // if (isNumberControlBox(box)) {
                 //     console.log(":: EXISTS " + box.kind + " for entity " + elementId + " role " + role + " already exists");
@@ -162,7 +159,7 @@ export class BoxFactory {
                 // if (isNumberControlBox(newBox)) {
                 //     console.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "            CREATED");
                 // }
-                cache[elementId][role] = newBox;
+                cache[nodeId][role] = newBox;
                 return newBox;
             }
         } else {
@@ -170,8 +167,8 @@ export class BoxFactory {
             // if (isNumberControlBox(newBox)) {
             //     console.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "               CREATED");
             // }
-            cache[elementId] = {};
-            cache[elementId][role] = newBox;
+            cache[nodeId] = {};
+            cache[nodeId][role] = newBox;
             return newBox;
         }
     }
@@ -493,13 +490,34 @@ export class BoxFactory {
         return result;
     }
 
+    // static optional(
+    //     node: FreNode,
+    //     role: string,
+    //     condition: BoolFunctie,
+    //     box: Box,
+    //     mustShow: boolean,
+    //     optional: Box,
+    //     initializer?: Partial<OldOptionalBox>,
+    // ): OldOptionalBox {
+    //     // TODO This only works with cache on, should also work with cache off.
+    //     // if (cacheOptionalOff) {
+    //     //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
+    //     // }
+    //     // 1. Create the optional box, or find the one that already exists for this element and role
+    //     const creator = () => new OldOptionalBox(node, role, condition, box, mustShow, optional);
+    //     const result: OldOptionalBox = this.find<OldOptionalBox>(node, role, creator, optionalCache);
+    //
+    //     // 2. Apply the other arguments in case they have changed
+    //     FreUtils.initializeObject(result, initializer);
+    //
+    //     return result;
+    // }
+
     static optional(
         node: FreNode,
         role: string,
-        condition: BoolFunctie,
-        box: Box,
-        mustShow: boolean,
-        optional: Box,
+        placeHolder: string,
+        contentBox: Box,
         initializer?: Partial<OptionalBox>,
     ): OptionalBox {
         // TODO This only works with cache on, should also work with cache off.
@@ -507,7 +525,7 @@ export class BoxFactory {
         //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
         // }
         // 1. Create the optional box, or find the one that already exists for this element and role
-        const creator = () => new OptionalBox(node, role, condition, box, mustShow, optional);
+        const creator = () => new OptionalBox(node, role, placeHolder, contentBox);
         const result: OptionalBox = this.find<OptionalBox>(node, role, creator, optionalCache);
 
         // 2. Apply the other arguments in case they have changed

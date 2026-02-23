@@ -1,14 +1,7 @@
 import { Names, FREON_CORE, Imports, Roles } from "../../../utils/on-lang/index.js"
-import type {
-    FreMetaLanguage,
-    FreMetaClassifier,
-    FreMetaProperty} from "../../../languagedef/metalanguage/index.js";
-import {
-    FreMetaBinaryExpressionConcept,
-    FreMetaPrimitiveType,
-} from "../../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage, FreMetaClassifier} from "../../../languagedef/metalanguage/index.js";
+import { FreMetaBinaryExpressionConcept } from "../../../languagedef/metalanguage/index.js";
 import type { FreEditUnit} from "../../metalanguage/index.js";
-import { FreEditNormalProjection, FreOptionalPropertyProjection } from "../../metalanguage/index.js";
 
 export class DefaultActionsTemplate {
     generate(language: FreMetaLanguage, editorDef: FreEditUnit, relativePath: string): string {
@@ -92,85 +85,84 @@ export class DefaultActionsTemplate {
             ];
 
             export const CUSTOM_ACTIONS: ${Names.FreCustomAction}[] = [
-                ${this.customActionsForOptional(editorDef)}
                 ${this.customActionForParts(language, editorDef)}
                 ${this.customActionForReferences(language, editorDef)}
             ];
             `;
     }
 
-    private customActionsForOptional(editorDef: FreEditUnit): string {
-        let result: string = "";
-        editorDef.getDefaultProjectiongroup()?.projections.forEach((projection) => {
-            if (!!projection && projection instanceof FreEditNormalProjection) {
-                projection.lines.forEach((line) => {
-                    line.items.forEach((item) => {
-                        if (item instanceof FreOptionalPropertyProjection && !!item.property) {
-                            const firstLiteral: string = item.firstLiteral();
-                            const myClassifier: FreMetaClassifier | undefined = projection.classifier?.referred;
-                            const prop: FreMetaProperty = item.property.referred;
-                            const optionalPropertyName = prop.name;
-                            // end change
-                            let rolename: string = "unknown role";
-                            if (!!myClassifier) {
-                                if (prop.isPart) {
-                                    // TODO Check for lists (everywhere)
-                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
-                                } else if (prop.isPrimitive) {
-                                    if (prop.type === FreMetaPrimitiveType.number) {
-                                        rolename = Roles.propertyRole(
-                                            myClassifier.name,
-                                            optionalPropertyName,
-                                            "numberbox",
-                                        );
-                                    } else if (prop.type === FreMetaPrimitiveType.string) {
-                                        rolename = Roles.propertyRole(
-                                            myClassifier.name,
-                                            optionalPropertyName,
-                                            "textbox",
-                                        );
-                                    } else if (prop.type === FreMetaPrimitiveType.boolean) {
-                                        rolename = Roles.propertyRole(
-                                            myClassifier.name,
-                                            optionalPropertyName,
-                                            "booleanbox",
-                                        );
-                                    }
-                                } else {
-                                    // reference
-                                    if (prop.isList) {
-                                        rolename = Roles.propertyRole(
-                                            myClassifier.name,
-                                            optionalPropertyName,
-                                            "new-list-item"
-                                        )
-                                    } else {
-                                        rolename = Roles.propertyRole(
-                                            myClassifier.name,
-                                            optionalPropertyName,
-                                            "referencebox",
-                                        );
-                                    }
-                                }
-                            }
-                            result += `${Names.FreCustomAction}.create(
-                                    {
-                                        trigger: "${firstLiteral === "" ? optionalPropertyName : firstLiteral}",
-                                        activeInBoxRoles: ["optional-${optionalPropertyName}"],
-                                        action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.FreEditor}): ${Names.FreNode} | null => {
-                                            ((box.parent) as OptionalBox).mustShow = true;
-                                            return box.node;
-                                        },
-                                        boxRoleToSelect: "${rolename}"
-                                    })`;
-                            result += ",";
-                        }
-                    });
-                });
-            }
-        });
-        return result;
-    }
+    // private customActionsForOptional(editorDef: FreEditUnit): string {
+    //     let result: string = "";
+    //     editorDef.getDefaultProjectiongroup()?.projections.forEach((projection) => {
+    //         if (!!projection && projection instanceof FreEditNormalProjection) {
+    //             projection.lines.forEach((line) => {
+    //                 line.items.forEach((item) => {
+    //                     if (item instanceof FreOptionalPropertyProjection && !!item.property) {
+    //                         const firstLiteral: string = item.firstLiteral();
+    //                         const myClassifier: FreMetaClassifier | undefined = projection.classifier?.referred;
+    //                         const prop: FreMetaProperty = item.property.referred;
+    //                         const optionalPropertyName = prop.name;
+    //                         // end change
+    //                         let rolename: string = "unknown role";
+    //                         if (!!myClassifier) {
+    //                             if (prop.isPart) {
+    //                                 // TODO Check for lists (everywhere)
+    //                                 rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
+    //                             } else if (prop.isPrimitive) {
+    //                                 if (prop.type === FreMetaPrimitiveType.number) {
+    //                                     rolename = Roles.propertyRole(
+    //                                         myClassifier.name,
+    //                                         optionalPropertyName,
+    //                                         "numberbox",
+    //                                     );
+    //                                 } else if (prop.type === FreMetaPrimitiveType.string) {
+    //                                     rolename = Roles.propertyRole(
+    //                                         myClassifier.name,
+    //                                         optionalPropertyName,
+    //                                         "textbox",
+    //                                     );
+    //                                 } else if (prop.type === FreMetaPrimitiveType.boolean) {
+    //                                     rolename = Roles.propertyRole(
+    //                                         myClassifier.name,
+    //                                         optionalPropertyName,
+    //                                         "booleanbox",
+    //                                     );
+    //                                 }
+    //                             } else {
+    //                                 // reference
+    //                                 if (prop.isList) {
+    //                                     rolename = Roles.propertyRole(
+    //                                         myClassifier.name,
+    //                                         optionalPropertyName,
+    //                                         "new-list-item"
+    //                                     )
+    //                                 } else {
+    //                                     rolename = Roles.propertyRole(
+    //                                         myClassifier.name,
+    //                                         optionalPropertyName,
+    //                                         "referencebox",
+    //                                     );
+    //                                 }
+    //                             }
+    //                         }
+    //                         result += `${Names.FreCustomAction}.create(
+    //                                 {
+    //                                     trigger: "${firstLiteral === "" ? optionalPropertyName : firstLiteral}",
+    //                                     activeInBoxRoles: ["optional-${optionalPropertyName}"],
+    //                                     action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.FreEditor}): ${Names.FreNode} | null => {
+    //                                         ((box.parent) as OptionalBox).mustShow = true;
+    //                                         return box.node;
+    //                                     },
+    //                                     boxRoleToSelect: "${rolename}"
+    //                                 })`;
+    //                         result += ",";
+    //                     }
+    //                 });
+    //             });
+    //         }
+    //     });
+    //     return result;
+    // }
 
     customActionForReferences(language: FreMetaLanguage, editorDef: FreEditUnit): string {
         let result = "";

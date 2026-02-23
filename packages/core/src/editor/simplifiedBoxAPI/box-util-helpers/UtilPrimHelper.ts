@@ -32,7 +32,7 @@ export class UtilPrimHelper {
         const isList: boolean = propInfo.isList;
         const property = node[propertyName];
         // create the box
-        if (property !== undefined && property !== null && typeof property === "string") {
+        if (propInfo.type === "string") {
             const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "textbox", index);
             if (isList && UtilCheckers.checkList(isList, index, propertyName)) {
                 result = BoxFactory.text(
@@ -62,7 +62,7 @@ export class UtilPrimHelper {
             result.propertyName = propertyName;
             result.propertyIndex = index;
         } else {
-            FreUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a string: " + property + '"');
+            FreUtils.CHECK(false, "Property " + propertyName + " is not a string: " + property + '"');
         }
         return result;
     }
@@ -115,7 +115,7 @@ export class UtilPrimHelper {
     public static numberBox(
         node: FreNode,
         propertyName: string,
-        display: NumberDisplay,
+        kind: NumberDisplay,
         index?: number,
         displayInfo?: NumberDisplayInfo,
     ): Box {
@@ -125,20 +125,20 @@ export class UtilPrimHelper {
             node.freLanguageConcept(),
             propertyName,
         );
-        const property: FreLanguageProperty = node[propertyName];
-        const isList: boolean = propInfo.isList;
         // create the box
-        if (property !== undefined && property !== null && typeof property === "number") {
+        if (propInfo.type === "number") {
+            const isList: boolean = propInfo.isList;
             const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "numberbox", index);
-            if (display !== NumberDisplay.SELECT) {
-                result = this.makeNumberControlBox(isList, index, propertyName, node, roleName, display, displayInfo);
+            if (kind !== NumberDisplay.SELECT) {
+                result = this.makeNumberControlBox(isList, index, propertyName, node, roleName, kind, displayInfo);
             } else {
-                result = this.makeNumberSelectBox(isList, index, propertyName, node, roleName);
+                result = this.makeNumberTextBox(isList, index, propertyName, node, roleName);
             }
             result.propertyName = propertyName;
             result.propertyIndex = index;
         } else {
-            FreUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a number: " + property + '"');
+            const property: FreLanguageProperty = node[propertyName];
+            FreUtils.CHECK(false, 'Property ' + propertyName + ' is not a number: "' + property + '"');
         }
         return result;
     }
@@ -159,20 +159,8 @@ export class UtilPrimHelper {
             propertyName,
         );
         const isList: boolean = propInfo.isList;
-        // const property: FreNode = node[propertyName];
 
-        // check the found information
-        // if (!(property !== undefined && property !== null)) {
-        //     FreUtils.CHECK(false, "Property " + propertyName + " does not exist:" + property + '"');
-        // }
-        // if (!(typeof property === "boolean" || typeof property === "string")) {
-        //     FreUtils.CHECK(
-        //         false,
-        //         "Property " + propertyName + " is not a boolean:" + property.freLanguageConcept() + '"',
-        //     );
-        // }
-
-        // all's well, create the box
+        // create the box
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "booleanbox", index);
         let result: BooleanControlBox | SelectBox;
         if (kind === BoolDisplay.SELECT) {
@@ -186,7 +174,7 @@ export class UtilPrimHelper {
         return result;
     }
 
-    private static makeNumberSelectBox(
+    private static makeNumberTextBox(
         isList: boolean,
         index: number,
         propertyName: string,

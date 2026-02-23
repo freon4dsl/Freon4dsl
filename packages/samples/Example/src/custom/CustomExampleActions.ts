@@ -34,16 +34,7 @@ const cust: FreCustomAction[] = [
         boxRoleToSelect: "",
         caretPosition: undefined,
         trigger: "",
-    }),
-    FreCustomAction.create({
-        trigger: "base",
-        activeInBoxRoles: ["optional-baseEntity"],
-        action: (box: Box, trigger: FreTriggerType, ed: FreEditor): FreNode | null => {
-            (box.parent as OptionalBox).mustShow = true;
-            return null;
-        },
-        boxRoleToSelect: "Entity-baseEntity"
-    }),
+    })
 ];
 
 export const MANUAL_BINARY_EXPRESSION_ACTIONS: FreCreateBinaryExpressionAction[] = [];

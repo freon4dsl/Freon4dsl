@@ -128,14 +128,13 @@ export class ItemBoxHelper {
             if (optionalLiteral === "") {
                 return result;
             }
-            const condition: string = property.isList
-                ? `() => (!!${elementVarName}.${optionalPropertyName}) && (${elementVarName}.${optionalPropertyName}).length !== 0`
-                : `() => (!!${elementVarName}.${optionalPropertyName})`;
-            result = `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", ${condition},
+            const initializer: string = property.isPrimitive
+                ? `{ propertyName: "${optionalPropertyName}" }`
+                : `{ propertyName: "${optionalPropertyName}", conceptOfProperty: "${property.type.name}" }`;
+            result = `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", "${optionalPropertyName}",
                 ${result},
-                false, 
-                BoxFactory.action(this._node, "optional-${optionalPropertyName}", "${optionalLiteral}")
-            )`;
+                ${initializer}
+            )`
             return result;
         } else {
             LOG2USER.error("INTERNAL ERROR: no property found in optional projection.");

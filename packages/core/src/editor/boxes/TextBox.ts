@@ -35,13 +35,13 @@ export class TextBox extends Box {
     placeHolder: string = "";
     caretPosition: number = -1;
     $_getText: () => string;
-    $setText: (newValue: string) => void;
+    $setText: (newValue: string) => void; // todo should this signature be "newValue: string | undefined"???
 
     /**
      * Run the setText() as defined by the user of this box inside a mobx action.
      * @param newValue
      */
-    setText(newValue: string): void {
+    setText(newValue: string | undefined): void {
         LOGGER.log("setText to " + newValue);
         FREON.astChanger.changeNamed("TextBox.setText", () => {
             this.$setText(newValue);

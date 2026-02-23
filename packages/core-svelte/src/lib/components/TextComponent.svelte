@@ -20,7 +20,7 @@
         ENTER,
         ESCAPE,
         FreCaret,
-        FreCaretPosition,
+        FreCaretPosition, FreLanguage,
         isActionBox,
         isNullOrUndefined,
         isSelectBox, notNullOrUndefined,
@@ -28,7 +28,7 @@
         SHIFT,
         TAB,
         TextBox, UndefinedRectangle
-    } from '@freon4dsl/core';
+    } from "@freon4dsl/core"
     import { TextComponentHelper } from './svelte-utils/TextComponentHelper.js';
     import ErrorTooltip from './ErrorTooltip.svelte';
     import ErrorMarker from './ErrorMarker.svelte';
@@ -154,7 +154,7 @@
      */
     // todo why is this function async?
     export async function setFocus(): Promise<void> {
-        LOGGER.log(`setFocus for ${box?.id} ${isEditing} && ${inputElement}`);
+        console.log(`setFocus for ${box?.id} ${isEditing} && ${inputElement}`);
         if (isEditing && notNullOrUndefined(inputElement)) {
             inputElement.focus();
             inputElement.select(); // selects all the text in the <input> element.
@@ -170,21 +170,26 @@
      * @param freCaret
      */
     const calculateCaret = (freCaret: FreCaret) => {
-        LOGGER.log(`${id}: setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]`);
+        console.log(`${id}: setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]`);
         // No need to flush any pending updates, method is being called from the box.
         switch (freCaret.position) {
             case FreCaretPosition.RIGHT_MOST: // type nr 2
                 myHelper.from = myHelper.to = text.length;
                 break;
             case FreCaretPosition.LEFT_MOST: // type nr 1
+                myHelper.from = 0;
+                myHelper.to = 0;
+                break;
             case FreCaretPosition.UNSPECIFIED: // type nr 0
-                myHelper.from = myHelper.to = 0;
+                myHelper.from = 0;
+                myHelper.to = text.length;
                 break;
             case FreCaretPosition.INDEX: // type nr 3
                 myHelper.setFromAndTo(freCaret.from, freCaret.to);
                 break;
             default:
-                myHelper.from = myHelper.to = 0;
+                myHelper.from = 0;
+                myHelper.to = text.length;
                 break;
         }
     };
@@ -299,11 +304,17 @@
             isEditing = false;
 
             if (!partOfDropdown) {
+                let textToStore: string | undefined = text;
+                /* When the value of an optional property of type string is the empty string, we store it as 'undefined'. */
+                const propDef = FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName);
+                if (propDef && propDef.propertyKind === "primitive" && propDef.type === "string" && propDef.isOptional && text === "") {
+                    textToStore = undefined;
+                }
                 // store the current value in the textbox, or delete the box, if appropriate
-                LOGGER.log(`   save text using box.setText(${text})`);
-                if (text !== box.getText()) {
+                LOGGER.log(`   save text using box.setText(${textToStore})`);
+                if (textToStore !== box.getText()) {
                     LOGGER.log(`   text is new value`);
-                    box.setText(text);
+                    box.setText(textToStore);
                 }
             } else {
                 toParent('endEditing');
@@ -369,6 +380,7 @@
 					break;
 				}
 				case DELETE: {
+                    console.log('TextComponent delete')
 					myHelper.handleDelete(event, editor);
 					break;
 				}

@@ -31,7 +31,7 @@ export class StringSearchWorker implements FreSearchWorker {
     private readonly writer: FreWriter;
     private readonly metatype: string;
     private $result: FreNode[] = [];
-    private elementMap: Map<FreNode, number> = new Map<FreNode, number>();
+    private nodeMap: Map<FreNode, number> = new Map<FreNode, number>();
 
     constructor(toFind: string, writer: FreWriter, metatype?: string) {
         this.toFind = toFind;
@@ -41,7 +41,7 @@ export class StringSearchWorker implements FreSearchWorker {
 
     get result(): FreNode[] {
         if (!this.metatype || this.metatype.length <= 0) {
-            this.elementMap.forEach((value, key) => {
+            this.nodeMap.forEach((value, key) => {
                 if (value > 0) {
                     this.$result.push(key);
                 }
@@ -68,10 +68,10 @@ export class StringSearchWorker implements FreSearchWorker {
             } else {
                 const stringRepresentation: string = this.writer.writeToString(node);
                 const count: number = StringSearchWorker.countSubsInText(stringRepresentation, this.toFind);
-                this.elementMap.set(node, count);
+                this.nodeMap.set(node, count);
                 const owner: FreNode = node.freOwner();
-                if (this.elementMap.has(owner)) {
-                    this.elementMap.set(owner, this.elementMap.get(owner) - count);
+                if (this.nodeMap.has(owner)) {
+                    this.nodeMap.set(owner, this.nodeMap.get(owner) - count);
                 }
             }
         }
@@ -81,7 +81,7 @@ export class StringSearchWorker implements FreSearchWorker {
     includeNode(node: FreNode): boolean {
         if (!this.metatype || this.metatype.length <= 0) {
             const owner: FreNode = node.freOwner();
-            if (this.elementMap.has(owner) && this.elementMap.get(owner) <= 0) {
+            if (this.nodeMap.has(owner) && this.nodeMap.get(owner) <= 0) {
                 return false;
             } else {
                 return true;

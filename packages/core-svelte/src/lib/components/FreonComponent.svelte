@@ -189,6 +189,7 @@
                     break;
                 case DELETE:
                 case BACKSPACE:
+                    console.log('FreonComponent delete/backspace, selectedBox type: ' + editor.selectedBox.kind)
                     editor.deleteBox(editor.selectedBox);
                     stopEvent(event);
                     break;
