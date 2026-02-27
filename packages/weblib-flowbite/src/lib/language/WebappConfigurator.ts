@@ -15,13 +15,12 @@ import {
     type FreNode,
     FreProjectionHandler,
     type FreUnitIdentifier,
-    ModelManager,
     isNullOrUndefined,
     jsonAsString,
     notNullOrUndefined,
     FREON,
-    isInMemoryError,
     type IModelManager,
+    isModelManagementError,
 } from "@freon4dsl/core"
 import { runInAction } from "mobx"
 
