@@ -116,7 +116,7 @@ export class ConceptTemplate {
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
             // TEMPLATE: ConceptTemplate.generateBinaryExpression
-            ${hasSuper? "": 'import { makeObservable, action } from "mobx"'}
+            import { runInAction ${hasSuper ? "" : ", makeObservable, action"} } from "mobx"
             
             /**
              * Class ${myName} is the implementation of the binary expression concept with the same name in the language definition file.
@@ -180,7 +180,7 @@ export class ConceptTemplate {
                     this.right = value;
                 }
             }
-        `;
+        `
 
         return `
             ${imports.makeImports(concept.language)}
