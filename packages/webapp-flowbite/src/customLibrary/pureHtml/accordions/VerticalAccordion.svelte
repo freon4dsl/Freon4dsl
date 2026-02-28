@@ -3,7 +3,6 @@
     import { FREON, PartListReplacerBox } from "@freon4dsl/core"
     import type { FreNode } from "@freon4dsl/core"
     import { onMount, untrack } from "svelte"
-    import { Stage } from "@freon4dsl/samples-festival-planning"
 
     // Props
     let { editor, box }: FreComponentProps<PartListReplacerBox> = $props()
@@ -92,10 +91,7 @@
     }
 
     async function addElement() {
-        FREON.astChanger.change(() => {
-            const newElement: Stage = Stage.create({})
-            box.getPropertyValue().push(newElement)
-        })
+        box.addNewItem()
 
         const last = box.children.length
         if (last >= 0) {

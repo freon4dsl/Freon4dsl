@@ -1,6 +1,6 @@
 language festivities
 
-concept Availability {
+concept DateTimeRange {
   start: DateTime;
   end: DateTime;
 }

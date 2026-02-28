@@ -6,14 +6,14 @@
 
     /**
      * Works with:
-     * concept Availability { start: DateTime; end: DateTime; }
+     * concept DateTimeRange { start: DateTime; end: DateTime; }
      * concept DateTime { date: DateValue; time: TimeValue; }
      * concept DateValue { year:number; month:number; day:number; }
      * concept TimeValue { hour:number; minute:number; }
      *
      * Import from ".../freon/index.js"
      */
-    import { Availability, DateTime, DateValue, TimeValue } from "@freon4dsl/samples-festival-planning"
+    import { DateTimeRange, DateTime, DateValue, TimeValue } from "@freon4dsl/samples-festival-planning"
 
     let { box }: FreComponentProps<PartReplacerBox> = $props()
 
@@ -90,8 +90,8 @@
 
     function getFromModel(): { start: DateTime; end: DateTime } {
         const v: FreNode | undefined = box.getPropertyValue()
-        if (notNullOrUndefined(v) && v.freLanguageConcept() === "Availability") {
-            const a = v as unknown as Availability
+        if (notNullOrUndefined(v) && !Array.isArray(v) && v.freLanguageConcept() === "DateTimeRange") {
+            const a = v as unknown as DateTimeRange
             return normalize(a.start, a.end)
         }
 
@@ -108,9 +108,9 @@
         const normalized = normalize(start, end)
         const wasCorrected = !isAfter(end, start)
 
-        let newAvail: Availability | undefined
+        let newAvail: DateTimeRange | undefined
         runInAction(() => {
-            newAvail = Availability.create(normalized)
+            newAvail = DateTimeRange.create(normalized)
         })
         if (notNullOrUndefined(newAvail)) {
             box.setPropertyValue(newAvail)

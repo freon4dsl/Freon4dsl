@@ -18,17 +18,15 @@ Festival overview
 
     Name: ${self.name}
     Location: ${self.location}
-    [fragment startAndEndDate]
+    Dates: ${self.dates replace=DateRangePicker} [button text="Create Day Schedule" boxRole="create-day-schedule"]
+    Days: ${self.days horizontal}
     Status: ${self.status radio}
-]
-fragment startAndEndDate [
-    Dates: ${self.dates replace=DateRangePicker}
 ]}
 
 Schedule {[
 Schedule
 
-    ${self.days replace=HorizontalAccordion}
+    ${self.performances replace=HorizontalAccordion}
 ]}
 
 Resources {[
@@ -57,21 +55,29 @@ Compliance
 ]}
 
 Day {[
-  Date: ${self.date replace=DatePicker}
-  Stages: ${self.stages replace=VerticalAccordion}
+  ${self.name}
+
+  Catering: ${self.catering}
+  Technical Crew: ${self.technicalCrew}
+  Safety plan: ${self.safetyPlanReference}
+]}
+
+Stage {[
+  Name: ${self.name}
+  Capacity: ${self.capacity}
   Logistics: ${self.logistics}
 ]}
 
 Performance {[
   Artist: ${self.artist}
+  Day: ${self.day}
   On from ${self.timeSlot replace=TimeRangePicker}
+  At stage: ${self.stage}
   TechnicalRequirements: ${self.technicalRequirements}
 ]}
 
 Logistics {[
   Load in at: ${self.loadInTime replace=TimePicker} Load out at: ${self.loadOutTime replace=TimePicker}
-  Security plan: ${self.securityPlanReference}
-  Catering: ${self.cateringArrangements}
 ]}
 
 Staff {[

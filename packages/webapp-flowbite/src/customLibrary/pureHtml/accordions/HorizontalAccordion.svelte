@@ -3,7 +3,6 @@
     import { FREON, PartListReplacerBox } from "@freon4dsl/core"
     import type { FreNode } from "@freon4dsl/core"
     import { onMount, untrack } from "svelte"
-    import { Day } from "@freon4dsl/samples-festival-planning"
 
     // Props
     let { editor, box }: FreComponentProps<PartListReplacerBox> = $props()
@@ -102,12 +101,7 @@
 
     async function addElement() {
         // 1) create/insert a new element in the underlying model list.
-        // Note that you need to put any changes to the actual model in a 'FREON.astChanger.change or FREON.astChanger.changeNamed',
-        // because all elements in the model are reactive using mobx.
-        FREON.astChanger.change(() => {
-            let newPerson: Day = Day.create({});
-            box.getPropertyValue().push(newPerson);
-        });
+        box.addNewItem();
 
         // 2) After refresh() re-initializes, open the last panel
         const last = box.children.length;
@@ -175,6 +169,7 @@
 
 </script>
 
+<div class="h-accordion-wrapper">
 <div class="h-accordion">
     {#each ch as childBox, index}
         <div class="panel" class:open={panelOpen[index]}>
@@ -207,7 +202,9 @@
             </button>
 
             <div class="content" hidden={!panelOpen[index]}>
-                <RenderComponent box={childBox} editor={editor} />
+                <div class="content-scroll">
+                    <RenderComponent box={childBox} editor={editor} />
+                </div>
             </div>
         </div>
     {/each}
@@ -224,15 +221,26 @@
         <div class="label">+</div>
     </div>
 </div>
+</div>
 
 <style>
     :root {
-        --accordion-label-height: 56px;
+        --accordion-label-height: 56px;     /* header height when OPEN */
+    }
+    .h-accordion-wrapper {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;     /* take available space */
+        min-height: 0;      /* allow shrinking */
+        overflow: hidden;   /* prevents outer scrollbar; scroll happens inside content */
+        outline: var(--color-light-accent-200) 2px solid;
+        /*height: 720px;*/
     }
     .h-accordion {
         display: flex;
-        align-items: stretch;  /* default, but explicit is nice */
-        height: 100%;
+        align-items: stretch;
+        flex: 1 1 auto;   /* fill the wrapper */
+        min-height: 0;    /* important */
     }
 
     /* Panels */
@@ -244,8 +252,9 @@
         flex: 0 0 auto;                  /* collapsed width */
         transition: flex-basis 250ms ease;
 
-        overflow: hidden;
+        overflow: visible;
         min-width: 0;                   /* important in flex rows */
+        min-height: 0;                  /* Panels must also be allowed to shrink */
         outline: 1px solid var(--color-light-accent-200);
     }
 
@@ -263,13 +272,14 @@
         padding: 0 12px;
     }
 
-    /* Label as button (toggle only on label) */
+    /* Label as button (CLOSED state default) */
     .label-btn {
         all: unset;
         box-sizing: border-box;
         cursor: pointer;
         writing-mode: vertical-rl;
         transform: rotate(180deg);
+        text-orientation: mixed;
         padding: 8px;
 
         font-weight: 700;
@@ -279,8 +289,31 @@
         border-right: 1px solid rgba(0,0,0,0.08);
 
         position: relative; /* anchor for the x */
+        /* take ALL available vertical space */
+        flex: 1 1 auto;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* OPEN state: horizontal header bar */
+    .panel.open .label-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        writing-mode: horizontal-tb;
+        transform: none;
+
+        padding: 0 12px;
+
+        /* Only open panels get the fixed header height */
         flex: 0 0 var(--accordion-label-height);
         height: var(--accordion-label-height);
+
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+        border-right: 0;
     }
 
     .label-btn:focus-visible {
@@ -290,12 +323,25 @@
     .label-btn:hover {
         background-color: var(--color-light-accent-100);
     }
+    .label-text {
+        overflow-wrap: anywhere; /* allow breaks in long labels */
+        word-break: break-word;
+        line-height: 1.1;
+        text-align: center;
+    }
 
     /* Content area */
     .content {
         padding: 12px;
-        overflow: auto;
-        min-height: 0;                  /* important in flex column */
+        overflow: visible;
+        flex: 1 1 auto;    /* fill available space under the header */
+        min-height: 0;     /* allow internal scroller to work */
+    }
+
+    .content-scroll {
+        height: 100%;
+        overflow: auto;        /* scrolling lives here instead */
+        min-height: 0;
     }
 
     /* Add panel tweaks */

@@ -88,7 +88,7 @@
 	<NavBar />
 	<ToolBar />
 	<!-- the tab panel with buttons -->
-	<div class="w-full h-[calc(100vh-118px)] pl-2 pr-2 dark:bg-dark-base-800 bg-light-base-100">
+	<div class="w-full h-[calc(100vh-118px)] pl-2 pr-2 dark:bg-dark-base-800 bg-light-base-100 flex flex-col min-h-0">
 		<div class="flex wmt-1" role="tablist">
 			{#each editorInfo.unitsInTabs as unitInfo, index}
 				<div class="relative dark:bg-dark-base-500 bg-light-base-200 dark:text-dark-base-50 text-light-base-900 p-1 mr-1 text-sm rounded-t-lg font-medium
@@ -117,7 +117,7 @@
 	</div>
 
 	<Footer
-		class="text-center sticky md:bottom-0 start-0 h-12 w-full p-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 border-t border-light-base-200 text-light-base-700 bg-light-base-50  dark:border-dark-base-600 dark:bg-dark-base-900"
+		class="text-center sticky md:bottom-0 inset-s-0 h-12 w-full p-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 border-t border-light-base-200 text-light-base-700 bg-light-base-50  dark:border-dark-base-600 dark:bg-dark-base-900"
 	>
 		<div class="flex items-center justify-between">
 			<FooterCopyright

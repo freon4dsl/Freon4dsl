@@ -17,15 +17,15 @@ modelunit FestivalOverview {
     name: identifier;
     location: string;
     dates: DateRange;
-    days: Day[];
     status: FestivalStatus;
 
     file-extension = "fes";
 }
 
 modelunit Schedule {
-    performances: Performance[];
+    days: Day[];  => foreach day in Days { days[i].date === self.parent(a FestivalPlan).dates[i] }
     stages: Stage[];
+
 
     file-extension = "sch";
 }
@@ -51,15 +51,12 @@ modelunit ComplianceDossier {
 }
 
 concept Day {
-  name: identifier;
   date: DateValue;
-  reference catering: Vendor[];
-  technicalCrew: Staff[];
-  reference safetyPlanReference: SafetyPlan;
+  catering: Vendor[];
 }
 
 concept Stage {
-  name: identifier;
+  name: string;
   capacity: number;
   logistics: Logistics;
 }
@@ -73,7 +70,7 @@ concept Performance {
 }
 
 concept Artist {
-    name: identifier;
+    name: string;
     agent: string;
     phone_number: number;
 }
@@ -88,13 +85,15 @@ concept TechnicalRequirements {
 concept Logistics {
   loadInTime: TimeValue;
   loadOutTime: TimeValue;
+  securityPlanReference: string;
+  cateringArrangements: string;
 }
 
 concept Staff {
   name: string;
   role: string;
   skills: string[];
-  availability: DateTimeRange[];
+  availability: Availability[];
 }
 
 concept Equipment {
@@ -105,7 +104,9 @@ concept Equipment {
 }
 
 concept Vendor {
-  name: identifier;
+  name: string;
+  contractStartDate: DateValue;
+  contractEndDate: DateValue;
   servicesProvided: string;
 }
 
@@ -124,7 +125,6 @@ concept Compliance {
 }
 
 concept SafetyPlan {
-  name: identifier;
   documentReference: string;
   approvalStatus: string;
   lastReviewDate: DateValue;

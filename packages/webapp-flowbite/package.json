@@ -37,7 +37,7 @@
         "@freon4dsl/samples-insurance": "~2.1.0",
         "@types/node": "^20.14.1",
         "kotlin": "^1.5.21",
-        "lodash": "^4.17.21",
+        "lodash": "^4.17.23",
         "mobx": "^6.12.3",
         "mobx-utils": "^6.0.8",
         "sirv-cli": "^2.0.2",

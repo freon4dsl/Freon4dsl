@@ -1,11 +1,7 @@
 import type { Imports } from "../../../utils/on-lang/index.js";
 import { Names } from "../../../utils/on-lang/index.js"
 import { GenerationUtil } from '../../../utils/on-lang/GenerationUtil.js';
-import type {
-    FreMetaClassifier,
-    FreMetaConceptProperty,
-    FreMetaPrimitiveProperty,
-    FreMetaProperty} from "../../metalanguage/index.js";
+import type { FreMetaClassifier, FreMetaConceptProperty, FreMetaPrimitiveProperty, FreMetaProperty } from "../../metalanguage/index.js"
 import {
     FreMetaConcept,
     FreMetaPrimitiveType,
@@ -270,18 +266,19 @@ export class ConceptUtils {
                  */
                 static create(data: Partial<${myName}>): ${myName} {
                     const result = new ${myName}(data.$id);
+                    runInAction( () => {
                     ${concept
-            .allProperties()
-            .map(
-                (freProp) =>
-                    `${
-                        freProp.isList
-                            ? `if (notNullOrUndefined(data.${freProp.name})) {
+                        .allProperties()
+                        .map(
+                            (freProp) =>
+                                `${
+                                    freProp.isList
+                                        ? `if (notNullOrUndefined(data.${freProp.name})) {
                                 data.${freProp.name}.forEach(x =>
                                     result.${freProp.name}.push(x)
                                 );
                             }`
-                            : `if (notNullOrUndefined(data.${freProp.name})) {
+                                        : `if (notNullOrUndefined(data.${freProp.name})) {
                                 result.${freProp.name} = data.${freProp.name};
                             ${
                                 allPartsToInitialize.find((ip) => ip.part === freProp)
@@ -290,12 +287,13 @@ export class ConceptUtils {
                                     : ``
                             }   
                             }`
-                    }`,
-            )
-            .join("\n")}
+                                }`,
+                        )
+                        .join("\n")}
                     if (notNullOrUndefined(data.parseLocation)) {
                         result.parseLocation = data.parseLocation;
                     }
+                    });
                     return result;
                 }`
     }

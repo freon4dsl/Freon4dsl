@@ -1,11 +1,11 @@
 import { setCustomComponents } from "@freon4dsl/core-svelte"
-import StructuredDatePicker from "./customComponents/pureHtml/StructuredDatePicker.svelte"
-import StructuredDateRangePicker from "./customComponents/pureHtml/StructuredDateRangePicker.svelte"
-import HorizontalAccordion from "./customComponents/pureHtml/HorizontalAccordion.svelte"
-import StructuredTimePicker from "./customComponents/pureHtml/StructuredTimePicker.svelte"
-import StructuredTimeRangePicker from "./customComponents/pureHtml/StructuredTimeRangePicker.svelte"
-import VerticalAccordion from "./customComponents/pureHtml/VerticalAccordion.svelte"
-import AvailabilityPicker from "./customComponents/pureHtml/AvailabilityPicker.svelte"
+import StructuredDateRangePicker from "./customLibrary/pureHtml/DateTimeConceptBased/StructuredDateRangePicker.svelte"
+import StructuredDatePicker from "./customLibrary/pureHtml/DateTimeConceptBased/StructuredDatePicker.svelte"
+import StructuredTimePicker from "./customLibrary/pureHtml/DateTimeConceptBased/StructuredTimePicker.svelte"
+import StructuredTimeRangePicker from "./customLibrary/pureHtml/DateTimeConceptBased/StructuredTimeRangePicker.svelte"
+import HorizontalAccordion from "./customLibrary/pureHtml/accordions/HorizontalAccordion.svelte"
+import VerticalAccordion from "./customLibrary/pureHtml/accordions/VerticalAccordion.svelte"
+import DateTimeRangePicker from "./customLibrary/pureHtml/DateTimeConceptBased/DateTimeRangePicker.svelte"
 
 // // For InsuranceModel:
 // import ShowAnimatedGif from "./customComponents/forInsurance/ShowAnimatedGif.svelte";
@@ -64,7 +64,7 @@ export function configureExternals() {
         { component: StructuredDatePicker, knownAs: "DatePicker" },
         { component: StructuredTimeRangePicker, knownAs: "TimeRangePicker" },
         { component: StructuredTimePicker, knownAs: "TimePicker" },
-        { component: AvailabilityPicker, knownAs: "AvailabilityPicker" },
+        { component: DateTimeRangePicker, knownAs: "AvailabilityPicker" },
         { component: HorizontalAccordion, knownAs: "HorizontalAccordion" },
         { component: VerticalAccordion, knownAs: "VerticalAccordion" },
     ])
