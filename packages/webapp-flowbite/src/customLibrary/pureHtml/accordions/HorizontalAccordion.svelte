@@ -234,7 +234,7 @@
         min-height: 0;      /* allow shrinking */
         overflow: hidden;   /* prevents outer scrollbar; scroll happens inside content */
         outline: var(--color-light-accent-200) 2px solid;
-        /*height: 720px;*/
+        /*height: 780px;*/
     }
     .h-accordion {
         display: flex;

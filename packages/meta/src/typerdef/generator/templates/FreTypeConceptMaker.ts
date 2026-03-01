@@ -30,6 +30,7 @@ export class FreTypeConceptMaker {
         // Template starts here
         return `
             // Template: FreTyperConceptMaker.generateTypeConcept(...)
+            import { runInAction } from "mobx";
             ${imports.makeImports(concept.language)}
 
             /**
@@ -64,7 +65,7 @@ export class FreTypeConceptMaker {
                         : ``
                 }
             }
-        `;
+        `
     }
 
     private makeToFreString(myName: string, concept: FretTypeConcept): string {

@@ -94,7 +94,7 @@ concept Staff {
   name: string;
   role: string;
   skills: string[];
-  availability: DateTimeRange[];
+  availability: DateTimeRange;
 }
 
 concept Equipment {
