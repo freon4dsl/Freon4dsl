@@ -6,6 +6,7 @@ import StructuredTimeRangePicker from "./customLibrary/pureHtml/DateTimeConceptB
 import HorizontalAccordion from "./customLibrary/pureHtml/accordions/HorizontalAccordion.svelte"
 import VerticalAccordion from "./customLibrary/pureHtml/accordions/VerticalAccordion.svelte"
 import DateTimeRangePicker from "./customLibrary/pureHtml/DateTimeConceptBased/DateTimeRangePicker.svelte"
+import Carousel from "./customLibrary/embla/Carousel.svelte"
 
 // // For InsuranceModel:
 // import ShowAnimatedGif from "./customComponents/forInsurance/ShowAnimatedGif.svelte";
@@ -67,6 +68,7 @@ export function configureExternals() {
         { component: DateTimeRangePicker, knownAs: "AvailabilityPicker" },
         { component: HorizontalAccordion, knownAs: "HorizontalAccordion" },
         { component: VerticalAccordion, knownAs: "VerticalAccordion" },
+        { component: Carousel, knownAs: "Carousel" },
     ])
     // For InsuranceModel:
     // setCustomComponents([

@@ -9,7 +9,8 @@ global {
         TimePicker,
         AvailabilityPicker,
         HorizontalAccordion,
-        VerticalAccordion
+        VerticalAccordion,
+        Carousel
     }
 }
 

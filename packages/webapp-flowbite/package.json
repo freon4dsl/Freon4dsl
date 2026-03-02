@@ -28,6 +28,8 @@
         "vite": "^6.3.5"
     },
     "dependencies": {
+        "embla-carousel": "^9.0.0-rc01",
+        "embla-carousel-svelte": "^9.0.0-rc01",
         "@freon4dsl/core": "~2.1.0",
         "@freon4dsl/core-svelte": "~2.1.0",
         "@freon4dsl/weblib-flowbite": "~2.1.0",

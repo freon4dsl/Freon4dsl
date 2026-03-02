@@ -135,6 +135,7 @@
         FREON.astChanger.change(() => {
             box.getPropertyValue().splice(index, 1);
         });
+        // TODO change the above into box.removeItem(index)
     }
 
     // The following three functions need to be included for the editor to function properly.
