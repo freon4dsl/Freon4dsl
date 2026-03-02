@@ -1,5 +1,5 @@
 import { FREON } from "../../environment/index.js"
-import { IWithName, NodeY, NodeX, ScoperModel, UnitA, UnitB } from './scoper-model/index.js';
+import { type IWithName, NodeY, NodeX, ScoperModel, UnitA, UnitB } from "./scoper-model/index.js"
 import { FreNodeReference } from '../../ast/index.js';
 
 export class ModelCreator {

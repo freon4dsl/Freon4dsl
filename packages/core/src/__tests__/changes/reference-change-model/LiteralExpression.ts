@@ -2,7 +2,7 @@
 // TEMPLATE ConceptTemplate.generateConceptPrivate(...)
 
 import { type FreExpressionNode} from "../../../ast/index.js"
-import { FreParseLocation } from "../../../reader/index.js";
+import { type FreParseLocation } from "../../../reader/index.js"
 import { CalcExpression } from "./internal.js";
 
 /**

@@ -1,4 +1,4 @@
-import { observablepart, FreNodeBaseImpl, FreModel } from "../../../ast/index.js";
+import { observablepart, FreNodeBaseImpl, type FreModel } from "../../../ast/index.js"
 import { FreUtils } from "../../../util/index.js";
 import { FreLanguage } from "../../../language/index.js";
 import { UndoUnit } from "./UndoUnit.js";

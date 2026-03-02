@@ -3,15 +3,8 @@
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
  * to the changes in the state of its properties.
  */
-import {
-    observablepart,
-    observablepartlist,
-    observableprim,
-    observableprimlist,
-    FreNodeBaseImpl,
-    FreModelUnit,
-} from "../../../ast/index.js";
-import { UndoPart } from "./UndoPart.js";
+import { observablepart, observablepartlist, observableprim, observableprimlist, FreNodeBaseImpl, type FreModelUnit } from "../../../ast/index.js"
+import { type UndoPart } from "./UndoPart.js"
 import { FreUtils } from "../../../util/index.js";
 import { FreLogger } from "../../../logging/index.js";
 

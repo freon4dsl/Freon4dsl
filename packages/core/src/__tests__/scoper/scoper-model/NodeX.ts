@@ -4,8 +4,8 @@
 import { type IWithName, type IWithoutName } from "./internal.js";
 
 import { makeObservable, action } from "mobx";
-import { FreNamedNode, FreNodeReference, MobxModelElementImpl, observablepartlist, observableprim } from '../../../ast/index.js';
-import { FreParseLocation } from '../../../reader/index.js';
+import { type FreNamedNode, type FreNodeReference, MobxModelElementImpl, observablepartlist, observableprim } from "../../../ast/index.js"
+import { type FreParseLocation } from "../../../reader/index.js"
 import { FreUtils } from '../../../util/index.js';
 import { matchElementList, matchReferenceList } from '../../../ast-utils/index.js';
 

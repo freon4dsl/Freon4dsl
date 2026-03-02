@@ -1,12 +1,12 @@
 import { runInAction } from "mobx";
-import { FreUndoManager } from "../../change-manager/FreUndoManager.js"
+import { type FreUndoManager } from "../../change-manager/FreUndoManager.js"
 import { CoreConfig, FREON } from "../../environment/index.js"
 import { notNullOrUndefined } from "../../util/index.js"
 import { UndoModel } from "./change-model/UndoModel.js";
 import { UndoUnit } from "./change-model/UndoUnit.js";
 import { UndoPart } from "./change-model/UndoPart.js";
-import { FreDelta, FreTransactionDelta } from "../../change-manager/index.js"
-import { FreModelUnit } from "../../ast/index.js";
+import { type FreDelta, FreTransactionDelta } from "../../change-manager/index.js"
+import { type FreModelUnit } from "../../ast/index.js"
 import { describe, it, expect, beforeEach } from "vitest";
 
 /*

@@ -3,7 +3,7 @@
 
 import { MobxModelElementImpl, type FreExpressionNode } from "../../../ast/index.js";
 import { FreUtils } from "../../../util/index.js";
-import { FreParseLocation } from '../../../reader/index.js';
+import { type FreParseLocation } from "../../../reader/index.js"
 import { makeObservable, action } from "mobx";
 
 /**
