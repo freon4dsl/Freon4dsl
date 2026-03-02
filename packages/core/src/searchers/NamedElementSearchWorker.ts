@@ -1,4 +1,5 @@
 import type { FreNode } from "../ast/index.js";
+import { notNullOrUndefined } from "../util/index.js"
 import type { FreSearchWorker } from "./FreSearchWorker.js";
 
 export class NamedElementSearchWorker implements FreSearchWorker {
@@ -17,15 +18,14 @@ export class NamedElementSearchWorker implements FreSearchWorker {
         return this.$result;
     }
 
-    // @ts-ignore
     // parameter is present to adhere to signature of super class
-    execAfter(node: FreNode): boolean {
+    execAfter(_node: FreNode): boolean {
         // unused
         return false;
     }
 
     execBefore(node: FreNode): boolean {
-        if (!!this.metatype) {
+        if (notNullOrUndefined(this.metatype)) {
             if (this.metatype === node.freLanguageConcept() || this.metatype === "FreNodeReference") {
                 this.checkElement(node);
             }

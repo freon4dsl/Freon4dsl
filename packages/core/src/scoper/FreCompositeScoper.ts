@@ -28,8 +28,8 @@ export class FreCompositeScoper implements FreScoper {
      */
     resolvePathName(refToResolve: FreNodeReference<FreNamedNode>): FreNamedNode | undefined {
         // console.log('resolving: ', refToResolve.pathname)
-        let baseNamespace: FreNamespace = findEnclosingNamespace(refToResolve);
-        let currentNamespace: FreNamespace = baseNamespace;
+        const baseNamespace: FreNamespace = findEnclosingNamespace(refToResolve);
+        const currentNamespace: FreNamespace = baseNamespace
         let found: FreNamedNode = undefined;
         if (notNullOrUndefined(baseNamespace)) {
             found = resolvePathStartingInNamespace(baseNamespace, currentNamespace, refToResolve.pathname, this, refToResolve.typeName);
@@ -48,7 +48,7 @@ export class FreCompositeScoper implements FreScoper {
      */
     getVisibleNodes(node: FreNode | FreNodeReference<FreNamedNode>, metatype?: string): FreNamedNode[] {
         // console.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
-        if (!!node) {
+        if (notNullOrUndefined(node)) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
                 const result = scoper.getVisibleNodes(node, metatype);
@@ -68,7 +68,7 @@ export class FreCompositeScoper implements FreScoper {
      */
     importedNamespaces(node: FreNode): FreNamespaceInfo[] {
         // todo should we check whether node 'is' a namespace?
-        if (!!node) {
+        if (notNullOrUndefined(node)) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
                 const result = scoper.importedNamespaces(node);
@@ -89,7 +89,7 @@ export class FreCompositeScoper implements FreScoper {
     alternativeNamespaces(node: FreNode): FreNamespaceInfo[] {
         // todo should we check whether node 'is' a namespace?
         LOGGER.log('COMPOSITE alternativeNamespaces for ' + node.freId() + " of type " + node.freLanguageConcept());
-        if (!!node) {
+        if (notNullOrUndefined(node)) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
                 const result: FreNamespaceInfo[] = scoper.alternativeNamespaces(node);

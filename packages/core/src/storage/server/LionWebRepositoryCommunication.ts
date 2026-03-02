@@ -3,6 +3,7 @@ import type { ClientResponse } from "@lionweb/server-client";
 import type { ListPartitionsResponse } from "@lionweb/server-shared";
 import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
+import { isNullOrUndefined, notNullOrUndefined } from "../../util/index.js"
 import { createLionWebJsonNode, FreLionwebSerializer, type ServerResponse, type VoidServerResponse } from "../index.js"
 import type { FreSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
@@ -18,7 +19,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     static instance: LionWebRepositoryCommunication;
 
     static getInstance(): LionWebRepositoryCommunication {
-        if (!!!LionWebRepositoryCommunication.instance) {
+        if (isNullOrUndefined(LionWebRepositoryCommunication.instance)) {
             LionWebRepositoryCommunication.instance = new LionWebRepositoryCommunication();
         }
         return LionWebRepositoryCommunication.instance;
@@ -28,18 +29,17 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         this.client.loggingOn = true;
     }
 
-    private _nodePort = 3005; // process.env.NODE_PORT || 3005;
-    private _SERVER_IP = `http://127.0.0.1`;
-    private _SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
+    // private _nodePort = 3005; // process.env.NODE_PORT || 3005;
+    // private _SERVER_IP = `http://127.0.0.1`;
+    // private _SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
 
     onError(msg: string, severity: FreErrorSeverity): void {
         // default implementation
         console.error(`LionWebRepositoryCommunication ${severity}: ${msg}`);
     }
 
-    // TODO fix callback
-    // @ts-ignore
-    async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<ServerResponse<string[]>> {
+    // TODO Why is there a callback and a return?
+    async generateIds(quantity: number, _callback: (strings: string[]) => void): Promise<ServerResponse<string[]>> {
         const ids = await this.client.bulk.ids(quantity);
         return {
             result: ids.body.ids,
@@ -53,14 +53,14 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         const rootNode = createLionWebJsonNode();
         rootNode.classifier = jsonUnit[0].classifier;
         rootNode.id = jsonUnit[0].id;
-        let partition = {
+        const partition = {
             serializationFormatVersion: "2023.1",
             languages: collectUsedLanguages([rootNode]),
             nodes: [rootNode],
         };
         const partitionResult = await this.client.bulk.createPartitions(partition);
         LOGGER.log("createpartition result is " + JSON.stringify(partitionResult));
-        let output = {
+        const output = {
             serializationFormatVersion: "2023.1",
             languages: collectUsedLanguages(jsonUnit),
             nodes: jsonUnit,
@@ -87,7 +87,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         ) {
             const model = this.lionweb_serial.convertToJSON(unit);
             const usedLanguages = collectUsedLanguages(model);
-            let output = {
+            const output = {
                 serializationFormatVersion: "2023.1",
                 languages: usedLanguages,
                 nodes: model,
@@ -149,7 +149,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         LOGGER.log(`loadModelList`);
         const repos = await this.client.dbAdmin.listRepositories();
         const res = repos.body.repositories;
-        if (!!res) {
+        if (notNullOrUndefined(res)) {
             return {
                 result: res.map(repoConfig => repoConfig.name),
                 errors: []
@@ -169,7 +169,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     async loadUnitList(modelName: string): Promise<ServerResponse<FreUnitIdentifier[]>> {
         LOGGER.log(`loadUnitList`);
         this.client.repository = modelName;
-        let modelUnits: ClientResponse<ListPartitionsResponse> = await this.client.bulk.listPartitions();
+        const modelUnits: ClientResponse<ListPartitionsResponse> = await this.client.bulk.listPartitions();
         const unitIds =  modelUnits.body.chunk.nodes.map((n) => {
             return { name: "name " + n.id, id: n.id, type: FreLanguage.getInstance().classifierByKey(n.classifier.key).typeName };
         });
@@ -191,10 +191,10 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         this.client.repository = modelName;
         if (!!unit.name && unit.name.length > 0) {
             const res = await this.client.bulk.retrieve([unit.id]);
-            if (!!res) {
+            if (notNullOrUndefined(res)) {
                 try {
                     LOGGER.log(JSON.stringify(res, null, 2));
-                    let unit = this.lionweb_serial.toTypeScriptInstance(res.body.chunk);
+                    const unit = this.lionweb_serial.toTypeScriptInstance(res.body.chunk);
                     return {
                         result: unit as FreNode,
                         errors: []
@@ -209,15 +209,15 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     }
 
 
-    // @ts-ignore
-    private handleError(e: Error) {
-        let errorMess: string = e.message;
-        if (e.message.includes("aborted")) {
-            errorMess = `Time out: no response from ${this._SERVER_URL}.`;
-        }
-        LOGGER.error(errorMess);
-        this.onError(errorMess, FreErrorSeverity.NONE);
-    }
+    // TODO Remove this?
+    // private handleError(e: Error) {
+    //     let errorMess: string = e.message;
+    //     if (e.message.includes("aborted")) {
+    //         errorMess = `Time out: no response from ${this._SERVER_URL}.`;
+    //     }
+    //     LOGGER.error(errorMess);
+    //     this.onError(errorMess, FreErrorSeverity.NONE);
+    // }
 
     async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<VoidServerResponse> {
         LOGGER.log(`renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);

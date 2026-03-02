@@ -9,7 +9,7 @@ export interface FreSerializer {
      * Convert a JSON object to a Freon Node.
      * @param jsonObject The object to convert
      */
-    toTypeScriptInstance(jsonObject: Object): FreNode;
+    toTypeScriptInstance(jsonObject: object): FreNode;
 
     /**
      * Convert a Freon Node to a JSOn object that can be serialized.

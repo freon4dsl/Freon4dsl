@@ -20,7 +20,7 @@ import {
     jsonAsString,
     notNullOrUndefined,
     FREON,
-    isInMemoryError,
+    type IModelManager
 } from "@freon4dsl/core"
 import { runInAction } from "mobx"
 
@@ -103,7 +103,7 @@ export class WebappConfigurator {
             // save any model that is already present
             if (notNullOrUndefined(this.modelStore.model)) {
                 const saveResult = await this.modelStore.saveModel()
-                if (isInMemoryError(saveResult)) {
+                if (isModelManagementError(saveResult)) {
                     setUserMessage(saveResult.message)
                     return
                 }
@@ -114,7 +114,7 @@ export class WebappConfigurator {
             resetEditorInfo()
             // create new model instance in memory and set its name
             const result = await this.modelStore.openModel(modelName)
-            if (isInMemoryError(result)) {
+            if (isModelManagementError(result)) {
                 setUserMessage(result.message)
             } else {
                 const unitIdentifiers: FreUnitIdentifier[] = this.modelStore.getUnitIdentifiers()
@@ -142,7 +142,7 @@ export class WebappConfigurator {
     async getAllModelNames(): Promise<string[]> {
         if (notNullOrUndefined(this.modelStore)) {
             const result = await this.modelStore?.getModels()
-            if (isInMemoryError(result)) {
+            if (isModelManagementError(result)) {
                 console.error("getAllModelNames: NO MODEL NAMES")
                 setUserMessage(result.message)
                 return []
@@ -230,7 +230,7 @@ export class WebappConfigurator {
     async deleteModel() {
         // console.log("deleting current model")
         const result = await this.modelStore?.deleteModel()
-        if (isInMemoryError(result)) {
+        if (isModelManagementError(result)) {
             setUserMessage(result.message, FreErrorSeverity.Error)
             return
         }
@@ -254,9 +254,9 @@ export class WebappConfigurator {
     }
 
     async renameModel(newName: string) {
-        console.log("rename model")
+        LOGGER.log("rename model")
         const response = await this.modelStore?.renameModel(newName)
-        if (isInMemoryError(response)) {
+        if (isModelManagementError(response)) {
             setUserMessage(response.message, FreErrorSeverity.Error)
         }
     }
@@ -264,7 +264,7 @@ export class WebappConfigurator {
     async saveModel() {
         LOGGER.log("saving model")
         const response = await this.modelStore?.saveModel()
-        if (isInMemoryError(response)) {
+        if (isModelManagementError(response)) {
             setUserMessage(response.message, FreErrorSeverity.Error)
         }
     }
@@ -298,7 +298,7 @@ export class WebappConfigurator {
     private async createNewUnit(newName: string, unitType: string) {
         LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: " + newName)
         const newUnitResult = await this.modelStore?.createUnit(newName, unitType)
-        if (isInMemoryError(newUnitResult)) {
+        if (isModelManagementError(newUnitResult)) {
             setUserMessage(`Model unit of type '${unitType}' could not be created (${newUnitResult.message}).`)
         } else {
             // await this.updateUnitList()
@@ -339,7 +339,7 @@ export class WebappConfigurator {
             // console.log("delete called for unit: " + unitId.name)
             // get rid of the unit on the server
             const response = await this.modelStore?.deleteUnitById(unitId)
-            if (isInMemoryError(response)) {
+            if (isModelManagementError(response)) {
                 return
             }
             // get rid of the name in the navigator => done through callback
@@ -552,7 +552,7 @@ export class WebappConfigurator {
      ***********************************************************/
 
     modelChanged(store: IModelManager): void {
-        console.log(`modelChanged: ${store?.model?.name}`)
+        LOGGER.log(`modelChanged: ${store?.model?.name}`)
         if (notNullOrUndefined(store?.model)) {
             editorInfo.modelName = store?.model?.name
             editorInfo.unitIds = store.getUnitIdentifiers()
