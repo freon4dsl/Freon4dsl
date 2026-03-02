@@ -15,6 +15,10 @@ import { LayoutBox, ListDirection } from "./LayoutBox.js";
 export abstract class ListBox extends LayoutBox {
     readonly kind: string = "ListBox";
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
+    // Controls whether drag-and-drop reordering is enabled for this list.
+    // When false, drag handles are hidden and items cannot be reordered.
+    // Defaults to true. Can be set to false via initializer: { canDragAndDrop: false }
+    canDragAndDrop: boolean = true;
 
     protected constructor(
         node: FreNode,

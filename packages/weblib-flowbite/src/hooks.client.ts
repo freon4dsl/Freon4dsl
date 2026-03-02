@@ -9,9 +9,9 @@ import {
 import { WebappConfigurator } from "$lib/language/WebappConfigurator.js";
 import { ServerCommunication } from "@freon4dsl/core";
 
-WebappConfigurator.getInstance().setEnvironment(
-  LanguageEnvironment.getInstance(),
-  ServerCommunication.getInstance(),
-);
+// WebappConfigurator.getInstance().setEnvironment(
+//   LanguageEnvironment.getInstance(),
+//   ServerCommunication.getInstance(),
+// );
 // configureExternals();
 // configureLoggers();

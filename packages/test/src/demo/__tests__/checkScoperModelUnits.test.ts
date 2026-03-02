@@ -1,6 +1,5 @@
 import { DemoModel, Demo } from "../freon/language/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
-import { DemoStdlib } from "../freon/stdlib/DemoStdlib.js";
 import { DemoUnitCreator } from "./DemoUnitCreator.js";
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { describe, test, expect } from "vitest";
@@ -10,12 +9,12 @@ import { isInScope, getVisibleNames } from '../../utils/HelperFunctions.js';
 describe("testing Scoper on model units", () => {
     describe("Scoper.getVisibleNodes from DemoModel with Units", () => {
         CoreConfig.initialize(DemoEnvironment.getInstance(), null)
-        let scoper = FREON.environment.scoper;
-        let stdlib = FREON.environment.stdlib;
-        let model: Demo = new DemoModelCreator().createModelWithMultipleUnits();
+        const scoper = FREON.environment.scoper;
+        const stdlib = FREON.environment.stdlib
+        const model: Demo = new DemoModelCreator().createModelWithMultipleUnits()
 
         test("visible elements in model", () => {
-            let vi = getVisibleNames(scoper.getVisibleNodes(model));
+            const vi = getVisibleNames(scoper.getVisibleNodes(model))
             expect(vi.length).toBe(6);
             expect(vi).not.toContain("ModelWithUnits");
             expect(vi).toContain("DemoModel_with_inheritance");
@@ -195,19 +194,19 @@ describe("testing Scoper on model units", () => {
 
         test("isInscope 'Person'", () => {
             // Person is Entity in DemoModel_1
-            let nameTotest: string = "Person";
+            const nameTotest: string = "Person";
             testEntity(scoper, model.models[0], nameTotest);
         });
 
         test("isInscope 'Company'", () => {
             // Company is Entity in DemoModel_1
-            let nameTotest: string = "Company";
+            const nameTotest: string = "Company"
             testEntity(scoper, model.models[0], nameTotest);
         });
 
         test("isInscope 'name'", () => {
             // name is Attribute of Person and of Company in DemoModel_1
-            let nameTotest: string = "name";
+            const nameTotest: string = "name"
             expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach(fun => {
@@ -224,7 +223,7 @@ describe("testing Scoper on model units", () => {
 
         test("isInscope 'age'", () => {
             // name is Attribute of Person and of Company in DemoModel_1
-            let nameTotest: string = "age";
+            const nameTotest: string = "age"
             expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach(fun => {
@@ -245,7 +244,7 @@ describe("testing Scoper on model units", () => {
 
         test("isInscope 'VAT_Number'", () => {
             // VAT_Number is Attribute of Company in DemoModel_1
-            let nameTotest: string = "VAT_Number";
+            const nameTotest: string = "VAT_Number"
             expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach(fun => {
@@ -266,7 +265,7 @@ describe("testing Scoper on model units", () => {
 
         test("isInscope 'length'", () => {
             // length is Function of DemoModel_1
-            let nameTotest: string = "length";
+            const nameTotest: string = "length"
             expect(isInScope(scoper.getVisibleNodes(model.models[0]), nameTotest)).toBe(true);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach(fun => {
@@ -283,7 +282,7 @@ describe("testing Scoper on model units", () => {
 
         test("isInscope 'first'", () => {
             // first is Function of Person in DemoModel_1
-            let nameTotest: string = "first";
+            const nameTotest: string = "first"
             expect(isInScope(scoper.getVisibleNodes(model, "DemoFunction"), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach(fun => {
@@ -304,7 +303,7 @@ describe("testing Scoper on model units", () => {
 
         test("isInscope 'another'", () => {
             // last is Function of DemoModel_1
-            let nameTotest: string = "another";
+            const nameTotest: string = "another"
             expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach(fun => {
@@ -325,7 +324,7 @@ describe("testing Scoper on model units", () => {
 
         test("isInscope 'Variable1'", () => {
             // Variable1 is VarDecl of length of DemoModel_1
-            let nameTotest: string = "Variable1";
+            const nameTotest: string = "Variable1"
             expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach(fun => {
@@ -346,7 +345,7 @@ describe("testing Scoper on model units", () => {
 
         test("isInscope 'Resultvar'", () => {
             // Resultvar is VarDecl of first of Person of DemoModel_1
-            let nameTotest: string = "Resultvar";
+            const nameTotest: string = "Resultvar"
             expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach(fun => {

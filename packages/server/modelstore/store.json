@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 44,
+    "currentPostfix": 43,
     "models": [
         {
             "folder": "modelstore",
@@ -632,6 +632,18 @@
             ]
         },
         {
+            "name": "Prims2",
+            "folder": "Prims2",
+            "language": "Prims",
+            "version": "1",
+            "units": [
+                {
+                    "name": "Unit",
+                    "file": "Unit.json"
+                }
+            ]
+        },
+        {
             "name": "OptionalTest1",
             "folder": "SECOND",
             "language": "Test1",
@@ -647,5 +659,6 @@
                 }
             ]
         }
+
     ]
 }

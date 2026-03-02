@@ -47,16 +47,8 @@ packages/meta/src/scoperdef/parser/ScoperGrammar.pegjs
 packages/meta/src/validatordef/parser/ValidatorGrammar.js
 packages/meta/src/validatordef/parser/ValidatorGrammar.pegjs
 
-/packages/test/src/*/config/
-/packages/test/src/*/editor/
-/packages/test/src/*/interpreter/
-/packages/test/src/*/scoper/
-/packages/test/src/*/commandline/
-/packages/test/src/*/stdlib/
-/packages/test/src/*/typer/
-/packages/test/src/*/utils/
-/packages/test/src/*/validator/
-/packages/test/src/*/index.ts
+/packages/test/src/*/freon/
+/packages/samples/*/src/freon/
 
 !/packages/test/src/qualifiedNameScoper/scoper/
 /packages/test/src/testDefinedScoper/defs/Language.ast

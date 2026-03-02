@@ -28,18 +28,20 @@ import {
 
 export class DemoModelCreator {
     public createModelWithMultipleUnits(): Demo {
-        let model
-        runInAction( () => {
-            model = Demo.create({ name: "ModelWithUnits" });
-            model.models.push(this.createInheritanceUnit());
-            model.models.push(this.createCorrectUnit());
+        let model: Demo
+        runInAction(() => {
+            model = Demo.create({ name: "ModelWithUnits" })
+        })
+        FREON.astChanger.change(() => {
+            model.models.push(this.createInheritanceUnit())
+            model.models.push(this.createCorrectUnit())
         })
         return model!;
     }
 
     public createModelWithIsUniqueError(): Demo {
-        let result = this.createCorrectModel();
-        let unit: DemoModel | undefined = result.models.find((m) => m.name === "CorrectUnit");
+        const result = this.createCorrectModel()
+        const unit: DemoModel | undefined = result.models.find((m) => m.name === "CorrectUnit")
 
         FREON.astChanger.change( () => {
             const companyEnt = DemoEntity.create({ name: "Company", x: "xxx", simpleprop: "simple" }); // another one with the same unitName
@@ -122,41 +124,41 @@ export class DemoModelCreator {
     }
 
     public createModelWithAppliedfeature(): Demo {
-        let result = this.createIncorrectModel();
-        let unit: DemoModel | undefined = result.models.find((m) => m.name === "DemoModel_1");
+        const result = this.createIncorrectModel();
+        const unit: DemoModel | undefined = result.models.find((m) => m.name === "DemoModel_1")
         // add new attribute to Person entity
         FREON.astChanger.change( () => {
             if (notNullOrUndefined(unit)) {
-                let personent = unit.entities[0]; // Person
-                let personattr = new DemoAttributeWithEntityType();
+                const personent = unit.entities[0] // Person
+                const personattr = new DemoAttributeWithEntityType()
                 personattr.name = "attrFromPerson";
                 personattr.declaredType = FreNodeReference.create<DemoEntity>(unit.entities[1], "DemoEntity"); // Company
                 personent.entAttributes.push(personattr);
 
 
                 // add new attribute to Company entity
-                let companyent = unit.entities[1]; // Company
-                let compattr = new DemoAttributeWithEntityType();
+                const companyent = unit.entities[1] // Company
+                const compattr = new DemoAttributeWithEntityType()
                 compattr.name = "attrFromCompany";
                 compattr.declaredType = FreNodeReference.create<DemoEntity>(unit.entities[0], "DemoEntity"); // Person
                 companyent.entAttributes.push(compattr);
 
 
                 // find the function to be changed
-                let length = unit.functions[0];
+                const length = unit.functions[0]
 
                 // create an expression that includes applied features
-                let expression: DemoVariableRef = new DemoVariableRef();
+                const expression: DemoVariableRef = new DemoVariableRef()
                 expression.variable = FreNodeReference.create<DemoVariable>(length.parameters[0], "DemoVariable"); // Variable1: Person
                 // add an applied feature to the variable reference
-                let firstFeature: DemoAttributeRef = new DemoAttributeRef();
+                const firstFeature: DemoAttributeRef = new DemoAttributeRef()
                 firstFeature.attribute = FreNodeReference.create<DemoAttributeWithEntityType>(
                   personattr,
                   "DemoAttributeWithEntityType",
                 ); // Person.attrFromPerson: Company
                 expression.appliedfeature = firstFeature;
                 // add a second applied feature to the attribute reference
-                let secondFeature: DemoAttributeRef = new DemoAttributeRef();
+                const secondFeature: DemoAttributeRef = new DemoAttributeRef()
                 secondFeature.attribute = FreNodeReference.create<DemoAttributeWithEntityType>(
                   compattr,
                   "DemoAttributeWithEntityType",
@@ -175,14 +177,14 @@ export class DemoModelCreator {
         let model
         FREON.astChanger.change( () => {
             model = Demo.create({ name: "ModelWithInheritance" });
-            let inheritanceModel = this.createInheritanceUnit();
+            const inheritanceModel = this.createInheritanceUnit()
             if (notNullOrUndefined(inheritanceModel)) model.models.push(inheritanceModel);
         })
         return model!;
     }
 
-    private createInheritanceUnit() {
-        let inheritanceModel
+    private createInheritanceUnit(): DemoModel {
+        let inheritanceModel: DemoModel
         FREON.astChanger.change( () => {
             inheritanceModel = DemoModel.create({ name: "DemoModel_with_inheritance" });
 
@@ -256,9 +258,9 @@ export class DemoModelCreator {
     }
 
     public createInheritanceWithLoop(): Demo {
-        let model = this.createInheritanceModel();
+        const model = this.createInheritanceModel()
         FREON.astChanger.change( () => {
-            let unit = model.models.find((m) => m.name === "DemoModel_with_inheritance");
+            const unit = model.models.find((m) => m.name === "DemoModel_with_inheritance")
             // let Vehicle inherit from RaceBike
             if (notNullOrUndefined(unit)) {
                 unit.entities[0].baseEntity = FreNodeReference.create<DemoEntity>(unit.entities[3], "DemoEntity");
@@ -271,7 +273,7 @@ export class DemoModelCreator {
         let model
         FREON.astChanger.change( () => {
             model = Demo.create({ name: "InCorrectModel" }); // , models: [DemoModel.create({name: "DemoModel_1"})]});
-            let unit: DemoModel = DemoModel.create({ name: "DemoModel_1" });
+            const unit: DemoModel = DemoModel.create({ name: "DemoModel_1" })
             model.models.push(unit);
 
             const company = this.makeCompanyEntity();
@@ -384,7 +386,7 @@ export class DemoModelCreator {
         let model
         FREON.astChanger.change( () => {
             model = Demo.create({ name: "CorrectModel" });
-            let unit = this.createCorrectUnit();
+            const unit = this.createCorrectUnit()
             model.models.push(unit);
         })
         return model!;

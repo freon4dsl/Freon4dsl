@@ -6,17 +6,15 @@ import {
     RtNumber,
     RtBoolean,
     RtError,
-    RtArray,
-    RtString,
     isRtError,
     isRtBoolean,
-    isNullOrUndefined, astToString, notNullOrUndefined
+    isNullOrUndefined, notNullOrUndefined
 } from '@freon4dsl/core';
 import {
     AndExpression,
     Answer,
     EqualsExpression, ExamplePage, FlowRule,
-    Fraction, Grade,
+    Fraction,
     GreaterOrEqualsExpression,
     GreaterThenExpression, InDepthMaterial, LastStep,
     LessOrEqualsExpression,
@@ -39,6 +37,9 @@ import { EducationEnvironment } from "../freon/config/EducationEnvironment.js";
 
 let main: IMainInterpreter
 
+const CURRENT_FLOW = new String("CURRENT_FLOW")
+const NR_OF_CORRECT_ANSWERS = new String("NR_OF_CORRECT_ANSWERS")
+
 /**
  * The class containing all interpreter functions written by the language engineer.
  * This class is initially empty, and will not be overwritten if it already exists.
@@ -54,7 +55,7 @@ export class EducationInterpreter extends EducationInterpreterBase {
         // Puts the current flow in the context
         const newCtx = new InterpreterContext(ctx)
         const flow = new RtFlow(node.flow.referred)
-        newCtx.set("CURRENT_FLOW", flow)
+        newCtx.set(CURRENT_FLOW, flow)
         for (const s of node.scenarios) {
             const scenarioResult = main.evaluate(s, newCtx)
             if (isRtBoolean(scenarioResult) && scenarioResult.asBoolean() === false) {
@@ -129,14 +130,14 @@ export class EducationInterpreter extends EducationInterpreterBase {
                 }
             }
         }
-        newCtx.set("NR_OF_CORRECT_ANSWERS", new RtNumber(nrOfCorrectAnswers))
+        newCtx.set(NR_OF_CORRECT_ANSWERS, new RtNumber(nrOfCorrectAnswers))
 
         // Find the grade for the given answers
         if (notNullOrUndefined(currentPage)) {
             const grade = main.evaluate(currentPage, newCtx) as RtGrade
 
             //  Find rule for current page
-            const currentFlow = ctx.find("CURRENT_FLOW") as RtFlow
+            const currentFlow = ctx.find(CURRENT_FLOW) as RtFlow
             if (isNullOrUndefined(currentFlow)) {
                 return new RtError(`No flow found for page ${currentPage.name}`)
             }
@@ -210,8 +211,8 @@ export class EducationInterpreter extends EducationInterpreterBase {
         return givenAnswer.equals(expected)
     }
 
-    override evalNrOfCorrectAnswers(node: NrOfCorrectAnswers, ctx: InterpreterContext): RtObject {
-        return ctx.find("NR_OF_CORRECT_ANSWERS")
+    override evalNrOfCorrectAnswers(_node: NrOfCorrectAnswers, ctx: InterpreterContext): RtObject {
+        return ctx.find(NR_OF_CORRECT_ANSWERS)
     }
 
     override evalAnswer(node: Answer, ctx: InterpreterContext): RtObject {
@@ -224,21 +225,21 @@ export class EducationInterpreter extends EducationInterpreterBase {
         return new RtError("evalAnswer: question not found")
     }
 
-    override evalLastStep(node: LastStep, ctx: InterpreterContext): RtObject {
+    override evalLastStep(_node: LastStep, _ctx: InterpreterContext): RtObject {
         return RtBoolean.TRUE
     }
 
     /////////////////// Literals
 
-    override evalSimpleNumber(node: SimpleNumber, ctx: InterpreterContext): RtObject {
+    override evalSimpleNumber(node: SimpleNumber, _ctx: InterpreterContext): RtObject {
         return new RtNumber(node.value)
     }
 
-    override evalNumberLiteralExpression(node: NumberLiteralExpression, ctx: InterpreterContext): RtObject {
+    override evalNumberLiteralExpression(node: NumberLiteralExpression, _ctx: InterpreterContext): RtObject {
         return new RtNumber(node.value)
     }
 
-    override evalFraction(node: Fraction, ctx: InterpreterContext): RtObject {
+    override evalFraction(node: Fraction, _ctx: InterpreterContext): RtObject {
         return new RtFraction(new RtNumber(node.numerator), new RtNumber(node.denominator))
     }
 

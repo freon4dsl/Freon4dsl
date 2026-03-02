@@ -1,4 +1,5 @@
-import { issuestoString, LanguageRegistry, LionWebJsonChunk, LionWebValidator } from "@lionweb/validation"
+import { issuestoString, LanguageRegistry, LionWebValidator } from "@lionweb/validation"
+import { LionWebJsonChunk } from "@lionweb/json"
 import * as fs from "fs"
 import { IRouterContext } from "@koa/router"
 import * as path from "node:path"

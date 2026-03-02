@@ -31,8 +31,8 @@ export class CollectDeclaredNodesWorker implements AstWorker {
         return false;
     }
 
-    // @ts-ignore parameter is present to adhere to signature of super class
-    execAfter(freNode: FreNode): boolean {
+    // parameter is present to adhere to signature of super class
+    execAfter(_freNode: FreNode): boolean {
         return false;
     }
 }
