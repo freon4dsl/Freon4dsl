@@ -1,5 +1,6 @@
-import type { LionWebJsonChunk, LionWebJsonNode} from "@lionweb/validation";
-import { LanguageRegistry, LionWebValidator, MetaPointers } from "@lionweb/validation";
+import type { LionWebJsonChunk, LionWebJsonNode } from "@lionweb/json"
+import { MetaPointers } from "@lionweb/json-utils"
+import { LanguageRegistry, LionWebValidator } from "@lionweb/validation";
 import type {
     FreMetaClassifier,
     FreMetaConcept,
@@ -554,16 +555,12 @@ export class LionWebTemplate {
         switch (prop.type.name) {
             case "number":
                 return "Integer"
-                break
             case "string":
                 return "String"
-                break
             case "boolean":
                 return "Boolean"
-                break
             case "identifier":
                 return "String"
-                break
             default:
                 return prop.type.name
         }

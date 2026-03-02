@@ -251,7 +251,11 @@ export class FreProjectionHandler {
 
     getKnownTableProjectionsFor(conceptName: string): string[] {
         LOGGER.log("getKnownTableProjectionsFor: " + conceptName);
-        const providerConstructor = this.conceptNameToProviderConstructor.get(conceptName)(this);
+        const constructorFunction = this.conceptNameToProviderConstructor.get(conceptName);
+        if (!constructorFunction) {
+            return [];
+        }
+        const providerConstructor = constructorFunction(this);
         if (!!providerConstructor) {
             return providerConstructor.knownTableProjections;
         } else {

@@ -69,7 +69,7 @@ export class FreNamespace {
      */
     public static create(node: FreNode): FreNamespace {
         const existingNS = this.allNamespaces.get(node);
-        if (!!existingNS) {
+        if (notNullOrUndefined(existingNS)) {
             return existingNS;
         } else {
             const result = new FreNamespace(node);
@@ -143,7 +143,7 @@ export class FreNamespace {
      */
     public getParentNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[]): FreNamedNode[] {
         const parentNamespace: FreNamespace = this.findParentNamespace(this);
-        let resultSoFar: Set<FreNamedNode> = new Set();
+        const resultSoFar: Set<FreNamedNode> = new Set();
         if (notNullOrUndefined(parentNamespace) && !visitedNamespaces.includes(parentNamespace)) {
             // We include all visible nodes from the parent, not only the declared nodes.
             parentNamespace.getVisibleNodes(mainScoper, visitedNamespaces, PUBLIC_AND_PRIVATE).forEach(x => {
@@ -221,7 +221,7 @@ export class FreNamespace {
      */
     public getAlternativeNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[]): FreNamedNode[] {
         const alternatives: FreNamespaceInfo[] = mainScoper.alternativeNamespaces(this._myNode);
-        let resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes(PUBLIC_AND_PRIVATE);
+        const resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes(PUBLIC_AND_PRIVATE)
         alternatives.forEach(namespaceInfo => {
             const nsNode = namespaceInfo._myNode;
             if (notNullOrUndefined(nsNode)) {
@@ -277,7 +277,7 @@ export class FreNamespace {
             return this.getAlternativeNodes(mainScoper, visitedNamespaces);
         } else {
             // First, add all the declared nodes.
-            let resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes(publicOnly);
+            const resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes(publicOnly)
             this.getParentNodes(mainScoper, visitedNamespaces).forEach(x => {
                 resultSoFar.add(x);
             });
@@ -348,14 +348,14 @@ export class FreNamespace {
         // We have to take all names in the path into account.
         // Search the first name within the nodes that are found so far, and continue from there.
         let result: FreNamedNode = undefined;
-        let pathname = toBeResolved.pathname;
+        const pathname = toBeResolved.pathname
         foundSoFar.forEach(node => {
             if (node.name === pathname[0]) {
                 result = node;
             }
         })
         if (pathname.length > 1 && notNullOrUndefined(result) && FreLanguage.getInstance().classifier(result.freLanguageConcept()).isNamespace) {
-            let currentNamespace: FreNamespace = FreNamespace.create(result);
+            const currentNamespace: FreNamespace = FreNamespace.create(result)
             // Note that we need to pass the pathname without its first element,
             // and that the base namespace is different from the previous namespace!
             result = resolvePathStartingInNamespace(this, currentNamespace, pathname.slice(1), mainScoper, toBeResolved.typeName);

@@ -32,8 +32,10 @@ ProductTest {
           "P A R T 3",
         ],
         "_FRE_referred": null,
+        "lionWeb": null,
         "parseLocation": FreParseLocation {
           "column": 7,
+          "filename": "",
           "line": 7,
         },
         "typeName": "InsurancePart",
@@ -46,8 +48,10 @@ ProductTest {
           "PART4,.:;"'|/\\",
         ],
         "_FRE_referred": null,
+        "lionWeb": null,
         "parseLocation": FreParseLocation {
           "column": 21,
+          "filename": "",
           "line": 7,
         },
         "typeName": "InsurancePart",
@@ -62,8 +66,10 @@ ProductTest {
           "PART1",
         ],
         "_FRE_referred": null,
+        "lionWeb": null,
         "parseLocation": FreParseLocation {
           "column": 5,
+          "filename": "",
           "line": 5,
         },
         "typeName": "InsurancePart",
@@ -76,8 +82,10 @@ ProductTest {
           "PA+_=-?"<>{}[]RT2",
         ],
         "_FRE_referred": null,
+        "lionWeb": null,
         "parseLocation": FreParseLocation {
           "column": 14,
+          "filename": "",
           "line": 5,
         },
         "typeName": "InsurancePart",
@@ -85,12 +93,14 @@ ProductTest {
     ],
     "parseLocation": FreParseLocation {
       "column": 1,
+      "filename": "",
       "line": 3,
     },
   },
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "",
     "line": 1,
   },
 }
@@ -128,8 +138,10 @@ ProductTest {
           "PART3",
         ],
         "_FRE_referred": null,
+        "lionWeb": null,
         "parseLocation": FreParseLocation {
           "column": 7,
+          "filename": "",
           "line": 7,
         },
         "typeName": "InsurancePart",
@@ -142,8 +154,10 @@ ProductTest {
           "PART4",
         ],
         "_FRE_referred": null,
+        "lionWeb": null,
         "parseLocation": FreParseLocation {
           "column": 17,
+          "filename": "",
           "line": 7,
         },
         "typeName": "InsurancePart",
@@ -158,8 +172,10 @@ ProductTest {
           "PART1",
         ],
         "_FRE_referred": null,
+        "lionWeb": null,
         "parseLocation": FreParseLocation {
           "column": 5,
+          "filename": "",
           "line": 5,
         },
         "typeName": "InsurancePart",
@@ -172,8 +188,10 @@ ProductTest {
           "PART2",
         ],
         "_FRE_referred": null,
+        "lionWeb": null,
         "parseLocation": FreParseLocation {
           "column": 14,
+          "filename": "",
           "line": 5,
         },
         "typeName": "InsurancePart",
@@ -181,12 +199,14 @@ ProductTest {
     ],
     "parseLocation": FreParseLocation {
       "column": 1,
+      "filename": "",
       "line": 3,
     },
   },
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "",
     "line": 1,
   },
 }
@@ -220,6 +240,7 @@ PitExpTest {
         "$typename": "PitSelfExp",
         "parseLocation": FreParseLocation {
           "column": 3,
+          "filename": "",
           "line": 3,
         },
       },
@@ -231,22 +252,26 @@ PitExpTest {
         "$typename": "PitSelfExp",
         "parseLocation": FreParseLocation {
           "column": 11,
+          "filename": "",
           "line": 3,
         },
       },
       "parseLocation": FreParseLocation {
         "column": 3,
+        "filename": "",
         "line": 3,
       },
     },
     "parseLocation": FreParseLocation {
       "column": 9,
+      "filename": "",
       "line": 2,
     },
   },
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "",
     "line": 1,
   },
 }
@@ -281,6 +306,7 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 3,
+            "filename": "",
             "line": 3,
           },
         },
@@ -292,11 +318,13 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 11,
+            "filename": "",
             "line": 3,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 3,
+          "filename": "",
           "line": 3,
         },
       },
@@ -314,6 +342,7 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 3,
+            "filename": "",
             "line": 4,
           },
         },
@@ -325,11 +354,13 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 14,
+            "filename": "",
             "line": 4,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 3,
+          "filename": "",
           "line": 4,
         },
       },
@@ -347,6 +378,7 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 3,
+            "filename": "",
             "line": 5,
           },
         },
@@ -358,23 +390,27 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 11,
+            "filename": "",
             "line": 5,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 3,
+          "filename": "",
           "line": 5,
         },
       },
     ],
     "parseLocation": FreParseLocation {
       "column": 9,
+      "filename": "",
       "line": 2,
     },
   },
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "",
     "line": 1,
   },
 }
@@ -409,6 +445,7 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 5,
+            "filename": "",
             "line": 4,
           },
         },
@@ -420,11 +457,13 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 13,
+            "filename": "",
             "line": 4,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 5,
+          "filename": "",
           "line": 4,
         },
       },
@@ -442,6 +481,7 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 5,
+            "filename": "",
             "line": 5,
           },
         },
@@ -453,11 +493,13 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 16,
+            "filename": "",
             "line": 5,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 5,
+          "filename": "",
           "line": 5,
         },
       },
@@ -475,6 +517,7 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 5,
+            "filename": "",
             "line": 6,
           },
         },
@@ -486,23 +529,27 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 13,
+            "filename": "",
             "line": 6,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 5,
+          "filename": "",
           "line": 6,
         },
       },
     ],
     "parseLocation": FreParseLocation {
       "column": 9,
+      "filename": "",
       "line": 2,
     },
   },
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "",
     "line": 1,
   },
 }
@@ -537,6 +584,7 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 3,
+            "filename": "",
             "line": 4,
           },
         },
@@ -548,11 +596,13 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 11,
+            "filename": "",
             "line": 4,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 3,
+          "filename": "",
           "line": 4,
         },
       },
@@ -570,6 +620,7 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 3,
+            "filename": "",
             "line": 5,
           },
         },
@@ -581,11 +632,13 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 14,
+            "filename": "",
             "line": 5,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 3,
+          "filename": "",
           "line": 5,
         },
       },
@@ -603,6 +656,7 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 3,
+            "filename": "",
             "line": 6,
           },
         },
@@ -614,23 +668,27 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 11,
+            "filename": "",
             "line": 6,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 3,
+          "filename": "",
           "line": 6,
         },
       },
     ],
     "parseLocation": FreParseLocation {
       "column": 9,
+      "filename": "",
       "line": 2,
     },
   },
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "",
     "line": 1,
   },
 }
@@ -665,6 +723,7 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 3,
+            "filename": "",
             "line": 3,
           },
         },
@@ -676,11 +735,13 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 11,
+            "filename": "",
             "line": 3,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 3,
+          "filename": "",
           "line": 3,
         },
       },
@@ -698,6 +759,7 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 3,
+            "filename": "",
             "line": 4,
           },
         },
@@ -709,11 +771,13 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 14,
+            "filename": "",
             "line": 4,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 3,
+          "filename": "",
           "line": 4,
         },
       },
@@ -731,6 +795,7 @@ PitExpTest {
           "$typename": "PitSelfExp",
           "parseLocation": FreParseLocation {
             "column": 3,
+            "filename": "",
             "line": 5,
           },
         },
@@ -742,23 +807,27 @@ PitExpTest {
           "$typename": "PitAnytypeExp",
           "parseLocation": FreParseLocation {
             "column": 11,
+            "filename": "",
             "line": 5,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 3,
+          "filename": "",
           "line": 5,
         },
       },
     ],
     "parseLocation": FreParseLocation {
       "column": 9,
+      "filename": "",
       "line": 2,
     },
   },
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "",
     "line": 1,
   },
 }
@@ -793,8 +862,10 @@ PartsInitiatorTest {
         "$typename": "NonOptionalLimited",
         "_FRE_name": "SECOND",
       },
+      "lionWeb": null,
       "parseLocation": FreParseLocation {
         "column": 16,
+        "filename": "",
         "line": 10,
       },
       "typeName": "NonOptionalLimited",
@@ -809,6 +880,7 @@ PartsInitiatorTest {
         "_FRE_content": "stringLiteralABC",
         "parseLocation": FreParseLocation {
           "column": 28,
+          "filename": "",
           "line": 3,
         },
       },
@@ -821,18 +893,21 @@ PartsInitiatorTest {
         "_FRE_content": "stringLiteralXYZ",
         "parseLocation": FreParseLocation {
           "column": 30,
+          "filename": "",
           "line": 7,
         },
       },
     ],
     "parseLocation": FreParseLocation {
       "column": 9,
+      "filename": "",
       "line": 2,
     },
   },
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "",
     "line": 1,
   },
 }
@@ -862,6 +937,7 @@ PartsInitiatorTest {
         "_FRE_content": "stringLiteralABC",
         "parseLocation": FreParseLocation {
           "column": 28,
+          "filename": "",
           "line": 3,
         },
       },
@@ -874,18 +950,21 @@ PartsInitiatorTest {
         "_FRE_content": "stringLiteralXYZ",
         "parseLocation": FreParseLocation {
           "column": 30,
+          "filename": "",
           "line": 6,
         },
       },
     ],
     "parseLocation": FreParseLocation {
       "column": 9,
+      "filename": "",
       "line": 2,
     },
   },
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "",
     "line": 1,
   },
 }
@@ -907,6 +986,7 @@ PrimsTest {
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "",
     "line": 1,
   },
 }
@@ -942,14 +1022,17 @@ PartsInitiatorTest {
             "InsuranceRef",
           ],
           "_FRE_referred": null,
+          "lionWeb": null,
           "parseLocation": FreParseLocation {
             "column": 29,
+            "filename": "",
             "line": 5,
           },
           "typeName": "InsurancePart",
         },
         "parseLocation": FreParseLocation {
           "column": 28,
+          "filename": "",
           "line": 3,
         },
       },
@@ -962,18 +1045,21 @@ PartsInitiatorTest {
         "_FRE_content": "stringLiteralXYZ",
         "parseLocation": FreParseLocation {
           "column": 30,
+          "filename": "",
           "line": 7,
         },
       },
     ],
     "parseLocation": FreParseLocation {
       "column": 9,
+      "filename": "",
       "line": 2,
     },
   },
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "",
     "line": 1,
   },
 }

@@ -1,3 +1,4 @@
+import { notNullOrUndefined } from "../util/index.js"
 import type { FreType } from "./FreType.js";
 import type { FreTyper } from "./FreTyper.js";
 import { FreTypeOrderedList } from "./FreTypeOrderedList.js";
@@ -44,7 +45,7 @@ export class FreCommonSuperTypeUtil {
      */
     private static getSupers(inCls: FreType, typer: FreTyper): FreTypeOrderedList<FreType> {
         const classes: FreTypeOrderedList<FreType> = new FreTypeOrderedList<FreType>();
-        if (!!inCls) {
+        if (notNullOrUndefined(inCls)) {
             let nextLevel: FreTypeOrderedList<FreType> = new FreTypeOrderedList<FreType>();
             nextLevel.add(inCls, typer);
             // this.printOrderedList("nextLevel: ", nextLevel );
