@@ -30,7 +30,7 @@ export class ServerCommunication implements IServerCommunication {
 
     set nodePort(value: number) {
         this._nodePort = value;
-        this.SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
+        this.SERVER_URL = this.buildServerUrl();
     }
 
     get SERVER_URL(): string {
@@ -46,7 +46,7 @@ export class ServerCommunication implements IServerCommunication {
 
     set SERVER_IP(value: string) {
         this._SERVER_IP = value;
-        this.SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
+        this.SERVER_URL = this.buildServerUrl();
     }
     static serial: FreModelSerializer = new FreModelSerializer();
     static lionweb_serial: FreLionwebSerializer = new FreLionwebSerializer();
@@ -95,6 +95,19 @@ export class ServerCommunication implements IServerCommunication {
     private _nodePort = 8001; // process.env.NODE_PORT || 8001;
     private _SERVER_IP = `http://127.0.0.1`;
     private _SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
+
+    /**
+     * Builds the server URL from the IP and port.
+     * If the port is not set, NaN, or otherwise invalid, the URL is constructed without a port.
+     * This is important for deployed environments (e.g. Azure) where the URL uses standard
+     * ports (443 for HTTPS, 80 for HTTP) and should not include an explicit port.
+     */
+    private buildServerUrl(): string {
+        if (this._nodePort !== null && this._nodePort !== undefined && !isNaN(this._nodePort)) {
+            return `${this._SERVER_IP}:${this._nodePort}/`;
+        }
+        return `${this._SERVER_IP}/`;
+    }
 
     onError(msg: string, severity: FreErrorSeverity): void {
         // default implementation
