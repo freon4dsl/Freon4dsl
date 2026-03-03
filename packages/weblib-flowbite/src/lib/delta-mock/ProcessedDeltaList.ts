@@ -9,7 +9,7 @@ import type {
     ReferenceAddedEvent,
     ReferenceDeletedEvent,
     ReferenceChangedEvent,
-} from "$lib/delta-mock/types"
+} from "@lionweb/server-delta-shared"
 
 export type ProcessedDelta = {
     delta: DeltaEvent

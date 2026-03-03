@@ -11,18 +11,18 @@ import { CoreConfig, FREON, FreonDeltaClient, LionWebRepositoryCommunication, Se
 /**
  * Initialize everything
  */
-CoreConfig.initializeWithServers(
-    LanguageEnvironment.getInstance(),
-    // ServerCommunication.getInstance(),
-    LionWebRepositoryCommunication.getInstance(),
-    new FreonDeltaClient()
-)
-// CoreConfig.initialize(
+// CoreConfig.initializeWithServers(
 //     LanguageEnvironment.getInstance(),
 //     // ServerCommunication.getInstance(),
 //     LionWebRepositoryCommunication.getInstance(),
-//     // new FreonDeltaClient()
+//     new FreonDeltaClient()
 // )
+CoreConfig.initialize(
+    LanguageEnvironment.getInstance(),
+    ServerCommunication.getInstance(),
+    // LionWebRepositoryCommunication.getInstance(),
+    // new FreonDeltaClient()
+)
 WebappConfigurator.getInstance()
 
 ServerCommunication.getInstance().SERVER_URL = "http://localhost:8001/"

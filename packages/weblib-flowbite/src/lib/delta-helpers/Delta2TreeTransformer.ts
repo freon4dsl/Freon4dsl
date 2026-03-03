@@ -30,7 +30,7 @@ import type {
     CompositeEvent,
     ErrorEvent,
     LionWebId,
-} from "$lib/delta-mock/types" // adjust path
+} from "@lionweb/server-delta-shared" // adjust path
 
 // -------------------- public API --------------------
 
