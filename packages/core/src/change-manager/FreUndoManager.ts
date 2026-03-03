@@ -35,22 +35,36 @@ export class FreUndoManager {
      */
     public currentUnit: FreModelUnit = null;
 
-    public startTransaction(unit?: FreModelUnit) {
+    /**
+     * Constructor is private, this implements the singleton pattern.
+     * Constructor subscribes to all changes in the model.
+     */
+    private constructor() {
+        AstObserver.getInstance().subscribeToPrimitive((delta: FrePrimDelta) => this.addDelta(delta));
+        AstObserver.getInstance().subscribeToPart((delta: FrePartDelta) => this.addDelta(delta));
+        AstObserver.getInstance().subscribeToListElement((delta: FrePartDelta | FrePrimDelta) => this.addDelta(delta));
+        AstObserver.getInstance().subscribeToList((delta: FrePartListDelta | FrePrimListDelta) => this.addDelta(delta));
+    }
+
+    public startTransaction(ignore: boolean, unit?: FreModelUnit) {
         LOGGER.log(`>> startTransaction for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
         if (unit === undefined) {
             unit = this.currentUnit
         }
         if (!!unit) {
-            this.getUndoStackManager(unit).startTransaction();
+            this.getUndoStackManager(unit).startTransaction(ignore);
             // this.unitForTransaction = unit;
         } else {
-            this.modelUndoManager.startTransaction();
+            this.modelUndoManager.startTransaction(ignore);
         }
         this.inTransaction = true;
     }
 
     public endTransaction(unit?: FreModelUnit) {
         LOGGER.log(`<< endTransaction for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
+        if (!this.inTransaction) {
+            LOGGER.error(`endTransaction while not in a transaction`)
+        }
         if (unit === undefined) {
             unit = this.currentUnit
         }
@@ -62,42 +76,6 @@ export class FreUndoManager {
         }
         this.inTransaction = false;
     }
-
-    public startIgnore(unit?: FreModelUnit) {
-        LOGGER.log(`startIgnore for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
-        if (unit === undefined) {
-            unit = this.currentUnit
-        }
-        if (!!unit) {
-            this.getUndoStackManager(unit).startIgnore();
-        } else {
-            this.modelUndoManager.startIgnore();
-        }
-    }
-
-    public endIgnore(unit?: FreModelUnit) {
-        LOGGER.log(`endIgnore for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
-        if (unit === undefined) {
-            unit = this.currentUnit
-        }
-        if (!!unit) {
-            this.getUndoStackManager(unit).endIgnore();
-        } else {
-            this.modelUndoManager.endIgnore();
-        }
-    }
-
-    // public cleanStacks(unit?: FreModelUnit) {
-    //     LOGGER.log(`cleanStacks for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
-    //     if (unit === undefined) {
-    //         unit = this.currentUnit
-    //     }
-    //     if (!!unit) {
-    //         this.getUndoStackManager(unit).cleanStacks();
-    //     } else {
-    //         this.modelUndoManager.cleanStacks();
-    //     }
-    // }
 
     public cleanAllStacks() {
         this.undoManagerPerUnit.forEach((val) => val.cleanStacks());
@@ -157,29 +135,18 @@ export class FreUndoManager {
         }
     }
 
-    /**
-     * Constructor is private, this implements the singleton pattern.
-     * Constructor subscribes to all changes in the model.
-     */
-    private constructor() {
-        AstObserver.getInstance().subscribeToPrimitive((delta: FrePrimDelta) => this.addDelta(delta));
-        AstObserver.getInstance().subscribeToPart((delta: FrePartDelta) => this.addDelta(delta));
-        AstObserver.getInstance().subscribeToListElement((delta: FrePartDelta | FrePrimDelta) => this.addDelta(delta));
-        AstObserver.getInstance().subscribeToList((delta: FrePartListDelta | FrePrimListDelta) => this.addDelta(delta));
-    }
-
     private addDelta(delta: FreDelta) {
-        LOGGER.log(` addDelta for unit ${this.currentUnit?.name}`)
+        LOGGER.log(` addDelta for unit ${this.currentUnit?.name}: ${delta.toString()}`)
         if (this.inTransaction) {
             // we are in a transaction => store all changes in the unit that originated the transaction
             if (!!this.currentUnit) {
                 this.getUndoStackManager(this.currentUnit).addDelta(delta);
             } else {
                 // the model has changed => store in model manager
-                // console.log("adding transaction to model")
                 this.modelUndoManager.addDelta(delta);
             }
         } else {
+            LOGGER.error(`addDelta: No Transaction: ${delta.toString()}`)
             // not in a transaction => store the changes in the unit that is changed.
             if (!!delta.unit) {
                 // console.log("adding delta to " + delta.unit.name)

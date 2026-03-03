@@ -70,14 +70,7 @@ export class AstObserver {
         newValue: DecoratedModelElement,
         oldValue: DecoratedModelElement,
     ): void {
-        LOGGER.log(
-            "AstObserver: set PART value for " +
-                nodeToChange.freLanguageConcept() +
-                "[" +
-                propertyName +
-                "] := " +
-                newValue,
-        );
+        LOGGER.log(`setPart: ${nodeToChange.freLanguageConcept()} [${propertyName}] := ${newValue}`);
         if (!!this.changePartCallbacks) {
             const unit = modelUnit(nodeToChange);
             if (!!unit?.freOwner() || nodeToChange.freIsModel()) {
@@ -97,14 +90,7 @@ export class AstObserver {
      * @param newValue
      */
     public setPrimitive(nodeToChange: FreNode, propertyName: string, oldValue:  string | boolean | number, newValue: string | boolean | number): void {
-        LOGGER.log(
-            "AstObserver: set PRIMITIVE value for " +
-                nodeToChange.freLanguageConcept() +
-                "[" +
-                propertyName +
-                "] := " +
-                newValue,
-        );
+        LOGGER.log(`setPrimitive: ${nodeToChange.freLanguageConcept()}[${propertyName}] := ${newValue}`);
         if (!!this.changePrimCallbacks) {
             const unit = modelUnit(nodeToChange);
             if (!!unit?.freOwner() || nodeToChange.freIsModel()) {
@@ -131,16 +117,7 @@ export class AstObserver {
     public updatePartListElement(newValue: DecoratedModelElement, oldValue: DecoratedModelElement, index: number) {
         const owner: FreNode = oldValue.$$owner;
         const propertyName: string = oldValue.$$propertyName;
-        LOGGER.log(
-            "AstObserver: UPDATE LIST ELEMENT for " +
-                owner.freLanguageConcept() +
-                "[" +
-                propertyName +
-                "][ " +
-                index +
-                "] := " +
-                newValue,
-        );
+        LOGGER.log(`updatePartListElement: ${owner.freLanguageConcept()}[${propertyName}][${index}] := ${newValue}`);
         if (!!this.changeListElemCallbacks) {
             const unit = modelUnit(owner);
             if (!!unit?.freOwner() || owner.freIsModel()) {
@@ -169,7 +146,7 @@ export class AstObserver {
         removed: DecoratedModelElement[],
         added: DecoratedModelElement[],
     ) {
-        LOGGER.log("AstObserver: UPDATE PART LIST for " + listOwner.freLanguageConcept() + "[" + propertyName + "]");
+        LOGGER.log(`updatePartList: ${listOwner.freLanguageConcept()}[${propertyName}][${index}]`);
         if (!!this.changeListCallbacks) {
             const unit = modelUnit(listOwner);
             if (!!unit?.freOwner() || listOwner.freIsModel()) {
@@ -189,9 +166,7 @@ export class AstObserver {
     }
 
     public updatePrimList(listOwner: any, propertyName: string, index: number, removed: PrimType[], added: PrimType[]) {
-        LOGGER.log(
-            "AstObserver: UPDATE PRIMITIVE LIST for " + listOwner.freLanguageConcept() + "[" + propertyName + "]",
-        );
+        LOGGER.log(`updatePrimList: ${listOwner.freLanguageConcept()}[${propertyName}][${index}]`);
         if (!!this.changeListCallbacks) {
             const unit = modelUnit(listOwner);
             if (!!unit?.freOwner() || listOwner.freIsModel()) {
@@ -217,16 +192,7 @@ export class AstObserver {
         oldValue: string | number | boolean,
         index: number,
     ) {
-        LOGGER.log(
-            "AstObserver: UPDATE LIST ELEMENT for " +
-                listOwner.freLanguageConcept() +
-                "[" +
-                propertyName +
-                "][" +
-                index +
-                "] := " +
-                newValue,
-        );
+        LOGGER.log(`updatePrimListElement: ${listOwner.freLanguageConcept()}[${propertyName}][${index}] := ${newValue}`);
         if (!!this.changeListElemCallbacks) {
             const unit = modelUnit(listOwner);
             if (!!unit?.freOwner() || listOwner.freIsModel()) {

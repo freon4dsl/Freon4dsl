@@ -49,10 +49,23 @@ export class AstChanger implements IAstChanger {
      * It will ensure that the full change is handled as one action in mobx, avoiding spurious UI updates, and
      * it will ensure that the full change is handled as one transaction by the undo manager so it will be undone
      * in one undo operation.
-     * The changeFunction function should return a node if a new node is created, otherwise it should return null.
      * @param changeFunction
      */
     change(changeFunction: () => void): void {
+        this.internalChange("noname", changeFunction, false)
+    }
+
+    changeNamed(name: string, changeFunction: () => void): void {
+        LOGGER.log(`change ${name}`)
+        this.internalChange(name, changeFunction, false)
+    }
+
+    changeIgnore(name: string, changeFunction: () => void): void {
+        LOGGER.log(`changeIgnore: ${name}`)
+        this.internalChange(name, changeFunction, true)
+    }
+
+    internalChange(_name: string, changeFunction: () => void, ignore: boolean): void {
         // Avoid nested change calls
         if (this.isInChange) {
             changeFunction()
@@ -60,7 +73,7 @@ export class AstChanger implements IAstChanger {
         }
         // Now we have a new change() call
         this.isInChange = true
-        this.undoManager.startTransaction()
+        this.undoManager.startTransaction(ignore)
         try {
             runInAction(() => {
                 changeFunction()
@@ -71,15 +84,6 @@ export class AstChanger implements IAstChanger {
             this.undoManager.endTransaction()
             this.isInChange = false
         }
-    }
-
-    changeNamed(name: string, changeFunction: () => void): void {
-        LOGGER.log(`change ${name}`)
-        this.change(changeFunction)
-    }
-
-    changeIgnore(_name: string, _changeFunction: () => void): void {
-        // TODO implement
     }
 
     undo(unit?: FreModelUnit): FreDelta | undefined  {

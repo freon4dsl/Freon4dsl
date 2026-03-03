@@ -24,10 +24,14 @@ describe("Testing Undo Manager", () => {
     it("change, undo, redo, undo on prim", () => {
         const filePath = "src/UndoTester/__inputs__/first.und";
         const unit1 = readUnitInTransaction(filePath);
+        FREON.astChanger.setCurrentUnit(unit1)
         expect(unit1).not.toBeNull();
+        expect(unit1.prim).toBe("myText");
 
         // change the value of 'prim'
-        unit1.prim = "nieuwe_waarde";
+        FREON.astChanger.change( () => {
+            unit1.prim = "nieuwe_waarde";
+        })
         expect(unit1.prim).toBe("nieuwe_waarde");
 
         // undo the change

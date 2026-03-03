@@ -46,7 +46,7 @@ export class FreUtils {
         }
         Object.keys(source).forEach((key) => {
             if (source.hasOwnProperty(key)) {
-                (target as any)[key] = (source as any)[key];
+                (target)[key] = (source)[key];
             }
         });
     }
@@ -107,7 +107,7 @@ export function isEmpty(str: string | null | undefined): str is null | undefined
 }
 
 export function startWithUpperCase(word: string): string {
-    if (!!word) {
+    if (notNullOrUndefined(word)) {
         return word[0].toUpperCase() + word.substring(1);
     }
     return "";
