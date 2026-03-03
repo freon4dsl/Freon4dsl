@@ -58,6 +58,7 @@ Compliance
 Day {[
   ${self.name}
 
+  Date: ${self.date}
   Catering: ${self.catering}
   Technical Crew: ${self.technicalCrew}
   Safety plan: ${self.safetyPlanReference}
@@ -86,4 +87,8 @@ Staff {[
   Role: ${self.role}
   Skills: ${self.skills}
   Availability: ${self.availability replace=AvailabilityPicker}
+]}
+
+DateValue {[
+    ${self.day}/${self.month}/${self.year}
 ]}
