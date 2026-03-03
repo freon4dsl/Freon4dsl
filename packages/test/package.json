@@ -60,8 +60,7 @@
         "check-imports": "bash ../../scripts/check-import-extensions.sh"
     },
     "devDependencies": {
-        "vitest": "3.2.4",
-        "@vitest/ui": "3.2.4"
+        "vitest": "3.2.4"
     },
     "dependencies": {
         "@freon4dsl/core": "~2.1.0",

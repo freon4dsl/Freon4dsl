@@ -7,10 +7,10 @@ import {
     observablepartlist,
     type FreModelUnit,
 } from "../../../ast/index.js";
-import { FreParseLocation } from '../../../reader/index.js';
+import { type FreParseLocation } from "../../../reader/index.js"
 import { matchElementList } from "../../../ast-utils/index.js";
 import { FreUtils } from "../../../util/index.js";
-import { InputField, OutputField } from "./internal.js";
+import type { InputField, OutputField } from "./internal.js"
 
 import { makeObservable, action } from "mobx";
 
