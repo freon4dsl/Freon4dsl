@@ -10,6 +10,7 @@
  */
 // @ts-expect-error enabled untyped
 export function clickOutsideConditional(node, { enabled: boolean }) {
+
     /**
      * onClick callback method, dispatches a new event when clicked outside the `node`.
      * @param event

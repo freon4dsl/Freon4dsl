@@ -72,6 +72,7 @@
     // for OptionalComponent
     let optionalNode: FreNode = new SimpleElement('optional');
     let content = layoutBox2;
+    // todo adjust to new OptionalBox
     let mustShow: boolean = false;
     let optionalCond: boolean = $state(false);
     let placeholder = new LabelBox(optionalNode, 'element-label-box', () => {
@@ -80,12 +81,8 @@
     let optionalBox: OptionalBox = new OptionalBox(
         optionalNode,
         'optional',
-        () => {
-            return optionalCond;
-        },
-        content,
-        mustShow,
-        placeholder
+        "placeHolderOptional",
+        content
     );
     let conditionString: string = $state('false');
 

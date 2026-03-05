@@ -2,7 +2,7 @@
     import { type SelectOption } from '@freon4dsl/core';
     import { DROPDOWN_LOGGER } from './ComponentLoggers.js';
     import type { DropdownProps } from './svelte-utils/FreComponentProps.js';
-    import { usePaneContext } from "./svelte-utils/PaneLike.js";
+    import { usePaneContext } from "./svelte-utils/OverlayPane.js";
     import { focusAndScrollIntoView } from './svelte-utils/ScrollingUtils.js';
     import { tick } from 'svelte';
 

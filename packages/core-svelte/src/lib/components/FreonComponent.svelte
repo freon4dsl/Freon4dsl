@@ -33,7 +33,7 @@
     } from './stores/AllStores.svelte.js';
     import type { MainComponentProps } from './svelte-utils/FreComponentProps.js';
     import { getNearestScrollContainer } from './svelte-utils/ScrollingUtils.js';
-    import { type PaneLike, providePaneContext } from './svelte-utils/PaneLike.js';
+    import { type OverlayPane, providePaneContext } from './svelte-utils/OverlayPane.js';
 
     let LOGGER = FREON_LOGGER;
 
@@ -333,8 +333,12 @@
     refreshSelection('Initialize FreonComponent');
 
     // Make sure the right functions are available for the Dropdown component to be able to scroll if needed.
-    const paneApi: PaneLike = { getVisibleRect, getScrollContainer };
+    function getOverlayRoot(): HTMLElement | null {
+        return overlayRootElement;
+    }
+    const paneApi: OverlayPane = { getVisibleRect, getScrollContainer, getOverlayRoot }
     providePaneContext(paneApi);
+    let overlayRootElement: HTMLElement | null = null;
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
@@ -350,7 +354,12 @@
     <div class="editor-component">
         <RenderComponent {editor} box={rootBox} />
     </div>
+
+    <!-- shared overlay host for this Freon root instance -->
+    <div class="freon-overlay-root" bind:this={overlayRootElement}></div>
 </div>
-<!-- Here the only instance of ContextMenu is defined -->
+<!-- Here the only instance of ContextMenu is defined.
+     It does not live “next to” the root;
+     it will portal into overlayRootElement -->
 <!-- TODO make some default items for the context menu -->
 <ContextMenu bind:this={contextMenu.instance} {editor} />

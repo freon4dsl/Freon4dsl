@@ -1,6 +1,6 @@
 // Utilities created by ChatGPT on August 28, 2025
 
-import { type PaneLike } from "./PaneLike.js";
+import { type OverlayPane } from "./OverlayPane.js";
 import { FreLogger, isNullOrUndefined, notNullOrUndefined } from '@freon4dsl/core';
 
 // Treat these as scrollable values (Safari still uses 'overlay' in places)
@@ -51,7 +51,7 @@ const EPS = 0.5; // deal with fractional pixels
 
 export async function focusAndScrollIntoView(
 	element: HTMLElement | null | undefined,
-	pane?: PaneLike | null | undefined
+	pane?: OverlayPane | null | undefined
 ) {
 	if (isNullOrUndefined(element) || isNullOrUndefined(pane)) return;
 

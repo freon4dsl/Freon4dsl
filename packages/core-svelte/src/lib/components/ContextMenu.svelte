@@ -6,15 +6,18 @@
      *  such that the complete menu stays within the boundaries of the editor viewport. The state of the editor
      *  viewport is stored in the EditorViewportStore (by FreonComponent).
      */
-    import { calculatePos } from './svelte-utils/CommonFunctions.js';
     import { clickOutsideConditional } from './svelte-utils/ClickOutside.js';
     import { type MainComponentProps } from './svelte-utils/FreComponentProps.js';
     import { tick } from 'svelte';
-    import { type ClientRectangle, MenuItem } from '@freon4dsl/core';
+    import { MenuItem } from '@freon4dsl/core';
     import { contextMenuVisible } from './stores/AllStores.svelte.js';
+    import { usePaneContext, portal, useOverlayListeners } from "./svelte-utils/OverlayPane.js"
 
-    // items for the context menu
+    // props
     let { editor }: MainComponentProps = $props();
+
+    const pane = usePaneContext();
+    let overlayRoot = $derived(pane?.getOverlayRoot() ?? null)
 
     // local variables
     const LOGGER = CONTEXTMENU_LOGGER;
@@ -22,9 +25,6 @@
     let submenuItems: MenuItem[] = $state([]);
     let elementIndex: number; // the index of the element in a list to which this menu is coupled
 
-    // browser/window dimension (height and width)
-    let innerWidth = $state(0);
-    let innerHeight = $state(0);
     // dimension (height and width) of context menu
     let menuHeight = $state(0);
     let menuWidth = $state(0);
@@ -40,6 +40,15 @@
     // height of items in menu and sub menu
     let itemHeight = $state(40);
     let submenuOpen = $state(false);
+    let panelEl: HTMLElement | null = $state(null);
+
+    const listeners = useOverlayListeners(() => ({
+        pane,
+        enabled: contextMenuVisible.value,
+        closeFunc: hide,
+        inside: [panelEl],
+        closeOnResize: true,
+    }));
 
     /**
      * This function shows the context menu. Note that the items to be shown should
@@ -54,6 +63,10 @@
         elementIndex = index;
         contextMenuVisible.value = true;
         submenuOpen = false;
+
+        // attach listeners for scrolling
+        listeners.attach();
+
         // wait for the menu to be rendered, because we need its sizes for the positioning
         await tick();
         // get the position of the mouse relative to the editor view
@@ -62,22 +75,30 @@
 
     /** This function is used to get the position of the context menu. */
     function getContextMenuPosition(event: MouseEvent) {
-        const rect: ClientRectangle = editor.getClientRectangle();
-        // Because there can be a navigation bar or anything else above the editor element,
-        // and we have to position the context menu in the editor element,
-        // we use this calculation instead of event.clientX and event.clientY.
-        top = event.pageY - rect.y;
-        left = event.pageX - rect.x;
-        // Determine whether the menu would be shown within the viewport.
-        // Use the event.clientXY for this because this is the distance between the mouse click and the top/left side
-        // of the window. The height/width of the window must be able to contain the menu at this position.
-        if (innerHeight < event.clientY + menuHeight)
-            top = top - menuHeight;
-        if (innerWidth < event.clientX + menuWidth)
-            left = left - menuWidth;
-        LOGGER.log(`ContextMenu posX: ${left}, posY: ${top}, event.pageX: ${event.pageX}, event.pageY: ${event.pageY},
-event.clientX: ${event.clientX}, event.clientY: ${event.clientY}, innerwidth: ${innerWidth}, innerHeight: ${innerHeight},
-editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
+        // overlay coordinates
+        const overlay = pane?.getOverlayRoot();
+        const r = overlay?.getBoundingClientRect();
+
+        // fallback (shouldn't happen once overlay exists)
+        const ox = r?.left ?? 0;
+        const oy = r?.top ?? 0;
+        const ow = r?.width ?? window.innerWidth;
+        const oh = r?.height ?? window.innerHeight;
+
+        // mouse position relative to overlay
+        let x = event.clientX - ox;
+        let y = event.clientY - oy;
+
+        // clamp within overlay bounds
+        x = Math.max(0, Math.min(x, ow - menuWidth));
+        y = Math.max(0, Math.min(y, oh - menuHeight));
+
+        left = x;
+        top = y;
+
+        LOGGER.log(
+            `ContextMenu left:${left}, top:${top}, clientX:${event.clientX}, clientY:${event.clientY}, ox: ${ox},  menuW:${menuWidth}, menuH:${menuHeight}`,
+        );
     }
 
     /**
@@ -87,6 +108,8 @@ editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
         LOGGER.log('CONTEXTMENU hide');
         contextMenuVisible.value = false;
         submenuOpen = false;
+
+        listeners.detach();
     }
 
     /**
@@ -94,14 +117,28 @@ editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
      */
     async function openSub(itemIndex: number) {
         submenuOpen = true;
-        await tick(); // wait in order to determine the size of the submenu
-        // determine the 'normal' position of the sub menu, which is
-        // (itemHeight px) lower than the main menu, 20 px left to the end of the item
-        topSub = top + itemHeight + itemIndex * (itemHeight + 2 + 3 + 4); // add 2 for gap, 3 for margin, 4 for padding
-        leftSub = left + submenuWidth - 20;
-        // calculate the right position of the sub menu based on the size of the viewport
-        topSub = calculatePos(innerWidth, submenuWidth, topSub);
-        leftSub = calculatePos(innerHeight, submenuHeight, leftSub);
+        await tick(); // submenuWidth/submenuHeight must be known
+
+        const overlay = pane?.getOverlayRoot();
+        const r = overlay?.getBoundingClientRect();
+        const ow = r?.width ?? window.innerWidth;
+        const oh = r?.height ?? window.innerHeight;
+
+        // align submenu with the clicked item
+        let y = top + itemIndex * itemHeight;
+        // prefer right
+        let x = left + menuWidth - 10;
+        // if overflow right, open left
+        if (x + submenuWidth > ow) {
+            x = left - submenuWidth + 10;
+        }
+
+        // clamp inside overlay
+        x = Math.max(0, Math.min(x, ow - submenuWidth));
+        y = Math.max(0, Math.min(y, oh - submenuHeight));
+
+        leftSub = x;
+        topSub = y;
     }
 
     /**
@@ -138,10 +175,15 @@ editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
     }
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight />
-
-<div use:clickOutsideConditional={{ enabled: contextMenuVisible.value }} onclick_outside={hide}>
-    {#if contextMenuVisible.value}
+{#if contextMenuVisible.value}
+    <!-- IMPORTANT: clickOutside must be on the *portaled* panel, not on a wrapper outside the portal -->
+    <div
+        class="context-menu-panel"
+        use:portal={overlayRoot}
+        use:clickOutsideConditional={{ enabled: contextMenuVisible.value }}
+        onclick_outside={hide}
+        bind:this={panelEl}
+    >
         <nav use:getContextMenuDimension class="contextmenu" style="top: {top}px; left: {left}px">
             {#each _items as item, index}
                 {#if item.label === '---'}
@@ -183,5 +225,17 @@ editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
                 {/each}
             </nav>
         {/if}
+        </div>
     {/if}
-</div>
+
+<style>
+    /* The panel lives in the fixed overlay. Let it receive pointer events. */
+    .context-menu-panel {
+        pointer-events: auto;
+    }
+
+    /* Make sure menus position correctly within the overlay layer. */
+    .contextmenu {
+        position: absolute;
+    }
+</style>

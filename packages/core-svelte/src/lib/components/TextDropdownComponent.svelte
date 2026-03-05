@@ -24,11 +24,12 @@
         isNullOrUndefined, notNullOrUndefined, jsonAsString, MatchUtil, SPACEBAR
     } from "@freon4dsl/core"
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
-    import { selectedBoxes } from './stores/AllStores.svelte.js';
+    import { contextMenuVisible, selectedBoxes } from "./stores/AllStores.svelte.js"
     import { clickOutsideConditional } from './svelte-utils/ClickOutside.js';
     import { type CaretDetails } from './svelte-utils/CaretDetails.js';
     import { tick } from 'svelte';
     import type DropdownCmp from "./DropdownComponent.svelte";
+    import { usePaneContext, portal, useOverlayListeners } from "./svelte-utils/OverlayPane.js"
 
     const LOGGER = TEXTDROPDOWN_LOGGER;
 
@@ -59,6 +60,11 @@
     let filteredOptions: SelectOption[] = $state([]); // the list of filtered options that are shown in the dropdown
     let allOptions: SelectOption[]; // all options as calculated by the editor
     let textComponent: TextComponent;
+
+    const pane = usePaneContext();
+    let overlayRoot = $derived(pane?.getOverlayRoot() ?? null)
+    let dropdownAnchorEl: HTMLElement | null = $state(null)
+    let dropdownPanelEl: HTMLElement | null = $state(null)
 
     let setText = (value: string) => {
         LOGGER.log(`${box.id}: setting text to '${value}'`);
@@ -182,8 +188,46 @@
         makeFilteredOptionsUnique();
     };
 
+
+    function updateDropdownPos() {
+        if (!dropdownAnchorEl || !dropdownPanelEl) return;
+
+        const a = dropdownAnchorEl.getBoundingClientRect();   // viewport coords
+        const p = dropdownPanelEl.getBoundingClientRect();    // current size
+
+        // prefer below
+        let left = a.left;
+        let top = a.bottom;
+
+        // clamp horizontally in overlay
+        const ow = window.innerWidth;
+        const oh = window.innerHeight;
+
+        // if overflow right, shift left
+        if (left + p.width > ow) left = Math.max(0, ow - p.width);
+        // if overflow bottom, flip above
+        if (top + p.height > oh) top = Math.max(0, a.top - p.height);
+
+        // final clamp
+        left = Math.max(0, Math.min(left, ow - p.width));
+        top  = Math.max(0, Math.min(top,  oh - p.height));
+
+        dropdownPanelEl.style.left = `${left}px`;
+        dropdownPanelEl.style.top = `${top}px`;
+        dropdownPanelEl.style.minWidth = `${a.width}px`; // optional: match anchor width
+    }
+
+    const listeners = useOverlayListeners(() => ({
+        pane,
+        enabled: contextMenuVisible.value,
+        closeFunc: hideDropdown,
+        inside: [dropdownPanelEl],
+        closeOnResize: true,
+    }));
+
     const hideDropdown = () => {
         dropdownShown = false;
+        listeners.detach();
     };
 
     const showDropdown = async () => {
@@ -193,9 +237,8 @@
 
         // now wait one more frame so images/css apply
         requestAnimationFrame(() => {
-            if (dropdownCmp) {
-                dropdownCmp?.scrollIntoViewIfNeeded();
-            }
+            updateDropdownPos();
+            listeners.attach()
         });
     };
 
@@ -495,7 +538,7 @@
     };
 
     /** This function replaces the event handling in version 1.0.0 (for svelte v4). What used to be an event,
-     * now is a call to this function, where the param 'eventType' indicates the type of the former event, and
+     *  now is a call to this function, where the param 'eventType' indicates the type of the former event, and
      * 'details' are the information passed by the event.
      *
      * NB Here this function is called 'fromInner', in the child TextComponent it is called 'toParent'.
@@ -529,6 +572,7 @@
 
 <span
     {id}
+    bind:this={dropdownAnchorEl}
     onkeydown={onKeyDown}
     use:clickOutsideConditional={{ enabled: dropdownShown }}
     onclick_outside={onClickOutside}
@@ -560,11 +604,17 @@
         {/if}
     </div>
     {#if dropdownShown}
+          <div
+              class="text-dropdown-panel"
+              use:portal={overlayRoot}
+              bind:this={dropdownPanelEl}
+          >
         <DropdownComponent
             bind:this={dropdownCmp}
             bind:selected
             bind:options={filteredOptions}
             selectionChanged={itemSelected}
         />
+          </div>
     {/if}
 </span>
