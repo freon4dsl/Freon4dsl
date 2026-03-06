@@ -91,7 +91,7 @@ export async function focusAndScrollIntoView(
 	if (fits) {
 		// LOGGER.log('focusAndScrollIntoView, fits, scrolling...', offsetBottom);
 		// Bring entire element into view by aligning its bottom if needed
-		sc.scrollTo({ top: Math.max(0, offsetBottom - paneHeight), behavior: "smooth" });
+		sc.scrollTo({ top: Math.max(0, offsetBottom - paneHeight), behavior: "auto" });
 		// sc.scrollTo({ top: offsetBottom, behavior: "smooth" });
 		return;
 	}

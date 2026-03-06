@@ -6,7 +6,6 @@
      *  such that the complete menu stays within the boundaries of the editor viewport. The state of the editor
      *  viewport is stored in the EditorViewportStore (by FreonComponent).
      */
-    import { clickOutsideConditional } from './svelte-utils/ClickOutside.js';
     import { type MainComponentProps } from './svelte-utils/FreComponentProps.js';
     import { tick } from 'svelte';
     import { MenuItem } from '@freon4dsl/core';
@@ -64,13 +63,18 @@
         contextMenuVisible.value = true;
         submenuOpen = false;
 
-        // attach listeners for scrolling
-        listeners.attach();
-
         // wait for the menu to be rendered, because we need its sizes for the positioning
         await tick();
+        // let any selection-triggered scrolling settle
+        await new Promise<void>((resolve) =>
+            requestAnimationFrame(() =>
+                requestAnimationFrame(() => resolve())
+            )
+        );
         // get the position of the mouse relative to the editor view
         getContextMenuPosition(event);
+        // attach listeners for scrolling, (!) after waiting for all elements to be rendered, because then 'panelEl' has a value.
+        listeners.attach();
     }
 
     /** This function is used to get the position of the context menu. */
@@ -160,7 +164,7 @@
     }
 
     function onClick(event: MouseEvent, item: MenuItem, itemIndex: number): boolean {
-        LOGGER.log('CONTEXTMENU onClick');
+        console.log('CONTEXTMENU onClick');
         submenuOpen = false;
         if (item.hasSubItems()) {
             submenuItems = item.subItems;
@@ -180,8 +184,6 @@
     <div
         class="context-menu-panel"
         use:portal={overlayRoot}
-        use:clickOutsideConditional={{ enabled: contextMenuVisible.value }}
-        onclick_outside={hide}
         bind:this={panelEl}
     >
         <nav use:getContextMenuDimension class="contextmenu" style="top: {top}px; left: {left}px">

@@ -9,7 +9,7 @@
     import TextComponent from './TextComponent.svelte';
     import DropdownComponent from './DropdownComponent.svelte';
     import ArrowUp from './images/ArrowUp.svelte';
-    import { componentId } from '../index.js';
+    import { componentId } from "../index.js"
     import {
         type AbstractChoiceBox,
         ARROW_DOWN,
@@ -24,8 +24,7 @@
         isNullOrUndefined, notNullOrUndefined, jsonAsString, MatchUtil, SPACEBAR
     } from "@freon4dsl/core"
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
-    import { contextMenuVisible, selectedBoxes } from "./stores/AllStores.svelte.js"
-    import { clickOutsideConditional } from './svelte-utils/ClickOutside.js';
+    import { selectedBoxes } from "./stores/AllStores.svelte.js"
     import { type CaretDetails } from './svelte-utils/CaretDetails.js';
     import { tick } from 'svelte';
     import type DropdownCmp from "./DropdownComponent.svelte";
@@ -219,9 +218,9 @@
 
     const listeners = useOverlayListeners(() => ({
         pane,
-        enabled: contextMenuVisible.value,
+        enabled: dropdownShown,
         closeFunc: hideDropdown,
-        inside: [dropdownPanelEl],
+        inside: [dropdownAnchorEl, dropdownPanelEl],
         closeOnResize: true,
     }));
 
@@ -574,8 +573,6 @@
     {id}
     bind:this={dropdownAnchorEl}
     onkeydown={onKeyDown}
-    use:clickOutsideConditional={{ enabled: dropdownShown }}
-    onclick_outside={onClickOutside}
     onblur={onBlur}
     oncontextmenu={() => endEditing()}
     tabindex="-1"
