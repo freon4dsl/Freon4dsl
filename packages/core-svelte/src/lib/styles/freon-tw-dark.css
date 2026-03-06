@@ -114,24 +114,24 @@
  *  ContextMenuComponent
  *******************************************************/
 .dark .contextmenu {
-    border-color: var(--color-dark-freon-300);
+    border-color: var(--color-dark-freon-900);
+    box-shadow: 0 0 6px 0 var(--color-dark-freon-250);
     background: var(--color-dark-freon-250);
-    box-shadow: 1.dark .5px 1.dark .5px 5px var(--color-dark-freon-500);
 }
 .dark .contextmenu-button {
+    color: var(--color-dark-freon-900);
     background: none;
-    border: none;
 }
 .dark .contextmenu-button:hover {
-    background: var(--color-dark-freon-100);
+    color: var(--color-dark-freon-900);
+    background-color: var(--color-dark-freon-100);
 }
 .dark .contextmenu-shortcut {
     color: var(--color-dark-freon-700);
 }
 .dark .contextmenu-hr {
-    border-top: solid 1px var(--color-dark-freon-300);
+    border-top: solid 1px var(--color-dark-freon-900);
 }
-
 /*******************************************************
  *  ErrorTooltipComponent
  *******************************************************/

@@ -342,8 +342,11 @@
 /*******************************************************
  *  ContextMenuComponent
  *******************************************************/
+/* The panel lives in the fixed overlay. Let it receive pointer events. */
+/* And make sure menus position correctly within the overlay layer. */
 .context-menu-panel {
     pointer-events: auto;
+    position: absolute;
 }
 .contextmenu {
     border-width: 1px;
@@ -773,7 +776,33 @@
     border-style: solid;
     border-color: var(--numeric-slider-tooltip-background-color) transparent transparent transparent;
 }
-
+/*******************************************************
+ *  TextDropdownComponent
+ *******************************************************/
+.text-dropdown-component {
+    display: inline-block;
+}
+.text-dropdown-component-text-wrapper {
+}
+.reference-button {
+    border: none;
+    height: 12px;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 16px;
+}
+.reference-arrow {
+    height: 12px;
+}
+.text-dropdown-panel {
+    position: absolute;
+    pointer-events: auto;
+}
+.dropdown-component-container {
+    display: inline-block;
+    max-height: 300px;
+    overflow-y: auto;
+}
 /*******************************************************
  *  DropdownComponent
  *******************************************************/
@@ -788,9 +817,7 @@
     min-width: 120px;
     width: fit-content;
     margin-top: 3px;
-    position: absolute;
 }
-
 .dropdown-component-item {
     white-space: nowrap;
     border: none;
@@ -804,22 +831,15 @@
     gap: 2px;
     place-items: center;
 }
-
 .dropdown-component-error {
     display: block;
     white-space: nowrap;
     border: none;
 }
-
 .dropdown-component-item:hover {
 }
-
 .dropdown-component-selected {
     border: none;
-}
-
-.dropdown-component-container {
-    position: relative;
 }
 .dropdown-entry-with-additional-label {
     display: flex;
@@ -837,7 +857,9 @@
     margin: 0 0.7rem 0 0.7rem;
     flex: 1;
 }
-
+/*******************************************************
+ *  BooleanInnerSwitchComponent
+ *******************************************************/
 .inner-switch-component button {
     margin: 4px 6px 4px 6px;
     border: solid 0.5px var(--inner-switch-border-color);
@@ -1052,13 +1074,6 @@
 }
 
 /* The container styling - needed to position the dropdown content */
-.text-dropdown-component {
-    display: inline-block;
-}
-.text-dropdown-panel {
-    position: absolute;
-    pointer-events: auto;
-}
 
 .grid-component {
     display: inline-grid;
@@ -1078,16 +1093,6 @@
     margin: 1px;
 }
 
-.reference-button {
-    border: none;
-    height: 12px;
-    padding-left: 0px;
-    padding-right: 0px;
-    width: 16px;
-}
-.reference-arrow {
-    height: 12px;
-}
 textarea {
     outline: none;
     vertical-align: top;

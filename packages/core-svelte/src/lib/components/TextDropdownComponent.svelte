@@ -60,10 +60,19 @@
     let allOptions: SelectOption[]; // all options as calculated by the editor
     let textComponent: TextComponent;
 
+    // elements for the use of the overlay to position the dropdown menu
     const pane = usePaneContext();
     let overlayRoot = $derived(pane?.getOverlayRoot() ?? null)
     let dropdownAnchorEl: HTMLElement | null = $state(null)
     let dropdownPanelEl: HTMLElement | null = $state(null)
+    let dropdownContentEl: HTMLElement | null = $state(null)
+    const listeners = useOverlayListeners(() => ({
+        pane,
+        enabled: dropdownShown,
+        closeFunc: hideDropdown,
+        inside: [dropdownAnchorEl, dropdownPanelEl, dropdownContentEl],
+        closeOnResize: true,
+    }));
 
     let setText = (value: string) => {
         LOGGER.log(`${box.id}: setting text to '${value}'`);
@@ -187,42 +196,50 @@
         makeFilteredOptionsUnique();
     };
 
-
     function updateDropdownPos() {
-        if (!dropdownAnchorEl || !dropdownPanelEl) return;
+        if (!dropdownAnchorEl || !dropdownPanelEl || !dropdownContentEl || !overlayRoot) return;
 
-        const a = dropdownAnchorEl.getBoundingClientRect();   // viewport coords
-        const p = dropdownPanelEl.getBoundingClientRect();    // current size
+        const a = dropdownAnchorEl.getBoundingClientRect(); // viewport coords
+        const p = dropdownContentEl.getBoundingClientRect();  // current size
+        const o = overlayRoot.getBoundingClientRect();      // overlay coords
+
+        const ow = o.width;
+        const oh = o.height;
+
+        // anchor position relative to overlay
+        const anchorLeft = a.left - o.left;
+        const anchorTop = a.top - o.top;
+        const anchorBottom = a.bottom - o.top;
 
         // prefer below
-        let left = a.left;
-        let top = a.bottom;
-
-        // clamp horizontally in overlay
-        const ow = window.innerWidth;
-        const oh = window.innerHeight;
+        let left = anchorLeft;
+        let top = anchorBottom;
 
         // if overflow right, shift left
-        if (left + p.width > ow) left = Math.max(0, ow - p.width);
+        if (left + p.width > ow) {
+            left = Math.max(0, ow - p.width);
+        }
+
         // if overflow bottom, flip above
-        if (top + p.height > oh) top = Math.max(0, a.top - p.height);
+        if (top + p.height > oh) {
+            top = Math.max(0, anchorTop - p.height);
+        }
 
         // final clamp
         left = Math.max(0, Math.min(left, ow - p.width));
-        top  = Math.max(0, Math.min(top,  oh - p.height));
+        top = Math.max(0, Math.min(top, oh - p.height));
+
+        // make the dropdown height dependent on the available space
+        const spaceBelow = oh - anchorBottom;
+        const spaceAbove = anchorTop;
+        const availableHeight =
+            top === anchorBottom ? spaceBelow : spaceAbove;
 
         dropdownPanelEl.style.left = `${left}px`;
         dropdownPanelEl.style.top = `${top}px`;
-        dropdownPanelEl.style.minWidth = `${a.width}px`; // optional: match anchor width
+        dropdownPanelEl.style.minWidth = `${a.width}px`;
+        dropdownContentEl.style.maxHeight = `${availableHeight}px`;
     }
-
-    const listeners = useOverlayListeners(() => ({
-        pane,
-        enabled: dropdownShown,
-        closeFunc: hideDropdown,
-        inside: [dropdownAnchorEl, dropdownPanelEl],
-        closeOnResize: true,
-    }));
 
     const hideDropdown = () => {
         dropdownShown = false;
@@ -233,12 +250,10 @@
         dropdownShown = true;
         // wait until DOM updates and styles/layout settle
         await tick();
-
-        // now wait one more frame so images/css apply
-        requestAnimationFrame(() => {
-            updateDropdownPos();
-            listeners.attach()
-        });
+        // wait two more frames
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+        updateDropdownPos();
+        listeners.attach();
     };
 
     function makeFilteredOptionsUnique() {
@@ -505,25 +520,6 @@
         }
     };
 
-    const onBlur = () => {
-        // We use onblur instead of onfocusout, because when the user selects an item in the dropdown list,
-        // the text component will trigger a focus out event. The focus out event from the text component
-        // always comes before the click in the dropdown. If we react to focus out by endEditing(), any click
-        // on the dropdown list will have no effect.
-        LOGGER.log('onBlur ' + id);
-        if (!document.hasFocus() || !selectedBoxes.value.includes(box)) {
-            endEditing();
-        }
-    };
-
-    /**
-     * The "click_outside" event was triggered because of `use:clickOutsideConditional`.
-     */
-    const onClickOutside = () => {
-        LOGGER.log('onClickOutside');
-        endEditing();
-    };
-
     const selectReferred = (event: Event) => {
         if (isReferenceBox(box)) {
             if (box.isSelectAble()) {
@@ -573,13 +569,12 @@
     {id}
     bind:this={dropdownAnchorEl}
     onkeydown={onKeyDown}
-    onblur={onBlur}
     oncontextmenu={() => endEditing()}
     tabindex="-1"
     class="text-dropdown-component {box.cssClass}"
     role="none"
 >
-    <div class="text-dropdown-component-text-wrapper">
+    <span class="text-dropdown-component-text-wrapper">
         <TextComponent
             {editor}
             box={textBox}
@@ -599,19 +594,21 @@
                 <ArrowUp />
             </button>
         {/if}
-    </div>
+    </span>
     {#if dropdownShown}
-          <div
+        <div
               class="text-dropdown-panel"
               use:portal={overlayRoot}
               bind:this={dropdownPanelEl}
-          >
-        <DropdownComponent
-            bind:this={dropdownCmp}
-            bind:selected
-            bind:options={filteredOptions}
-            selectionChanged={itemSelected}
-        />
-          </div>
+        >
+            <div class="dropdown-component-container" bind:this={dropdownContentEl}>
+                <DropdownComponent
+                      bind:this={dropdownCmp}
+                      bind:selected
+                      bind:options={filteredOptions}
+                      selectionChanged={itemSelected}
+                />
+            </div>
+        </div>
     {/if}
 </span>

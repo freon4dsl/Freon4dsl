@@ -2,8 +2,9 @@ import { setContext, getContext } from 'svelte';
 import type { Action } from 'svelte/action';
 import { onDestroy } from 'svelte';
 
-// The interface for FreonComponent, which enables us to determine whether a new element is in
-// the visible part of the FreonComponent, and makes scrolling possible
+// The interface for FreonComponent, which enables us to determine whether a dropdown
+// or context menu is in the visible part of the FreonComponent, and makes scrolling possible.
+
 export type OverlayPane = {
     /** Visible (clipped) rect of `el` within this pane, or null if not measurable. */
     getVisibleRect(el: HTMLElement): Promise<DOMRectReadOnly | null>;
@@ -60,6 +61,20 @@ export const portal: Action<HTMLElement, HTMLElement | null | undefined> = (node
 export function useOverlayListeners(opts: () => OverlayListenerOpts) {
     let cleanup: (() => void) | null = null;
 
+    function isEventInside(e: Event, inside: (HTMLElement | null | undefined)[]) {
+        const t = e.target as Node | null;
+        const path =
+            typeof (e as Event & { composedPath?: () => EventTarget[] }).composedPath === 'function'
+                ? (e as Event & { composedPath: () => EventTarget[] }).composedPath()
+                : [];
+
+        return inside.some((el) => {
+            if (!el) return false;
+            if (t && el.contains(t)) return true;
+            return path.includes(el);
+        });
+    }
+
     function detach() {
         cleanup?.();
         cleanup = null;
@@ -73,18 +88,19 @@ export function useOverlayListeners(opts: () => OverlayListenerOpts) {
 
         const scroller = pane?.getScrollContainer();
 
-        const onScroll = () => closeFunc();
+        const onScroll = (e?: Event) => {
+            if (e && isEventInside(e, inside)) return;
+            closeFunc();
+        };
 
         const onResize = () => {
             if (closeOnResize) closeFunc();
         };
 
         const onPointerDown = (e: PointerEvent) => {
-            const t = e.target as Node | null;
-            if (!t) return;
-
-            const isInside = inside.some((el) => !!el && el.contains(t));
-            if (!isInside) closeFunc();
+            if (!isEventInside(e, inside)) {
+                closeFunc();
+            }
         };
 
         if (scroller) scroller.addEventListener('scroll', onScroll, { capture: true });

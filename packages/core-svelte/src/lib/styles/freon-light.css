@@ -123,17 +123,19 @@
  *  ContextMenuComponent
  *******************************************************/
 .contextmenu {
-    border-color: var(--color-light-freon-150);
-    background: var(--color-light-freon-50);
-    box-shadow: 1.5px 1.5px 5px var(--color-light-freon-200);
+    border-color: var(--color-light-freon-900);
+    background: var(--color-freon-light-accent-lightgreen);
+    box-shadow: 0 3px 8px color-mix(in srgb, var(--color-light-freon-900) 35%, transparent);
 }
 .contextmenu-button {
+    color: var(--color-light-freon-accent-dropdown);
     background: none;
     border: none;
 }
 
 .contextmenu-button:hover {
-    background: var(--color-light-freon-50);
+    color: var(--color-light-freon-50);
+    background-color: var(--color-light-freon-accent-dropdown);
 }
 
 .contextmenu-shortcut {
@@ -141,9 +143,8 @@
 }
 
 .contextmenu-hr {
-    border-top: solid 1px var(--color-light-freon-150);
+    border-top: solid 1px var(--color-light-freon-900);
 }
-
 .error-tooltip {
     border: 1px solid var(--color-light-freon-700);
     box-shadow: 1px 1px 1px var(--color-light-freon-700);

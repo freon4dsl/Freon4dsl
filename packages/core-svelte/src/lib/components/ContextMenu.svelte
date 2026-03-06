@@ -3,8 +3,8 @@
 
     /**
      *  This component combines a menu with a submenu. The positions of both the menu and the submenu are determined
-     *  such that the complete menu stays within the boundaries of the editor viewport. The state of the editor
-     *  viewport is stored in the EditorViewportStore (by FreonComponent).
+     *  such that the complete menu stays within the boundaries of the editor viewport.
+     *  Note that the component is rendered as part of an overlay that is provided by the FreonComponent.
      */
     import { type MainComponentProps } from './svelte-utils/FreComponentProps.js';
     import { tick } from 'svelte';
@@ -15,8 +15,16 @@
     // props
     let { editor }: MainComponentProps = $props();
 
+    // elements for the use of the overlay
     const pane = usePaneContext();
     let overlayRoot = $derived(pane?.getOverlayRoot() ?? null)
+    const listeners = useOverlayListeners(() => ({
+        pane,
+        enabled: contextMenuVisible.value,
+        closeFunc: hide,
+        inside: [panelEl],
+        closeOnResize: true,
+    }));
 
     // local variables
     const LOGGER = CONTEXTMENU_LOGGER;
@@ -40,14 +48,6 @@
     let itemHeight = $state(40);
     let submenuOpen = $state(false);
     let panelEl: HTMLElement | null = $state(null);
-
-    const listeners = useOverlayListeners(() => ({
-        pane,
-        enabled: contextMenuVisible.value,
-        closeFunc: hide,
-        inside: [panelEl],
-        closeOnResize: true,
-    }));
 
     /**
      * This function shows the context menu. Note that the items to be shown should
@@ -73,7 +73,8 @@
         );
         // get the position of the mouse relative to the editor view
         getContextMenuPosition(event);
-        // attach listeners for scrolling, (!) after waiting for all elements to be rendered, because then 'panelEl' has a value.
+        // attach listeners for scrolling, (!) after waiting for all elements to be
+        // rendered, because only then 'panelEl' has a value.
         listeners.attach();
     }
 
@@ -90,15 +91,27 @@
         const oh = r?.height ?? window.innerHeight;
 
         // mouse position relative to overlay
-        let x = event.clientX - ox;
-        let y = event.clientY - oy;
+        const clickX = event.clientX - ox;
+        const clickY = event.clientY - oy;
 
-        // clamp within overlay bounds
-        x = Math.max(0, Math.min(x, ow - menuWidth));
-        y = Math.max(0, Math.min(y, oh - menuHeight));
+        // prefer below/right of pointer - with a little gap
+        const GAP = 2;
+        let x = clickX + GAP;
+        let y = clickY + GAP;
 
-        left = x;
-        top = y;
+        // flip horizontally if needed
+        if (x + menuWidth > ow) {
+            x = clickX - menuWidth;
+        }
+
+        // flip vertically if needed
+        if (y + menuHeight > oh) {
+            y = clickY - menuHeight;
+        }
+
+        // final clamp
+        left = Math.max(0, Math.min(x, ow - menuWidth));
+        top = Math.max(0, Math.min(y, oh - menuHeight));
 
         LOGGER.log(
             `ContextMenu left:${left}, top:${top}, clientX:${event.clientX}, clientY:${event.clientY}, ox: ${ox},  menuW:${menuWidth}, menuH:${menuHeight}`,
@@ -129,20 +142,26 @@
         const oh = r?.height ?? window.innerHeight;
 
         // align submenu with the clicked item
-        let y = top + itemIndex * itemHeight;
-        // prefer right
+        const itemTop = top + itemIndex * itemHeight;
+
+        // prefer opening to the right
         let x = left + menuWidth - 10;
-        // if overflow right, open left
         if (x + submenuWidth > ow) {
             x = left - submenuWidth + 10;
         }
+        // prefer aligning submenu top with parent item
+        let y = itemTop;
+        // if submenu would run below viewport, move it up
+        if (y + submenuHeight > oh) {
+            y = oh - submenuHeight;
+        }
+        // if still above top, clamp
+        if (y < 0) {
+            y = 0;
+        }
 
-        // clamp inside overlay
-        x = Math.max(0, Math.min(x, ow - submenuWidth));
-        y = Math.max(0, Math.min(y, oh - submenuHeight));
-
-        leftSub = x;
-        topSub = y;
+        leftSub = Math.max(0, Math.min(x, ow - submenuWidth));
+        topSub = Math.max(0, Math.min(y, oh - submenuHeight));
     }
 
     /**
@@ -164,7 +183,7 @@
     }
 
     function onClick(event: MouseEvent, item: MenuItem, itemIndex: number): boolean {
-        console.log('CONTEXTMENU onClick');
+        LOGGER.log('CONTEXTMENU onClick');
         submenuOpen = false;
         if (item.hasSubItems()) {
             submenuItems = item.subItems;
@@ -227,17 +246,5 @@
                 {/each}
             </nav>
         {/if}
-        </div>
-    {/if}
-
-<style>
-    /* The panel lives in the fixed overlay. Let it receive pointer events. */
-    .context-menu-panel {
-        pointer-events: auto;
-    }
-
-    /* Make sure menus position correctly within the overlay layer. */
-    .contextmenu {
-        position: absolute;
-    }
-</style>
+    </div>
+{/if}
