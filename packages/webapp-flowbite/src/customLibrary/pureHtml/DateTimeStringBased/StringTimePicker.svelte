@@ -1,34 +1,49 @@
 <script lang="ts">
-    import type { FreComponentProps } from "@freon4dsl/core-svelte"
     import { StringReplacerBox } from "@freon4dsl/core"
+    import type { FreComponentProps } from "@freon4dsl/core-svelte"
     import { onMount } from "svelte"
+
+    /**
+     * Note that this component works when the time is represented by a string.
+     * The string value will be in ISO format: "HH:MM"
+     */
 
     // Props
     let { box }: FreComponentProps<StringReplacerBox> = $props()
 
     let inputElement: HTMLInputElement
-    let isoString = $state("")
+    let hmString = $state("")
 
     const onClick = (event: MouseEvent & { currentTarget: EventTarget & HTMLInputElement }) => {
         event.stopPropagation()
     }
 
     const onInput = () => {
-        // Store raw ISO date string in the model (YYYY-MM-DD)
-        box.setPropertyValue(isoString)
+        // Store raw "HH:MM" string in the model
+        box.setPropertyValue(hmString)
     }
 
-    function isIsoDate(s: string): boolean {
-        return /^\d{4}-\d{2}-\d{2}$/.test(s)
+    function pad2(n: number): string {
+        return String(n).padStart(2, "0")
     }
 
-    function todayIso(): string {
-        return new globalThis.Date().toISOString().slice(0, 10)
+    function isHm(s: string): boolean {
+        // Basic "HH:MM" check; input[type=time] will also produce this
+        return /^\d{2}:\d{2}$/.test(s)
+    }
+
+    function nowRounded(stepMinutes = 5): string {
+        const now = new globalThis.Date()
+        const roundedMin = Math.round(now.getMinutes() / stepMinutes) * stepMinutes
+        now.setMinutes(roundedMin, 0, 0)
+        return `${pad2(now.getHours())}:${pad2(now.getMinutes())}`
     }
 
     function getValueFromModel(): string {
-        const s = (box.getPropertyValue() ?? "").trim()
-        return isIsoDate(s) ? s : todayIso()
+        const v = (box.getPropertyValue() ?? "").trim()
+        if (isHm(v)) return v
+        // default: current time (rounded to 5 minutes)
+        return nowRounded(5)
     }
 
     // Freon hooks
@@ -38,9 +53,9 @@
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const refresh = (_why?: string): void => {
-        const newIso = getValueFromModel()
-        if (isoString !== newIso) {
-            isoString = newIso
+        const newHm = getValueFromModel()
+        if (hmString !== newHm) {
+            hmString = newHm
         }
     }
 
@@ -54,12 +69,13 @@
     })
 </script>
 
-<div class="datepicker">
+<div class="timepicker">
     <input
-        type="date"
-        bind:value={isoString}
-        class="datepicker-input"
-        placeholder="Select date"
+        type="time"
+        step="60"
+        bind:value={hmString}
+        class="timepicker-input"
+        placeholder="Select time"
         onclick={onClick}
         oninput={onInput}
         bind:this={inputElement}
@@ -67,13 +83,13 @@
 </div>
 
 <style>
-    .datepicker {
+    .timepicker {
         position: relative;
         max-width: 24rem;
         margin: 0 0.5rem;
     }
 
-    .datepicker-input {
+    .timepicker-input {
         padding: 0.5rem 0.75rem;
         border-radius: 6px;
         border: 1px solid var(--color-light-base-300);
@@ -82,18 +98,18 @@
         transition: border-color 0.15s, box-shadow 0.15s;
     }
 
-    .datepicker-input:focus {
+    .timepicker-input:focus {
         outline: none;
         border-color: var(--color-light-accent-400);
         box-shadow: 0 0 0 2px var(--color-light-accent-200);
     }
 
-    .datepicker-input::-webkit-calendar-picker-indicator {
+    .timepicker-input::-webkit-calendar-picker-indicator {
         cursor: pointer;
         opacity: 0.8;
     }
 
-    .datepicker-input::-webkit-calendar-picker-indicator:hover {
+    .timepicker-input::-webkit-calendar-picker-indicator:hover {
         opacity: 1;
     }
 </style>

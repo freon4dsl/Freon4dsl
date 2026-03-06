@@ -1,0 +1,42 @@
+language festivities
+
+concept DateTimeRange {
+  start: DateTime;
+  end: DateTime;
+}
+
+concept DateTime {
+  date: DateValue;
+  time: TimeValue;
+}
+
+concept DateRange {
+  start: DateValue;
+  end: DateValue;
+}
+
+concept DateValue {
+  year: number;
+  month: number;
+  day: number;
+}
+
+concept TimeSlot {
+  startTime: TimeValue;
+  endTime: TimeValue;
+}
+
+concept TimeValue {
+  hour: number;
+  minute: number;
+}
+
+concept StringTimeRange {
+  start: string;    // ISO "HH:MM"
+  end: string;      // ISO "HH:MM"
+}
+
+concept StringDateRange {
+  start: string;    // ISO "YYYY-MM-DD"
+  end: string;      // ISO "YYYY-MM-DD"
+}

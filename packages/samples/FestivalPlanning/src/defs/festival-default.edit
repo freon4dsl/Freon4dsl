@@ -1,0 +1,94 @@
+// -------------------- Editors for modelunits --------------------
+editor default
+
+global {
+    external {
+        DatePicker,
+        DateRangePicker,
+        TimeRangePicker,
+        TimePicker,
+        AvailabilityPicker,
+        HorizontalAccordion,
+        VerticalAccordion,
+        Carousel
+    }
+}
+
+FestivalOverview {[
+Festival overview
+
+    Name: ${self.name}
+    Location: ${self.location}
+    Dates: ${self.dates replace=DateRangePicker} [button text="Create Day Schedule" boxRole="create-day-schedule"]
+    Days: ${self.days horizontal}
+    Status: ${self.status radio}
+]}
+
+Schedule {[
+Schedule
+
+    ${self.performances replace=HorizontalAccordion}
+]}
+
+Resources {[
+Resources
+
+    Staff:
+    ${self.staff}
+
+    Equipment:
+    ${self.equipment}
+
+    Vendors:
+    ${self.vendors}
+]}
+
+TicketCatalog {[
+Tickets
+
+    ${self.ticketTypes}
+]}
+
+ComplianceDossier {[
+Compliance
+
+    ${self.compliance}
+]}
+
+Day {[
+  ${self.name}
+
+  Date: ${self.date}
+  Catering: ${self.catering}
+  Technical Crew: ${self.technicalCrew}
+  Safety plan: ${self.safetyPlanReference}
+]}
+
+Stage {[
+  Name: ${self.name}
+  Capacity: ${self.capacity}
+  Logistics: ${self.logistics}
+]}
+
+Performance {[
+  Artist: ${self.artist}
+  Day: ${self.day}
+  On from ${self.timeSlot replace=TimeRangePicker}
+  At stage: ${self.stage}
+  TechnicalRequirements: ${self.technicalRequirements}
+]}
+
+Logistics {[
+  Load in at: ${self.loadInTime replace=TimePicker} Load out at: ${self.loadOutTime replace=TimePicker}
+]}
+
+Staff {[
+  Name: ${self.name}
+  Role: ${self.role}
+  Skills: ${self.skills}
+  Availability: ${self.availability replace=AvailabilityPicker}
+]}
+
+DateValue {[
+    ${self.day}/${self.month}/${self.year}
+]}

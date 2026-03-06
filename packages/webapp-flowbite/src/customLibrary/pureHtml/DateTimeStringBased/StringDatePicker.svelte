@@ -3,6 +3,11 @@
     import { StringReplacerBox } from "@freon4dsl/core"
     import { onMount } from "svelte"
 
+    /**
+     * Note that this component works when the date is represented by a string.
+     * The string value will be in ISO format: "YYYY-MM-DD"
+     */
+
     // Props
     let { box }: FreComponentProps<StringReplacerBox> = $props()
 

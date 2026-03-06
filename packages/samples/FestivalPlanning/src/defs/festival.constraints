@@ -1,0 +1,162 @@
+language festivities
+// Festival planning metamodel
+// (Inspired by a multi-day festival / event production system)
+
+// Root model that ties the separate modelunits together
+model FestivalPlan {
+    festival: FestivalOverview;
+    schedule: Schedule;
+    resources: Resources;
+    tickets: TicketCatalog;
+    compliance: ComplianceDossier;
+}
+
+// -------------------- Modelunits --------------------
+
+modelunit FestivalOverview {
+    name: identifier;
+    location: string;
+    dates: DateRange;
+    status: FestivalStatus;
+
+    file-extension = "fes";
+}
+
+modelunit Schedule {
+    days: Day[];  => foreach day in Days { days[i].date === self.parent(a FestivalPlan).dates[i] }
+    stages: Stage[];
+
+
+    file-extension = "sch";
+}
+
+modelunit Resources {
+    staff: Staff[];
+    equipment: Equipment[];
+    vendors: Vendor[];
+
+    file-extension = "res";
+}
+
+modelunit TicketCatalog {
+    ticketTypes: TicketType[];
+
+    file-extension = "tix";
+}
+
+modelunit ComplianceDossier {
+    compliance: Compliance;
+
+    file-extension = "cmp";
+}
+
+concept Day {
+  date: DateValue;
+  catering: Vendor[];
+}
+
+concept Stage {
+  name: string;
+  capacity: number;
+  logistics: Logistics;
+}
+
+concept Performance {
+  reference artist: Artist;
+  reference stage?: Stage;
+  reference day?: Day;
+  timeSlot: StringTimeRange;
+  technicalRequirements: TechnicalRequirements;
+}
+
+concept Artist {
+    name: string;
+    agent: string;
+    phone_number: number;
+}
+
+concept TechnicalRequirements {
+  powerRequirements: string;
+  soundChannels: string;
+  lightingNeeds: string;
+  specialEffects: string;
+}
+
+concept Logistics {
+  loadInTime: TimeValue;
+  loadOutTime: TimeValue;
+  securityPlanReference: string;
+  cateringArrangements: string;
+}
+
+concept Staff {
+  name: string;
+  role: string;
+  skills: string[];
+  availability: Availability[];
+}
+
+concept Equipment {
+  name: string;
+  category: string;
+  quantity: number;
+  assignedStage: Stage;
+}
+
+concept Vendor {
+  name: string;
+  contractStartDate: DateValue;
+  contractEndDate: DateValue;
+  servicesProvided: string;
+}
+
+concept TicketType {
+  name: string;
+  price: Money;
+  accessLevel: string;
+  validDays: DateValue[];
+  capacityLimit: number;
+}
+
+concept Compliance {
+  safetyPlan: SafetyPlan;
+  insurance: Insurance;
+  permits: Permit[];
+}
+
+concept SafetyPlan {
+  documentReference: string;
+  approvalStatus: string;
+  lastReviewDate: DateValue;
+}
+
+concept Insurance {
+  policyNumber: string;
+  coverageType: string;
+  expiryDate: DateValue;
+}
+
+concept Permit {
+  permitType: string;
+  issuingAuthority: string;
+  issueDate: DateValue;
+  expiryDate: DateValue;
+}
+
+concept Money {
+  amount: number;
+  currency: string;
+}
+
+limited FestivalStatus {
+    name: identifier;
+    label: string;
+
+    Draft        = { name: "Draft",        label: "Draft" }
+    Planning     = { name: "Planning",     label: "Planning" }
+    Confirmed    = { name: "Confirmed",    label: "Confirmed" }
+    OnSale       = { name: "OnSale",       label: "On sale" }
+    Active       = { name: "Active",       label: "Live / In progress" }
+    Completed    = { name: "Completed",    label: "Completed" }
+    Cancelled    = { name: "Cancelled",    label: "Cancelled" }
+}

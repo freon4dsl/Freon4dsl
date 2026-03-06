@@ -13,7 +13,7 @@
     font-style: normal;
     font-weight: normal;
     font-family: "Arial";
-    margin: 1px;
+    margin: 0px;
     padding: 0px;
     position: relative;
     display: flex;
@@ -52,15 +52,19 @@
     --freon-radio-shadow-color: rgba(0, 0, 0, 0.2);
 }
 .gutter {
-    /*border: 1px solid;*/
     min-width: 4px;
     width: 8px;
-    height: 100vh;
     box-sizing: border-box;
+    /* match editor-component height */
+    align-self: stretch;
+    /* remove the viewport constraint */
+    height: auto; /* or just delete any height rule */
 }
 .editor-component {
     width: 100%;
-    flex: 1;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
 }
 .freon-overlay-root {
     position: fixed;

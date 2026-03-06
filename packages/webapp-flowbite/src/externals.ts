@@ -1,11 +1,19 @@
 import { setCustomComponents } from "@freon4dsl/core-svelte"
+import StructuredDateRangePicker from "./customLibrary/pureHtml/DateTimeConceptBased/StructuredDateRangePicker.svelte"
+import StructuredDatePicker from "./customLibrary/pureHtml/DateTimeConceptBased/StructuredDatePicker.svelte"
+import StructuredTimePicker from "./customLibrary/pureHtml/DateTimeConceptBased/StructuredTimePicker.svelte"
+import StructuredTimeRangePicker from "./customLibrary/pureHtml/DateTimeConceptBased/StructuredTimeRangePicker.svelte"
+import HorizontalAccordion from "./customLibrary/pureHtml/accordions/HorizontalAccordion.svelte"
+import VerticalAccordion from "./customLibrary/pureHtml/accordions/VerticalAccordion.svelte"
+import DateTimeRangePicker from "./customLibrary/pureHtml/DateTimeConceptBased/DateTimeRangePicker.svelte"
+import Carousel from "./customLibrary/embla/Carousel.svelte"
 
-// For InsuranceModel:
-import ShowAnimatedGif from "./customComponents/forInsurance/ShowAnimatedGif.svelte";
-import FB_Card_Component from "./customComponents/forInsurance/FB_Card_Component.svelte";
-import FB_Accordion from "./customComponents/forInsurance/FB_Accordion.svelte";
-import FB_Dialog from "./customComponents/forInsurance/FB_Dialog.svelte";
-import DatePicker from "./customComponents/forInsurance/DatePicker.svelte";
+// // For InsuranceModel:
+// import ShowAnimatedGif from "./customComponents/forInsurance/ShowAnimatedGif.svelte";
+// import FB_Card_Component from "./customComponents/forInsurance/FB_Card_Component.svelte";
+// import FB_Accordion from "./customComponents/forInsurance/FB_Accordion.svelte";
+// import FB_Dialog from "./customComponents/forInsurance/FB_Dialog.svelte";
+// import DatePicker from "./customComponents/forInsurance/DatePicker.svelte";
 
 // For ExternalTester:
 // import BooleanWrapperComponent from "./customComponents/forExternalTester/BooleanWrapperComponent.svelte";
@@ -51,14 +59,25 @@ export function configureExternals() {
     //     { component: StaffAccordion, knownAs: "StaffAccordion" },
     //     { component: Schedule, knownAs: "Schedule" },
     // ])
-    // For InsuranceModel:
+    // For Festival:
     setCustomComponents([
-    	{component: ShowAnimatedGif, knownAs: "AnimatedGif"},
-    	{component: FB_Card_Component, knownAs: "ExternalCard"},
-    	{component: FB_Accordion, knownAs: "ExternalAccordion"},
-    	{component: FB_Dialog, knownAs: "ExternalDialog"},
-    	{component: DatePicker, knownAs: "DatePicker"}
-    ]);
+        { component: StructuredDateRangePicker, knownAs: "DateRangePicker" },
+        { component: StructuredDatePicker, knownAs: "DatePicker" },
+        { component: StructuredTimeRangePicker, knownAs: "TimeRangePicker" },
+        { component: StructuredTimePicker, knownAs: "TimePicker" },
+        { component: DateTimeRangePicker, knownAs: "AvailabilityPicker" },
+        { component: HorizontalAccordion, knownAs: "HorizontalAccordion" },
+        { component: VerticalAccordion, knownAs: "VerticalAccordion" },
+        { component: Carousel, knownAs: "Carousel" },
+    ])
+    // For InsuranceModel:
+    // setCustomComponents([
+    //     { component: ShowAnimatedGif, knownAs: "AnimatedGif" },
+    //     { component: FB_Card_Component, knownAs: "ExternalCard" },
+    //     { component: FB_Accordion, knownAs: "ExternalAccordion" },
+    //     { component: FB_Dialog, knownAs: "ExternalDialog" },
+    //     { component: DatePicker, knownAs: "DatePicker" },
+    // ])
     // For ExternalTester:
     // setCustomComponents([
     //     { component: BooleanWrapperComponent, knownAs: "booleanWrapper" },

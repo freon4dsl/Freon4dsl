@@ -41,7 +41,8 @@ export class ConceptTemplate {
         const imports = new Imports()
         imports.core = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .add(implementsFre)
-            .add(Names.FreParseLocation).add(Names.notNullOrUndefined)
+            .add(Names.FreParseLocation)
+            .add(Names.notNullOrUndefined)
         if (hasReferences) {
             imports.core.add(Names.FreNodeReference)
         }
@@ -56,7 +57,7 @@ export class ConceptTemplate {
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
             // TEMPLATE: ConceptTemplate.generateConceptPrivate
-            ${hasSuper? "": 'import { makeObservable, action } from "mobx"'}
+            import { runInAction ${hasSuper ? "" : ", makeObservable, action"} } from "mobx"
 
             /**
              * Class ${myName} is the implementation of the concept with the same name in the language definition file.
@@ -87,7 +88,7 @@ export class ConceptTemplate {
                 ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName, imports)}
                 ${ConceptUtils.makeConvenienceMethods(concept.references())}
             }
-        `;
+        `
 
         return `
             // TEMPLATE ConceptTemplate.generateConceptPrivate(...)
@@ -115,7 +116,7 @@ export class ConceptTemplate {
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
             // TEMPLATE: ConceptTemplate.generateBinaryExpression
-            ${hasSuper? "": 'import { makeObservable, action } from "mobx"'}
+            import { runInAction ${hasSuper ? "" : ", makeObservable, action"} } from "mobx"
             
             /**
              * Class ${myName} is the implementation of the binary expression concept with the same name in the language definition file.
@@ -179,7 +180,7 @@ export class ConceptTemplate {
                     this.right = value;
                 }
             }
-        `;
+        `
 
         return `
             ${imports.makeImports(concept.language)}

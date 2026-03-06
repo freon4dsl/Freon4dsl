@@ -1,0 +1,12 @@
+// -------------------- Editors for modelunits --------------------
+editor externals
+
+FestivalOverview {[
+Festival overview
+
+    Name: ${self.name}
+    Location: ${self.location}
+    Dates: ${self.dates replace=DateRangePicker} [button text="Create Day Schedule" boxRole="create-day-schedule"]
+    Days: ${self.days replace=Carousel}
+    Status: ${self.status radio}
+]}

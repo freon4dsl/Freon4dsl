@@ -20,14 +20,14 @@ export class UnitTemplate {
         imports.core = ClassifierUtil.findMobxImportsForConcept(false, unitDescription)
             .add(Names.FreModelUnit)
             .add(Names.FreParseLocation)
-						.add(Names.notNullOrUndefined)
-        if (hasReferences) imports.core.add(Names.FreNodeReference);
+			.add(Names.notNullOrUndefined)
+        if (hasReferences) imports.core.add(Names.FreNodeReference)
         const metaType = Names.metaType();
         const intfaces = Array.from(new Set(unitDescription.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
-            import { makeObservable, action } from "mobx"
+            import { runInAction, makeObservable, action } from "mobx"
 
             /**
              * Class ${myName} is the implementation of the model unit with the same name in the language definition file.
