@@ -15,7 +15,6 @@ import type { DragAndDropType, FreLanguageClassifier, PropertyKind } from "../..
 import type { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index.js";
 import { isFreNodeReference } from "../../ast/index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
-import { runInAction } from "mobx"
 
 const LOGGER = new FreLogger("ListUtil");
 
