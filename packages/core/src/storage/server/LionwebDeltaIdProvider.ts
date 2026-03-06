@@ -4,20 +4,19 @@ import { type IdProvider } from "../../util/index.js"
 import { setAvailableIdsHandler } from "../lionweb-delta/FreonQueryResponses.js"
 
 export class LionwebDeltaIdProvider implements IdProvider {
-    
     constructor() {
         this.availableIds = []
         setAvailableIdsHandler(this.setIds)
         this.sendIdRequest()
     }
-    
+
     public sendIdRequest() {
         console.log(`sendIdRequest`)
         const getIdRequest: GetAvailableIdsRequest = {
             messageKind: "GetAvailableIdsRequest",
             queryId: "whatever",
             count: 400,
-            additionalInfos: []
+            additionalInfos: [],
         }
         this.queryRunning = true
         FREON.deltaClient.deltaApiClient.sendRequest(getIdRequest)
@@ -26,7 +25,7 @@ export class LionwebDeltaIdProvider implements IdProvider {
     localNumber: number = 0
     queryRunning: boolean = false
     newId(): string {
-        if (this.availableIds.length < 100  && !this.queryRunning) {
+        if (this.availableIds.length < 100 && !this.queryRunning) {
             this.sendIdRequest()
         }
         if (this.availableIds.length > 0) {
@@ -38,13 +37,15 @@ export class LionwebDeltaIdProvider implements IdProvider {
 
     usedId(_id: string): void {}
 
-    availableIds: string[] = [];
-    
+    availableIds: string[] = []
+
     setIds = (ids: LionWebId[]): void => {
         console.log(`IDS = '${this.availableIds}'`)
-        for(const id of ids) {
+        for (const id of ids) {
             this.availableIds.push(id)
         }
         this.queryRunning = false
     }
+
+    reset() {}
 }

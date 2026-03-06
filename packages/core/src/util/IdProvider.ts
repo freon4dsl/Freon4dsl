@@ -15,4 +15,9 @@ export interface IdProvider {
      * @param id
      */
     usedId(id: string): void;
+
+    /**
+     * Reset the id provider, used for testing when ID's should be predictable.
+     */
+    reset()
 }
