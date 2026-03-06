@@ -1,9 +1,9 @@
 import type { IAstChanger } from "../change-manager/IAstChanger.js"
 import { AstChanger, AstObserver, ReferenceUpdateManager } from "../change-manager/index.js"
 import { DeltaModelManager } from "../storage/DeltaModelManager.js"
-import { type IModelManager, type IServerCommunication, ModelManager } from "../storage/index.js"
+import { type IModelManager, type IServerCommunication, LionwebDeltaIdProvider, ModelManager } from "../storage/index.js"
 import { type FreonDeltaClient } from "../storage/lionweb-delta/FreonDeltaClient.js"
-import { notNullOrUndefined } from "../util/index.js"
+import { type IdProvider, notNullOrUndefined, SimpleIdProvider } from "../util/index.js"
 import type { FreEnvironment } from "./FreEnvironment.js"
 
 export interface ICoreConfig {
@@ -14,6 +14,7 @@ export interface ICoreConfig {
     server: IServerCommunication
     environment: FreEnvironment
     deltaClient: FreonDeltaClient
+    idProvider: IdProvider
 
     usesDelta(): boolean;
 }
@@ -26,7 +27,8 @@ export class CoreConfig implements ICoreConfig {
     server: IServerCommunication
     environment: FreEnvironment
     deltaClient: FreonDeltaClient
-    
+    idProvider: IdProvider
+
     static initialize(env: FreEnvironment, server: IServerCommunication) {
         FREON = new CoreConfig(env, server, undefined)
     }
@@ -35,7 +37,8 @@ export class CoreConfig implements ICoreConfig {
         FREON = new CoreConfig(env, undefined, deltaClient)
     }
 
-    static initializeWithServers(env: FreEnvironment, server: IServerCommunication, deltaClient: FreonDeltaClient) {
+    static async initializeWithServers(env: FreEnvironment, server: IServerCommunication, deltaClient: FreonDeltaClient) {
+        await deltaClient.connect()
         FREON = new CoreConfig(env, undefined, deltaClient)
         FREON.server = server
     }
@@ -49,18 +52,20 @@ export class CoreConfig implements ICoreConfig {
         // if (isNullOrUndefined(server)) {
         //     this.server = new DummyServerConfiguration()
         // } else {
-            this.server = server
+        this.server = server
         // }
         this.deltaClient = deltaClient
         if (notNullOrUndefined(deltaClient)) {
             this.modelManager = new DeltaModelManager()
+            this.idProvider = new LionwebDeltaIdProvider()
         } else {
             this.modelManager = new ModelManager()
+            this.idProvider = new SimpleIdProvider("ID-")
         }
     }
-    
+
     usesDelta(): boolean {
-        return this.deltaClient !== undefined 
+        return this.deltaClient !== undefined
     }
 }
 
@@ -85,6 +90,9 @@ export class DummyCoreConfig implements ICoreConfig {
     }
     get deltaClient(): FreonDeltaClient {
         throw new Error("DummyCoreConfig.deltaClient: FREON is still a dummy")
+    }
+    get idProvider(): IdProvider {
+        throw new Error("DummyCoreConfig.idProvider: FREON is still a dummy")
     }
     usesDelta(): boolean {
         throw new Error("DummyCoreConfig.usesDelta: FREON is still a dummy")

@@ -1,5 +1,6 @@
 import {
     AstActions,
+    deltaList,
     FreDelta,
     FreEditorUtil,
     type FreEnvironment,
@@ -34,7 +35,6 @@ import {
     searchTab,
 } from "../stores/InfoPanelStore.svelte"
 import { TreeNodeData } from "../tree/TreeNodeData.js"
-import { deltaList, mockDeltaList } from "$lib/delta-mock/ProcessedDeltaList"
 
 const LOGGER = new FreLogger("EditorRequestsHandler") // .mute();
 
@@ -277,25 +277,20 @@ export class EditorRequestsHandler {
     }
 
     showDeltas = (): void => {
-        // console.log("validate called");
         deltaResultLoading.value = true
         activeTab.value = deltaTab
         infoPanelShown.value = true
-        // add mock data to list
-        mockDeltaList()
-        // end mock
-        // console.log("Errors: " + modelErrors.list.map(err => err.message).join("\n"));
         deltaResultLoading.value = false
-        if (!isNullOrUndefined(deltaList.deltas[0])) {
-            const nodes: FreNode | FreNode[] | undefined = deltaList.deltas[0].changedNode
-            if (isNullOrUndefined(nodes)) {
-                // todo
-            } else if (Array.isArray(nodes)) {
-                WebappConfigurator.getInstance().selectElement(nodes[0])
-            } else {
-                WebappConfigurator.getInstance().selectElement(nodes)
-            }
-        }
+        // if (!isNullOrUndefined(deltaList.deltas[0])) {
+        //     const nodes: FreNode | FreNode[] | undefined = deltaList.deltas[0].changedNode
+        //     if (isNullOrUndefined(nodes)) {
+        //         // todo
+        //     } else if (Array.isArray(nodes)) {
+        //         WebappConfigurator.getInstance().selectElement(nodes[0])
+        //     } else {
+        //         WebappConfigurator.getInstance().selectElement(nodes)
+        //     }
+        // }
     }
 
     findText(stringToFind: string) {

@@ -1,16 +1,15 @@
 <script lang="ts">
-    import type { ProcessedDelta } from "$lib/delta-mock/ProcessedDeltaList"
     import { RenderComponent } from "@freon4dsl/core-svelte"
     import { inDevelopment, WebappConfigurator } from "$lib"
-    import { type Box, notNullOrUndefined } from "@freon4dsl/core"
+    import { type Box, notNullOrUndefined, type ProcessedDelta } from "@freon4dsl/core"
     import TreeView from "$lib/tree/TreeView.svelte"
     import type { TreeNodeData } from "$lib/tree/TreeNodeData"
     import { deltaEventToTreeNodeData } from "$lib/delta-helpers/Delta2TreeTransformer"
 
-    const { it } = $props<{ it: ProcessedDelta }>();
+    const { pDelta }: { pDelta: ProcessedDelta } = $props();
 
     let editor = WebappConfigurator.getInstance().langEnv?.editor
-    let originalNode = WebappConfigurator.getInstance().langEnv?.editor.copiedElement
+    let originalNode = pDelta.originalNode
     let originalBox: Box | undefined = undefined
     if (notNullOrUndefined(originalNode)) {
         originalBox = editor?.projection.getBox(originalNode);
@@ -18,7 +17,7 @@
 
     let nodeId = originalNode? originalNode.freId() : "unknown";
 
-    let treeData: TreeNodeData | undefined = deltaEventToTreeNodeData(it.delta)
+    let treeData: TreeNodeData | undefined = deltaEventToTreeNodeData(pDelta.delta)
     let showDeltaTree = $state(false)
 
     function toggleDeltaTree() {

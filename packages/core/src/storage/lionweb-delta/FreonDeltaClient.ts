@@ -1,4 +1,5 @@
 import { DeltaClient } from "@lionweb/server-delta-client"
+import { wait } from "../../editor/index.js"
 import { adminResponseFunctions } from "./FreonAdminResponses.js"
 import { childEventFunctions } from "./FreonChildEvents.js"
 import { partitionEventFunctions } from "./FreonPartitionEvents.js"
@@ -21,10 +22,14 @@ export class FreonDeltaClient {
             adminResponseFunctions,
             referenceEventFunctions
         ])
+        this._deltaApiClient.loggingOn = true
         this.connect()
+        wait(2000)
     }
 
     async connect(): Promise<void> {
+        console.log(">>>>>>>>> connecting ")
         await this.deltaApiClient.connect()
+        console.log("<<<<<<<<< connecting ")
     }
 }
