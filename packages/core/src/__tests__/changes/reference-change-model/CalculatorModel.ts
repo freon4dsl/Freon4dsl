@@ -7,7 +7,7 @@ import {
 } from "../../../ast/index.js";
 import { FREON } from "../../../environment/index.js"
 import { FreLanguage} from "../../../language/index.js";
-import { FreParseLocation } from '../../../reader/index.js';
+import { type FreParseLocation } from "../../../reader/index.js"
 import { matchElementList } from "../../../ast-utils/index.js";
 import { FreUtils } from "../../../util/index.js";
 import { Calculator } from "./internal.js";

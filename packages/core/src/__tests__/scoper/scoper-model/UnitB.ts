@@ -14,13 +14,13 @@
 // } from "@freon4dsl/core";
 import { type IWithoutName, type IWithName } from "./internal.js";
 import {
-    FreModelUnit,
-    FreNodeReference,
+    type FreModelUnit,
+    type FreNodeReference,
     MobxModelElementImpl,
     observablepartlist,
     observableprim
 } from '../../../ast/index.js';
-import { FreParseLocation } from '../../../reader/index.js';
+import { type FreParseLocation } from '../../../reader/index.js';
 import { FreUtils } from '../../../util/index.js';
 import { matchElementList, matchReferenceList } from '../../../ast-utils/index.js';
 

@@ -13,8 +13,8 @@ import { FREON } from "../../../environment/index.js"
 //     matchElementList,
 // } from "@freon4dsl/core";
 import { UnitA, UnitB } from "./internal.js";
-import { FreModel, FreModelUnit, MobxModelElementImpl, observablepartlist } from '../../../ast/index.js';
-import { FreParseLocation } from '../../../reader/index.js';
+import { type FreModel, type FreModelUnit, MobxModelElementImpl, observablepartlist } from "../../../ast/index.js"
+import { type FreParseLocation } from "../../../reader/index.js"
 import { FreUtils } from '../../../util/index.js';
 import { matchElementList } from '../../../ast-utils/index.js';
 

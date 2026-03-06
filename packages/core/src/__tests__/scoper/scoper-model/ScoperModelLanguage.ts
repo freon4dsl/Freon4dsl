@@ -4,11 +4,13 @@
 // Import as MyLanguage to avoid naming conflicts in generated constructors
 import { FreNodeReference } from "../../../ast/FreNodeReference.js";
 import {
-    FreLanguage, FreLanguageConcept, FreLanguageInterface,
-    FreLanguageModel,
-    FreLanguageModelUnit,
-    FreLanguageProperty
-} from '../../../language/FreLanguage.js';
+    FreLanguage,
+    type FreLanguageConcept,
+    type FreLanguageInterface,
+    type FreLanguageModel,
+    type FreLanguageModelUnit,
+    type FreLanguageProperty,
+} from "../../../language/FreLanguage.js"
 import * as MyLanguage from "./internal.js";
 
 /**

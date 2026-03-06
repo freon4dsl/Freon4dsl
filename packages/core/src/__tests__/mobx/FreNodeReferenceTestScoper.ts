@@ -1,4 +1,4 @@
-import { FreNamedNode } from "../../ast/index.js";
+import { type FreNamedNode } from "../../ast/index.js"
 import { computed, observable, makeObservable } from "mobx";
 import { TestScoper } from "./TestScoper.js";
 import { FreLogger } from "../../logging/index.js";
