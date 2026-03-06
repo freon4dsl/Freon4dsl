@@ -45,8 +45,8 @@
     }
 
     const refresh = (why?: string): void => {
-        LOGGER.log('REFRESH NumberControlBox: ' + why);
-        value = box.getNumber();
+        LOGGER.log('REFRESH NumberControlBox: ' + why + ` box value ${box.getNumber()}` );
+        value = box.getNumber()
     };
 
     onMount(() => {

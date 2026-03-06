@@ -1,3 +1,4 @@
+import { autorun } from "mobx"
 import { FREON } from "../../environment/index.js"
 import { FreLogger } from "../../logging/index.js";
 import type { FreNode } from "../../ast/index.js";
@@ -38,7 +39,7 @@ export class NumberControlBox extends Box {
             this.displayInfo.max = newValue;
             console.log("NumberBox: value greater than max");
         }
-        this.isDirty();
+        // this.isDirty();
     }
 
     getNumber(): number {
@@ -59,6 +60,10 @@ export class NumberControlBox extends Box {
         if (this.showAs === NumberDisplay.SLIDER) {
             this.completeDisplayInfo(getNumber());
         }
+        autorun(() => {
+            this.getNumber()
+            this.isDirty()
+        })
     }
 
     /**

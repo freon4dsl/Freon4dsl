@@ -126,7 +126,7 @@
 
     const onClick = (event: MouseEvent) => {
         LOGGER.log(
-            'RenderComponent.onClick for box ' + box.role + ', selectable:' + box.selectable
+            `RenderComponent.onClick for box ${box.role} selectable: ${box.selectable} readonly: ${readonly}` 
         );
         // Note that click events on some components, like TextComponent, are already caught.
         // These components need to take care of setting the currently selected element themselves.
