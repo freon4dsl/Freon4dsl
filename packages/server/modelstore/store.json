@@ -678,7 +678,22 @@
                     "file": "StaffNeeded.json"
                 }
             ]
+        },
+        {
+            "name": "Festival-AAP",
+            "folder": "AAP",
+            "language": "FestivalPlan",
+            "version": "1",
+            "units": [
+                {
+                    "name": "NOOT",
+                    "file": "NOOT.json"
+                },
+                {
+                    "name": "MIES",
+                    "file": "MIES.json"
+                }
+            ]
         }
-
     ]
 }

@@ -86,6 +86,7 @@
 
         // Rebuild slide boxes for Svelte
         ch = [...box.children]
+        console.log("REFRESH CAROUSEL, #children:", ch.length)
 
         // If Embla exists, re-init so it re-reads the DOM and rebuilds snapList
         if (emblaApi) {
@@ -126,6 +127,7 @@
 </script>
 
 <div class="embla">
+    <div>{ch.length}</div>
     <div
         class="embla__viewport"
         onemblainit={onInit}
@@ -136,6 +138,7 @@
                 <div class="embla__slide" inert={selectedIndex!==index} aria-hidden={selectedIndex !== index}>
                     <div class="card-wrapper">
                     <div class="card">
+                        <div>{index}</div>
                         <RenderComponent box={childBox} editor={editor} />
                     </div>
                     </div>
