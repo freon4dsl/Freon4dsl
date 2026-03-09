@@ -699,9 +699,9 @@
 </script>
 
 {#if readonly}
-    <span {id} role="none" class="text-component readonly">
+    <span {id} role="none" class="{cssClass} text-component readonly">
             <span
-                class="{cssClass} text-box-{boxType} text-component-text {errorCls} readonly"
+                class="text-box-{boxType} text-component-text {errorCls} readonly"
                 {tabindex}
                 bind:this={spanElement}
                 id="{id}-span"
@@ -746,7 +746,7 @@
                  But ... this is only a problem when this component is inside a draggable element (like List or table)
             -->
             <span
-                class="{cssClass} text-box-{boxType} text-component-text {errorCls}"
+                class="text-box-{boxType} text-component-text {errorCls}"
                 onmousedown={onMousedown}
                 onfocusin={onFocusIn}
                 {tabindex}

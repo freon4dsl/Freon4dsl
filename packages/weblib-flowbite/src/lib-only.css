@@ -79,3 +79,7 @@ Styling the draggable size-slider between the info panel and the editor panel
 .dark .size-slider.dragging:hover {
     background: var(--color-dark-accent-500);
 }
+
+.changed {
+    border: 1pt solid red;
+}

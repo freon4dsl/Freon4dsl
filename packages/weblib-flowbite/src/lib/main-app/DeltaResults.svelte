@@ -85,7 +85,7 @@
                             </summary>
 
                             <div class="p-1.5" id={"delta-details-" + idx}>
-                                <DeltaDetails pDelta={pDelta} />
+                                <DeltaDetails pDelta={pDelta} open={openIndex}/>
                             </div>
                         </details>
                     {/each}
