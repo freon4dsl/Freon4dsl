@@ -34,6 +34,8 @@ export abstract class Box {
     selectable: boolean = true; // todo because most boxes are not selectable the default could be set to false
     // Is this box currently not shown in the editor?
     isVisible: boolean = true;
+    // Should the drag handle be hidden for this box in a list?
+    hideDragHandle: boolean = false;
     parent: Box = null;
 
     // Indication whether the 'node' which this box projects has any validation errors. Adds a CSS class

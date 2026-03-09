@@ -116,6 +116,8 @@ export class FreEditor {
         if (notNullOrUndefined(this.rootElement)) {
             this._rootBox = this.projection.getBox(this.rootElement);
             this.rootBoxChanged();
+            // Clear error decorator cache when projection changes since boxes may have changed
+            this._errorDecorator.clearCache();
         }
     };
 
@@ -133,6 +135,11 @@ export class FreEditor {
      * @param node
      */
     set rootElement(node: FreNode) {
+        // Clear error decorator state when switching to a new root element
+        // This prevents stale box references from causing errors
+        if (this._rootElement !== node) {
+            this._errorDecorator.clearAll();
+        }
         this._rootElement = node;
         if (notNullOrUndefined(node)) {
             // select first editable child

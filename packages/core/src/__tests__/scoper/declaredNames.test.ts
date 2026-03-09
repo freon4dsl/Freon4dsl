@@ -4,11 +4,11 @@
  */
 import { beforeEach, describe, test, expect } from 'vitest';
 import { CoreConfig } from "../../environment/index.js"
-import { ScoperModel } from './scoper-model/ScoperModel.js';
+import { type ScoperModel } from "./scoper-model/ScoperModel.js"
 import { ModelCreator } from './ModelCreator.js';
-import { initializeLanguage, UnitB } from './scoper-model/index.js';
+import { initializeLanguage, type UnitB } from "./scoper-model/index.js"
 import { FreNamespace } from '../../scoper/index.js';
-import { FreNamedNode } from '../../ast/index.js';
+import { type FreNamedNode } from "../../ast/index.js"
 import { FreLanguage } from '../../language/index.js';
 
 

@@ -5,6 +5,7 @@ import { FreLogger } from "../logging/index.js";
 import type { FreCompositeScoper } from "./FreCompositeScoper.js";
 import type { FreNamespace} from './FreNamespace.js';
 import { PUBLIC_AND_PRIVATE } from './FreNamespace.js';
+import type { FreNamespaceInfo } from "./FreNamespaceInfo.js"
 import type { FreScoper } from "./FreScoper.js";
 import { notNullOrUndefined } from '../util/index.js';
 import { findEnclosingNamespace, hasCorrectType } from './ScoperUtil.js';
@@ -34,7 +35,7 @@ export abstract class FreScoperBase implements FreScoper {
             const visitedNamespaces: FreNamespace[] = [];
             let result: FreNamedNode[] = [].concat(FreLanguage.getInstance().stdLib.elements);
             // Find the namespace that 'node' is in
-            let nearestNamespace: FreNamespace = findEnclosingNamespace(node);
+            const nearestNamespace: FreNamespace = findEnclosingNamespace(node);
             // Add the visible nodes from the namespace
             if (notNullOrUndefined(nearestNamespace)) {
                 result.push(...nearestNamespace.getVisibleNodes(this.mainScoper, visitedNamespaces, PUBLIC_AND_PRIVATE));
@@ -52,8 +53,7 @@ export abstract class FreScoperBase implements FreScoper {
      * @see FreScoper
      * @param node
      */
-    // @ts-ignore parameter is present to adhere to interface FreScoper
-    importedNamespaces(node: FreNode): FreNamespaceInfo[] {
+    importedNamespaces(_node: FreNode): FreNamespaceInfo[] {
         // This method may be overridden by any subclass of this class.
         return [];
     }
@@ -62,8 +62,7 @@ export abstract class FreScoperBase implements FreScoper {
      * @see FreScoper
      * @param node
      */
-    // @ts-ignore parameter is present to adhere to interface FreScoper
-    alternativeNamespaces(node: FreNode): FreNamespaceInfo[] {
+    alternativeNamespaces(_node: FreNode): FreNamespaceInfo[] {
         // This method may be overridden by any subclass of this class.
         return [];
     }

@@ -1,67 +1,63 @@
 {
-  "private": false,
-  "publishConfig": {
-    "access": "public"
-  },
-  "name": "@freon4dsl/meta",
-  "version": "2.1.0",
-  "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/freon4dsl/Freon4dsl.git"
-  },
-  "bin": {
-    "freon": "dist/bin/freon-generator.js"
-  },
-  "scripts": {
-    "clean": "rm -rf node_modules/ && rm -rf dist/",
-    "cleanup": "bash ../../scripts/cleanup.sh",
-    "start": "echo Starting meta",
-
-    "peggy-concat-language"     : "cd src/languagedef/parser && bash ./concat.sh",
-    "peggy-concat-editor"       : "cd src/editordef/parser && bash ./concat.sh",
-    "peggy-concat-validator"    : "cd src/validatordef/parser && bash ./concat.sh",
-    "peggy-concat-scoper"       : "cd src/scoperdef/parser && bash ./concat.sh",
-    "peggy-concat-lang-exp-new" : "cd src/langexpressions/parser && bash ./concat.sh",
-    "all-concats": "npm run peggy-concat-language && npm run peggy-concat-editor && npm run peggy-concat-scoper && npm run peggy-concat-validator && npm run peggy-concat-lang-exp-new",
-
-    "lang-parser": "peggy --format es src/languagedef/parser/LanguageGrammar.pegjs",
-    "edit-parser": "peggy --format es src/editordef/parser/FreEditGrammar.pegjs",
-    "valid-parser": "peggy --format es src/validatordef/parser/ValidatorGrammar.pegjs",
-    "scop-parser": "peggy --format es src/scoperdef/parser/ScoperGrammar.pegjs",
-    "lang-exp-new-parser": "peggy --format es src/langexpressions/parser/ExpressionGrammar.pegjs",
-    "all-parsers": "npm run lang-parser && npm run edit-parser && npm run valid-parser && npm run scop-parser && npm run lang-exp-new-parser",
-
-    "build": "npm run all-concats && npm run all-parsers && tsc",
-    "build-dev": "npm run build",
-    "build-release": "npm run build",
-    "release-beta": "npm publish --tag beta",
-    "publish-local": "npm publish --verbose --registry http://localhost:4873/ --tag local",
-    "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
-    "republish-local": "npm run unpublish-local && npm run publish-local",
-    "test": "vitest run",
-    "circular": "madge --circular src/* > DEPENDENCIES.md",
-    "check-imports": "bash ../../scripts/check-import-extensions.sh",
-    "lint": "eslint"
-  },
-  "devDependencies": {
-    "vitest": "3.2.4",
-    "@vitest/ui": "3.2.4",
-    "vite-tsconfig-paths": "^5.0.1",
-    "vitest-tsconfig-paths": "^3.4.1"
-  },
-  "dependencies": {
-    "@rushstack/ts-command-line": "^4.22.0",
-    "@prettier/sync": "^0.5.2",
-    "kotlin": "^1.5.21",
-    "@lionweb/validation": "^0.6.3",
-    "net.akehurst.language-agl-processor": "4.2.1-20-RC2",
-    "peggy": "^4.0.3",
-    "prettier": "^3.5.1",
-    "source-map-support": "^0.5.21",
-    "tslib": "^2.8.1"
-  }
+    "private": false,
+    "publishConfig": {
+        "access": "public"
+    },
+    "name": "@freon4dsl/meta",
+    "version": "2.1.0",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/freon4dsl/Freon4dsl.git"
+    },
+    "bin": {
+        "freon": "dist/bin/freon-generator.js"
+    },
+    "scripts": {
+        "clean": "rm -rf node_modules/ && rm -rf dist/",
+        "cleanup": "bash ../../scripts/cleanup.sh",
+        "start": "echo Starting meta",
+        "peggy-concat-language": "cd src/languagedef/parser && bash ./concat.sh",
+        "peggy-concat-editor": "cd src/editordef/parser && bash ./concat.sh",
+        "peggy-concat-validator": "cd src/validatordef/parser && bash ./concat.sh",
+        "peggy-concat-scoper": "cd src/scoperdef/parser && bash ./concat.sh",
+        "peggy-concat-lang-exp-new": "cd src/langexpressions/parser && bash ./concat.sh",
+        "all-concats": "npm run peggy-concat-language && npm run peggy-concat-editor && npm run peggy-concat-scoper && npm run peggy-concat-validator && npm run peggy-concat-lang-exp-new",
+        "lang-parser": "peggy --format es src/languagedef/parser/LanguageGrammar.pegjs",
+        "edit-parser": "peggy --format es src/editordef/parser/FreEditGrammar.pegjs",
+        "valid-parser": "peggy --format es src/validatordef/parser/ValidatorGrammar.pegjs",
+        "scop-parser": "peggy --format es src/scoperdef/parser/ScoperGrammar.pegjs",
+        "lang-exp-new-parser": "peggy --format es src/langexpressions/parser/ExpressionGrammar.pegjs",
+        "all-parsers": "npm run lang-parser && npm run edit-parser && npm run valid-parser && npm run scop-parser && npm run lang-exp-new-parser",
+        "build": "npm run all-concats && npm run all-parsers && tsc",
+        "build-dev": "npm run build",
+        "build-release": "npm run build",
+        "release-beta": "npm publish --tag beta",
+        "publish-local": "npm publish --verbose --registry http://localhost:4873/ --tag local",
+        "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+        "republish-local": "npm run unpublish-local && npm run publish-local",
+        "test": "vitest run",
+        "circular": "madge --circular src/* > DEPENDENCIES.md",
+        "check-imports": "bash ../../scripts/check-import-extensions.sh",
+        "lint": "eslint"
+    },
+    "devDependencies": {
+        "vitest": "3.2.4",
+        "vite-tsconfig-paths": "^5.0.1",
+        "vitest-tsconfig-paths": "3.4.1"
+    },
+    "dependencies": {
+        "@rushstack/ts-command-line": "^4.22.0",
+        "@prettier/sync": "^0.5.2",
+        "kotlin": "^1.5.21",
+        "@lionweb/validation": "0.8.0-beta.8",
+        "net.akehurst.language-agl-processor": "4.2.1-20-RC2",
+        "peggy": "^4.0.3",
+        "prettier": "^3.5.1",
+        "source-map-support": "^0.5.21",
+        "tslib": "^2.8.1"
+    }
 }
