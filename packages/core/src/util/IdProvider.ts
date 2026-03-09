@@ -1,8 +1,5 @@
 /**
  * Provides unique identifiers for nodes or boxes.
- *
- * @see FreUtils.BOX_ID
- * @see FreUtils.ID
  */
 export interface IdProvider {
     /**
@@ -19,5 +16,5 @@ export interface IdProvider {
     /**
      * Reset the id provider, used for testing when ID's should be predictable.
      */
-    reset()
+    reset(): void
 }

@@ -2,15 +2,15 @@ import type { GetAvailableIdsRequest, LionWebId } from "@lionweb/server-delta-sh
 import { FREON } from "../../environment/index.js"
 import { type IdProvider } from "../../util/index.js"
 import { setAvailableIdsHandler } from "../lionweb-delta/FreonQueryResponses.js"
+import { v4 as uuidv4 } from "uuid"
 
 export class LionwebDeltaIdProvider implements IdProvider {
     constructor() {
         this.availableIds = []
         setAvailableIdsHandler(this.setIds)
-        this.sendIdRequest()
     }
 
-    public sendIdRequest() {
+    public sendIdRequest(): void {
         console.log(`sendIdRequest`)
         const getIdRequest: GetAvailableIdsRequest = {
             messageKind: "GetAvailableIdsRequest",
@@ -22,7 +22,6 @@ export class LionwebDeltaIdProvider implements IdProvider {
         FREON.deltaClient.deltaApiClient.sendRequest(getIdRequest)
     }
 
-    localNumber: number = 0
     queryRunning: boolean = false
     newId(): string {
         if (this.availableIds.length < 100 && !this.queryRunning) {
@@ -31,7 +30,8 @@ export class LionwebDeltaIdProvider implements IdProvider {
         if (this.availableIds.length > 0) {
             return this.availableIds.pop()
         } else {
-            return "LOCALID-" + this.localNumber++
+            // Use a local created id, using uuid, so it is hopefully unique.
+            return "LOCALID-" + uuidv4()
         }
     }
 
