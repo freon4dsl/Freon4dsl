@@ -30,3 +30,20 @@
     --accent-300: var(--color-dark-accent-300);
     --accent-400: var(--color-dark-accent-400);
 }
+
+/* Colors for the Accordion - positioned here because they depend on the color scheme used */
+.h-accordion-wrapper {
+    --accordion-outline-color: var(--color-light-accent-200);
+    --accordion-background-color: var(--color-light-accent-50);
+    --accordion-hover-color: var(--color-light-accent-100);
+    --accordion-remove-color: var(--color-light-freon-error);
+    --accordion-label-color: var(--color-light-freon-900);
+}
+
+.dark .h-accordion-wrapper {
+    --accordion-outline-color: var(--color-dark-accent-700);
+    --accordion-background-color: var(--color-dark-accent-900);
+    --accordion-hover-color: var(--color-dark-accent-800);
+    --accordion-remove-color: var(--color-dark-freon-error);
+    --accordion-label-color: var(--color-dark-base-100);
+}

@@ -127,7 +127,6 @@
 </script>
 
 <div class="embla">
-    <div>{ch.length}</div>
     <div
         class="embla__viewport"
         onemblainit={onInit}
@@ -137,10 +136,9 @@
             {#each ch as childBox, index (childBox.$id)}
                 <div class="embla__slide" inert={selectedIndex!==index} aria-hidden={selectedIndex !== index}>
                     <div class="card-wrapper">
-                    <div class="card">
-                        <div>{index}</div>
-                        <RenderComponent box={childBox} editor={editor} />
-                    </div>
+                        <div class="card">
+                            <RenderComponent box={childBox} editor={editor} />
+                        </div>
                     </div>
                 </div>
             {/each}

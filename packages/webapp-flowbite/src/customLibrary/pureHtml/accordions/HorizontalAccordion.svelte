@@ -171,108 +171,94 @@
 </script>
 
 <div class="h-accordion-wrapper">
-<div class="h-accordion">
-    {#each ch as childBox, index}
-        <div class="panel" class:open={panelOpen[index]}>
-            <button
-                type="button"
-                class="label label-btn"
-                aria-expanded={panelOpen[index]}
-                onclick={() => toggle(index)}
-                onkeydown={(e) => onLabelKeydown(e, index)}
-            >
+    <div class="h-accordion">
+        {#each ch as childBox, index}
+            <div class="panel" class:open={panelOpen[index]}>
+                <button
+                    type="button"
+                    class="label label-btn"
+                    aria-expanded={panelOpen[index]}
+                    onclick={() => toggle(index)}
+                    onkeydown={(e) => onLabelKeydown(e, index)}
+                >
                 <span class="label-text">
                     {childBox.node.freLanguageConcept()} {labels[index]}
                 </span>
 
-                <span
-                    class="remove-btn"
-                    role="button"
-                    tabindex="0"
-                    aria-label="Remove item"
-                    title="Remove item"
-                    onclick={(ev) => {ev.stopPropagation(); removeElement(index)}}
-                    onkeydown={(e) => {
+                    <span
+                        class="remove-btn"
+                        role="button"
+                        tabindex="0"
+                        aria-label="Remove item"
+                        title="Remove item"
+                        onclick={(ev) => {ev.stopPropagation(); removeElement(index)}}
+                        onkeydown={(e) => {
                         e.stopPropagation()
                         if (e.key === " ") e.preventDefault();
                         if (e.key === "Enter" || e.key === " ") removeElement(index)
                     }}
-                >
+                    >
                     ×
                 </span>
-            </button>
+                </button>
 
-            <div class="content" hidden={!panelOpen[index]}>
-                <div class="content-scroll">
-                    <RenderComponent box={childBox} editor={editor} />
+                <div class="content" hidden={!panelOpen[index]}>
+                    <div class="content-scroll">
+                        <RenderComponent box={childBox} editor={editor} />
+                    </div>
                 </div>
             </div>
+        {/each}
+        <!-- Add button as final narrow “panel” -->
+        <div
+            class="panel add-panel"
+            onclick={addElement}
+            onkeydown={onAddKeydown}
+            role="button"
+            tabindex="0"
+            aria-label="Add item"
+            title="Add item"
+        >
+            <div class="label">+</div>
         </div>
-    {/each}
-    <!-- Add button as final narrow “panel” -->
-    <div
-        class="panel add-panel"
-        onclick={addElement}
-        onkeydown={onAddKeydown}
-        role="button"
-        tabindex="0"
-        aria-label="Add item"
-        title="Add item"
-    >
-        <div class="label">+</div>
     </div>
-</div>
 </div>
 
 <style>
-    :root {
-        --accordion-label-height: 56px;     /* header height when OPEN */
-    }
     .h-accordion-wrapper {
+        --accordion-label-height: 56px;     /* header height when OPEN */
+        --accordion-strip-width: 36px;      /* width of the panel with the add button */
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;     /* take available space */
         min-height: 0;      /* allow shrinking */
+        min-width: 0;       /* keeps the row container from being stretched by content during animation or by long text*/
         overflow: hidden;   /* prevents outer scrollbar; scroll happens inside content */
-        outline: var(--color-light-accent-200) 2px solid;
-        /*height: 780px;*/
+        outline: var(--accordion-outline-color) 2px solid;
     }
     .h-accordion {
         display: flex;
-        align-items: stretch;
         flex: 1 1 auto;   /* fill the wrapper */
         min-height: 0;    /* important */
     }
-
-    /* Panels */
     .panel {
         display: flex;
         flex-direction: column;
-        align-items: stretch;
 
         flex: 0 0 auto;                  /* collapsed width */
-        transition: flex-basis 250ms ease;
+        transition: flex 250ms ease;
 
-        overflow: visible;
+        overflow: hidden;
         min-width: 0;                   /* important in flex rows */
         min-height: 0;                  /* Panels must also be allowed to shrink */
-        outline: 1px solid var(--color-light-accent-200);
+        outline: 1px solid var(--accordion-outline-color);
     }
 
     .panel.open {
-        flex: 1 1 auto; /* grow and fill remaining space */
+        flex: 1 1 0;        /* the open panel may grow */
+        min-width: 0;
+        min-height: 0;
     }
-    .panel.open .label-btn {
-        display: flex;              /* <-- the missing piece */
-        align-items: center;        /* vertical centering */
-        justify-content: space-between;
-
-        writing-mode: horizontal-tb;
-        transform: none;
-
-        padding: 0 12px;
-    }
-
     /* Label as button (CLOSED state default) */
     .label-btn {
         all: unset;
@@ -285,17 +271,15 @@
 
         font-weight: 700;
         opacity: 0.9;
-        background-color: var(--color-light-accent-50);
+        background-color: var(--accordion-background-color);
         border-bottom: 1px solid rgba(0,0,0,0.08);
         border-right: 1px solid rgba(0,0,0,0.08);
 
-        position: relative; /* anchor for the x */
-        /* take ALL available vertical space */
-        flex: 1 1 auto;
-        height: 100%;
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
+        align-self: stretch;
     }
 
     /* OPEN state: horizontal header bar */
@@ -303,18 +287,15 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-
         writing-mode: horizontal-tb;
         transform: none;
-
         padding: 0 12px;
 
         /* Only open panels get the fixed header height */
         flex: 0 0 var(--accordion-label-height);
-        height: var(--accordion-label-height);
-
-        border-bottom: 1px solid rgba(0,0,0,0.08);
+        flex-shrink: 0;   /* prevent header jitter during panel animation */
         border-right: 0;
+        flex-direction: row;
     }
 
     .label-btn:focus-visible {
@@ -322,39 +303,37 @@
         outline-offset: 2px;
     }
     .label-btn:hover {
-        background-color: var(--color-light-accent-100);
+        background-color: var(--accordion-hover-color);
     }
     .label-text {
+        color: var(--accordion-label-color);
         overflow-wrap: anywhere; /* allow breaks in long labels */
         word-break: break-word;
         line-height: 1.1;
         text-align: center;
     }
-
-    /* Content area */
     .content {
         padding: 12px;
-        overflow: visible;
-        flex: 1 1 auto;    /* fill available space under the header */
-        min-height: 0;     /* allow internal scroller to work */
+        overflow: hidden;
+        flex: 1 1 auto;     /* fill available space under the header */
+        min-height: 0;      /* allow internal scroller to work */
+        min-width: 0;       /* prevents horizontal reflow during animation */
+        display: flex;
+        flex-direction: column;
     }
-
     .content-scroll {
-        height: 100%;
-        overflow: auto;        /* scrolling lives here instead */
+        flex: 1 1 auto;
         min-height: 0;
+        overflow: auto;     /* scrolling lives here instead */
     }
-
-    /* Add panel tweaks */
-    .add-panel:hover {
-        background-color: var(--color-light-accent-100);
-    }
-
     .add-panel {
-        flex: 0 0 36px;
+        flex: 0 0 var(--accordion-strip-width);
         font-size: 1.6rem;   /* scales nicely */
         font-weight: 700;
         cursor: pointer;
+    }
+    .add-panel:hover {
+        background-color: var(--accordion-hover-color);
     }
     .add-panel .label {
         flex: 1;
@@ -365,11 +344,9 @@
         writing-mode: vertical-rl;
         transform: rotate(180deg);
     }
-
     .remove-btn {
         display: none;
     }
-
     .panel.open .remove-btn {
         display: flex;
         align-items: center;          /* vertical center */
@@ -381,43 +358,21 @@
         font-size: 16px;
         font-weight: 700;
 
-        color: #b91c1c;
+        color: var(--accordion-remove-color);
         border-radius: 50%;
         cursor: pointer;
-        transition: background 0.2s ease, transform 0.1s ease;
+        opacity: 0.6;              /* base visibility */
+        transition: opacity 0.2s ease, background 0.2s ease, transform 0.1s ease;
     }
-
-    .panel.open .remove-btn:hover {
+    .panel.open .remove-btn:hover,
+    .panel.open .remove-btn:focus-visible {
         background: rgba(185, 28, 28, 0.12);
         transform: scale(1.05);
     }
-
-    .label-btn:hover .remove-btn {
-        opacity: 1;
-    }
-
-    .remove-btn:hover {
-        background-color: #f1aeb5;
-    }
-
-    /* show on hover/focus of the label */
     .label-btn:hover .remove-btn,
     .label-btn:focus-visible .remove-btn,
+    .remove-btn:hover,
     .remove-btn:focus-visible {
         opacity: 1;
-    }
-
-    /* nice: full opacity on hover of the x itself */
-    .remove-btn:hover {
-        background-color: #f1aeb5;
-    }
-
-    .panel.open .label-btn {
-        writing-mode: horizontal-tb;
-        transform: none;
-
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 0 12px;
     }
 </style>
