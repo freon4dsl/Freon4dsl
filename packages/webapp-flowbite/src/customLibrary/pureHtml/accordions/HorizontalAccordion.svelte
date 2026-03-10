@@ -160,7 +160,7 @@
         box.refreshComponent = refresh;
         // Needed to get an effect
         ch = [...box.children]
-        // untrack because initialize causes a too many  effects error
+        // untrack because initialize causes a too many effects error
         untrack( () => getOpenPanels() );
     });
 
