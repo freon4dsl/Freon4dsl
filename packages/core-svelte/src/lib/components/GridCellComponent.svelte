@@ -13,7 +13,7 @@
     //local variables
     const LOGGER = GRIDCELL_LOGGER;
     let contentBox: Box = $state(dummyBox);
-    let id: string = notNullOrUndefined(box) ? componentId(box) : 'gridcell-for-unknown-box';
+    let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'gridcell-for-unknown-box');
 
     let row: string = $state('');
     let column: string = $state('');
@@ -73,7 +73,7 @@
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {

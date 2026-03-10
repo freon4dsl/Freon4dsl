@@ -19,12 +19,12 @@
 
     const LOGGER = LIMITEDRADIO_LOGGER;
 
-    let id: string = box.id;
-    let myEnum = box.getPossibleNames();
-    let currentValue: string = $state(box.getNames()[0]);
+    let id: string = $derived(box.id);
+    let myEnum = $derived(box.getPossibleNames());
+    let currentValue: string = $derived(box.getNames()[0]);
     let allElements: HTMLInputElement[] = $state([]);
-    let ariaLabel: string = box.propertyName;
-    let isHorizontal: boolean = box.horizontal;
+    let ariaLabel: string = $derived(box.propertyName);
+    let isHorizontal: boolean = $derived(box.horizontal);
 
     function findSelectedElement(): HTMLInputElement | undefined {
         let selected: HTMLInputElement | undefined = undefined;
@@ -39,7 +39,7 @@
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {

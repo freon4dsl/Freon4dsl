@@ -9,20 +9,20 @@
     import { CHECKBOX_LOGGER } from './ComponentLoggers.js';
 
     // Props
-    let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
+    let { box }: FreComponentProps<BooleanControlBox> = $props();
 
     const LOGGER = CHECKBOX_LOGGER;
 
-    let id: string = notNullOrUndefined(box) ? componentId(box) : 'checkbox-for-unknown-box';
+    let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'checkbox-for-unknown-box');
     let inputElement: HTMLInputElement;
-    let value = $state((box as BooleanControlBox).getBoolean());
+    let value = $derived((box as BooleanControlBox).getBoolean());
 
-    let indeterminate = $state((box as BooleanControlBox).getBoolean() === null || (box as BooleanControlBox).getBoolean() === undefined);
+    let indeterminate = $derived((box as BooleanControlBox).getBoolean() === null || (box as BooleanControlBox).getBoolean() === undefined);
     let isOptional: boolean = false
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {

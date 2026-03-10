@@ -5,7 +5,8 @@
 <script lang="ts">
     import { TEXT_LOGGER } from './ComponentLoggers.js';
     import { flushSync, onMount, tick } from 'svelte';
-    import { componentId, replaceHTML } from './svelte-utils/index.js';
+    import { componentId, replaceHTML, TextComponentHelper } from './svelte-utils/index.js';
+    import type { TextComponentProps } from './svelte-utils/FreComponentProps.js';
     import {
         ActionBox,
         ALT,
@@ -29,10 +30,8 @@
         TAB,
         TextBox, UndefinedRectangle
     } from "@freon4dsl/core"
-    import { TextComponentHelper } from './svelte-utils/TextComponentHelper.js';
     import ErrorTooltip from './ErrorTooltip.svelte';
     import ErrorMarker from './ErrorMarker.svelte';
-    import type { TextComponentProps } from './svelte-utils/FreComponentProps.js';
     import { contextMenu, shouldBeHandledByBrowser } from './stores/AllStores.svelte';
 
     const LOGGER = TEXT_LOGGER;
@@ -50,18 +49,19 @@
     }: TextComponentProps<TextBox> = $props();
 
     // Variables dependent upon the box, the prop 'text' is one of these.
-    // an id for the html element
-    let id: string = $state(notNullOrUndefined(box) ? componentId(box) : 'text-with-unknown-box');
+    // an id for the HTML element
+    // svelte-ignore
+    let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'text-with-unknown-box');
     // the placeholder when value of text component is not present
-    let placeholder: string = $state(notNullOrUndefined(box) ? box.placeHolder : '<..>');
+    let placeholder: string = $derived(notNullOrUndefined(box) ? box.placeHolder : '<..>');
     // variable to remember the text that was in the box previously
-    let originalText: string = $state(notNullOrUndefined(box) ? box.getText() : '');
+    let originalText: string = $derived(notNullOrUndefined(box) ? box.getText() : '');
     // variable for styling
-    let placeHolderStyle: string = partOfDropdown
+    let placeHolderStyle: string = $derived(partOfDropdown
         ? 'text-component-action-placeholder'
-        : 'text-component-placeholder';
+        : 'text-component-placeholder');
     // indication how is this text component is used, determines styling
-    let boxType: BoxType = $state(
+    let boxType: BoxType = $derived(
         notNullOrUndefined(box?.parent)
             ? isActionBox(box?.parent)
                 ? 'action'
@@ -71,19 +71,16 @@
             : 'text'
     );
 
-    // Variables to alter the state of the component, the prop 'isEditing' is one of these.
-    // indicates whether we are just starting to edit, so we need to set the cursor in the <input>
-    let editStart = $state(false);
-    // indicates whether the user can use the TAB key to enter this component
+    // Indicates whether the user can use the TAB key to enter this component.
     // Tab skips spaces before and after operators, which have specific roles.
-    let tabindex: number = notNullOrUndefined(box?.role)
+    let tabindex: number = $derived(notNullOrUndefined(box?.role)
         ? box.role.startsWith('action-binary') || box.role.startsWith('action-exp')
             ? -1
             : 0
-        : 0;
+        : 0);
 
     // Variables for showing errors
-    let errorCls: string = $state(''); // css class name for when the node is erroneous
+    let errorCls: string = $state(''); // CSS class name for when the node is erroneous
     let errMess: string[] = $state([]); // error message to be shown when element is hovered
     let hasErr: boolean = $state(false); // indicates whether this box has errors
 
@@ -93,7 +90,7 @@
     let widthSpan: HTMLSpanElement = $state()!; // the width of the <span> element, used to set the width of the <input> element
 
     // We create an extra object that handles a number of the more complex functions for this component
-    let myHelper: TextComponentHelper = new TextComponentHelper(
+    let myHelper: TextComponentHelper = $derived(new TextComponentHelper(
         box,
         () => {
             return text;
@@ -103,7 +100,7 @@
         },
         endEditing,
         toParent
-    );
+    ));
 
     /* ========	The following functions are called from @freon4dsl/core =========== */
 
@@ -234,7 +231,6 @@
         }
         // set the local variables
         isEditing = true;
-        editStart = true;
         originalText = text;
         await tick(); 
         // wait till the <input> is rendered 
@@ -651,7 +647,7 @@
         const before = text.slice(0, myHelper.from);
         const after  = text.slice(myHelper.to);
         text = before + insert + after;
-        LOGGER.log( `inserAtSelection: ${before} ${insert} ${after}`)
+        LOGGER.log( `insertAtSelection: ${before} ${insert} ${after}`)
         flushSync(); // flush any pending updates.
 
         // Collapse caret to end of inserted text

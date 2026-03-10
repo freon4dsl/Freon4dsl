@@ -8,8 +8,8 @@
     import { isNullOrUndefined } from '@freon4dsl/core';
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    let { editor, box }: FreComponentProps<EmptyLineBox> = $props();
-    let id: string = isNullOrUndefined(box) ? componentId(box) : 'empty-line-for-unknown-box';
+    let { box }: FreComponentProps<EmptyLineBox> = $props();
+    let id: string = $derived(isNullOrUndefined(box) ? componentId(box) : 'empty-line-for-unknown-box');
 </script>
 
 <span {id} class="{box.cssClass}">

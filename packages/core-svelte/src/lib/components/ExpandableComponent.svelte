@@ -33,7 +33,7 @@
     {/key}
 </span>
 
-<!--   todo move this style to freon.css as soon as this component is available through the .edit file -->
+<!--   todo move this style to freon.CSS as soon as this component is available through the .edit file -->
 <style>
     .expandable-component {
         display: flex;

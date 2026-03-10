@@ -1,6 +1,5 @@
 <script lang="ts">
     import { RENDER_LOGGER } from './ComponentLoggers.js';
-    import { tick } from "svelte"
     // This component renders any box from the box model.
     // Depending on the box type the right component is used.
     // It also makes the rendered element selectable, including changing the style.
@@ -72,11 +71,10 @@
 
     let { editor, box }: FreComponentProps<Box> = $props();
 
-    let id: string = $state('');
-    id = notNullOrUndefined(box) ? `render-${componentId(box)}` : 'render-for-unknown-box';
+    let id: string = $derived(notNullOrUndefined(box) ? `render-${componentId(box)}` : 'render-for-unknown-box');
     let element: HTMLElement | undefined = $state(undefined);
 
-    // css class name for when the node is selected
+    // CSS class name for when the node is selected
     let selectedCls: string = $derived.by(() => {
         LOGGER.log(`Render derived: selectedCls ${box?.id}`)
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
@@ -103,7 +101,7 @@
         }
     });
 
-    // css class name for when the node is erroneous
+    // CSS class name for when the node is erroneous
     let errorCls: string = $derived.by(() => {
         if (notNullOrUndefined(box) && box.hasError) {
             return 'render-component-error';

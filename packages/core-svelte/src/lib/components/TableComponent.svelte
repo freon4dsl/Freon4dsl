@@ -29,7 +29,7 @@
     // Props
     let { editor, box }: FreComponentProps<TableBox> = $props();
 
-    let id = notNullOrUndefined(box) ? componentId(box) : 'table-for-unknown-box';
+    let id = $derived(notNullOrUndefined(box) ? componentId(box) : 'table-for-unknown-box');
     let cells: TableCellBox[] = $state([]);
     let templateColumns: string = $state('');
     let templateRows: string = $state('');
@@ -72,7 +72,7 @@
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {

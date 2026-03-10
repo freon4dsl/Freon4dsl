@@ -12,11 +12,11 @@
 
     // Variables set from the box.
     // box.displayInfo is completely set, it is done in NumberControlBox constructor
-    let id: string = box.id;
-    let value: number = $state(box.getNumber());
-    let min: number = $state(box.displayInfo!.min)!;
-    let max: number = $state(box.displayInfo!.max)!;
-    let step: number = $state(box.displayInfo!.step)!;
+    let id: string = $derived(box.id);
+    let value: number = $derived(box.getNumber());
+    let min: number = $derived(box.displayInfo!.min)!;
+    let max: number = $derived(box.displayInfo!.max)!;
+    let step: number = $derived(box.displayInfo!.step)!;
 
     let inputElement: HTMLInputElement;
     let tooltip: HTMLSpanElement;
@@ -37,7 +37,7 @@
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {

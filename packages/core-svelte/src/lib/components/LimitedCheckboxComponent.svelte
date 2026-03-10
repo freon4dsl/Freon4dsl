@@ -19,12 +19,12 @@
 
     const LOGGER = LIMITEDCHECKBOX_LOGGER;
 
-    let id: string = box.id;
-    let currentNames: string[] = $state(box.getNames());
-    let myEnum: string[] = box.getPossibleNames();
+    let id: string = $derived(box.id)
+    let currentNames: string[] = $derived(box.getNames());
+    let myEnum: string[] = $derived(box.getPossibleNames())
     let allElements: HTMLInputElement[] = $state([]);
-    let ariaLabel: string = box.propertyName;
-    let isHorizontal: boolean = box.horizontal;
+    let ariaLabel: string = $derived(box.propertyName)
+    let isHorizontal: boolean = $derived(box.horizontal);
 
     const onClick = (event: MouseEvent) => {
         // console.log("onClick")
@@ -51,7 +51,7 @@
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {

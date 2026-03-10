@@ -25,8 +25,7 @@
 	// Props
     let { editor, box }: FreComponentProps<OptionalBox> = $props();
 
-    let id: string = $state(''); // an id for the html element showing the optional
-    id = notNullOrUndefined(box) ? componentId(box) : 'optional-for-unknown-box';
+    let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'optional-for-unknown-box'); // an id for the HTML element showing the optional
     let isEmpty: boolean = $state(true);
 	let placeholder: string = $state('add optional element');
     let contentBox: Box = $state()!;
@@ -59,7 +58,7 @@
 		// wait until DOM updates and styles/layout settle
 		await tick();
 
-		// now wait one more frame so images/css apply
+		// now wait one more frame so images/CSS apply
 		requestAnimationFrame(() => {
 		    if (dropdownCmp) {
 		        dropdownCmp?.scrollIntoViewIfNeeded();
@@ -265,9 +264,9 @@
 			  {/if}
 		  </button>
 
-		  <div class="optional-component-tooltip" role="tooltip">
+		  <span class="optional-component-tooltip" role="tooltip">
 			Add {placeholder}
-		  </div>
+		  </span>
 
 			{#if dropdownShown}
 			<DropdownComponent
@@ -290,9 +289,9 @@
 			<DeleteIcon/>
 		  </button>
 
-		  <div class="optional-component-tooltip" role="tooltip">
+		  <span class="optional-component-tooltip" role="tooltip">
 			Remove {placeholder}
-		  </div>
+		  </span>
 		</span>
 		<RenderComponent box={contentBox} {editor} bind:this={contentComponent} />
 	{/if}

@@ -18,14 +18,14 @@
     // Props
     let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
 
-    let id: string = notNullOrUndefined(box) ? componentId(box) : 'switch-for-unknown-box';
-    let value = $state(box.getBoolean());
+    let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'switch-for-unknown-box');
+    let value = $derived(box.getBoolean());
     let switchElement: HTMLButtonElement;
 
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {

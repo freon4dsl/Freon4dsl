@@ -22,19 +22,19 @@
 
     let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
 
-    let id: string = box.id;
+    let id: string = $derived(box.id);
     let trueElement: HTMLInputElement;
     let falseElement: HTMLInputElement;
     let undefinedElement: HTMLInputElement | undefined = $state(undefined);
-    let currentValue: boolean | undefined = $state(box.getBoolean());
-    let ariaLabel = box.propertyName;
-    let isHorizontal: boolean = box.horizontal;
+    let currentValue: boolean | undefined = $derived(box.getBoolean());
+    let ariaLabel = $derived(box.propertyName)
+    let isHorizontal: boolean = $derived(box.horizontal)
     let isOptional: boolean = $state(false); // is set in $effect to optionality from box
 
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {
