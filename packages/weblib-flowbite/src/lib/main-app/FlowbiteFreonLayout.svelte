@@ -4,7 +4,7 @@
 		FooterLinkGroup,
 		Drawer,
 		Footer,
-		FooterCopyright, CloseButton, Button
+		FooterCopyright, CloseButton
 	} from "flowbite-svelte"
 	import { onMount } from 'svelte';
 	import { sineIn } from 'svelte/easing';
@@ -78,6 +78,13 @@
 		}
 	}
 
+	function handleCloseClick(index: number): (e: MouseEvent) => void {
+		return (e: MouseEvent) => {
+			e.stopPropagation(); // prevent tab change on close
+			closeTab(index);
+		};
+	}
+
 	const normal_tab_style: string = "focus:outline-none border border-transparent opacity-70";
 	const active_tab_style: string = "border border-light-base-900 dark:border-dark-base-900 opacity-100";
 </script>
@@ -90,7 +97,7 @@
 	<!-- the tab panel with buttons -->
 	<div class="w-full h-[calc(100vh-118px)] pl-2 pr-2 dark:bg-dark-base-800 bg-light-base-100">
 		<div class="flex wmt-1" role="tablist">
-			{#each editorInfo.unitsInTabs as unitInfo, index}
+			{#each editorInfo.unitsInTabs as unitInfo, index (index)}
 				<div class="relative dark:bg-dark-base-500 bg-light-base-200 dark:text-dark-base-50 text-light-base-900 p-1 mr-1 text-sm rounded-t-lg font-medium
 					flex flex-wrap items-center
 					{editorInfo.currentOpenTab === index ? active_tab_style : normal_tab_style}">
@@ -101,10 +108,7 @@
 						{unitInfo.name}
 					</button>
 					<CloseButton size="sm" class="text-light-base-900 dark:text-dark-base-50 p-1"
-								 tabindex={-1} onclick={(e: MouseEvent) => {
-								e.stopPropagation(); // Prevent tab change on close
-								closeTab(index);
-							}}
+								 tabindex={-1} onclick={handleCloseClick(index)}
 					/>
 					{#if editorInfo.currentOpenTab === index}
 						<div class="absolute inset-x-0 bottom-0 h-0.5 bg-light-accent-500 dark:bg-dark-accent-500"></div>
@@ -117,7 +121,7 @@
 	</div>
 
 	<Footer
-		class="text-center sticky md:bottom-0 start-0 h-12 w-full p-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 border-t border-light-base-200 text-light-base-700 bg-light-base-50  dark:border-dark-base-600 dark:bg-dark-base-900"
+		class="text-center sticky md:bottom-0 inset-s-0 h-12 w-full p-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 border-t border-light-base-200 text-light-base-700 bg-light-base-50  dark:border-dark-base-600 dark:bg-dark-base-900"
 	>
 		<div class="flex items-center justify-between">
 			<FooterCopyright

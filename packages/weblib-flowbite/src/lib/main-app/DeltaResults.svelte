@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Spinner} from "flowbite-svelte"
-    import { deltaResultLoading, WebappConfigurator } from "$lib"
+    import { deltaResultLoading } from "$lib"
     import { deltaList, type ProcessedDelta, processedDeltaAsString } from "@freon4dsl/core"
     import DeltaDetails from "$lib/main-app/DeltaDetails.svelte"
     import { goToNode } from "$lib/ts-utils/CommonFunctions"
