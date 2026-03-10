@@ -61,11 +61,6 @@
 			<QuestionCircleOutline class={iconCls} />
 		</Button>
 
-<!--		&lt;!&ndash;  Model panel button and tooltip      &ndash;&gt;-->
-<!--		<Button class="{buttonCls} {colorCls} " onclick={() => (drawerHidden.value = false)}>-->
-<!--			<ChevronRightOutline class={iconCls} />-->
-<!--		</Button>-->
-<!--		<Tooltip placement="bottom" class={tooltipClass}>Show Model Info</Tooltip>-->
 	</ButtonGroup>
 	<!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
 	<Tooltip tabindex={-1} triggeredBy="#dark-mode-button" placement="bottom" class={tooltipClass}>Dark/Light Mode</Tooltip>

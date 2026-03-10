@@ -11,7 +11,7 @@
     import { type FreUnitIdentifier, notNullOrUndefined } from "@freon4dsl/core"
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {editorInfo} from "$lib/stores/ModelInfo.svelte";
-    import {drawerHidden, dialogs} from "$lib/stores";
+    import {drawerOpen, dialogs} from "$lib/stores";
     import {openModelDialog} from "$lib/language/DialogHelpers";
     import {ImportExportHandler, WebappConfigurator} from "$lib/language";
     import { tooltipClass } from '$lib/stores/StylesStore.svelte';
@@ -46,38 +46,38 @@
     const openUnit = (index: number) => {
         // console.log('openUnit ' + index + " " + editorInfo.unitIds[index]?.id)
         WebappConfigurator.getInstance().openModelUnit(editorInfo.unitIds[index]);
-        drawerHidden.value = true;
+        drawerOpen.value = false;
     };
 
     const deleteUnit = (index: number) => {
         // console.log("deleteUnit: " + editorInfo.unitIds[index].name);
         editorInfo.toBeDeleted = editorInfo.unitIds[index];
         dialogs.deleteUnitDialogVisible = true;
-        drawerHidden.value = true;
+        drawerOpen.value = false;
     };
 
     const renameUnit = (index: number) => {
         // console.log("renameUnit: " + editorInfo.unitIds[index].name);
         editorInfo.toBeRenamed = editorInfo.unitIds[index];
         dialogs.renameUnitDialogVisible = true;
-        drawerHidden.value = true;
+        drawerOpen.value = false;
     };
 
     const exportUnit = (index: number) => {
         // console.log("exportUnit: " + editorInfo.unitIds[index].name);
         new ImportExportHandler().exportUnit(editorInfo.unitIds[index]);
-        drawerHidden.value = true;
+        drawerOpen.value = false;
     };
 
     const newUnit = (type: string) => {
         // console.log('newUnit of type: ' + type);
         editorInfo.toBeCreated = {name: '', id: '', type: type}
         dialogs.newUnitDialogVisible = true;
-        drawerHidden.value = true;
+        drawerOpen.value = false;
     };
     
     const closeDrawer = () => {
-        drawerHidden.value = true
+        drawerOpen.value = false
         WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
     }
 
@@ -117,7 +117,6 @@
             <FolderPlusSolid class={iconCls}/>
         </Button>
     </ButtonGroup>
-    <CloseButton onclick={closeDrawer} class="mb-4 dark:text-dark-base-50"/>
 </div>
 <!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
 <Tooltip triggeredBy="#open-model-button" class={tooltipClass} placement="bottom">Open existing model</Tooltip>

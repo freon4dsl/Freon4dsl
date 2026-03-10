@@ -11,7 +11,7 @@
 	import { WebappConfigurator } from '$lib/language';
 	import NavBar from '$lib/main-app/NavBar.svelte';
 	import ModelPanel from '$lib/main-app/ModelPanel.svelte';
-	import { drawerHidden, inDevelopment, initializing } from '$lib/stores/WebappStores.svelte';
+	import { drawerOpen, inDevelopment, initializing } from '$lib/stores/WebappStores.svelte';
 	import ViewDialog from '$lib/dialogs/ViewDialog.svelte';
 	import { openStartDialog } from '$lib/language/DialogHelpers';
 	import StartDialog from '$lib/dialogs/StartDialog.svelte';
@@ -33,7 +33,6 @@
 	import ErrorMessage from '$lib/dialogs/ErrorMessage.svelte';
 
 	let transitionParams = {
-		x: 320,
 		duration: 200,
 		easing: sineIn
 	};
@@ -129,8 +128,7 @@
 				href="/"
 				by="Freon contributors"
 				year={2025}
-				class="inline-flex items-center text-xs mr-4 pr-4 "
-				spanClass="text-light-base-700 dark:text-dark-base-400 text-xs"
+				class="inline-flex items-center text-xs mr-4 pr-4 text-light-base-700 dark:text-dark-base-400"
 			/>
 			{#if inDevelopment.value}
 				<StatusBar />
@@ -154,7 +152,7 @@
 	tabindex={-1}
 	placement="left"
 	{transitionParams}
-	bind:hidden={drawerHidden.value}
+	bind:open={drawerOpen.value}
 	id="sidebar1"
 	class="bg-light-base-50 dark:bg-dark-base-900"
 >

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { EditorRequestsHandler } from "$lib/language/index.js"
-    import { dialogs, drawerHidden, editorInfo } from "$lib"
+    import { dialogs, drawerOpen, editorInfo } from "$lib"
 import {
     ClipboardOutline,
     EyeOutline,
@@ -41,8 +41,8 @@ const buttonCls: string= 'rounded-none font-normal px-2 py-1 mx-2' +
 const iconCls: string = "w-4 h-4";
 const searchFieldCls: string =
   'text-light-base-50           dark:text-dark-base-900 ' +
-  'bg-light-base-600 					  dark:bg-dark-base-200 ' +
-  'hover:bg-light-base-50       dark:hover:bg-dark-base-900 ' +
+  'bg-light-base-600 			dark:bg-dark-base-200 ' +
+  'hover:bg-light-base-50       dark:hover:bg-dark-base-300 ' +
   'hover:text-light-base-900    dark:hover:text-dark-base-900' +
   'placeholder-light-base-100   dark:placeholder-dark-base-800';
 
@@ -61,7 +61,7 @@ const searchFieldCls: string =
         <Button
             id="model-button"
             tabindex={-1}
-            class="{buttonCls} ml-2 mb-1 bg-light-accent-700 dark:bg-dark-accent-500 dark:text-dark-base-200" onclick={() => (drawerHidden.value = false)}>
+            class="{buttonCls} ml-2 mb-1 bg-light-accent-700 dark:bg-dark-accent-500 dark:text-dark-base-200" onclick={() => (drawerOpen.value = true)}>
             <ChevronRightOutline class="w-5 h-5" />
         </Button>
         <Tooltip tabindex={-1} placement="bottom" class={tooltipClass}>Show Model Info</Tooltip>
@@ -119,14 +119,14 @@ const searchFieldCls: string =
             <div class="flex absolute inset-y-0 start-0 items-center ps-3 pointer-events-none ">
                 <SearchOutline class="w-4 h-4 " />
             </div>
-            <Input tabindex={-1}
-                   {disabled}
-                   id="search-navbar"
-                   class="rounded-none h-full border-l border-t-0 border-b-0 ps-10 py-1 {searchFieldCls}"
-                   divClass={searchFieldCls}
-                   size="sm"
-                   placeholder="Search..."
-                   onkeydown={onKeydown}
+            <Input
+                tabindex={-1}
+                {disabled}
+                id="search-navbar"
+                size="sm"
+                placeholder="Search..."
+                onkeydown={onKeydown}
+                class={`rounded-none h-full border-l border-t-0 border-b-0 ps-10 py-1 ${searchFieldCls}`}
             />
         </div>
     </div>
