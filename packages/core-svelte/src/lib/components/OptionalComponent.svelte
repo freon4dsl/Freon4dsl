@@ -23,7 +23,7 @@
 	const LOGGER = OPTIONAL_LOGGER;
 
 	// Props
-    let { editor, box }: FreComponentProps<OptionalBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<OptionalBox> = $props();
 
     let id: string = $state(''); // an id for the html element showing the optional
     id = notNullOrUndefined(box) ? componentId(box) : 'optional-for-unknown-box';
@@ -245,45 +245,32 @@
     });
 </script>
 
-<span class="optional-component {box.cssClass}" {id}
-	  onkeydown={onKeyDown}
-	  onfocusout={onFocusOut}
-	  role="none"
->
+{#if readonly}
+	<span class="optional-component {box.cssClass} readonly" {id}
+		  role="none"
+	>
 	{#if isEmpty}
-		<span class="optional-component-tooltip-anchor">
+		<span class="optional-component-tooltip-anchor readonly" >
 		  <button
-			  class="optional-component-button {showPlaceholderButton ? 'text-mode' : ''}"
-			  onclick={add}
+			  class="optional-component-button {showPlaceholderButton ? 'text-mode' : ''} readonly"
 			  aria-label="Add optional component"
-			  bind:this={addButtonComponent}
 		  >
 			  {#if showPlaceholderButton}
-				<span class="optional-component-placeholder">{placeholder}</span>
+				<span class="optional-component-placeholder readonly">{placeholder}</span>
 			  {:else}
 				<AddIcon />
 			  {/if}
 		  </button>
 
-		  <div class="optional-component-tooltip" role="tooltip">
+		  <span class="optional-component-tooltip readonly" role="tooltip">
 			Add {placeholder}
-		  </div>
-
-			{#if dropdownShown}
-			<DropdownComponent
-				bind:this={dropdownCmp}
-				bind:selected={selectedOption}
-				bind:options={filteredOptions}
-				selectionChanged={itemSelected}
-			/>
-		  {/if}
+		  </span>
 		</span>
 
 	{:else}
 		<span class="optional-component-tooltip-anchor">
 		  <button
 			  class="optional-component-button"
-			  onclick={remove}
 			  aria-label="Remove optional component"
 			  tabindex="-1"
 		  >
@@ -294,6 +281,60 @@
 			Remove {placeholder}
 		  </div>
 		</span>
-		<RenderComponent box={contentBox} {editor} bind:this={contentComponent} />
+		<RenderComponent box={contentBox} {editor} {readonly}  />
 	{/if}
 </span>
+{:else}
+	<span class="optional-component {box.cssClass}" {id}
+		  onkeydown={onKeyDown}
+		  onfocusout={onFocusOut}
+		  role="none"
+	>
+		{#if isEmpty}
+			<span class="optional-component-tooltip-anchor">
+			  <button
+				  class="optional-component-button {showPlaceholderButton ? 'text-mode' : ''}"
+				  onclick={add}
+				  aria-label="Add optional component"
+				  bind:this={addButtonComponent}
+			  >
+				  {#if showPlaceholderButton}
+					<span class="optional-component-placeholder">{placeholder}</span>
+				  {:else}
+					<AddIcon />
+				  {/if}
+			  </button>
+
+			  <div class="optional-component-tooltip" role="tooltip">
+				Add {placeholder}
+			  </div>
+
+				{#if dropdownShown}
+				<DropdownComponent
+					bind:this={dropdownCmp}
+					bind:selected={selectedOption}
+					bind:options={filteredOptions}
+					selectionChanged={itemSelected}
+				/>
+			  {/if}
+			</span>
+
+		{:else}
+			<span class="optional-component-tooltip-anchor">
+			  <button
+				  class="optional-component-button"
+				  onclick={remove}
+				  aria-label="Remove optional component"
+				  tabindex="-1"
+			  >
+				<DeleteIcon/>
+			  </button>
+
+			  <div class="optional-component-tooltip" role="tooltip">
+				Remove {placeholder}
+			  </div>
+			</span>
+			<RenderComponent box={contentBox} {editor} {readonly} bind:this={contentComponent} />
+		{/if}
+	</span>
+{/if}

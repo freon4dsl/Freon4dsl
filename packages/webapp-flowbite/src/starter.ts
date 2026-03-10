@@ -11,7 +11,7 @@ import { CoreConfig, FREON, FreonDeltaClient, LionWebRepositoryCommunication, Se
 /**
  * Initialize everything
  */
-CoreConfig.initializeWithServers(
+await CoreConfig.initializeWithServers(
     LanguageEnvironment.getInstance(),
     // ServerCommunication.getInstance(),
     LionWebRepositoryCommunication.getInstance(),
@@ -19,8 +19,8 @@ CoreConfig.initializeWithServers(
 )
 // CoreConfig.initialize(
 //     LanguageEnvironment.getInstance(),
-//     // ServerCommunication.getInstance(),
-//     LionWebRepositoryCommunication.getInstance(),
+//     ServerCommunication.getInstance(),
+//     // LionWebRepositoryCommunication.getInstance(),
 //     // new FreonDeltaClient()
 // )
 WebappConfigurator.getInstance()

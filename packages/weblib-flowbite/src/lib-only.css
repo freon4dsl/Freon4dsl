@@ -52,3 +52,34 @@
 .my-background  {
     background-color: var(--color-light-base-100)
 }
+
+/**
+Styling the draggable size-slider between the info panel and the editor panel
+ */
+.size-slider {
+    background: var(--color-light-base-700);
+}
+.dark .size-slider {
+    background: var(--color-dark-base-100);
+}
+
+.size-slider:hover {
+    background: var(--color-light-accent-300);
+}
+.dark .size-slider:hover {
+    background: var(--color-dark-accent-300);
+}
+
+/* Put this AFTER hover rules, because it needs to override those values. */
+.size-slider.dragging,
+.size-slider.dragging:hover {
+    background: var(--color-light-accent-500);
+}
+.dark .size-slider.dragging,
+.dark .size-slider.dragging:hover {
+    background: var(--color-dark-accent-500);
+}
+
+.changed {
+    border: 1pt solid red;
+}

@@ -12,7 +12,7 @@
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
-    let { editor, box }: FreComponentProps<IndentBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<IndentBox> = $props();
 
     const LOGGER = INDENT_LOGGER;
 
@@ -38,7 +38,7 @@
 </script>
 
 {#if notNullOrUndefined(child)}
-    <span {style} {id}>
-        <RenderComponent box={child} {editor} />
+    <span {style} {id} class:readonly={readonly}>
+        <RenderComponent box={child} {editor} {readonly} />
     </span>
 {/if}
