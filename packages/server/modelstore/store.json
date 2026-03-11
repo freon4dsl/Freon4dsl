@@ -360,6 +360,10 @@
                 {
                     "file": "SomeNameOrOther.json",
                     "name": "SomeNameOrOther"
+                },
+                {
+                    "name": "HGERG",
+                    "file": "HGERG.json"
                 }
             ],
             "version": "1"

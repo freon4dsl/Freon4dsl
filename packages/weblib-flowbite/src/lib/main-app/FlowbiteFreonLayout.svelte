@@ -40,13 +40,19 @@
 	function openTab(index: number) {
 		// console.log('opening tab: ', index);
 		editorInfo.currentOpenTab = index;
-		WebappConfigurator.getInstance().openModelUnit(editorInfo.unitsInTabs[index]);
+		const unit = editorInfo.unitsInTabs[index];
+		if (unit) {
+			WebappConfigurator.getInstance().openModelUnit(unit)
+		}
 		infoPanelShown.value = false;
 	}
 
 	function closeTab(index: number) {
 		// console.log('closing tab: ', index);
-		WebappConfigurator.getInstance().closeModelUnit(editorInfo.unitsInTabs[index]);
+		const unit = editorInfo.unitsInTabs[index];
+		if (unit) {
+			WebappConfigurator.getInstance().closeModelUnit(unit);
+		}
 	}
 
 	onMount(async () => {
@@ -90,7 +96,7 @@
 
 <svelte:window onbeforeunload={onBeforeUnload} />
 
-<div id="freon-layout" class="flex flex-col h-screen overflow-hidden">
+<div id="freon-layout" class="flex flex-col h-screen overflow-hidden dark:bg-dark-base-800 bg-light-base-100">
 	<NavBar />
 	<ToolBar />
 	<!-- the tab panel with buttons -->

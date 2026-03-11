@@ -70,7 +70,7 @@
             <ArrowDownToBracketOutline class="w-10 h-10 me-2 dark:text-dark-base-500"/>
             <Label class="space-y-2">
                 <p class="mb-2 text-lg text-light-base-500 dark:text-dark-base-400"><span
-                        class="font-semibold">Click to import </span> or drag and drop</p>
+                    class="font-semibold">Click to import </span> or drag and drop</p>
                 <p class="text-base text-light-base-500 dark:text-dark-base-400">Valid file types: {file_extensions}</p>
             </Label>
         </button>

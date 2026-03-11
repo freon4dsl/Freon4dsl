@@ -1,11 +1,11 @@
 <script>
 	import { CloseButton } from "flowbite-svelte"
-	import SearchResults from "$lib/main-app/SearchResults.svelte"
-	import InterpreterResults from "$lib/main-app/InterpreterResults.svelte"
-	import ValidationResults from '$lib/main-app/ValidationResults.svelte';
+	import SearchResults from "$lib/main-app/infopanel/SearchResults.svelte"
+	import InterpreterResults from "$lib/main-app/infopanel/InterpreterResults.svelte"
+	import ValidationResults from '$lib/main-app/infopanel/ValidationResults.svelte';
 	import { deltaTab, infoPanelShown } from "$lib/stores/index.js"
 	import { activeTab, errorTab, interpreterTab, searchTab } from "$lib/stores/InfoPanelStore.svelte.js"
-	import DeltaResults from "$lib/main-app/DeltaResults.svelte"
+	import DeltaResults from "$lib/main-app/infopanel/DeltaResults.svelte"
 </script>
 
 <div id="infoPanel">

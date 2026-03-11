@@ -2,7 +2,7 @@
     import { Spinner} from "flowbite-svelte"
     import { deltaResultLoading } from "$lib"
     import { deltaList, type ProcessedDelta, processedDeltaAsString } from "@freon4dsl/core"
-    import DeltaDetails from "$lib/main-app/DeltaDetails.svelte"
+    import DeltaDetails from "$lib/main-app/infopanel/DeltaDetails.svelte"
     import { goToNode } from "$lib/ts-utils/CommonFunctions"
     import { ArrowRightOutline } from "flowbite-svelte-icons"
 
