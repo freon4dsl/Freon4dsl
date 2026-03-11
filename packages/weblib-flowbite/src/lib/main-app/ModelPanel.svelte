@@ -145,7 +145,7 @@
                 <Tooltip class="freon-tooltip" placement="bottom">New {unitType} unit</Tooltip>
             </div>
             <div class="ml-3 py-1 text-sm">
-                {#each myUnits as unit, index (unit.id)}
+                {#each myUnits as unit, index (index)}
                     {#if unit.type === unitType}
                         <div
                             class="freon-modelpanel-unit mx-2 my-1 flex items-center justify-between rounded-md px-2 py-1"

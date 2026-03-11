@@ -3,16 +3,16 @@
 	import SearchResults from "$lib/main-app/infopanel/SearchResults.svelte"
 	import InterpreterResults from "$lib/main-app/infopanel/InterpreterResults.svelte"
 	import ValidationResults from '$lib/main-app/infopanel/ValidationResults.svelte';
-	import { deltaTab, infoPanelShown } from "$lib/stores/index.js"
+	import { deltaTab, infoPanelShown, searchText } from "$lib/stores/index.js"
 	import { activeTab, errorTab, interpreterTab, searchTab } from "$lib/stores/InfoPanelStore.svelte.js"
 	import DeltaResults from "$lib/main-app/infopanel/DeltaResults.svelte"
 </script>
 
-<div id="infoPanel">
-	<div class="flex flex-end p-0 m-0 w-full border-b border-light-base-300 dark:border-dark-base-800 dark:bg-dark-base-500 bg-light-base-200">
-		<div class="font-semibold p-1 ">
+<div id="infoPanel" class="freon-infopanel">
+	<div class="freon-infopanel-header">
+		<div class="freon-infopanel-title">
 			{#if activeTab.value === searchTab}
-				Search results
+				Search results for "{searchText.value}"
 			{:else if activeTab.value === errorTab}
 				Errors found
 			{:else if activeTab.value === interpreterTab}
@@ -21,15 +21,22 @@
 				Processed LionWeb Deltas
 			{/if}
 		</div>
-		<CloseButton onclick={() => (infoPanelShown.value = false)} class="dark:text-dark-base-50 ml-auto" />
+
+		<CloseButton
+			onclick={() => (infoPanelShown.value = false)}
+			class="freon-infopanel-close ml-auto"
+		/>
 	</div>
-	{#if activeTab.value === searchTab}
-		<SearchResults/>
-	{:else if activeTab.value === errorTab}
-		<ValidationResults/>
-	{:else if activeTab.value === interpreterTab}
-		<InterpreterResults/>
-	{:else if activeTab.value === deltaTab}
-		<DeltaResults/>
-	{/if}
+
+	<div class="freon-infopanel-content">
+		{#if activeTab.value === searchTab}
+			<SearchResults />
+		{:else if activeTab.value === errorTab}
+			<ValidationResults />
+		{:else if activeTab.value === interpreterTab}
+			<InterpreterResults />
+		{:else if activeTab.value === deltaTab}
+			<DeltaResults />
+		{/if}
+	</div>
 </div>

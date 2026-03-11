@@ -38,68 +38,59 @@
 
 
 {#if deltaResultLoading.value}
-    <div class="p-2">
+    <div class="freon-infopanel-loading">
         <Spinner class="me-3" size="4" />
         Data is being loaded...
     </div>
-{:else }
-    <div class="relative" id="delta-results">
+{:else}
+    <div class="freon-infopanel-deltas" id="delta-results">
         {#if deltas && deltas.length > 0}
-            <!-- table-like container -->
-            <div class="text-left text-sm text-light-base-900 dark:text-dark-base-50 w-full">
-                <div class="divide-y w-full">
+            <div class="freon-infopanel-table">
+                <div class="w-full">
                     {#each deltas as pDelta, idx (pDelta.delta.sequenceNumber)}
                         <details
                             open={openIndex === idx}
-                            class="w-full border-b last:border-b-0 bg-light-base-50 dark:bg-dark-base-800 dark:border-dark-base-700 hover:bg-light-base-50 dark:hover:bg-dark-base-900
-                                    odd:bg-light-base-50 even:bg-light-base-50 odd:dark:bg-dark-base-800 even:dark:bg-dark-base-700"
+                            class="freon-infopanel-delta-row"
                         >
                             <summary
-                                class="w-full whitespace-nowrap font-medium  p-1.5 list-none cursor-pointer
-                                        flex items-center justify-between"
+                                class="freon-infopanel-delta-summary"
                                 id={"delta-summary-" + idx}
                                 onclick={(ev) => toggleNoDefault(ev, idx)}
                                 onkeydown={(ev) => onKeydown(ev, idx)}
                             >
-                                    <span class="font-medium ">
-                                      {processedDeltaAsString(pDelta)}
-                                    </span>
+                                <span class="freon-infopanel-delta-message">
+                                    {processedDeltaAsString(pDelta)}
+                                </span>
 
                                 {#if pDelta.changedNode}
                                     <button
-                                        class="bg-transparent border-2 border-light-base-600 hover:border-light-base-600
-                                               h-7 w-7 rounded-full inline-flex items-center ml-auto mr-1"
+                                        class="freon-infopanel-action"
                                         onclick={(ev) => {
-                                          ev.stopPropagation();
-                                          if (openIndex !== idx) {
-                                            toggleNoDefault(ev, idx)
-                                          }
-                                          goToNode(pDelta.changedNode);
+                                            ev.stopPropagation();
+                                            if (openIndex !== idx) {
+                                                toggleNoDefault(ev, idx);
+                                            }
+                                            goToNode(pDelta.changedNode);
                                         }}
                                     >
-                                        <ArrowRightOutline
-                                            class="h-5 w-5 ms-0.5 text-light-accent-900 dark:text-dark-accent-50"
-                                        />
+                                        <ArrowRightOutline class="freon-infopanel-action-icon" />
                                     </button>
                                 {/if}
                             </summary>
 
-                            <div class="p-1.5" id={"delta-details-" + idx}>
-                                <DeltaDetails pDelta={pDelta} open={openIndex}/>
+                            <div class="freon-infopanel-delta-details" id={"delta-details-" + idx}>
+                                <DeltaDetails pDelta={pDelta} open={openIndex} />
                             </div>
                         </details>
                     {/each}
                 </div>
             </div>
         {:else}
-            No elements found.
+            <div class="freon-infopanel-empty">
+                No elements found.
+            </div>
         {/if}
     </div>
 {/if}
-
-<style>
-    /* Optional but handy: hide the default marker so it looks like a table row */
-    summary::-webkit-details-marker { display: none; }
-</style>
 
 

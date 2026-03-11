@@ -400,3 +400,209 @@ Styling the draggable size-slider between the info panel and the editor panel
     padding: 1rem;
     color: var(--freon-dialog-shell-text);
 }
+
+/********************************************
+ * Info Panel and its content
+ ********************************************/
+
+.freon-infopanel {
+    background: var(--freon-infopanel-bg);
+    border: 1px solid var(--freon-infopanel-border);
+    color: var(--freon-infopanel-content-text);
+}
+
+.freon-infopanel-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--freon-infopanel-header-border);
+    background: var(--freon-infopanel-header-bg);
+}
+
+.freon-infopanel-title {
+    padding: 0.25rem 0.5rem;
+    font-weight: 600;
+    color: var(--freon-infopanel-title-text);
+}
+
+.freon-infopanel-close {
+    color: var(--freon-infopanel-close-text);
+}
+
+.freon-infopanel-content {
+    color: var(--freon-infopanel-content-text);
+}
+
+.freon-infopanel-loading {
+    padding: 0.5rem;
+    color: var(--freon-infopanel-loading-text);
+}
+
+.freon-infopanel-list {
+    position: relative;
+    overflow-x: auto;
+}
+
+.freon-infopanel-table {
+    width: 100%;
+    font-size: 0.875rem;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.freon-infopanel-row {
+    background: var(--freon-infopanel-row-bg);
+    border-bottom: 1px solid var(--freon-infopanel-row-border);
+}
+
+.freon-infopanel-row:last-child {
+    border-bottom: 0;
+}
+
+.freon-infopanel-row:hover {
+    background: var(--freon-infopanel-row-hover-bg);
+}
+
+.freon-infopanel-cell {
+    padding: 0.375rem;
+    white-space: nowrap;
+}
+
+.freon-infopanel-message {
+    font-weight: 500;
+    color: var(--freon-infopanel-message-text);
+}
+
+.freon-infopanel-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-right: 0.25rem;
+    margin-left: auto;
+    border: 2px solid var(--freon-infopanel-action-border);
+    border-radius: 9999px;
+    background: var(--freon-infopanel-action-bg);
+}
+
+.freon-infopanel-action:hover {
+    border-color: var(--freon-infopanel-action-border);
+}
+
+.freon-infopanel-action-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-inline-start: 0.125rem;
+    color: var(--freon-infopanel-action-icon);
+}
+
+.freon-infopanel-empty {
+    padding: 0.5rem;
+    color: var(--freon-infopanel-empty-text);
+}
+
+.freon-infopanel-tree {
+    position: relative;
+    overflow-x: auto;
+    padding: 0.5rem;
+}
+
+/*******************************************
+    TreeView and TreeNode
+ *******************************************/
+.freon-infopanel-tree-title {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--freon-infopanel-tree-title);
+}
+
+.freon-infopanel-tree-list {
+    max-width: 28rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--freon-infopanel-tree-text);
+}
+
+.freon-infopanel-tree-node {
+    padding-left: 1rem;
+}
+
+.freon-infopanel-tree-row {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    border-bottom: 1px solid var(--freon-infopanel-tree-row-border);
+}
+
+.freon-infopanel-tree-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0;
+    cursor: pointer;
+    color: var(--freon-infopanel-tree-toggle-text);
+    background: transparent;
+    border: 0;
+    text-align: left;
+}
+
+.freon-infopanel-tree-chevron {
+    width: 0.75rem;
+    height: 0.75rem;
+    color: var(--freon-infopanel-tree-chevron);
+}
+
+.freon-infopanel-tree-leaf {
+    padding-left: 1rem;
+}
+
+.freon-infopanel-deltas {
+    position: relative;
+}
+
+.freon-infopanel-delta-row {
+    width: 100%;
+    border-bottom: 1px solid var(--freon-infopanel-delta-row-border);
+    background: var(--freon-infopanel-delta-row-bg);
+}
+
+.freon-infopanel-delta-row:last-child {
+    border-bottom: 0;
+}
+
+.freon-infopanel-delta-row:hover {
+    background: var(--freon-infopanel-delta-row-hover-bg);
+}
+
+.freon-infopanel-delta-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.375rem;
+    cursor: pointer;
+    list-style: none;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.freon-infopanel-delta-summary::-webkit-details-marker {
+    display: none;
+}
+
+.freon-infopanel-delta-message {
+    font-weight: 500;
+    color: var(--freon-infopanel-delta-text);
+}
+
+.freon-infopanel-delta-details {
+    padding: 0.375rem;
+    background: var(--freon-infopanel-delta-details-bg);
+}

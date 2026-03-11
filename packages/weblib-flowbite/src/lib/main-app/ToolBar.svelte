@@ -1,6 +1,6 @@
 <script lang="ts">
     import { EditorRequestsHandler } from "$lib/language/index.js"
-    import { dialogs, drawerOpen, editorInfo } from "$lib"
+    import { dialogs, drawerOpen, editorInfo, searchText } from "$lib"
 import {
     ClipboardOutline,
     EyeOutline,
@@ -18,27 +18,29 @@ import {
 import { Button, Input, Tooltip } from 'flowbite-svelte';
 import { ENTER } from "@freon4dsl/core"
 
+let innerSearchText: string = $state("");
 
 /**
  * We use the key ENTER here to be able to search again, when the search text has not changed, but possibly
  * the model has. The onchange event only triggers when the search text has changed.
  * @param event
  */
-function onKeydown(event: KeyboardEvent) {
+function search(event: KeyboardEvent) {
     if (event.key !== ENTER) return;
 
-    const input = event.currentTarget;
-    if (!(input instanceof HTMLInputElement)) return;
+    if (!innerSearchText || innerSearchText.length === 0) return;
 
-    EditorRequestsHandler.getInstance().findText(input.value);
+    searchText.value = innerSearchText;
+    EditorRequestsHandler.getInstance().findText(innerSearchText);
+    innerSearchText = "";
 }
 
     /**
      * disable buttons if there  is no open model and open unit in the editor
      */
     let disabled: boolean = $derived(
-     editorInfo.modelName === "<no-model>" || editorInfo.currentUnit === undefined
-)
+        editorInfo.modelName === "<no-model>" || editorInfo.currentUnit === undefined
+    )
 </script>
 
 <div id="freon-toolbar" class="freon-toolbar flex h-12 w-full items-center justify-between border-b px-2">
@@ -113,7 +115,8 @@ function onKeydown(event: KeyboardEvent) {
             id="search-navbar"
             size="sm"
             placeholder="Search..."
-            onkeydown={onKeydown}
+            bind:value={innerSearchText}
+            onkeydown={search}
             class="freon-toolbar-search h-9 rounded-md border ps-10 pe-3 text-sm"
         />
     </div>
