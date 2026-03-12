@@ -6,18 +6,13 @@
 </script>
 
 {#if title}
-    <h4>{title}</h4>
+    <h4 class="freon-infopanel-tree-title">{title}</h4>
 {/if}
+
 {#if dataList}
-    <ul class="max-w-md space-y-1 text-light-base-800 dark:text-dark-base-200">
+    <ul class="freon-infopanel-tree-list">
         {#each dataList as node, idx (idx)}
-            <TreeNode data={node}/>
+            <TreeNode data={node} />
         {/each}
     </ul>
 {/if}
-
-<style>
-    ul {
-        list-style-type: none;
-    }
-</style>

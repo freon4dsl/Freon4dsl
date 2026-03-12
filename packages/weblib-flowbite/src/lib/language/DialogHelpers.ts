@@ -1,4 +1,4 @@
-import { dialogs, drawerHidden, serverInfo, userMessageOpen } from "$lib"
+import { dialogs, drawerOpen, serverInfo, userMessageOpen } from "$lib"
 import { WebappConfigurator } from "$lib/language/WebappConfigurator"
 import { isIdentifier, notNullOrUndefined } from "@freon4dsl/core"
 
@@ -26,12 +26,12 @@ export async function openModelDialog() {
         return
     }
     dialogs.openModelDialogVisible = true
-    drawerHidden.value = true
+    drawerOpen.value = false
 }
 
 export async function newModelDialog() {
     dialogs.newModelDialogVisible = true
-    drawerHidden.value = true
+    drawerOpen.value = false
 }
 
 export async function openStartDialog() {

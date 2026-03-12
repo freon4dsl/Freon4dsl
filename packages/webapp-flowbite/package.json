@@ -14,7 +14,7 @@
         "errors-only": "svelte-check --threshold error --tsconfig ./tsconfig.json",
         "install-local": "npm install --registry http://localhost:4873",
         "format": "prettier --write .",
-        "styles": "cross-env NODE_ENV=production npx @tailwindcss/cli -i styles/webapp-styles.css -o ./public/site.css"
+        "styles": "cross-env NODE_ENV=production npx @tailwindcss/cli -i styles/webapp-styles.css -o ./public/site.css --minify"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^6.2.4",

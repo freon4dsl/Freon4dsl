@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './theme-colors.css';
+@import './lib-only-colors.css';
 
 @source "../../../node_modules/flowbite-svelte/dist";
 @source "../../../node_modules/flowbite-svelte-icons/dist";
@@ -21,30 +22,21 @@
 }
 
 /**
- This class is missing the "overflow"  property when using bare tailwind, we therefore define it over here.
- */
-.text-ellipsis {
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
-/**
-  I can't do this using tailwind, so I use my own class here.
- */
-.my-nav-bar {
-    padding: 1px;
-    margin: 1px;
-    margin-inline: 1px;
-}
-
-/**
   Flowbite uses mx-auto inside the NavBar (cannot change this code) and then it gets a very big padding.
   Does not look nice, so I redefined this.
  */
 .mx-auto {
     margin: 1px;
     margin-inline: 1px;
- }
+}
+
+/**
+ This class is missing the "overflow"  property when using bare tailwind, we therefore define it over here. TODO
+ */
+.text-ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 
 /**
     Add background, so it is even in all places.
@@ -80,6 +72,537 @@ Styling the draggable size-slider between the info panel and the editor panel
     background: var(--color-dark-accent-500);
 }
 
+/* Delta styles */
 .changed {
     border: 1pt solid red;
+}
+
+/* Shared button styles */
+.freon-btn {
+    background-color: var(--freon-button-bg);
+    border-color: var(--freon-button-border);
+    color: var(--freon-button-text);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.freon-btn:hover {
+    background-color: var(--freon-button-hover);
+}
+
+/* Navbar */
+.freon-navbar {
+    padding: 1px;
+    margin: 1px;
+    margin-inline: 1px;
+    background: var(--freon-navbar-bg);
+    border-color: var(--freon-navbar-border);
+    color: var(--freon-navbar-text);
+}
+
+.freon-navbar-btn {
+    background-color: var(--freon-button-bg);
+    border-color: var(--freon-button-border);
+    color: var(--freon-button-text);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.freon-navbar-btn:hover {
+    background-color: var(--freon-button-hover);
+}
+
+.freon-navbar-text {
+    color: var(--freon-navbar-text);
+}
+
+.freon-navbar-icon {
+    margin-inline-start: 0;
+    display: inline;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Toolbar */
+.freon-toolbar {
+    background: var(--freon-toolbar-bg);
+    border-color: var(--freon-toolbar-border);
+    color: var(--freon-toolbar-text);
+}
+
+.freon-toolbar-btn {
+    background-color: var(--freon-button-bg);
+    border-color: var(--freon-button-border);
+    color: var(--freon-button-text);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.freon-toolbar-btn:hover {
+    background-color: var(--freon-button-hover);
+}
+
+.freon-toolbar-btn-accent {
+    background-color: var(--freon-toolbar-accent-button-bg);
+}
+
+.freon-toolbar-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.freon-toolbar-search {
+    background-color: var(--freon-toolbar-search-bg);
+    color: var(--freon-toolbar-search-text);
+    border-color: var(--freon-button-border);
+}
+
+.freon-toolbar-search:hover,
+.freon-toolbar-search:focus {
+    background-color: var(--freon-toolbar-search-hover);
+}
+
+.freon-toolbar-search::placeholder {
+    color: var(--freon-toolbar-search-placeholder);
+}
+
+/* Tooltip */
+.freon-tooltip {
+    z-index: 10;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: var(--freon-tooltip-text);
+    background-color: var(--freon-tooltip-bg);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* ModelPanel */
+.freon-modelpanel {
+    background: var(--freon-modelpanel-bg);
+    color: var(--freon-modelpanel-text);
+}
+
+.freon-modelpanel-header {
+    background: var(--freon-modelpanel-header-bg);
+    color: var(--freon-modelpanel-header-text);
+}
+
+.freon-modelpanel-section {
+    border: 1px solid var(--freon-modelpanel-section-border);
+    background: var(--freon-modelpanel-bg);
+}
+
+.freon-modelpanel-section-header {
+    background: var(--freon-modelpanel-section-bg);
+    color: var(--freon-modelpanel-section-text);
+
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+
+    padding: 4px 8px;
+}
+
+.freon-modelpanel-btn {
+    background-color: var(--freon-button-bg);
+    border-color: var(--freon-button-border);
+    color: var(--freon-button-text);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.freon-modelpanel-btn:hover {
+    background-color: var(--freon-button-hover);
+}
+
+.freon-modelpanel-dropdown-btn {
+    background-color: var(--freon-modelpanel-dropdown-bg);
+    border-color: var(--freon-button-border);
+    color: var(--freon-modelpanel-text);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.freon-modelpanel-dropdown-btn:hover {
+    background-color: var(--freon-button-hover);
+    color: var(--freon-button-text);
+}
+
+.freon-modelpanel-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.freon-modelpanel-unit {
+    background: var(--freon-modelpanel-unit-bg);
+    color: var(--freon-modelpanel-unit-text);
+    padding-left: 5px;
+}
+.freon-modelpanel-unit:hover {
+    background-color: var(--freon-modelpanel-section-bg);
+}
+.freon-modelpanel-unit-selected {
+    background: var(--freon-modelpanel-unit-selected-bg);
+    font-weight: 500;
+    border-left: 3px solid var(--freon-toolbar-accent-button-bg);
+}
+
+.freon-modelpanel-menu-trigger {
+    color: var(--freon-modelpanel-unit-text);
+}
+
+.freon-modelpanel-menu-trigger:hover {
+    background-color: var(--freon-button-hover);
+    color: var(--freon-button-text);
+}
+
+/* =========================
+   Dialog form controls
+   ========================= */
+
+.freon-dialog-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    border: 1px solid;
+    text-align: center;
+    transition:
+            background-color 0.15s ease,
+            color 0.15s ease,
+            border-color 0.15s ease;
+}
+
+.freon-dialog-btn-cancel {
+    color: var(--freon-dialog-button-cancel-text);
+    background: var(--freon-dialog-button-cancel-bg);
+    border-color: var(--freon-dialog-button-cancel-border);
+}
+
+.freon-dialog-btn-cancel:hover {
+    background: var(--freon-dialog-button-cancel-hover-bg);
+    color: var(--freon-dialog-button-cancel-hover-text);
+}
+
+.freon-dialog-btn-ok {
+    color: var(--freon-dialog-button-ok-text);
+    background: var(--freon-dialog-button-ok-bg);
+    border-color: var(--freon-dialog-button-ok-border);
+}
+
+.freon-dialog-btn-ok:hover {
+    background: var(--freon-dialog-button-ok-hover-bg);
+    color: var(--freon-dialog-button-ok-hover-text);
+}
+
+/* =========================
+   Dialog input
+   ========================= */
+
+.freon-dialog-input {
+    width: 100%;
+    height: 2.5rem;
+    padding-left: 0.75rem;
+    padding-right: 8rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--freon-dialog-input-border);
+    background: var(--freon-dialog-input-bg);
+}
+
+/* =========================
+   Dialog content
+   ========================= */
+
+.freon-dialog-card {
+    background: var(--freon-dialog-card-bg);
+}
+
+.freon-dialog-section {
+    background: var(--freon-dialog-section-bg);
+}
+
+.freon-dialog-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--freon-dialog-title-text);
+}
+
+.freon-dialog-subtitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--freon-dialog-subtitle-text);
+}
+
+.freon-dialog-text,
+.freon-dialog-label {
+    color: var(--freon-dialog-text);
+}
+
+.freon-dialog-value,
+.freon-dialog-link {
+    color: var(--freon-dialog-value);
+}
+
+.freon-dialog-icon {
+    color: var(--freon-dialog-icon);
+}
+
+.freon-dialog-warning {
+    padding: 0.5rem 0.75rem;
+    border-left: 4px solid var(--freon-dialog-warning-text);
+    border-radius: 0.375rem;
+
+    font-weight: 500;
+
+    color: var(--freon-dialog-warning-text);
+    background: var(--freon-dialog-warning-bg);
+}
+
+.freon-dialog-host {
+    width: 100%;
+    color: var(--freon-dialog-shell-text);
+    background: var(--freon-dialog-shell-bg);
+}
+
+.freon-dialog-shell {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: none;
+    flex-direction: column;
+
+    width: 100%;
+    max-width: 42rem;
+    max-height: 90vh;
+
+    border: 1px solid var(--freon-dialog-shell-border);
+    border-radius: 0.5rem;
+
+    background: var(--freon-dialog-shell-bg);
+    color: var(--freon-dialog-shell-text);
+
+    overflow-y: auto;
+    overflow-x: hidden;
+    pointer-events: auto;
+}
+
+.freon-dialog-shell[open] {
+    display: flex;
+}
+
+.freon-dialog-shell::backdrop {
+    background: var(--freon-dialog-backdrop);
+}
+
+.freon-dialog-content {
+    padding: 1rem;
+    color: var(--freon-dialog-shell-text);
+}
+
+/********************************************
+ * Info Panel and its content
+ ********************************************/
+
+.freon-infopanel {
+    background: var(--freon-infopanel-bg);
+    border: 1px solid var(--freon-infopanel-border);
+    color: var(--freon-infopanel-content-text);
+}
+
+.freon-infopanel-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--freon-infopanel-header-border);
+    background: var(--freon-infopanel-header-bg);
+}
+
+.freon-infopanel-title {
+    padding: 0.25rem 0.5rem;
+    font-weight: 600;
+    color: var(--freon-infopanel-title-text);
+}
+
+.freon-infopanel-close {
+    color: var(--freon-infopanel-close-text);
+}
+
+.freon-infopanel-content {
+    color: var(--freon-infopanel-content-text);
+}
+
+.freon-infopanel-loading {
+    padding: 0.5rem;
+    color: var(--freon-infopanel-loading-text);
+}
+
+.freon-infopanel-list {
+    position: relative;
+    overflow-x: auto;
+}
+
+.freon-infopanel-table {
+    width: 100%;
+    font-size: 0.875rem;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.freon-infopanel-row {
+    background: var(--freon-infopanel-row-bg);
+    border-bottom: 1px solid var(--freon-infopanel-row-border);
+}
+
+.freon-infopanel-row:last-child {
+    border-bottom: 0;
+}
+
+.freon-infopanel-row:hover {
+    background: var(--freon-infopanel-row-hover-bg);
+}
+
+.freon-infopanel-cell {
+    padding: 0.375rem;
+    white-space: nowrap;
+}
+
+.freon-infopanel-message {
+    font-weight: 500;
+    color: var(--freon-infopanel-message-text);
+}
+
+.freon-infopanel-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-right: 0.25rem;
+    margin-left: auto;
+    border: 2px solid var(--freon-infopanel-action-border);
+    border-radius: 9999px;
+    background: var(--freon-infopanel-action-bg);
+}
+
+.freon-infopanel-action:hover {
+    border-color: var(--freon-infopanel-action-border);
+}
+
+.freon-infopanel-action-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-inline-start: 0.125rem;
+    color: var(--freon-infopanel-action-icon);
+}
+
+.freon-infopanel-empty {
+    padding: 0.5rem;
+    color: var(--freon-infopanel-empty-text);
+}
+
+.freon-infopanel-tree {
+    position: relative;
+    overflow-x: auto;
+    padding: 0.5rem;
+}
+
+/*******************************************
+    TreeView and TreeNode
+ *******************************************/
+.freon-infopanel-tree-title {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--freon-infopanel-tree-title);
+}
+
+.freon-infopanel-tree-list {
+    max-width: 28rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--freon-infopanel-tree-text);
+}
+
+.freon-infopanel-tree-node {
+    padding-left: 1rem;
+}
+
+.freon-infopanel-tree-row {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    border-bottom: 1px solid var(--freon-infopanel-tree-row-border);
+}
+
+.freon-infopanel-tree-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0;
+    cursor: pointer;
+    color: var(--freon-infopanel-tree-toggle-text);
+    background: transparent;
+    border: 0;
+    text-align: left;
+}
+
+.freon-infopanel-tree-chevron {
+    width: 0.75rem;
+    height: 0.75rem;
+    color: var(--freon-infopanel-tree-chevron);
+}
+
+.freon-infopanel-tree-leaf {
+    padding-left: 1rem;
+}
+
+.freon-infopanel-deltas {
+    position: relative;
+}
+
+.freon-infopanel-delta-row {
+    width: 100%;
+    border-bottom: 1px solid var(--freon-infopanel-delta-row-border);
+    background: var(--freon-infopanel-delta-row-bg);
+}
+
+.freon-infopanel-delta-row:last-child {
+    border-bottom: 0;
+}
+
+.freon-infopanel-delta-row:hover {
+    background: var(--freon-infopanel-delta-row-hover-bg);
+}
+
+.freon-infopanel-delta-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.375rem;
+    cursor: pointer;
+    list-style: none;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.freon-infopanel-delta-summary::-webkit-details-marker {
+    display: none;
+}
+
+.freon-infopanel-delta-message {
+    font-weight: 500;
+    color: var(--freon-infopanel-delta-text);
+}
+
+.freon-infopanel-delta-details {
+    padding: 0.375rem;
+    background: var(--freon-infopanel-delta-details-bg);
 }

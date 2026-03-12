@@ -15,7 +15,7 @@ const config = {
   },
   // Disable all Svelte compiler warnings
   onwarn: () => {}
-  // Disable all warnings except your own components
+  // Disable all warnings except our own components
   // onwarn(warning, handler) {
   //   if (warning.filename?.includes('node_modules')) return;
   //   handler(warning);
