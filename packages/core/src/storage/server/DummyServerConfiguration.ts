@@ -5,7 +5,19 @@ import type { FreUnitIdentifier, IServerCommunication, OnError, ServerResponse, 
  *  Takes care of the communication with the server at SERVER_URL from WebappConfiguration.
  */
 export class DummyServerConfiguration implements IServerCommunication {
-    onError: OnError;
+    onError: OnError
+
+    /**
+     * Set a Bearer token to include in the Authorization header of every request.
+     * Pass null to clear the token.
+     */
+    setBearerAuthToken(_token: string | null): void {}
+
+    /**
+     * Set custom headers to include in every request.
+     * Merges with (and can overwrite) previously set headers.
+     */
+    setCustomHeaders(_headers: Record<string, string>): void {}
 
     /**
      * return a set of unused Id's
