@@ -4,12 +4,19 @@
  * 
  *********************************************/
 
+/* standard sizes for all element */
+:root {
+    --freon-inline-font-size: var(--standard-font-size, var(--font-size-base, 14px));
+    --freon-inline-line-height: 20px;
+    --freon-inline-padding-x: 0.25rem;
+    --freon-inline-row-height: 24px;
+    --freon-inline-height: var(--freon-inline-row-height);
+}
+
 /* freon-component is the top component and consist of a gutter and an editor-component */
 .freon-component {
     height: 100%;
     width: 100%;
-    /*overflow-x: auto;*/
-    font-size: 14px;
     font-style: normal;
     font-weight: normal;
     font-family: "Arial";
@@ -63,18 +70,29 @@
     flex: 1;
 }
 
+/***************************************
+ * Label component
+ ***************************************/
+
 .label-component:empty:before {
     content: attr(data-placeholdertext);
-    margin: 0 1px 0 1px;
-    padding: 0px 1px 0px 1px;
 }
 
 .label-component {
-    padding: 0px 1px 0px 1px;
-    margin: 1px;
-    white-space: normal;
+    box-sizing: border-box;
     display: inline-block;
+    white-space: normal;
+
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    min-height: var(--freon-inline-height);
+
+    padding-inline: 1px;
 }
+
+/***************************************
+ * List component
+ ***************************************/
 
 .list-component-horizontal {
     white-space: nowrap;
@@ -585,48 +603,61 @@
 /*******************************************************
  *  TextComponent
  *******************************************************/
+.text-component {
+    display: inline-block;
+    white-space: nowrap;
+}
+
 .text-component-width {
     position: absolute;
     left: -9999px;
     display: inline-block;
-    padding: 0px;
-    margin: 1px;
     border: none;
     box-sizing: border-box;
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    padding-inline: var(--freon-inline-padding-x);
 }
 
 .text-component-input {
-    /* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
-    padding: 0px;
-    margin: 1px;
-    outline: none; 
-    /*width: 100%;*/
+    outline: none;
     box-sizing: border-box;
     border: none;
-    font-size: inherit;
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    height: var(--freon-inline-height);
+    padding-inline: var(--freon-inline-padding-x);
 }
 
 .text-component-text {
-    padding: 0px;
-    margin: 1px;
-    /*width: 100%;*/
-    white-space: normal;
     display: inline-block;
+    box-sizing: border-box;
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    min-height: var(--freon-inline-height);
+    padding-inline: var(--freon-inline-padding-x);
 }
 
 .text-component-placeholder {
-    padding: 0px;
-    margin: 1px;
-    white-space: normal;
     display: inline-block;
+    box-sizing: border-box;
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    min-height: var(--freon-inline-height);
+    padding-inline: var(--freon-inline-padding-x);
 }
 .text-component-action-placeholder {
-    padding: 0px;
-    margin: 1px;
-    white-space: normal;
     display: inline-block;
+    box-sizing: border-box;
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    min-height: var(--freon-inline-height);
+    padding-inline: var(--freon-inline-padding-x);
 }
 
+/*******************************************************
+ *  Multiline TextComponent
+ *******************************************************/
 .multiline-text-component {
     padding: 1px;
     margin: 1px;
@@ -786,20 +817,27 @@
     width: fit-content;
     margin-top: 3px;
     position: absolute;
+    padding: 2px;
 }
 
 .dropdown-component-item {
     white-space: nowrap;
     border: none;
     border-radius: 2px;
-    padding: 0px;
-    margin: 5px;
     cursor: pointer;
     text-align: left;
-    display: flex;
     justify-content: space-between;
     gap: 2px;
-    place-items: center;
+
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+
+    min-height: var(--freon-inline-row-height);
+    padding-inline: var(--freon-inline-padding-x);
 }
 
 .dropdown-component-error {
@@ -835,6 +873,9 @@
     flex: 1;
 }
 
+/*******************************************************
+ *  Inner Switch Component
+ *******************************************************/
 .inner-switch-component button {
     margin: 4px 6px 4px 6px;
     border: solid 0.5px var(--inner-switch-border-color);
