@@ -1,6 +1,6 @@
 <script lang="ts">
     import EditorPart from "$lib/main-app/EditorPart.svelte"
-    import InfoPanel from "$lib/main-app/InfoPanel.svelte"
+    import InfoPanel from "$lib/main-app/infopanel/InfoPanel.svelte"
     import { infoPanelShown } from "$lib/stores"
 
     // draggable split state (only used when info panel is shown)

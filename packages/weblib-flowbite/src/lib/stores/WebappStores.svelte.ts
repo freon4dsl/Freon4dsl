@@ -1,5 +1,5 @@
-export const drawerHidden = $state({
-	value: true,
+export const drawerOpen = $state({
+	value: false,
 });
 
 export const dialogs = $state({

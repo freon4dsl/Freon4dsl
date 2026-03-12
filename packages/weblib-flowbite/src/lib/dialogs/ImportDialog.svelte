@@ -1,7 +1,7 @@
 <script lang="ts">
     import Dialog from "$lib/dialogs/Dialog.svelte"
     import {Label} from 'flowbite-svelte';
-    import { dialogs, drawerHidden, langInfo } from '$lib';
+    import { dialogs, drawerOpen, langInfo } from '$lib';
     import {ArrowDownToBracketOutline} from "flowbite-svelte-icons";
     import {isNullOrUndefined} from "@freon4dsl/core";
     import {ImportExportHandler} from "$lib/language";
@@ -36,7 +36,7 @@
         if (!isNullOrUndefined(files)) {
             new ImportExportHandler().importUnits(files);
             dialogs.importDialogVisible = false;
-            drawerHidden.value = true;
+            drawerOpen.value = false;
         }
     };
 
@@ -46,7 +46,7 @@
         if (!isNullOrUndefined(fileList)) {
             new ImportExportHandler().importUnits(fileList);
             dialogs.importDialogVisible = false;
-            drawerHidden.value = true;
+            drawerOpen.value = false;
         }
     }
 
@@ -70,7 +70,7 @@
             <ArrowDownToBracketOutline class="w-10 h-10 me-2 dark:text-dark-base-500"/>
             <Label class="space-y-2">
                 <p class="mb-2 text-lg text-light-base-500 dark:text-dark-base-400"><span
-                        class="font-semibold">Click to import </span> or drag and drop</p>
+                    class="font-semibold">Click to import </span> or drag and drop</p>
                 <p class="text-base text-light-base-500 dark:text-dark-base-400">Valid file types: {file_extensions}</p>
             </Label>
         </button>

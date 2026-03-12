@@ -35,6 +35,7 @@ import {
     searchTab,
 } from "../stores/InfoPanelStore.svelte"
 import { TreeNodeData } from "../tree/TreeNodeData.js"
+import { goToNode } from "$lib/ts-utils/CommonFunctions"
 
 const LOGGER = new FreLogger("EditorRequestsHandler") // .mute();
 
@@ -227,12 +228,7 @@ export class EditorRequestsHandler {
         // console.log("Errors: " + modelErrors.list.map(err => err.message).join("\n"));
         errorsLoading.value = false
         if (!isNullOrUndefined(modelErrors.list[0])) {
-            const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn
-            if (Array.isArray(nodes)) {
-                WebappConfigurator.getInstance().selectElement(nodes[0])
-            } else {
-                WebappConfigurator.getInstance().selectElement(nodes)
-            }
+            goToNode(modelErrors.list[0].reportedOn)
         }
     }
 
@@ -316,7 +312,9 @@ export class EditorRequestsHandler {
     private showSearchResults(results: FreNode[], stringToFind: string) {
         const itemsToShow: FreError[] = []
         if (!results || results.length === 0) {
-            itemsToShow.push(new FreError("No results for " + stringToFind, results[0], "", FreErrorSeverity.Info))
+            // todo change the FreError interface to allow undefined as node
+            const node = WebappConfigurator.getInstance().langEnv?.editor.selectedElement // a dummy, because there is no node to jump to
+            itemsToShow.push(new FreError("No results for " + stringToFind, node!, "", FreErrorSeverity.Info))
         } else {
             for (const elem of results) {
                 // todo show some part of the text string instead of the element id

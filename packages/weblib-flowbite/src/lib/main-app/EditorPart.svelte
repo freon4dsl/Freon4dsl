@@ -5,8 +5,9 @@
     import { Alert } from "flowbite-svelte"
     import { InfoCircleSolid } from "flowbite-svelte-icons";
     import { FreonComponent } from "@freon4dsl/core-svelte";
-    import { isNullOrUndefined } from "@freon4dsl/core";
+    import { isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
 
+    let editor = $derived(WebappConfigurator.getInstance().langEnv?.editor)
     let alertCls: string = 'p-1 m-2 gap-1 bg-light-base-600 dark:bg-dark-base-200 text-light-base-50 dark:text-dark-base-900';
 </script>
 
@@ -19,6 +20,13 @@
             </Alert>
         {/if}
     {:else}
-        <FreonComponent editor={WebappConfigurator.getInstance().langEnv?.editor}/>
+        {#if notNullOrUndefined(editor)}
+            <FreonComponent editor={editor}/>
+        {:else}
+            <Alert transition={fly} params={{ x: 200 }} class={alertCls}>
+                {#snippet icon()}<InfoCircleSolid class="w-5 h-5"/>{/snippet}
+                Freon Editor is not available.
+            </Alert>
+        {/if}
     {/if}
 </div>
