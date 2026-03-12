@@ -203,6 +203,7 @@ export class ConceptTemplate {
         imports.language = this.findModelImports(concept, myName);
         const metaType: string = Names.metaType();
         const intfaces: string[] = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
+        let limitedId = 0
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
@@ -217,16 +218,14 @@ export class ConceptTemplate {
             {
                 ${!concept.isAbstract ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}` : ""}
 
-                ${concept.instances
-            .map((predef) => `static ${predef.name}: ${myName};  // implementation of instance ${predef.name}`)
-            .join("\n")}
+                ${concept.instances.map((predef) => `static ${predef.name}: ${myName};  // implementation of instance ${predef.name}`).join("\n")}
                      static $freANY : ${myName};        // default predefined instance
 
                 ${ConceptUtils.makeBasicProperties(metaType, myName, hasSuper)}
                 ${concept
-            .implementedPrimProperties()
-            .map((p) => ConceptUtils.makePrimitiveProperty(p))
-            .join("\n")}
+                    .implementedPrimProperties()
+                    .map((p) => ConceptUtils.makePrimitiveProperty(p))
+                    .join("\n")}
 
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), imports)}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType, false, false, false, false)}
@@ -238,14 +237,14 @@ export class ConceptTemplate {
             // otherwise the state of properties with primitive type will not be kept correctly.
             runInAction( () => {
                 ${concept.instances
-                .map(
-                    (predef) =>
-                        `${myName}.${predef.name} = ${myName}.create({
+                    .map(
+                        (predef) =>
+                            `${myName}.${predef.name} = ${myName}.create({ $id: "LIMITED-${concept.name}-ID-${limitedId++}",
                                 ${predef.props.map((prop) => `${prop.name}: ${this.createInstancePropValue(prop)}`).join(", ")}
                             });`,
-                )
-                .join(" ")}
-            })`;
+                    )
+                    .join(" ")}
+            })`
         return `
             ${imports.makeImports(concept.language)}
 

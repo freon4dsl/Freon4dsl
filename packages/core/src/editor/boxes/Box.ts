@@ -17,6 +17,14 @@ const LOGGER = new FreLogger("Box");
  * The root of the Box class hierarchy, contains all generic properties and a number of navigation/search functions.
  */
 export abstract class Box {
+    get cssClass(): string {
+        return this._cssClass
+    }
+
+    set cssClass(value: string) {
+        this._cssClass = value
+        this.isDirty()
+    }
     $id: string;
     kind: string = "";
     role: string = "";
@@ -27,13 +35,15 @@ export abstract class Box {
     // The index within the property, if appropriate
     propertyIndex: number;
     // Custom CSS class that will be added to the component rendering this box
-    cssClass: string = "";
+    private _cssClass: string = "";
     // Custom CSS Style class that will be added as inline style to the component rendering this box
     cssStyle: string = "";
     // Can this box be selected in the editor?
     selectable: boolean = true; // todo because most boxes are not selectable the default could be set to false
     // Is this box currently not shown in the editor?
     isVisible: boolean = true;
+    // Should the drag handle be hidden for this box in a list?
+    hideDragHandle: boolean = false;
     parent: Box = null;
 
     // Indication whether the 'node' which this box projects has any validation errors. Adds a CSS class

@@ -39,8 +39,8 @@ export class ConceptUtils {
     private static initializer(freProp: FreMetaPrimitiveProperty): string {
         const myType: FreMetaClassifier = freProp.type
         if (freProp.isOptional) { 
-            if (myType === FreMetaPrimitiveType.identifier || myType === FreMetaPrimitiveType.string) {
-                // initialize optional string property to empty string
+            if (myType === FreMetaPrimitiveType.identifier) {
+                // should never occur, as identifiers may not be optional, but still we initialize it to empty string
                 return `this.${freProp.name} = \"\"`
             } else {
                 // do not initialize an optional property
@@ -271,17 +271,17 @@ export class ConceptUtils {
                 static create(data: Partial<${myName}>): ${myName} {
                     const result = new ${myName}(data.$id);
                     ${concept
-            .allProperties()
-            .map(
-                (freProp) =>
-                    `${
-                        freProp.isList
-                            ? `if (notNullOrUndefined(data.${freProp.name})) {
+                        .allProperties()
+                        .map(
+                            (freProp) =>
+                                `${
+                                    freProp.isList
+                                        ? `if (notNullOrUndefined(data.${freProp.name})) {
                                 data.${freProp.name}.forEach(x =>
                                     result.${freProp.name}.push(x)
                                 );
                             }`
-                            : `if (notNullOrUndefined(data.${freProp.name})) {
+                                        : `if (notNullOrUndefined(data.${freProp.name})) {
                                 result.${freProp.name} = data.${freProp.name};
                             ${
                                 allPartsToInitialize.find((ip) => ip.part === freProp)
@@ -290,9 +290,9 @@ export class ConceptUtils {
                                     : ``
                             }   
                             }`
-                    }`,
-            )
-            .join("\n")}
+                                }`,
+                        )
+                        .join("\n")}
                     if (notNullOrUndefined(data.parseLocation)) {
                         result.parseLocation = data.parseLocation;
                     }

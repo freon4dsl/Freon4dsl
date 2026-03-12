@@ -6,7 +6,7 @@
     import type { GridCellProps } from './svelte-utils/FreComponentProps.js';
 
     // properties
-    let { editor, box, parentBox }: GridCellProps<GridCellBox> = $props();
+    let { editor, box, readonly, parentBox }: GridCellProps<GridCellBox> = $props();
 
     type BoxTypeName = 'gridcellNeutral' | 'gridcellOdd' | 'gridcellEven';
 
@@ -100,16 +100,30 @@
     };
 </script>
 
-<div
-    class="grid-cell-component {orientation} {isHeader} {cssClass}"
-    style:grid-row={row}
-    style:grid-column={column}
-    style={cssStyle}
-    onkeydown={onKeydown}
-    {id}
-    bind:this={htmlElement}
-    role="gridcell"
-    tabindex={0}
->
-    <RenderComponent box={contentBox} {editor} />
-</div>
+{#if readonly}
+    <span
+        class="grid-cell-component {orientation} {isHeader} {cssClass} readonly"
+        style:grid-row={row}
+        style:grid-column={column}
+        style={cssStyle}
+        {id}
+        role="gridcell"
+        tabindex={0}
+    >
+        <RenderComponent box={contentBox} {editor} {readonly} />
+    </span>
+{:else}
+    <span
+        class="grid-cell-component {orientation} {isHeader} {cssClass}"
+        style:grid-row={row}
+        style:grid-column={column}
+        style={cssStyle}
+        onkeydown={onKeydown}
+        {id}
+        bind:this={htmlElement}
+        role="gridcell"
+        tabindex={0}
+    >
+        <RenderComponent box={contentBox} {editor} {readonly} />
+    </span>
+{/if}

@@ -27,7 +27,7 @@
     const LOGGER = TABLE_LOGGER;
 
     // Props
-    let { editor, box }: FreComponentProps<TableBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<TableBox> = $props();
 
     let id = notNullOrUndefined(box) ? componentId(box) : 'table-for-unknown-box';
     let cells: TableCellBox[] = $state([]);
@@ -133,21 +133,42 @@
     };
 </script>
 
-<span
-    style:grid-template-columns={templateColumns}
-    style:grid-template-rows={templateRows}
-    class="table-component {cssClass}"
-    {id}
-    tabIndex={-1}
-    bind:this={htmlElement}
->
-    {#each cells as cell (cell.content.id + '-' + cell.row + '-' + cell.column)}
-        <TableCellComponent
-            box={cell}
-            {editor}
-            parentComponentId={id}
-            parentOrientation={box.direction}
-            ondropOnCell={drop}
-        />
-    {/each}
-</span>
+{#if readonly}
+    <span
+        style:grid-template-columns={templateColumns}
+        style:grid-template-rows={templateRows}
+        class="table-component {cssClass} readonly"
+        {id}
+        tabIndex={-1}
+        bind:this={htmlElement}
+    >
+        {#each cells as cell (cell.content.id + '-' + cell.row + '-' + cell.column)}
+            <TableCellComponent
+                box={cell}
+                {editor} {readonly}
+                parentComponentId={id}
+                parentOrientation={box.direction}
+                ondropOnCell={() => {}}
+            />
+        {/each}
+    </span>
+{:else}
+    <span
+        style:grid-template-columns={templateColumns}
+        style:grid-template-rows={templateRows}
+        class="table-component {cssClass}"
+        {id}
+        tabIndex={-1}
+        bind:this={htmlElement}
+    >
+        {#each cells as cell (cell.content.id + '-' + cell.row + '-' + cell.column)}
+            <TableCellComponent
+                box={cell}
+                {editor} {readonly}
+                parentComponentId={id}
+                parentOrientation={box.direction}
+                ondropOnCell={drop}
+            />
+        {/each}
+    </span>
+{/if}

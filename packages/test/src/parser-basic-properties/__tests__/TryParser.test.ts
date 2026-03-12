@@ -19,7 +19,7 @@ describe("Parser properties of type", () => {
 
     beforeEach(() => {
         // Ensure that ID's of created elements do not change.
-        FreUtils.resetId();
+        FREON.idProvider.reset()
     });
 
     test(" Primitive ", () => {
@@ -41,7 +41,7 @@ describe("Parser properties of type", () => {
           new TestParserModel(),
           "test4.opt"
         ) as OptionalPrimitivesTest;
-        // console.log(writer.writeToString(unit1));
+        console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
     });
 

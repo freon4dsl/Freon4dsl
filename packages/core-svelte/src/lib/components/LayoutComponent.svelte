@@ -1,5 +1,6 @@
 <script lang="ts">
     import { LAYOUT_LOGGER } from './ComponentLoggers.js';
+    import { untrack, tick } from 'svelte';
 
     /**
      * This component shows a list of various boxes (no 'true' list). It can be shown
@@ -13,7 +14,7 @@
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
-    let { editor, box }: FreComponentProps<LayoutBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<LayoutBox> = $props();
 
     let LOGGER: FreLogger = LAYOUT_LOGGER;
     let id: string = $state('');
@@ -34,11 +35,14 @@
         // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
-        // Evaluated and re-evaluated when the box changes.
-        refresh('Refresh Layout box changed ' + box?.id);
+        // Use untrack to avoid triggering state_unsafe_mutation error in Svelte 5
+        untrack(() => {
+            refreshInternal('Refresh Layout box changed ' + box?.id);
+        });
     });
 
-    const refresh = (why?: string): void => {
+    /** Internal refresh function. Should be wrapped in untrack() when called from effects. */
+    const refreshInternal = (why?: string): void => {
         LOGGER.log('REFRESH LayoutComponent (' + why + ')' + box?.node?.freLanguageConcept());
         id = notNullOrUndefined(box) ? componentId(box) : 'layout-for-unknown-box';
         children = [...box.children];
@@ -53,22 +57,28 @@
             errMess = [];
         }
     };
+
+    /** External refresh function exposed to box.refreshComponent.
+     *  Defers state mutations to after the current reactive cycle. */
+    const refresh = (why?: string): void => {
+        tick().then(() => {
+            refreshInternal(why);
+        });
+    };
 </script>
 
-{#if errMess.length > 0}
-    <ErrorMarker {editor} {box} />
-{/if}
-<span
-    class="layout-component {errorCls} {box.cssClass}"
-    {id}
-    class:layout-component-horizontal={isHorizontal}
-    class:layout-component-vertical={!isHorizontal}
-    tabindex="-1"
-    bind:this={element}
->
+
+{#if readonly}
+    <span
+        class="layout-component {errorCls} {box.cssClass} readonly"
+        {id}
+        class:layout-component-horizontal={isHorizontal}
+        class:layout-component-vertical={!isHorizontal}
+        tabindex="-1"
+    >
     {#if isHorizontal}
         {#each children as child (child.id)}
-            <RenderComponent box={child} {editor} />
+            <RenderComponent box={child} {editor} {readonly} />
         {/each}
     {:else}
         {#each children as child (child.id)}
@@ -76,7 +86,34 @@
                 <br/>
             {/if}
 -->
-            <RenderComponent box={child} {editor} />
+            <RenderComponent box={child} {editor} {readonly} />
         {/each}
     {/if}
 </span>
+{:else }
+    {#if errMess.length > 0}
+        <ErrorMarker {editor} {readonly} {box} />
+    {/if}
+    <span
+        class="layout-component {errorCls} {box.cssClass}"
+        {id}
+        class:layout-component-horizontal={isHorizontal}
+        class:layout-component-vertical={!isHorizontal}
+        tabindex="-1"
+        bind:this={element}
+    >
+    {#if isHorizontal}
+        {#each children as child (child.id)}
+            <RenderComponent box={child} {editor} {readonly} />
+        {/each}
+    {:else}
+        {#each children as child (child.id)}
+            <!--            {#if i > 0 && i < children.length && !(isEmptyLineBox(children[i - 1]))}
+                <br/>
+            {/if}
+-->
+            <RenderComponent box={child} {editor} {readonly} />
+        {/each}
+    {/if}
+</span>
+{/if}

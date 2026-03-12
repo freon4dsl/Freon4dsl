@@ -2,6 +2,7 @@
  * Class representing the context (or environment) in which an expression is evaluated.
  * The context contains values for objects and is hierarchical.
  */
+import { notNullOrUndefined } from "../util/index.js"
 import type { RtObject } from "./runtime/index.js";
 
 export class InterpreterContext {
@@ -9,9 +10,9 @@ export class InterpreterContext {
     public static EMPTY_CONTEXT = new InterpreterContext(null);
 
     // Map containing values for objects in this context
-    private values: Map<Object, RtObject> = new Map<Object, RtObject>();
+    private values: Map<object, RtObject> = new Map<object, RtObject>();
 
-    // Parent context, used to find objects in case they are not in the current context
+    // Parent context, u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            sed to find objects in case they are not in the current context
     private parentContext: InterpreterContext;
 
     constructor(parent: InterpreterContext) {
@@ -21,9 +22,9 @@ export class InterpreterContext {
     /**
      * Find the value of `node` in this context, assuming its type is T.
      */
-    find<T extends RtObject>(node: Object): T {
+    find<T extends RtObject>(node: object): T {
         const result = this.values.get(node);
-        if (!!result) {
+        if (notNullOrUndefined(result)) {
             return result as T;
         } else {
             return this.parentContext?.find(node);
@@ -33,13 +34,13 @@ export class InterpreterContext {
     /**
      * Set the value of `node` to `value`.
      */
-    set(node: Object, value: RtObject): void {
+    set(node: object, value: RtObject): void {
         this.values.set(node, value);
     }
 
     toString(): string {
         let result = "{ ";
-        this.values.forEach((value: Object, node: Object) => {
+        this.values.forEach((value: object, node: object) => {
             result += node["name"] + " == " + value + ", ";
         });
         // return result + "}";

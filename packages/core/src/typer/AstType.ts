@@ -1,4 +1,5 @@
 import type { FreOwnerDescriptor, FreNode, FreNamedNode } from "../ast/index.js";
+import { notNullOrUndefined } from "../util/index.js"
 import type { FreWriter } from "../writer/index.js";
 import type { FreType } from "./FreType.js";
 import type { FreParseLocation } from "../reader/index.js";
@@ -80,10 +81,10 @@ export class AstType implements FreType {
     readonly $typename: string = "AstType";
 
     toFreString(writer: FreWriter): string {
-        if (!!this.astElement) {
+        if (notNullOrUndefined(this.astElement)) {
             if (this.astElement === AstType.ANY) {
                 return "ANY";
-            } else if (!!this.astElement["name"]) { // Note "name" must refer to the property of FreNamedNode!
+            } else if (notNullOrUndefined(this.astElement["name"])) { // Note "name" must refer to the property of FreNamedNode!
                 return writer.writeNameOnly(this.astElement);
             } else {
                 return writer.writeToString(this.astElement);

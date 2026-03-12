@@ -16,7 +16,7 @@
     const LOGGER = SWITCH_LOGGER;
 
     // Props
-    let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<BooleanControlBox> = $props();
 
     let id: string = notNullOrUndefined(box) ? componentId(box) : 'switch-for-unknown-box';
     let value = $state(box.getBoolean());
@@ -60,7 +60,7 @@
     }
 </script>
 
-<span class="switch-component {box.cssClass}">
+<span class="switch-component {box.cssClass}" class:readonly={readonly}>
     <button
         {id}
         bind:this={switchElement}
@@ -68,6 +68,7 @@
         aria-checked={value}
         aria-labelledby={`switch-${id}`}
         onclick={handleClick}
+        disabled={readonly}
     >
     </button>
 </span>

@@ -43,7 +43,7 @@
     import DragHandle from "./images/DragHandle.svelte";
 
     // Props
-    let { editor, box }: FreComponentProps<ListBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<ListBox> = $props();
 
     // Local state variables
     let LOGGER: FreLogger = LIST_LOGGER;
@@ -195,6 +195,21 @@
             : false;
     };
 
+    /**
+     * Determines whether the drag handle should be hidden for a given box.
+     * Checks the box's hideDragHandle property and external box params.
+     */
+    function shouldHideDragHandle(b: Box): boolean {
+        // Check box property
+        if (b.hideDragHandle) return true;
+
+        // Check external box param
+        if ('findParam' in b && typeof (b as any).findParam === 'function') {
+            if ((b as any).findParam("hideDragHandle") === "true") return true;
+        }
+        return false;
+    }
+
     const onKeyDown = (event: KeyboardEvent, index: number) => {
         if (event.key === ENTER) {
             // Create a new list element after the node at index
@@ -218,14 +233,33 @@
     }
 </script>
 
-<!-- onblur is needed for onmouseout -->
-<span
-    class="{isHorizontal ? 'list-component-horizontal' : 'list-component-vertical'} {box.cssClass}"
-    {id}
-    bind:this={htmlElement}
-    style:grid-template-columns="auto"
-    style:grid-template-rows="auto"
->
+{#if readonly}
+    <span
+        class="{isHorizontal ? 'list-component-horizontal' : 'list-component-vertical'} {box.cssClass} readonly"
+        {id}
+        style:grid-template-columns="auto"
+        style:grid-template-rows="auto"
+    >
+        {#each shownElements as box, index (box.id)}
+            <span
+                class="list-item readonly"
+                style:grid-column={!isHorizontal ? 1 : index + 1}
+                style:grid-row={isHorizontal ? 1 : index + 1}
+                role="none"
+            >
+                <RenderComponent {box} {editor} {readonly} />
+            </span>
+        {/each}
+    </span>
+{:else}
+    <!-- onblur is needed for onmouseout -->
+    <span
+        class="{isHorizontal ? 'list-component-horizontal' : 'list-component-vertical'} {box.cssClass}"
+        {id}
+        bind:this={htmlElement}
+        style:grid-template-columns="auto"
+        style:grid-template-rows="auto"
+    >
     {#each shownElements as box, index (box.id)}
         <span
             class="list-item"
@@ -247,13 +281,14 @@
             oncontextmenu={(event) => showContextMenu(event, index)}
             role="none"
         >
-            {#if !isActionBox(box)}
+            {#if !isActionBox(box) && !shouldHideDragHandle(box)}
             <span class="drag-handle"
                   draggable="true"
                   ondragstart={(event) => dragstart(event, id, index)}
                   role="listitem"><DragHandle/></span>
             {/if}
-            <RenderComponent {box} {editor} />
+            <RenderComponent {box} {editor} {readonly} />
         </span>
     {/each}
 </span>
+{/if}

@@ -43,6 +43,7 @@
     let {
         editor,
         box,
+        readonly,
         partOfDropdown,
         isEditing = $bindable(),
         text = $bindable(),
@@ -70,6 +71,7 @@
                   : 'text'
             : 'text'
     );
+    let cssClass: string | undefined = $state(box?.cssClass)
 
     // Variables to alter the state of the component, the prop 'isEditing' is one of these.
     // indicates whether we are just starting to edit, so we need to set the cursor in the <input>
@@ -137,6 +139,7 @@
                 errMess = [];
                 hasErr = false;
             }
+            cssClass = box?.cssClass
         }
     };
 
@@ -695,11 +698,28 @@
 
 </script>
 
-{#if errMess.length > 0 && box.isFirstInLine}
-    <ErrorMarker {editor} {box} />
-{/if}
-<ErrorTooltip {editor} {box} {hasErr} parentTop={0} parentLeft={0}>
-    <span {id} role="none" bind:this={surroundingElement} class="text-component">
+{#if readonly}
+    <span {id} role="none" class="{cssClass} text-component readonly">
+            <span
+                class="text-box-{boxType} text-component-text {errorCls} readonly"
+                {tabindex}
+                bind:this={spanElement}
+                id="{id}-span"
+                role="textbox"
+            >
+                {#if !!text && text.length > 0}
+                    <span class="{errorCls} readonly">{text}</span>
+                {:else}
+                    <span class="{placeHolderStyle} {errorCls} readonly">{placeholder}</span>
+                {/if}
+            </span>
+    </span>
+{:else}
+    {#if errMess.length > 0 && box.isFirstInLine}
+        <ErrorMarker {editor} {readonly} {box} />
+    {/if}
+    <ErrorTooltip {editor} {readonly} {box} {hasErr} parentTop={0} parentLeft={0}>
+    <span {id} role="none" bind:this={surroundingElement} class="{cssClass} text-component">
         {#if isEditing}
             <span class="text-component-input-wrapper">
                 <input
@@ -726,7 +746,7 @@
                  But ... this is only a problem when this component is inside a draggable element (like List or table)
             -->
             <span
-                class="{box?.cssClass} text-box-{boxType} text-component-text {errorCls}"
+                class="text-box-{boxType} text-component-text {errorCls}"
                 onmousedown={onMousedown}
                 onfocusin={onFocusIn}
                 {tabindex}
@@ -744,4 +764,5 @@
             </span>
         {/if}
     </span>
-</ErrorTooltip>
+    </ErrorTooltip>
+{/if}

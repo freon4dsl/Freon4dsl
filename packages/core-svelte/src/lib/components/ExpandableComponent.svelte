@@ -3,7 +3,7 @@
     import { type FragmentBox} from "@freon4dsl/core";
     import ArrowForward from "./images/ArrowForward.svelte";
 
-    let { editor, box }: FreComponentProps<FragmentBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<FragmentBox> = $props();
 
     let isExpanded: boolean = $state(false);
     let contentStyle: string = $state("display: none");
@@ -20,15 +20,15 @@
     }
 </script>
 
-<span class="expandable-component {box.cssClass}">
+<span class="expandable-component {box.cssClass}" class:readonly={readonly}>
     {#key isExpanded}
-        <button class="expandable-button" onclick={toggleExpanded}>
+        <button class="expandable-button" class:readonly={readonly} onclick={toggleExpanded}>
             <ArrowForward />
         </button>
     {/key}
     {#key contentStyle}
         <div style={contentStyle}>
-            <RenderComponent box={box.childBox} {editor} />
+            <RenderComponent box={box.childBox} {editor} {readonly} />
         </div>
     {/key}
 </span>

@@ -327,6 +327,7 @@ function objectWillChange(
             }
             // make sure the change is propagated to listeners
             // note we use 'change.added' here because this list might be different from 'added'
+            // TODO Delta: this should be sent before the actual change in the model.
             AstObserver.getInstance().updatePartList(listOwner, propertyName, index, removed, change.added);
             break;
     }
@@ -391,6 +392,7 @@ function primWillChange(
             });
             // make sure the change is propagated to listeners
             // note we use 'change.added' here because this list might be different from 'added'
+            // TODO Delta: this should be sent before the actual change in the model.
             AstObserver.getInstance().updatePrimList(listOwner, propertyName, index, removed, change.added);
             break;
     }

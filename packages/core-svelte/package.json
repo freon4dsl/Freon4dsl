@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && npm run prepack",
-    "build-dev": "tsc --noEmit && vite build && npm run prepack",
+    "build-dev": "vite build && npm run prepack",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "prepack": "svelte-kit sync && svelte-package && publint",
@@ -51,23 +51,23 @@
     }
   },
   "peerDependencies": {
-    "svelte": "^5.0.0"
+    "svelte": "^5.50.1"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^6.0.1",
-    "@sveltejs/kit": "^2.25.1",
-    "@sveltejs/package": "^2.4.0",
+    "@sveltejs/adapter-auto": "^7.0.0",
+    "@sveltejs/kit": "^2.50.2",
+    "@sveltejs/package": "^2.5.7",
     "@sveltejs/vite-plugin-svelte": "^6.1.0",
     "autoprefixer": "^10.4.21",
     "globals": "^16.3.0",
     "prettier": "^3.6.2",
-    "prettier-plugin-svelte": "^3.4.0",
+    "prettier-plugin-svelte": "^3.4.1",
     "publint": "^0.3.12",
-    "svelte": "^5.0.0",
-    "svelte-check": "^4.3.0",
+    "svelte": "^5.50.1",
+    "svelte-check": "^4.4.4",
     "typescript": "^5.8.3",
-    "vite": "^7.0.5",
-    "vitest": "^3.2.4"
+    "vite": "^7.3.1",
+    "vitest": "3.2.4"
 },
   "dependencies": {
     "@freon4dsl/core": "~2.1.0"

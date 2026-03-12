@@ -7,6 +7,7 @@ export const infoPanelShown = $state({
 
 export const searchResultLoading = $state({value: true});
 export const interpreterResultLoading = $state({value: true});
+export const deltaResultLoading = $state({ value: true })
 
 export interface ErrorInfoInterface {
     list: FreError[];
@@ -24,5 +25,6 @@ export const interpreterTrace: {value: TreeNodeData | undefined} = $state({value
 // the currently active tab and constants to indicate the tabs
 export const errorTab = "Errors";
 export const searchTab = "Search";
-export const interpreterTab = "Interpreter";
+export const interpreterTab = "Interpreter"
+export const deltaTab = "Processed Deltas"
 export const activeTab = $state({value: errorTab});

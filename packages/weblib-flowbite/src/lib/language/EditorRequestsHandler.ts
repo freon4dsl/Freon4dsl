@@ -1,5 +1,6 @@
 import {
     AstActions,
+    deltaList,
     FreDelta,
     FreEditorUtil,
     type FreEnvironment,
@@ -20,7 +21,7 @@ import {
 } from "@freon4dsl/core"
 import { runInAction } from "mobx"
 import { WebappConfigurator } from "../language/index.js"
-import { editorInfo, infoPanelShown, setUserMessage, userMessageOpen } from "../stores/index.js"
+import { deltaResultLoading, deltaTab, editorInfo, infoPanelShown, setUserMessage, userMessageOpen } from "../stores/index.js"
 import {
     activeTab,
     errorsLoading,
@@ -273,6 +274,23 @@ export class EditorRequestsHandler {
         } else {
             return new TreeNodeData(name, trace.node as FreNode, undefined)
         }
+    }
+
+    showDeltas = (): void => {
+        deltaResultLoading.value = true
+        activeTab.value = deltaTab
+        infoPanelShown.value = true
+        deltaResultLoading.value = false
+        // if (!isNullOrUndefined(deltaList.deltas[0])) {
+        //     const nodes: FreNode | FreNode[] | undefined = deltaList.deltas[0].changedNode
+        //     if (isNullOrUndefined(nodes)) {
+        //         // todo
+        //     } else if (Array.isArray(nodes)) {
+        //         WebappConfigurator.getInstance().selectElement(nodes[0])
+        //     } else {
+        //         WebappConfigurator.getInstance().selectElement(nodes)
+        //     }
+        // }
     }
 
     findText(stringToFind: string) {

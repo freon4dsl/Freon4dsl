@@ -15,7 +15,7 @@
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
-    let { editor, box }: FreComponentProps<LimitedControlBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<LimitedControlBox> = $props();
 
     const LOGGER = LIMITEDCHECKBOX_LOGGER;
 
@@ -151,32 +151,62 @@
     };
 </script>
 
-<span
-  role="group"
-  aria-labelledby={ariaLabel}
-  {id}
-  class="limited-checkbox-component-group"
-  class:limited-checkbox-component-vertical={!isHorizontal}
->
-    {#each myEnum as nn, i}
-        <span class="limited-checkbox-component-single">
-            <label class="limited-checkbox-component-label">
-                <input
-                  class="limited-checkbox-component-input"
-                  type="checkbox"
-                  id="{id}-{nn}-{i}"
-                  value={nn}
-                  checked={isChecked(nn)}
-                  aria-label="checkbox-{nn}"
-                  aria-checked={isChecked(nn)}
-                  tabindex={0}
-                  onchange={() => changed(nn)}
-                  onclick={onClick}
-                  onkeydown={onKeyDown}
-                  bind:this={allElements[i]}
-                >
-                {nn}
-            </label>
-        </span>
-    {/each}
-</span>
+{#if readonly}
+    <span
+        role="group"
+        aria-labelledby={ariaLabel}
+        {id}
+        class="limited-checkbox-component-group readonly"
+        class:readonly={readonly}
+        class:limited-checkbox-component-vertical={!isHorizontal}
+    >
+        {#each myEnum as nn, i}
+            <span class="limited-checkbox-component-single readonly" class:readonly={readonly}>
+                <label class="limited-checkbox-component-label readonly" class:readonly={readonly}>
+                    <input
+                        class="limited-checkbox-component-input readonly" class:readonly={readonly}
+                        type="checkbox"
+                        id="{id}-{nn}-{i}"
+                        value={nn}
+                        checked={isChecked(nn)}
+                        aria-label="checkbox-{nn}"
+                        aria-checked={isChecked(nn)}
+                        tabindex={0}
+                        disabled
+                    >
+                    {nn}
+                </label>
+            </span>
+        {/each}
+    </span>
+{:else}
+    <span
+        role="group"
+        aria-labelledby={ariaLabel}
+        {id}
+        class="limited-checkbox-component-group"
+        class:limited-checkbox-component-vertical={!isHorizontal}
+    >
+        {#each myEnum as nn, i}
+            <span class="limited-checkbox-component-single">
+                <label class="limited-checkbox-component-label">
+                    <input
+                        class="limited-checkbox-component-input"
+                        type="checkbox"
+                        id="{id}-{nn}-{i}"
+                        value={nn}
+                        checked={isChecked(nn)}
+                        aria-label="checkbox-{nn}"
+                        aria-checked={isChecked(nn)}
+                        tabindex={0}
+                        onchange={() => changed(nn)}
+                        onclick={onClick}
+                        onkeydown={onKeyDown}
+                        bind:this={allElements[i]}
+                    >
+                    {nn}
+                </label>
+            </span>
+        {/each}
+    </span>
+{/if}

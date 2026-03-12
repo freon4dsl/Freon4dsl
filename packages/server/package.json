@@ -30,13 +30,12 @@
     "check-imports": "bash ../../scripts/check-import-extensions.sh"
   },
   "devDependencies": {
-    "vitest": "3.2.4",
-    "@vitest/ui": "3.2.4"
+    "vitest": "3.2.4"
   },
   "dependencies": {
     "@types/koa": "3.0.1",
-    "@lionweb/validation": "^0.6.3",
-    "koa": "3.1.1",
+    "@lionweb/validation": "0.8.0-beta.8",
+    "koa": "3.1.2",
     "koa-bodyparser": "4.4.1",
     "@koa/router": "14.0.0",
     "@koa/cors": "5.0.0",

@@ -1,7 +1,7 @@
 import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLanguage } from "../../language/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { isIdentifier } from "../../util/index.js"
+import { isIdentifier, isNullOrUndefined } from "../../util/index.js"
 import {
     collectUsedLanguages,
     FreLionwebSerializer,
@@ -24,13 +24,13 @@ export type ParameterType = {
 }
 
 export class ServerCommunication implements IServerCommunication {
-    get nodePort(): any {
-        return this._nodePort
+    get nodePort(): number {
+        return this._nodePort;
     }
 
-    set nodePort(value: any) {
-        this._nodePort = value
-        this.SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`
+    set nodePort(value: number) {
+        this._nodePort = value;
+        this.SERVER_URL = this.buildServerUrl();
     }
 
     get SERVER_URL(): string {
@@ -45,16 +45,16 @@ export class ServerCommunication implements IServerCommunication {
     }
 
     set SERVER_IP(value: string) {
-        this._SERVER_IP = value
-        this.SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`
+        this._SERVER_IP = value;
+        this.SERVER_URL = this.buildServerUrl();
     }
     static serial: FreModelSerializer = new FreModelSerializer()
     static lionweb_serial: FreLionwebSerializer = new FreLionwebSerializer()
     static instance: ServerCommunication
 
     static getInstance(): ServerCommunication {
-        if (!!!ServerCommunication.instance) {
-            ServerCommunication.instance = new ServerCommunication()
+        if (isNullOrUndefined(ServerCommunication.instance)) {
+            ServerCommunication.instance = new ServerCommunication();
         }
         return ServerCommunication.instance
     }
@@ -118,15 +118,27 @@ export class ServerCommunication implements IServerCommunication {
         Object.assign(this.customHeaders, headers)
     }
 
+    /**
+     * Builds the server URL from the IP and port.
+     * If the port is not set, NaN, or otherwise invalid, the URL is constructed without a port.
+     * This is important for deployed environments (e.g. Azure) where the URL uses standard
+     * ports (443 for HTTPS, 80 for HTTP) and should not include an explicit port.
+     */
+    private buildServerUrl(): string {
+        if (this._nodePort !== null && this._nodePort !== undefined && !isNaN(this._nodePort)) {
+            return `${this._SERVER_IP}:${this._nodePort}/`;
+        }
+        return `${this._SERVER_IP}/`;
+    }
+
     onError(msg: string, severity: FreErrorSeverity): void {
         // default implementation
         console.error(`ServerCommunication ${severity}: ${msg}`)
     }
 
-    // @ts-ignore
     // parameters present to adhere to interface
-    async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<ServerReturn<string[]>> {
-        return null
+    async generateIds(_quantity: number, _callback: (strings: string[]) => void): Promise<ServerResponse<string[]>> {
+        return null;
     }
 
     /**
@@ -168,7 +180,7 @@ export class ServerCommunication implements IServerCommunication {
     async deleteModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unit.name}`)
         if (!!unit.name && unit.name.length > 0) {
-            const response = await this.getWithTimeout<any>(`deleteModelUnit`, { model: modelName, unit: unit.name })
+            const response = await this.getWithTimeout<never>(`deleteModelUnit`, {model:modelName, unit: unit.name});
             if (response.errors.length > 0) {
                 response.errors[0] = `Server cannot delete model unit '${unit.name}' (${response.errors[0]})`
             }
@@ -184,7 +196,7 @@ export class ServerCommunication implements IServerCommunication {
     async deleteModel(modelName: string): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.deleteModel ${modelName}`)
         if (!!modelName && modelName.length > 0) {
-            const response = await this.getWithTimeout<any>(`deleteModel`, { model: modelName })
+            const response = await this.getWithTimeout<never>(`deleteModel`, { model: modelName });
             if (response.errors.length > 0) {
                 response.errors[0] = `Server cannot delete model '${modelName}' (${response.errors[0]})`
             }
@@ -212,8 +224,8 @@ export class ServerCommunication implements IServerCommunication {
      * @param modelName
      */
     async loadUnitList(modelName: string): Promise<ServerResponse<FreUnitIdentifier[]>> {
-        LOGGER.log(`ServerCommunication.loadUnitList`)
-        let response = await this.getWithTimeout<string[]>(`getUnitList`, { model: modelName })
+        LOGGER.log(`ServerCommunication.loadUnitList`);
+        const response = await this.getWithTimeout<string[]>(`getUnitList`, {model: modelName });
         if (response.errors.length > 0) {
             return {
                 result: null,
@@ -316,8 +328,8 @@ export class ServerCommunication implements IServerCommunication {
         return void 0
     }
 
-    private async saveWithTimeout(method: string, data: Object, params: ParameterType): Promise<VoidServerResponse> {
-        const parameters = ServerCommunication.findParams(params)
+    private async saveWithTimeout(method: string, data: object, params: ParameterType): Promise<VoidServerResponse> {
+        const parameters = ServerCommunication.findParams(params);
         try {
             const controller = new AbortController()
             const timeoutId = setTimeout(() => controller.abort(), 2000)
@@ -363,7 +375,6 @@ export class ServerCommunication implements IServerCommunication {
         return { errors: [] }
     }
 
-    // @ts-ignore
     async createModel(modelName: string): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.createModel ${modelName}`)
         const language = FreLanguage.getInstance().name
@@ -375,7 +386,6 @@ export class ServerCommunication implements IServerCommunication {
         return response
     }
 
-    // @ts-ignore
     async createModelUnit(modelName: string, unit: FreModelUnit): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.createModelUnit ${modelName}::${unit.name}`)
         const response = await this.saveModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)

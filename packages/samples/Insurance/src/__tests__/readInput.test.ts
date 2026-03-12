@@ -1,6 +1,6 @@
 import { InsuranceModelEnvironment } from "../freon/config/InsuranceModelEnvironment.js";
 import { BaseProduct, InsuranceModel, Part, Product } from "../freon/language/index.js";
-import { CoreConfig, FreReader, FreValidator } from "@freon4dsl/core"
+import { CoreConfig, FREON, FreReader, FreValidator } from "@freon4dsl/core"
 import { FileUtil } from '@freon4dsl/test-helpers';
 import { describe, test, expect } from "vitest";
 
@@ -15,7 +15,9 @@ function addPartToModel(model: InsuranceModel, filepath: string) {
         const langSpec: string = FileUtil.stringFromFile('./src/__inputs__/' + filepath);
         const unit1 = reader.readFromString(langSpec, "Part", model) as Part;
         // use last name of filepath as name of the unit
-        unit1.name = filepath.split("/").pop().split(".").shift();
+        FREON.astChanger.change( () => {
+            unit1.name = filepath.split("/").pop().split(".").shift();
+        })
     } catch (e) {
         console.log(e.message + e.stack);
         expect(e).toBeNull();
@@ -27,7 +29,9 @@ function addProductToModel(model: InsuranceModel, filepath: string) {
         const langSpec: string = FileUtil.stringFromFile('./src/__inputs__/' + filepath);
         const unit1 = reader.readFromString(langSpec, "Product", model) as Product;
         // use last name of filepath as name of the unit
-        unit1.name = filepath.split("/").pop().split(".").shift();
+        FREON.astChanger.change( () => {
+            unit1.name = filepath.split("/").pop().split(".").shift();
+        })
     } catch (e) {
         console.log(e.message + e.stack);
         expect(e).toBeNull();

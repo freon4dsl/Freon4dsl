@@ -1,4 +1,4 @@
-import { FreLogger } from "@freon4dsl/core";
+import { FreLogger, NumberControlBox } from "@freon4dsl/core"
 
 /**
  * Configure loggers. Loggers are muted by default, unmuting loggers that you want to
@@ -7,15 +7,16 @@ import { FreLogger } from "@freon4dsl/core";
 export function configureLoggers() {
     // // Activate the following loggers
     // FreLogger.unmute("FreLionwebSerializer")
-    // FreLogger.unmute("MobxDecorators")
-    // FreLogger.unmute("ActionBox")
-    // FreLogger.unmute("TextComponentHelper")
+    FreLogger.unmute("CheckBoxComponent")
+    FreLogger.unmute("NumericSliderComponent")
+    FreLogger.unmute("NumberControlBox")
     // FreLogger.unmute("TextComponent")
     // FreLogger.unmute("FreonComponent")
     // FreLogger.unmute("FreEditor")
     // FreLogger.unmute("TextDropdownComponent")
     // FreLogger.unmute("EditorState")
     // FreLogger.unmute("ModelManager")
+    // FreLogger.unmute("DeltaModelManager")
     // FreLogger.unmute("TextComponent")
     // FreLogger.unmute("ServerCommunication")
     // // Do not show log messages containing any of these strings

@@ -1,9 +1,9 @@
 import type { IAstChanger } from "../change-manager/IAstChanger.js"
 import { AstChanger, AstObserver, ReferenceUpdateManager } from "../change-manager/index.js"
-import type { IModelManager } from "../storage/IModelManager.js"
-import { type IServerCommunication, ModelManager } from "../storage/index.js"
-import { DummyServerConfiguration } from "../storage/server/DummyServerConfiguration.js"
-import { isNullOrUndefined } from "../util/index.js"
+import { DeltaModelManager } from "../storage/DeltaModelManager.js"
+import { type IModelManager, type IServerCommunication, LionwebDeltaIdProvider, ModelManager } from "../storage/index.js"
+import { type FreonDeltaClient } from "../storage/lionweb-delta/FreonDeltaClient.js"
+import { type IdProvider, notNullOrUndefined, SimpleIdProvider } from "../util/index.js"
 import type { FreEnvironment } from "./FreEnvironment.js"
 
 export interface ICoreConfig {
@@ -13,6 +13,10 @@ export interface ICoreConfig {
     astChanger: IAstChanger
     server: IServerCommunication
     environment: FreEnvironment
+    deltaClient: FreonDeltaClient
+    idProvider: IdProvider
+
+    usesDelta(): boolean;
 }
 
 export class CoreConfig implements ICoreConfig {
@@ -22,23 +26,46 @@ export class CoreConfig implements ICoreConfig {
     astChanger: IAstChanger
     server: IServerCommunication
     environment: FreEnvironment
-    
+    deltaClient: FreonDeltaClient
+    idProvider: IdProvider
+
     static initialize(env: FreEnvironment, server: IServerCommunication) {
-        FREON = new CoreConfig(env, server)
+        FREON = new CoreConfig(env, server, undefined)
     }
-    
-    private constructor(env: FreEnvironment, server: IServerCommunication) {
+
+    static initializeWithDeltaServer(env: FreEnvironment, deltaClient: FreonDeltaClient) {
+        FREON = new CoreConfig(env, undefined, deltaClient)
+    }
+
+    static async initializeWithServers(env: FreEnvironment, server: IServerCommunication, deltaClient: FreonDeltaClient) {
+        await deltaClient.connect()
+        FREON = new CoreConfig(env, undefined, deltaClient)
+        FREON.server = server
+    }
+
+    private constructor(env: FreEnvironment, server: IServerCommunication, deltaClient: FreonDeltaClient) {
         FREON = this
         this.astObserver = AstObserver.getInstance()
         this.referenceUpdater = ReferenceUpdateManager.getInstance()
         this.astChanger = new AstChanger()
         this.environment = env
-        if (isNullOrUndefined(server)) {
-            this.server = new DummyServerConfiguration()
+        // if (isNullOrUndefined(server)) {
+        //     this.server = new DummyServerConfiguration()
+        // } else {
+        this.server = server
+        // }
+        this.deltaClient = deltaClient
+        if (notNullOrUndefined(deltaClient)) {
+            this.modelManager = new DeltaModelManager()
+            this.idProvider = new LionwebDeltaIdProvider()
         } else {
-            this.server = server
+            this.modelManager = new ModelManager()
+            this.idProvider = new SimpleIdProvider("ID-")
         }
-        this.modelManager = new ModelManager()
+    }
+
+    usesDelta(): boolean {
+        return this.deltaClient !== undefined
     }
 }
 
@@ -60,6 +87,15 @@ export class DummyCoreConfig implements ICoreConfig {
     }
     get environment(): FreEnvironment {
         throw new Error("DummyCoreConfig.environment: FREON is still a dummy")
+    }
+    get deltaClient(): FreonDeltaClient {
+        throw new Error("DummyCoreConfig.deltaClient: FREON is still a dummy")
+    }
+    get idProvider(): IdProvider {
+        throw new Error("DummyCoreConfig.idProvider: FREON is still a dummy")
+    }
+    usesDelta(): boolean {
+        throw new Error("DummyCoreConfig.usesDelta: FREON is still a dummy")
     }
 }
 
