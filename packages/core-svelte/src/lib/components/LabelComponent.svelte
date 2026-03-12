@@ -12,7 +12,7 @@
 
     const LOGGER = LABEL_LOGGER;
 
-    let id: string = notNullOrUndefined(box) ? componentId(box) : 'label-for-unknown-box';
+    let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'label-for-unknown-box');
     let element: HTMLSpanElement | undefined = $state(undefined);
     let style: string = $state('');
     let cssClass: string = $state('');

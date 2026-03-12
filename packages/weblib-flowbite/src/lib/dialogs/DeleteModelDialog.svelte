@@ -1,11 +1,10 @@
 <script lang="ts">
-    import Dialog from "$lib/dialogs/Dialog.svelte"
-    import {Button, Label} from 'flowbite-svelte';
-    import {dialogs} from '$lib/stores/WebappStores.svelte';
-    import {editorInfo} from "$lib";
-    import {WebappConfigurator} from "$lib/language";
-    import { cancelButtonClass, okButtonClass } from '$lib/stores/StylesStore.svelte';
-    import { TrashBinSolid } from 'flowbite-svelte-icons';
+    import Dialog from "$lib/dialogs/Dialog.svelte";
+    import { Button, Label } from "flowbite-svelte";
+    import { dialogs } from "$lib/stores/WebappStores.svelte";
+    import { editorInfo } from "$lib";
+    import { WebappConfigurator } from "$lib/language";
+    import { TrashBinSolid, ExclamationCircleSolid } from "flowbite-svelte-icons";
 
     function handleCancel() {
         dialogs.deleteModelDialogVisible = false;
@@ -15,28 +14,44 @@
         WebappConfigurator.getInstance().deleteModel();
         dialogs.deleteModelDialogVisible = false;
     }
-
 </script>
 
 <Dialog open={dialogs.deleteModelDialogVisible}>
     <div class="flex flex-col space-y-6" role="dialog">
-        <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Delete model</h3>
-        <div class="flex flex-col space-y-6 p-4 bg-light-base-700 dark-bg-light-base-300" role="dialog">
-        <Label class="space-y-2 text-light-base-50 dark:text-dark-base-50">
-            Do you want to delete <span class="font-bold">{editorInfo.modelName}</span>?
-        </Label>
-        <Label class="italic text-light-base-200 dark:text-dark-base-200">Note that this action cannot be undone.</Label>
+
+        <h3 class="freon-dialog-title">
+            Delete model
+        </h3>
+
+        <div class="freon-dialog-section flex flex-col space-y-4 p-4">
+
+            <Label class="freon-dialog-text">
+                Do you want to delete
+                <span class="font-semibold">{editorInfo.modelName}</span>?
+            </Label>
+
+            <div class="freon-dialog-warning">
+                <ExclamationCircleSolid class="w-4 h-4 inline mr-2"/>
+                Note that this action cannot be undone.
+            </div>
+
         </div>
     </div>
 
-    <div class="flex flex-row justify-end">
-        <Button onclick={handleCancel} class={cancelButtonClass}>
+    <div class="mt-6 flex justify-end gap-3">
+
+        <Button onclick={handleCancel}
+                class="freon-dialog-btn freon-dialog-btn-cancel">
             Cancel
         </Button>
-        <Button class={okButtonClass}
-                onclick={handleSubmit}>
+
+        <Button onclick={handleSubmit}
+                class="freon-dialog-btn freon-dialog-btn-ok">
+
             <TrashBinSolid class="w-4 h-4 me-2"/>
             Delete
+
         </Button>
+
     </div>
 </Dialog>

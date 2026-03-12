@@ -17,8 +17,8 @@
     // Props
     let { editor, box, readonly }: FreComponentProps<BooleanControlBox> = $props();
 
-    let value = $state(box.getBoolean());
-    let id: string = box.id;
+    let value = $derived(box.getBoolean());
+    let id: string = $derived(box.id);
     let switchElement: HTMLButtonElement;
 
     async function setFocus(): Promise<void> {

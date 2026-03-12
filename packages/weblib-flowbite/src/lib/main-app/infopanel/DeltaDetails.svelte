@@ -9,19 +9,21 @@
     const { pDelta, open }: { pDelta: ProcessedDelta, open: number | null } = $props();
 
     let editor = WebappConfigurator.getInstance().langEnv?.editor
-    let originalNode = pDelta.originalNode
-    let originalBox: Box | undefined = undefined
-    let newEditor = editor
-    let div: HTMLDivElement = null
+    let originalNode = $derived(pDelta.originalNode)
+    let originalBox: Box | undefined = $state(undefined)
+    let newEditor = $state(editor)
+    let originalNodeEl: HTMLDivElement | null = null
 
-    if (notNullOrUndefined(originalNode)) {
-        newEditor = new FreEditor(editor!.projection, editor!.environment)
-        originalBox = newEditor?.projection.getBox(originalNode);
-    }
+    $effect(() => {
+        if (notNullOrUndefined(originalNode)) {
+            newEditor = new FreEditor(editor!.projection, editor!.environment)
+            originalBox = newEditor?.projection.getBox(originalNode);
+        }
+    })
     $effect( () => {
         if (open !== null) {
             // give changed property a "changed" style 
-            const newbox = editor.findBoxForNode(pDelta.changedNode!, pDelta.propertyName)
+            const newbox = editor?.findBoxForNode(pDelta.changedNode!, pDelta.propertyName)
             const origbox = newEditor!.findBoxForNode2(pDelta.originalNode!, pDelta.propertyName)
             console.log(`ORIG BOX ${origbox?.kind} NEW BOX ${newbox?.kind}`)
                 if (notNullOrUndefined(origbox)) {
@@ -35,9 +37,9 @@
         }
     })
 
-    let nodeId = originalNode? originalNode.freId() : "unknown";
+    let nodeId = $derived(originalNode? originalNode.freId() : "unknown")
 
-    let treeData: TreeNodeData | undefined = deltaEventToTreeNodeData(pDelta.delta)
+    let treeData: TreeNodeData | undefined = $derived(deltaEventToTreeNodeData(pDelta.delta))
     let showDeltaTree = $state(false)
 
     function toggleDeltaTree() {
@@ -49,8 +51,8 @@
     <div class="inline-block min-w-max">
         <div id="original-node-{nodeId}">
             Original node:
-            <div class="bg-light-base-100 dark:bg-dark-base-800 p-2 rounded" bind:this={div}>
-                {#if notNullOrUndefined(originalBox)}
+            <div class="bg-light-base-100 dark:bg-dark-base-800 p-2 rounded" bind:this={originalNodeEl}>
+                {#if notNullOrUndefined(originalBox) && notNullOrUndefined(newEditor)}
                     <RenderComponent box={originalBox} editor={newEditor} readonly={true} />
                 {:else}
                     <div>No box found: {nodeId}</div>

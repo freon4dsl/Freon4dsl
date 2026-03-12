@@ -5,7 +5,6 @@
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
-    import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
     import { PenSolid } from 'flowbite-svelte-icons';
     import { editorInfo, setUserMessage } from "$lib"
 
@@ -35,7 +34,7 @@
                 errorText = `Cannot rename unit to '${newName}', because a unit with that name already exists on the server.`;
             } else {
                 if (notNullOrUndefined(editorInfo.toBeRenamed)) {
-                    WebappConfigurator.getInstance().renameModelUnit(editorInfo.toBeRenamed, newName);
+                    await WebappConfigurator.getInstance().renameModelUnit(editorInfo.toBeRenamed, newName);
                 } else {
                     setUserMessage(`Cannot rename unit to '${newName}', because the old unit cannot be identified.`, FreErrorSeverity.Error);
                 }
@@ -52,28 +51,47 @@
 </script>
 
 <Dialog open={dialogs.renameUnitDialogVisible}>
-    <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Rename unit</h3>
+
+    <h3 class="freon-dialog-title">
+        Rename unit
+    </h3>
+
     <div class="flex flex-col space-y-6" role="dialog">
-        <div class="relative text-light-base-700">
-            <Input class={textInputClass}
-                   type="text"
-                   bind:value={newName}
-                   id="new-input"
-                   name="unit-name"
-                   oninput={onInput}
+
+        <div class="relative">
+            <Input
+                class="freon-dialog-input"
+                type="text"
+                bind:value={newName}
+                id="new-input"
+                name="unit-name"
+                oninput={onInput}
             />
         </div>
-        <Helper class="text-sm ml-2 text-light-base-900">
+
+        <Helper class="freon-dialog-helper">
             <span class="font-medium">{errorText}</span>
         </Helper>
-        <div class="mt-4 flex flex-row justify-end">
-            <Button onclick={handleCancel} class={cancelButtonClass}>
+
+        <div class="mt-2 flex justify-end gap-3">
+
+            <Button
+                onclick={handleCancel}
+                class="freon-dialog-btn freon-dialog-btn-cancel"
+            >
                 Cancel
             </Button>
-            <Button class={okButtonClass} onclick={handleSubmit} >
+
+            <Button
+                onclick={handleSubmit}
+                class="freon-dialog-btn freon-dialog-btn-ok"
+            >
                 <PenSolid class="w-4 h-4 me-2"/>
                 Rename
             </Button>
+
         </div>
+
     </div>
+
 </Dialog>

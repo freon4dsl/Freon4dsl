@@ -8,7 +8,6 @@
     let { editor, box, readonly }: FreComponentProps<ElementBox> = $props();
 
     const LOGGER = ELEMENT_LOGGER;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let id: string = $state('');
 
     let childBox: Box | undefined = $state(undefined);

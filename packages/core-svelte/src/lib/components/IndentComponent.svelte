@@ -17,8 +17,8 @@
     const LOGGER = INDENT_LOGGER;
 
     const indentWidth: number = 8;
-    let style: string = $state(`margin-left: ${box?.indent * indentWidth}px;`);
-    let id: string = notNullOrUndefined(box) ? componentId(box) : 'indent-for-unknown-box';
+    let style: string = $derived(`margin-left: ${box?.indent * indentWidth}px;`);
+    let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'indent-for-unknown-box');
     let child: Box | undefined = $state();
 
     $effect(() => {

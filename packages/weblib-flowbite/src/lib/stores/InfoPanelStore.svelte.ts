@@ -13,7 +13,8 @@ export interface ErrorInfoInterface {
     list: FreError[];
 }
 // the current list of search results that is shown in the editor
-export const searchResults: ErrorInfoInterface = $state({list: []});
+export const searchResults: ErrorInfoInterface = $state({ list: [] })
+export const searchText: {value: string} = $state({value: ""})
 
 
 export const errorsLoading = $state({value: true});

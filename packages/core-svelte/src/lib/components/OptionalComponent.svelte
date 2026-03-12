@@ -25,8 +25,7 @@
 	// Props
     let { editor, box, readonly }: FreComponentProps<OptionalBox> = $props();
 
-    let id: string = $state(''); // an id for the html element showing the optional
-    id = notNullOrUndefined(box) ? componentId(box) : 'optional-for-unknown-box';
+    let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'optional-for-unknown-box'); // an id for the HTML element showing the optional
     let isEmpty: boolean = $state(true);
 	let placeholder: string = $state('add optional element');
     let contentBox: Box = $state()!;
@@ -59,7 +58,7 @@
 		// wait until DOM updates and styles/layout settle
 		await tick();
 
-		// now wait one more frame so images/css apply
+		// now wait one more frame so images/CSS apply
 		requestAnimationFrame(() => {
 		    if (dropdownCmp) {
 		        dropdownCmp?.scrollIntoViewIfNeeded();
@@ -262,9 +261,18 @@
 			  {/if}
 		  </button>
 
-		  <span class="optional-component-tooltip readonly" role="tooltip">
+		  <span class="optional-component-tooltip" role="tooltip">
 			Add {placeholder}
 		  </span>
+
+			{#if dropdownShown}
+			<DropdownComponent
+				bind:this={dropdownCmp}
+				bind:selected={selectedOption}
+				bind:options={filteredOptions}
+				selectionChanged={itemSelected}
+			/>
+		  {/if}
 		</span>
 
 	{:else}
@@ -277,9 +285,9 @@
 			<DeleteIcon/>
 		  </button>
 
-		  <div class="optional-component-tooltip" role="tooltip">
+		  <span class="optional-component-tooltip" role="tooltip">
 			Remove {placeholder}
-		  </div>
+		  </span>
 		</span>
 		<RenderComponent box={contentBox} {editor} {readonly}  />
 	{/if}

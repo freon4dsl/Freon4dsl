@@ -8,13 +8,13 @@
     const LOGGER = BUTTON_LOGGER;
     LOGGER.show();
 
-    let id: string = $state(box.id);
+    let id: string = $derived(box.id);
     let thisButton: HTMLButtonElement;
 
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {

@@ -76,7 +76,7 @@
         if (innerWidth < event.clientX + menuWidth)
             left = left - menuWidth;
         LOGGER.log(`ContextMenu posX: ${left}, posY: ${top}, event.pageX: ${event.pageX}, event.pageY: ${event.pageY},
-event.clientX: ${event.clientX}, event.clientY: ${event.clientY}, innerwidth: ${innerWidth}, innerHeight: ${innerHeight},
+event.clientX: ${event.clientX}, event.clientY: ${event.clientY}, innerWidth: ${innerWidth}, innerHeight: ${innerHeight},
 editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
     }
 

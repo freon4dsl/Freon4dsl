@@ -22,7 +22,7 @@
     let children: Box[] = $state([]);
     let isHorizontal: boolean = $state(true);
 
-    let errorCls: string = $state(''); // css class name for when the node is erroneous
+    let errorCls: string = $state(''); // CSS class name for when the node is erroneous
     let errMess: string[] = $state([]); // error message to be shown when element is hovered
 
     async function setFocus(): Promise<void> {
