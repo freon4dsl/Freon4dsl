@@ -56,12 +56,12 @@
     --color-light-freon-error-soft: #FDECEC;
 
     /* Accent family — Indigo */
-    --color-light-freon-accent-900: #2C2F6B;
-    --color-light-freon-accent-700: #3F44A3;
-    --color-light-freon-accent-500: #5A60D6;
-    --color-light-freon-accent-400: #7A7FF0;
-    --color-light-freon-accent-200: #C8CBFA;
-    --color-light-freon-accent-100: #ECEEFF;
+    /*--color-light-freon-accent-900: #2C2F6B;*/
+    /*--color-light-freon-accent-700: #3F44A3;*/
+    /*--color-light-freon-accent-500: #5A60D6;*/
+    /*--color-light-freon-accent-400: #7A7FF0;*/
+    /*--color-light-freon-accent-200: #C8CBFA;*/
+    /*--color-light-freon-accent-100: #ECEEFF;*/
 
     /* ------------------------------------------------ */
     /* Dark mode BASE for the app                       */
@@ -120,10 +120,10 @@
     --color-dark-freon-error-soft: #3B2023;
 
     /* Accent family — Indigo */
-    --color-dark-freon-accent-900: #2C2F6B;
-    --color-dark-freon-accent-700: #3F44A3;
-    --color-dark-freon-accent-500: #5A60D6;
-    --color-dark-freon-accent-400: #7A7FF0;
-    --color-dark-freon-accent-200: #C8CBFA;
-    --color-dark-freon-accent-100: #ECEEFF;
+    /*--color-dark-freon-accent-900: #2C2F6B;*/
+    /*--color-dark-freon-accent-700: #3F44A3;*/
+    /*--color-dark-freon-accent-500: #5A60D6;*/
+    /*--color-dark-freon-accent-400: #7A7FF0;*/
+    /*--color-dark-freon-accent-200: #C8CBFA;*/
+    /*--color-dark-freon-accent-100: #ECEEFF;*/
 }

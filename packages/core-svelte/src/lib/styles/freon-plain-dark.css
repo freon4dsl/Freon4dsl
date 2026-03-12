@@ -1,27 +1,130 @@
 /*********************************************
  *
- * Dark mode styles for Freon Svelte components
- * for use as plain css, for example by Sass.
+ * Styles for Freon Svelte components - Dark mode
  *
  *********************************************/
 
+/* Accent-role variables for dark mode */
+{
+    --freon-focus-ring: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-400) 28%,
+            transparent
+    );
+
+    --color-freon-list-component-border: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-500) 55%,
+            var(--color-dark-freon-600)
+    );
+
+    --color-freon-button-component-bg: var(--color-dark-freon-accent-500);
+    --color-freon-button-component-hover-bg: var(--color-dark-freon-accent-400);
+    --color-freon-button-component-border: var(--color-dark-freon-accent-700);
+
+    --color-freon-text-component-text-color: var(--color-dark-freon-accent-100);
+    --color-freon-text-component-input-bg: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-500) 14%,
+            var(--color-dark-freon-900)
+    );
+    --color-freon-text-component-input-hover-bg: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-500) 22%,
+            var(--color-dark-freon-900)
+    );
+    --color-freon-text-component-text-bg: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-500) 8%,
+            var(--color-dark-freon-900)
+    );
+    --color-freon-text-component-text-hover-bg: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-500) 16%,
+            var(--color-dark-freon-900)
+    );
+    --color-freon-text-component-action-placeholder: var(--color-dark-freon-accent-400);
+
+    --color-freon-multiline-text-component-focus-bg: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-500) 18%,
+            var(--color-dark-freon-900)
+    );
+
+    --color-freon-numeric-slider-low: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-700) 70%,
+            var(--color-dark-freon-800)
+    );
+    --color-freon-numeric-slider-high: var(--color-dark-freon-accent-400);
+    --color-freon-numeric-slider-thumb-bg: var(--color-dark-freon-accent-500);
+    --color-freon-numeric-slider-thumb-border: var(--color-dark-freon-accent-400);
+
+    --color-freon-dropdown-component-border: var(--color-dark-freon-700, var(--color-dark-freon-700));
+    --color-freon-dropdown-component-bg: var(--color-dark-freon-800);
+    --color-freon-dropdown-component-item-hover-bg: var(--color-dark-freon-accent-500);
+    --color-freon-dropdown-component-selected-color: var(--color-dark-freon-accent-400);
+    --color-freon-dropdown-component-selected-bg: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-500) 18%,
+            var(--color-dark-freon-900)
+    );
+
+    --color-freon-optional-component-tooltip-border: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-500) 45%,
+            var(--color-dark-freon-700)
+    );
+    --color-freon-optional-component-tooltip-bg: var(--color-dark-freon-800);
+    --color-freon-optional-component-button-text: var(--color-dark-freon-accent-400);
+
+    --color-freon-add-icon: var(--color-dark-freon-accent-400);
+    --color-freon-delete-icon: var(--color-dark-freon-accent-400);
+
+    --color-freon-switch-component-bg-on: var(--color-dark-freon-accent-500);
+
+    --color-freon-table-component-border: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-500) 55%,
+            var(--color-dark-freon-600)
+    );
+    --color-freon-table-cell-selected-ring: var(--color-dark-freon-accent-400);
+    --color-freon-table-cell-selected-bg: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-500) 14%,
+            var(--color-dark-freon-900)
+    );
+
+    --color-freon-grid-component-border: color-mix(
+            in srgb,
+            var(--color-dark-freon-accent-500) 55%,
+            var(--color-dark-freon-600)
+    );
+
+    --color-freon-text-dropdown-text: var(--color-dark-freon-accent-400);
+    --color-freon-text-dropdown-input-bg: var(--color-dark-freon-accent-700);
+
+    --color-freon-reference-arrow: var(--color-dark-freon-accent-400);
+}
+
 .freon-component {
-    color: var(--color-dark-freon-900);
-    background-color: var(--color-dark-freon-50);
+    color: var(--color-dark-freon-50);
+    background-color: var(--color-dark-freon-900);
 }
 
 .label-component:empty:before {
 }
 
 .label-component {
+    color: var(--color-dark-freon-50);
 }
 
 .list-component-horizontal {
-    border-color: var(--color-dark-freon-border-green);
+    border-color: var(--color-freon-list-component-border);
 }
 
 .list-component-vertical {
-    border-color: var(--color-dark-freon-accent-error);
+    border-color: var(--color-dark-freon-error);
 }
 
 .layout-component {
@@ -31,7 +134,7 @@
 }
 
 .layout-component-horizontal-error {
-    border-bottom: double thin var(--color-dark-freon-accent-error);
+    border-bottom: double thin var(--color-dark-freon-error);
     padding-bottom: 1px;
 }
 
@@ -39,399 +142,388 @@
 }
 
 .layout-component-vertical-error {
-    border-left: 2px solid var(--color-dark-freon-accent-error);
+    border-left: 2px solid var(--color-dark-freon-error);
     height: 100%;
 }
 
-/*******************************************************
- *  LimitedCheckboxComponent
- *******************************************************/
 .limited-checkbox-component-group {
-    /* Base (unchecked) */
-    --limited-checkbox-border-color: var(--color-dark-freon-100);
+    --limited-checkbox-border-color: var(--color-dark-freon-300);
     --limited-checkbox-background-color: transparent;
 
-    /* Checked */
-    --limited-checkbox-checked-border-color: var(--color-dark-freon-100);
-    --limited-checkbox-checked-background-color: var(--color-dark-freon-900);
-    --limited-checkbox-checkmark-color: var(--color-dark-freon-50);
+    --limited-checkbox-checked-border-color: var(--color-dark-freon-50);
+    --limited-checkbox-checked-background-color: var(--color-dark-freon-50);
+    --limited-checkbox-checkmark-color: var(--color-dark-freon-900);
 
-    /* Focus / hover ring */
-    --limited-checkbox-focus-ring-color: color-mix(
-            in srgb,
-            var(--color-dark-freon-accent-dropdown) 30%,
-            transparent
-    );
+    --limited-checkbox-focus-ring-color: var(--freon-focus-ring);
 
-    /* Disabled */
-    --limited-checkbox-disabled-border-color: var(--color-dark-freon-400);
+    --limited-checkbox-disabled-border-color: var(--color-dark-freon-500);
     --limited-checkbox-disabled-background-color: var(--color-dark-freon-250);
 
     --limited-checkbox-disabled-checked-border-color: color-mix(
             in srgb,
-            var(--color-dark-freon-900) 38%,
+            var(--color-dark-freon-50) 38%,
             var(--color-dark-freon-250)
     );
     --limited-checkbox-disabled-checked-background-color: color-mix(
             in srgb,
-            var(--color-dark-freon-900) 38%,
+            var(--color-dark-freon-50) 38%,
             var(--color-dark-freon-250)
     );
 
-    /* Label text */
-    --limited-checkbox-label-color: var(--color-dark-freon-100);
+    --limited-checkbox-label-color: var(--color-dark-freon-50);
 }
+
 .limited-checkbox-component-group:hover,
 .limited-checkbox-component-group:focus-within {
-    outline: var(--color-dark-freon-700) solid 1px;
-    box-shadow: 0 0 10px var(--color-dark-freon-700);
+    outline: var(--color-dark-freon-150) solid 1px;
+    box-shadow: 0 0 10px var(--color-dark-freon-150);
 }
+
 .limited-checkbox-component-label {
 }
+
 .limited-checkbox-component-single {
 }
+
+/*******************************************************
+ *  LimitedRadioComponent
+ *******************************************************/
 .limited-radio-component-group {
-    /* Base (unchecked) */
-    --limited-radio-unchecked-border-color: var(--color-dark-freon-600);
-    --limited-radio-unchecked-background-color: transparent;
-
-    /* Checked */
-    --limited-radio-checked-border-color: var(--color-dark-freon-900);
-    --limited-radio-checked-background-color: transparent;
-    --limited-radio-dot-color: var(--color-dark-freon-900);
-
-    /* Hover / focus */
-    --limited-radio-hover-background-color: var(--color-dark-freon-150);
-    --limited-radio-focus-ring-color: color-mix(
-            in srgb,
-            var(--color-dark-freon-accent-dropdown) 30%,
-            transparent
-    );
-
-    /* Disabled */
-    --limited-radio-disabled-border-color: var(--color-dark-freon-400);
-    --limited-radio-disabled-background-color: var(--color-dark-freon-250);
-    --limited-radio-disabled-dot-color: var(--color-dark-freon-400);
-
-    /* Label */
-    --limited-radio-label-color: var(--color-dark-freon-900);
-    --limited-radio-disabled-label-color: var(--color-dark-freon-400);
-
-    --limited-radio-shadow-color: var(--color-dark-freon-300);
+    --limited-radio-unchecked-border-color: var(--color-dark-freon-300);
+    --limited-radio-dot-color: var(--color-dark-freon-50);
+    --limited-radio-hover-background-color: var(--color-dark-freon-700);
+    --limited-radio-focus-ring-color: var(--freon-focus-ring);
+    --limited-radio-label-color: var(--color-dark-freon-50);
+    --limited-radio-shadow-color: var(--color-dark-freon-150);
 }
-.limited-radio-component-group:hover,
-.limited-radio-component-group:focus-within {
-    outline: var(--color-dark-freon-900) solid 1px;
-    box-shadow: 0 0 10px var(--color-dark-freon-900);
+
+/*******************************************************
+ *  BooleanRadioComponent
+ *******************************************************/
+.boolean-radio-component-group {
+    --boolean-radio-border-color: var(--color-dark-freon-500);
+    --boolean-radio-color: var(--color-dark-freon-50);
+    --boolean-radio-hover-ripple: var(--color-dark-freon-600);
+    --boolean-radio-focus-ring-color: var(--freon-focus-ring);
+    --boolean-radio-label-color: var(--color-dark-freon-50);
+    --boolean-radio-shadow-color: var(--color-dark-freon-150);
 }
-.limited-radio-component-single {
-}
-.limited-radio-component-vertical {
-}
-.limited-radio-component-label {
-}
+
+/*******************************************************
+ *  ContextMenuComponent
+ *******************************************************/
 .contextmenu {
-    border-color: var(--color-dark-freon-150);
-    background: var(--color-dark-freon-50);
-    box-shadow: 1.5px 1.5px 5px var(--color-dark-freon-200);
+    border-color: var(--color-dark-freon-700);
+    background: var(--color-dark-freon-900);
+    box-shadow: 1.5px 1.5px 5px var(--color-dark-freon-600);
 }
+
 .contextmenu-button {
     background: none;
     border: none;
 }
 
 .contextmenu-button:hover {
-    background: var(--color-dark-freon-50);
+    background: var(--color-dark-freon-800);
 }
 
 .contextmenu-shortcut {
-    color: var(--color-dark-freon-700);
+    color: var(--color-dark-freon-150);
 }
 
 .contextmenu-hr {
-    border-top: solid 1px var(--color-dark-freon-150);
+    border-top: solid 1px var(--color-dark-freon-700);
 }
 
 .error-tooltip {
-    border: 1px solid var(--color-dark-freon-700);
-    box-shadow: 1px 1px 1px var(--color-dark-freon-700);
-    background: var(--color-dark-freon-100);
+    border: 1px solid var(--color-dark-freon-error);
+    box-shadow: 1px 1px 1px var(--color-dark-freon-error);
+    background: var(--color-dark-freon-error-soft);
+    color: var(--color-dark-freon-error);
 }
+
 .error-marker {
-    background-color: var(--color-dark-freon-accent-error);
+    background-color: var(--color-dark-freon-error);
 }
 
-/* Button Component */
+/*******************************************************
+ *  ButtonComponent
+ *******************************************************/
 .button-component {
-    box-shadow: 2px 2px 4px var(--color-dark-freon-250);
-    background-color: var(--color-dark-freon-900);
-    color: var(--color-dark-freon-50);
+    box-shadow: 2px 2px 4px var(--color-dark-freon-500);
+    background-color: var(--color-freon-button-component-bg);
+    color: var(--color-dark-freon-900);
+    border: 1px solid var(--color-freon-button-component-border);
 }
-/* Hover effects */
+
 .button-component:hover {
-    background-color: var(--color-dark-freon-900);
+    background-color: var(--color-freon-button-component-hover-bg);
+    box-shadow: 0 2px 6px var(--color-dark-freon-350);
 }
 
-/* Focus-within styles */
-.button-component:focus-within {
-    box-shadow: 0 0 0 4px var(--color-dark-freon-700);
+.button-component:focus-visible {
+    outline: 2px solid var(--color-dark-freon-250);
 }
 
+/*******************************************************
+ *  BooleanCheckboxComponent
+ *******************************************************/
 .boolean-checkbox-component {
-    /* Base (unchecked) */
-    --limited-checkbox-border-color: var(--color-dark-freon-600);
+    --limited-checkbox-border-color: var(--color-dark-freon-300);
     --limited-checkbox-background-color: transparent;
 
-    /* Checked */
-    --limited-checkbox-checked-border-color: var(--color-dark-freon-900);
-    --limited-checkbox-checked-background-color: var(--color-dark-freon-900);
-    --limited-checkbox-checkmark-color: var(--color-dark-freon-50);
+    --limited-checkbox-checked-border-color: var(--color-dark-freon-50);
+    --limited-checkbox-checked-background-color: var(--color-dark-freon-50);
+    --limited-checkbox-checkmark-color: var(--color-dark-freon-900);
 
-    /* Focus / hover ring */
-    --limited-checkbox-focus-ring-color: color-mix(
-            in srgb,
-            var(--color-dark-freon-accent-dropdown) 30%,
-            transparent
-    );
+    --limited-checkbox-focus-ring-color: var(--freon-focus-ring);
 
-    /* Disabled */
-    --limited-checkbox-disabled-border-color: var(--color-dark-freon-400);
+    --limited-checkbox-disabled-border-color: var(--color-dark-freon-500);
     --limited-checkbox-disabled-background-color: var(--color-dark-freon-250);
 
     --limited-checkbox-disabled-checked-border-color: color-mix(
             in srgb,
-            var(--color-dark-freon-900) 38%,
+            var(--color-dark-freon-50) 38%,
             var(--color-dark-freon-250)
     );
     --limited-checkbox-disabled-checked-background-color: color-mix(
             in srgb,
-            var(--color-dark-freon-900) 38%,
+            var(--color-dark-freon-50) 38%,
             var(--color-dark-freon-250)
     );
 
-    /* Label text */
-    --limited-checkbox-label-color: var(--color-dark-freon-900);
+    --limited-checkbox-label-color: var(--color-dark-freon-50);
 }
+
 .boolean-checkbox-component:hover {
-    box-shadow: 0 0 10 var(--color-dark-freon-800);
+    box-shadow: 0 0 10px var(--color-dark-freon-100);
 }
+
 .boolean-checkbox-component:focus-within {
-    outline: var(--color-dark-freon-900) solid 1px;
-}
-.boolean-checkbox-component:focus-within {
-    outline: var(--color-dark-freon-250) solid 1px;
-}
-.boolean-radio-component-group {
-    /* Label */
-    --boolean-radio-label-color: var(--color-dark-freon-50);
-
-    /* Base (unchecked outer ring) */
-    --boolean-radio-border-color: var(--color-dark-freon-400);
-
-    /* Checked state (border + inner dot) */
-    --boolean-radio-color: var(--color-dark-freon-200);
-
-    /* Hover ripple halo */
-    --boolean-radio-hover-ripple: var(--color-dark-freon-200);
-
-    /* Shadow color for the whole group, mirroring the light-mode token */
-    --boolean-radio-shadow-color: var(--color-dark-freon-300);
-}
-
-/* Hover halo around the *input* */
-.boolean-radio-component-label input::after {
-    /* Fallback: if color-mix is not supported, this will be ignored,
-       but at least the variable is valid. */
-    background-color: var(--boolean-radio-hover-ripple);
-
-    /* Modern browsers: translucent halo based on the accent color */
-    background-color: color-mix(
-            in srgb,
-            var(--boolean-radio-hover-ripple) 12%,
-            transparent
-    );
-}
-
-/* Group outline / focus */
-.boolean-radio-component-group:hover,
-.boolean-radio-component-group:focus-within {
-    outline: 1px solid var(--color-dark-freon-300);
-    box-shadow: 0 0 10px color-mix(
-            in srgb,
-            var(--boolean-radio-shadow-color) 40%,
-            transparent
-    );
+    outline: var(--color-dark-freon-50) solid 1px;
 }
 
 /*******************************************************
  *  TextComponent
  *******************************************************/
 .text-component-input {
-    background: var(--color-dark-freon-accent-dropdown);
-    color: var(--color-dark-freon-accent-editable);
-}
-.text-component-text {
-    color: var(--color-dark-freon-accent-editable);
-}
-.text-component-text-error {
-    text-decoration-color: var(--color-dark-freon-accent-error);
-}
-.text-component-placeholder {
-    color: var(--color-dark-freon-350);
-}
-.text-component-action-placeholder {
-    color: var(--color-dark-freon-350);
+    color: var(--color-freon-text-component-text-color);
+    background: var(--color-freon-text-component-input-bg);
+    cursor: text;
+    outline: none;
 }
 
-/*******************************************************
- *  MultilineTextComponent
- *******************************************************/
-.multiline-text-component:focus {
-    color: var(--color-dark-freon-accent-editable);
-    background: var(--color-dark-freon-accent-dropdown);
+.text-component-input::placeholder {
+    color: var(--color-dark-freon-250);
+    opacity: 0.7;
 }
+
+.text-component-input:hover {
+    background: var(--color-freon-text-component-input-hover-bg);
+    cursor: text;
+}
+
+.text-component-input:focus,
+.text-component-input:focus-visible {
+    background: var(--color-freon-text-component-input-hover-bg);
+    box-shadow: 0 0 0 3px var(--freon-focus-ring);
+}
+
+.text-component-text {
+    color: var(--color-freon-text-component-text-color);
+    background: var(--color-freon-text-component-text-bg);
+    cursor: text;
+}
+
+.text-component-text:hover {
+    background: var(--color-freon-text-component-text-hover-bg);
+    cursor: text;
+}
+
+.text-component-text-error {
+    text-decoration-color: var(--color-dark-freon-error);
+}
+
+.text-component-placeholder {
+    color: var(--color-dark-freon-250);
+    opacity: 0.5;
+}
+
+.text-component-action-placeholder {
+    color: var(--color-freon-text-component-action-placeholder);
+    opacity: 0.5;
+}
+
 .multiline-text-component {
-    color: var(--color-dark-freon-accent-editable);
-    background-color: var(--color-dark-freon-800);
+    color: var(--color-dark-freon-50);
+}
+
+.multiline-text-component:focus {
+    color: var(--color-dark-freon-50);
+    background-color: var(--color-freon-multiline-text-component-focus-bg);
+    box-shadow: 0 0 0 3px var(--freon-focus-ring);
 }
 
 /*******************************************************
  *  NumericSliderComponent
  *******************************************************/
-.numeric-slider-component:hover,
-.numeric-slider-component:focus-within {
-    outline: var(--color-dark-freon-700) solid 1px;
-    box-shadow: 0 0 8px var(--color-dark-freon-250);
-    border-radius: 0.1em;
+.numeric-slider-component {
+    --numeric-slider-low-color: var(--color-freon-numeric-slider-low);
+    --numeric-slider-high-color: var(--color-freon-numeric-slider-high);
+
+    --numeric-slider-background-color: var(--color-dark-freon-500);
+
+    --numeric-slider-thumb-background-color: var(--color-freon-numeric-slider-thumb-bg);
+    --numeric-slider-thumb-border-color: var(--color-freon-numeric-slider-thumb-border);
+    --numeric-slider-thumb-shadow-color: var(--color-dark-freon-500);
+
+    --numeric-slider-focus-ring-color: var(--freon-focus-ring);
+
+    --numeric-slider-tooltip-background-color: var(--color-dark-freon-50);
+    --numeric-slider-tooltip-text-color: var(--color-dark-freon-900);
+
+    --numeric-slider-thumb-size: 18px;
+    --numeric-slider-tooltip-distance: 18px;
 }
 
 /*******************************************************
  *  DropDownComponent
  *******************************************************/
 .dropdown-component {
-    border-color: var(--color-dark-freon-900);
-    box-shadow: 0 0 6px 0 var(--color-dark-freon-250);
-    background: var(--color-dark-freon-250);
+    border: 1px solid var(--color-freon-dropdown-component-border);
+    background: var(--color-freon-dropdown-component-bg);
 }
 
 .dropdown-component-item {
-    color: var(--color-dark-freon-900);
+    color: var(--color-dark-freon-50);
     background: none;
 }
 
 .dropdown-component-error {
-    color: var(--color-dark-freon-accent-error);
+    color: var(--color-dark-freon-error);
 }
 
 .dropdown-component-item:hover {
     color: var(--color-dark-freon-900);
-    background-color: var(--color-dark-freon-100);
+    background-color: var(--color-freon-dropdown-component-item-hover-bg);
 }
 
 .dropdown-component-selected {
-    color: var(--color-dark-freon-900);
-    background-color: var(--color-dark-freon-300);
+    color: var(--color-freon-dropdown-component-selected-color);
+    font-weight: bold;
+    background-color: var(--color-freon-dropdown-component-selected-bg);
 }
 
 /*******************************************************
  *  BooleanInnerSwitchComponent
  *******************************************************/
 .inner-switch-component button {
-    color: var(--color-dark-freon-900);
-    background: var(--color-dark-freon-200);
+    color: var(--color-dark-freon-50);
+    background: var(--color-dark-freon-600);
+    --inner-switch-border-color: var(--color-dark-freon-50);
 }
 
 [role="switch"][aria-checked="true"] :first-child,
 [role="switch"][aria-checked="false"] :last-child {
-    color: var(--color-dark-freon-50);
-    background-color: var(--color-dark-freon-900);
+    color: var(--color-dark-freon-900);
+    background-color: var(--color-dark-freon-50);
 }
 
 .inner-switch-component button:hover,
 .inner-switch-component button:focus {
-    outline: var(--color-dark-freon-900) solid 1px;
-    box-shadow: 0 0 8px var(--color-dark-freon-900);
+    outline: var(--color-dark-freon-50) solid 1px;
+    box-shadow: 0 0 8px var(--color-dark-freon-50);
 }
 
 /*******************************************************
  *  OptionalComponent
  *******************************************************/
-.optional-component-tooltip { /* color props */
-    border: 1px solid var(--color-dark-freon-accent-optional);
-    box-shadow: 1px 1px 1px var(--color-dark-freon-accent-optional);
-    background: var(--color-dark-freon-150);
-    color: var(--color-dark-freon-900);
+.optional-component-tooltip {
+    border: 1px solid var(--color-freon-optional-component-tooltip-border);
+    box-shadow: 1px 1px 2px var(--color-dark-freon-500);
+    background: var(--color-freon-optional-component-tooltip-bg);
+    color: var(--color-dark-freon-50);
 }
+
 .optional-component-button.text-mode {
-    color: var(--color-dark-freon-350);
+    color: var(--color-freon-optional-component-button-text);
+    opacity: 0.7;
 }
+
 .delete-icon {
-    fill: var(--color-dark-freon-accent-error, currentColor);
+    fill: var(--color-freon-delete-icon, currentColor);
+    opacity: 0.85;
 }
+
 .add-icon {
-    fill: var(--color-dark-freon-accent-button, currentColor);
+    fill: var(--color-freon-add-icon, currentColor);
 }
+
 /*******************************************************
  *  RenderComponent
  *******************************************************/
 .render-component-unknown-box {
-    color: var(--color-dark-freon-accent-error);
+    color: var(--color-dark-freon-error);
 }
+
 .render-component-error {
-    text-decoration-line: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: var(--color-dark-freon-accent-error);
+    text-decoration-color: var(--color-dark-freon-error);
 }
+
 .render-component-selected {
-    outline-color: var(--color-dark-freon-100);
+    outline-color: var(--color-dark-freon-50);
 }
+
 .render-component-selected:has(.layout-component-horizontal) > span:focus {
-    outline-color: var(--color-dark-freon-100);
-    box-shadow: 0 0 10px var(--color-dark-freon-100);
+    outline-color: var(--color-dark-freon-150);
+    box-shadow: 0 0 10px var(--color-dark-freon-150);
 }
 
 /*******************************************************
  *  BooleanSwitchComponent
  *******************************************************/
 .switch-component {
-    --switch-background-off: var(--color-dark-freon-150);
-    --switch-background-on: var(--color-dark-freon-accent-button);
+    --switch-background-off: var(--color-dark-freon-700);
+    --switch-background-on: var(--color-freon-switch-component-bg-on);
 
-    --switch-border-color-off: var(--color-dark-freon-500);
+    --switch-border-color-off: var(--color-dark-freon-250);
 
     --switch-knob-color: var(--color-dark-freon-900);
-    --switch-shadow-color: var(--color-dark-freon-700);
+    --switch-shadow-color: var(--color-dark-freon-300);
 }
 
 /*******************************************************
  *  TableComponent and TableCellComponent
  *******************************************************/
 .table-component {
-    border-color: var(--color-dark-freon-border-green);
+    border-color: var(--color-freon-table-component-border);
 }
-.table-component {
-    border-color: var(--color-dark-freon-accent-button);
-}
+
 .table-cell-component {
     background-color: transparent;
 }
+
 .table-cell-component-unselected {
     background: transparent;
 }
+
 .table-cell-component-selected {
-    outline-color: var(--color-dark-freon-900);
-    box-shadow: 0px 0px 8px 7px var(--color-dark-freon-border-green);
+    outline-color: var(--color-dark-freon-50);
+    box-shadow: 0 0 0 3px var(--color-freon-table-cell-selected-ring);
+    background-color: var(--color-freon-table-cell-selected-bg);
 }
+
 .table-cell-component-selected:focus {
-    box-shadow: 0px 0px 8px 7px var(--color-dark-freon-border-green);
+    box-shadow: 0 0 0 3px var(--color-freon-table-cell-selected-ring);
 }
 
 /*******************************************************
  *  GridComponent and GridCellComponent
  *******************************************************/
 .grid-component {
-    border-color: var(--color-dark-freon-border-green);
+    border-color: var(--color-freon-grid-component-border);
 }
+
 .grid-cell-component {
     color: inherit;
 }
@@ -441,30 +533,26 @@
  *******************************************************/
 .reference-button {
     background-color: transparent;
-    color: var(--color-dark-freon-100)
+    color: var(--color-dark-freon-900);
 }
 
 .text-dropdown-component .text-component-text {
-    color: var(--color-dark-freon-accent-dropdown);
+    color: var(--color-freon-text-dropdown-text);
 }
 
 .text-dropdown-component .text-component-input {
-    color: var(--color-dark-freon-accent-editable);
-    background: var(--color-dark-freon-accent-dropdown);
+    color: var(--color-dark-freon-900);
+    background: var(--color-freon-text-dropdown-input-bg);
 }
 
 .brackets {
-    color: var(--color-dark-freon-400);
+    color: var(--color-dark-freon-300);
 }
 
 .drag-handle-icon {
-    fill: var(--color-dark-freon-250);
+    fill: var(--color-dark-freon-300);
 }
 
 .reference-arrow {
-    fill: var(--color-dark-freon-accent-button);
-}
-
-\:text-white:where(.dark,.dark *) {
-    color: var(--color-dark-freon-400);
+    fill: var(--color-freon-reference-arrow);
 }

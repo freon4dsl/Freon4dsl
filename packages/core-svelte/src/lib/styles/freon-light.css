@@ -18,6 +18,7 @@
     --color-freon-button-component-hover-bg: var(--color-light-freon-accent-400);
     --color-freon-button-component-border: var(--color-light-freon-accent-700);
 
+    --color-freon-text-component-text-color: var(--color-light-freon-accent-700);
     --color-freon-text-component-input-bg: var(--color-light-freon-accent-200);
     --color-freon-text-component-input-hover-bg: var(--color-light-freon-accent-100);
     --color-freon-text-component-text-bg: color-mix(
@@ -262,7 +263,7 @@
  *  TextComponent
  *******************************************************/
 .text-component-input {
-    color: var(--color-light-freon-900);
+    color: var(--color-freon-text-component-text-color);
     background: var(--color-freon-text-component-input-bg);
     cursor: text;
     outline: none;
@@ -285,7 +286,7 @@
 }
 
 .text-component-text {
-    color: var(--color-light-freon-900);
+    color: var(--color-freon-text-component-text-color);
     background: var(--color-freon-text-component-text-bg);
     cursor: text;
 }
