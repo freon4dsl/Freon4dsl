@@ -10,7 +10,7 @@
     const LOGGER = MULTILINETEXT_LOGGER;
 
     // Props
-    let { box }: FreComponentProps<MultiLineTextBox> = $props();
+    let { box, readonly }: FreComponentProps<MultiLineTextBox> = $props();
 
     // Local variables
     let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'text-with-unknown-box'); // an id for the HTML element
@@ -71,13 +71,15 @@
 <span>
 <textarea
     class="{box.cssClass} multilinetext-box multiline-text-component"
+    class:readonly={readonly}
     {id}
-    onfocusout={onFocusOut}
-    onkeydown={onKeyDown}
+    onfocusout={readonly ? undefined : onFocusOut}
+    onkeydown={readonly ? undefined : onKeyDown}
     spellcheck="false"
-    tabindex="0"
+    tabindex={readonly ? -1 : 0}
     bind:this={textArea}
     {placeholder}
     bind:value={text}
+    disabled={readonly}
 ></textarea>
 </span>

@@ -6,7 +6,7 @@
     import { componentId } from './svelte-utils/index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    let { editor, box }: FreComponentProps<FragmentBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<FragmentBox> = $props();
 
     const LOGGER = FRAGMENT_LOGGER;
     let id: string = $state('');
@@ -41,7 +41,7 @@
 </script>
 
 {#if notNullOrUndefined(childBox)}
-    <span class="fragment-component {cssClass}" {id}>
-        <RenderComponent box={childBox} {editor} />
+    <span class="fragment-component {cssClass}" class:readonly={readonly} {id}>
+        <RenderComponent box={childBox} {editor} {readonly} />
     </span>
 {/if}

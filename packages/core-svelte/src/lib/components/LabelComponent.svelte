@@ -8,7 +8,7 @@
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    let { box }: FreComponentProps<LabelBox> = $props();
+    let { box, readonly }: FreComponentProps<LabelBox> = $props();
 
     const LOGGER = LABEL_LOGGER;
 
@@ -38,6 +38,6 @@
 </script>
 
 <!-- todo the 'text' here may contain spaces and other nasty stuff, should clean it up before using it as class-->
-<span class="label-component {text} {cssClass}" {style} bind:this={element} {id}>
+<span class="label-component {text} {cssClass}" class:readonly={readonly} {style} bind:this={element} {id}>
     {text}
 </span>

@@ -86,7 +86,7 @@ export abstract class AbstractChoiceBox extends Box {
 
     set getSelectedOption( value: () => SelectOption | null) {
         this._getSelectedOption = value
-        this.isDirty()
+        // this.isDirty()
         autorun( () => {
             this._getSelectedOption()
             this.isDirty()

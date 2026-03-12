@@ -9,15 +9,15 @@
     import { CHECKBOX_LOGGER } from './ComponentLoggers.js';
 
     // Props
-    let { box }: FreComponentProps<BooleanControlBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<BooleanControlBox> = $props();
 
     const LOGGER = CHECKBOX_LOGGER;
 
     let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'checkbox-for-unknown-box');
     let inputElement: HTMLInputElement;
-    let value = $derived((box as BooleanControlBox).getBoolean());
+    let checked = $derived(box.getBoolean());
 
-    let indeterminate = $derived((box as BooleanControlBox).getBoolean() === null || (box as BooleanControlBox).getBoolean() === undefined);
+    let indeterminate = $derived(box.getBoolean() === null || box.getBoolean() === undefined);
     let isOptional: boolean = false
     /**
      * This function sets the focus on this element programmatically.
@@ -30,12 +30,15 @@
     }
 
     const refresh = (why?: string): void => {
-        LOGGER.log('REFRESH BooleanCheckBoxComponent: ' + why);
-        value = box.getBoolean();
+        LOGGER.log('REFRESH BooleanCheckBoxComponent: ' + why + ` set to ${box.getBoolean()} checked is ${checked}`);
+        // NB 
+        // checked = box.getBooolen() doesn't work, although ity should
+        checked = !checked
     };
 
     onMount(() => {
-        value = box.getBoolean();
+        LOGGER.log("onMOUNT runs now")
+        checked = box.getBoolean();
     });
 
     $effect(() => {
@@ -56,12 +59,12 @@
         LOGGER.log(
             `ONCLICK IN  box for '${box.propertyName}' value: ${box.getBoolean()} indeterminate: ${indeterminate} isOptional: ${isOptional}`
         );
-        value = box.getBoolean() // inputElement.checked;
+        checked = box.getBoolean() // inputElement.checked;
         if (isOptional) {
-            if (isNullOrUndefined(value)) {
+            if (isNullOrUndefined(checked)) {
                 box.setBoolean(false)
                 indeterminate = false
-            } else if (value === true) {
+            } else if (checked === true) {
                 box.setBoolean(undefined)
                 indeterminate = true
             } else {
@@ -69,7 +72,7 @@
                 indeterminate = false
             }
         } else {
-            if (value === true) {
+            if (checked === true) {
                 box.setBoolean(false)
             } else {
                 box.setBoolean(true)
@@ -83,14 +86,15 @@
 
 <!--<span {id} class="boolean-checkbox-component {box.cssClass}">-->
     <!-- svelte-ignore a11y_click_events_have_key_events   -->
-    <input {id} class="boolean-checkbox-component {box.cssClass}"
+    <input {id} class="boolean-checkbox-component {box.cssClass} class:readonly={readonly}"
         type="checkbox"
         aria-label={id}
         aria-checked="mixed"
         onclick={onClick}
         bind:indeterminate
+           bind:checked
         bind:this={inputElement}
-        checked={value}
         tabindex="0"
+        disabled={readonly}
     >
 <!--</span>-->

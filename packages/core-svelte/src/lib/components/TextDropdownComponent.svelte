@@ -33,7 +33,7 @@
     const LOGGER = TEXTDROPDOWN_LOGGER;
 
     // Props
-    let { editor, box }: FreComponentProps<AbstractChoiceBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<AbstractChoiceBox> = $props();
     // the textbox that is to be coupled to the TextComponent part
     let textBox: TextBox = $derived(box.textBox)!; // NB the initial value must be here, the effect starts to function after initialization
     // True if box is a referencebox and referred is in the same unit
@@ -526,6 +526,25 @@
     refresh();
 </script>
 
+{#if readonly}
+    <span
+        {id}
+        tabindex="-1"
+        class="text-dropdown-component {box.cssClass} readonly"
+        role="none"
+    >
+    <span class="text-dropdown-component-text-wrapper readonly">
+        <TextComponent
+            {editor} {readonly}
+            box={textBox}
+            partOfDropdown={true}
+            isEditing={false}
+            text={text}
+            toParent={fromInner}
+        />
+    </span>
+</span>
+{:else}
 <span
     {id}
     onkeydown={onKeyDown}
@@ -539,7 +558,7 @@
 >
     <span class="text-dropdown-component-text-wrapper">
         <TextComponent
-            {editor}
+            {editor} {readonly}
             box={textBox}
             partOfDropdown={true}
             bind:isEditing
@@ -567,3 +586,4 @@
         />
     {/if}
 </span>
+{/if}

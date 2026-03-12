@@ -9,8 +9,8 @@
     <h4>{title}</h4>
 {/if}
 {#if dataList}
-    <ul class="max-w-md space-y-1 text-light-base-500 dark:text-dark-base-400">
-        {#each dataList as node}
+    <ul class="max-w-md space-y-1 text-light-base-800 dark:text-dark-base-200">
+        {#each dataList as node, idx (idx)}
             <TreeNode data={node}/>
         {/each}
     </ul>

@@ -15,7 +15,7 @@
     const LOGGER = INNERSWITCH_LOGGER;
 
     // Props
-    let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<BooleanControlBox> = $props();
 
     let value = $derived(box.getBoolean());
     let id: string = $derived(box.id);
@@ -49,7 +49,7 @@
     }
 </script>
 
-<span class="inner-switch-component {box.cssClass}">
+<span class="inner-switch-component {box.cssClass}" class:readonly={readonly}>
     <button
         {id}
         bind:this={switchElement}
@@ -57,8 +57,9 @@
         aria-checked={value}
         aria-labelledby={`switch-${id}`}
         onclick={handleClick}
+        disabled={readonly}
     >
-        <span class="inner-switch-component-label">{box.labels.yes}</span>
-        <span class="inner-switch-component-label">{box.labels.no}</span>
+        <span class="inner-switch-component-label" class:readonly={readonly}>{box.labels.yes}</span>
+        <span class="inner-switch-component-label" class:readonly={readonly}>{box.labels.no}</span>
     </button>
 </span>
