@@ -13,6 +13,7 @@
 }
 
 .label-component {
+    color: var(--color-light-freon-600);
 }
 
 .list-component-horizontal {
@@ -223,19 +224,19 @@
  *  TextComponent
  *******************************************************/
 .text-component-input {
-    color: var(--color-light-freon-400);
+    color: var(--color-light-freon-900);
     background: var(--color-freon-light-accent-lightgreen);
 }
 
 .text-component-text {
-    color: var(--color-light-freon-400);
+    color: var(--color-light-freon-900);
 
 }
 .text-component-text-error {
     text-decoration-color: var(--color-light-freon-accent-error);
 }
 .text-component-placeholder {
-    color: var(--color-light-freon-400);
+    color: var(--color-light-freon-500);
     opacity: 0.5;
 }
 .text-component-action-placeholder {
@@ -244,10 +245,10 @@
 }
 
 .multiline-text-component {
-    color: var(--color-light-freon-400);
+    color: var(--color-light-freon-900);
 }
 .multiline-text-component:focus {
-    color: var(--color-light-base-300);
+    color: var(--color-light-base-800);
     background-color: var(--color-freon-light-accent-lightgreen);
 }
 
