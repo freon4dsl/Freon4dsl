@@ -4,30 +4,47 @@
  * 
  *********************************************/
 
-/* standard sizes for all element */
+/* standard sizes for all elements */
 :root {
-    --freon-inline-font-size: var(--standard-font-size, var(--font-size-base, 14px));
+    --freon-font-size: 14px;
+
+    --freon-inline-font-size: var(--freon-font-size);
     --freon-inline-line-height: 20px;
-    --freon-inline-padding-x: 0.25rem;
     --freon-inline-row-height: 24px;
     --freon-inline-height: var(--freon-inline-row-height);
+    --freon-inline-padding-x: 0.25rem;
+
+    --freon-radio-size: 18px;
+    --freon-radio-dot-size: 10px;
+    --freon-radio-font-size: 0.95rem;
+    --freon-radio-gap-inline: 0.5rem;
+    --freon-radio-gap-block: 1rem;
+}
+:root {
+
 }
 
-/* freon-component is the top component and consist of a gutter and an editor-component */
+/* Defaults for shared color tokens used by all radio groups. Overwritten in 'freon-light.css' etc. */
+.freon-radio-group {
+    --freon-radio-label-color: #1f1f1f;
+    --freon-radio-border-color: #5f6368;
+    --freon-radio-dot-color: #1f1f1f;
+    --freon-radio-hover-background-color: transparent;
+    --freon-radio-focus-ring-color: rgba(26, 115, 232, 0.3);
+    --freon-radio-shadow-color: rgba(0, 0, 0, 0.2);
+}
+
+/* freon-component is the top component and consists of a gutter and an editor-component */
 .freon-component {
     height: 100%;
     width: 100%;
     font-style: normal;
     font-weight: normal;
-    font-family: "Arial";
-    margin: 1px;
-    padding: 0px;
     position: relative;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 2px;
-    spellcheck: false;
     /* Prevent accidental stacking-context/containing-block bugs */
     transform: none !important; /* (don’t set transforms on the pane root) */
     filter: none !important;
@@ -41,28 +58,12 @@
     min-height: 0;       /* avoids flex/grid ancestors forcing scrollbars */
     min-width: 0;        /* same for horizontal cases */
     flex: 1 1 auto;      /* if it's inside a flex layout */
+}
 
-    /* Base tokens (non-color) */
-    --freon-radio-size: 18px;
-    --freon-radio-dot-size: 10px;
-    --freon-radio-font-size: 0.95rem;
-    --freon-radio-gap-inline: 0.5rem;
-    --freon-radio-gap-block: 1rem;
-}
-/* Defaults for shared color tokens used by all radio groups. Overwritten in 'freon-light.css' etc. */
-.freon-radio-group {
-    --freon-radio-label-color: #1f1f1f;
-    --freon-radio-border-color: #5f6368;
-    --freon-radio-dot-color: #1f1f1f;
-    --freon-radio-hover-background-color: transparent;
-    --freon-radio-focus-ring-color: rgba(26, 115, 232, 0.3);
-    --freon-radio-shadow-color: rgba(0, 0, 0, 0.2);
-}
 .gutter {
-    /*border: 1px solid;*/
     min-width: 4px;
     width: 8px;
-    height: 100vh;
+    height: 100%;
     box-sizing: border-box;
 }
 .editor-component {
@@ -71,9 +72,19 @@
 }
 
 /***************************************
+ * Alignment on same row
+ ***************************************/
+.label-component,
+.text-component,
+.text-component-text,
+.text-component-input,
+.text-component-input-wrapper {
+    vertical-align: top;
+}
+
+/***************************************
  * Label component
  ***************************************/
-
 .label-component:empty:before {
     content: attr(data-placeholdertext);
 }
@@ -87,7 +98,7 @@
     line-height: var(--freon-inline-line-height);
     min-height: var(--freon-inline-height);
 
-    padding-inline: 1px;
+    padding-inline: var(--freon-inline-padding-x);
 }
 
 /***************************************
@@ -97,16 +108,16 @@
 .list-component-horizontal {
     white-space: nowrap;
     display: grid;
-    padding: 0px;
-    border-width: 0pt;
+    padding: 0;
+    border-width: 0;
     border-style: none;
-    margin: 0px;
+    margin: 0;
     box-sizing: border-box;
 }
 
 .list-component-vertical {
-    padding: 0px;
-    border-width: 0pt;
+    padding: 0;
+    border-width: 0;
     border-style: none;
     margin: 1px;
     box-sizing: border-box;
@@ -127,7 +138,7 @@
 }
 
 .layout-component {
-    padding: 0px;
+    padding: 0;
     margin: 0 1px 0 1px;
     box-sizing: border-box;
 }
@@ -255,7 +266,7 @@
     display: inline-flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: var(--freon-radio-gap-inline) var(--freon-radio-gap-block);
+    gap: var(--freon-radio-gap-block) var(--freon-radio-gap-inline);
     align-items: center;
     padding: 4px 6px;
     margin: 2px;
@@ -351,8 +362,7 @@
 }
 
 /* Focus */
-.limited-radio-component-single input:focus-visible
-+ .limited-radio-component-label::before {
+.limited-radio-component-single input:focus-visible + .limited-radio-component-label::before {
     box-shadow: 0 0 0 3px var(--freon-radio-focus-ring-color);
 }
 
@@ -360,31 +370,44 @@
  *  ContextMenuComponent
  *******************************************************/
 .contextmenu {
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 3px;
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 10;
+
     display: flex;
     flex-direction: column;
     gap: 2px;
-    position: absolute; /* relative to a 'relative' parent */
+
     min-width: 120px;
-    z-index: 10;
+    padding: 2px;
+
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
 }
 .contextmenu-button {
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+
+    min-height: var(--freon-inline-row-height);
+    padding-inline: var(--freon-inline-padding-x);
+
     border-radius: 2px;
-    padding: 0 1px 1px 0;
-    margin: 3px;
     cursor: pointer;
     text-align: left;
-    display: flex;
-    justify-content: space-between;
-    gap: 2px;
-    place-items: center;
+
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    white-space: nowrap;
 }
 .contextmenu-button:hover {
 }
 .contextmenu-shortcut {
-    /*font-size: 0.7em;*/
+    white-space: nowrap;
 }
 .contextmenu-hr {
     width: 100%;
@@ -415,7 +438,7 @@
 
 .error-positioning {
     position: absolute;
-    left: 0px;
+    left: 0;
 }
 
 /*******************************************************
@@ -659,13 +682,23 @@
  *  Multiline TextComponent
  *******************************************************/
 .multiline-text-component {
-    padding: 1px;
-    margin: 1px;
-    white-space: normal;
-    display: inline-block;
+    box-sizing: border-box;
+    display: block;
+
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+
+    padding-inline: 0.125rem;
+    margin: 0;
+
     height: auto;
+    min-height: calc(2 * var(--freon-inline-line-height));
+
     resize: both;
-    field-sizing: content;  
+    field-sizing: content;
+
+    outline: none;
+    vertical-align: top;
 }
 
 /*******************************************************
@@ -826,7 +859,6 @@
     border-radius: 2px;
     cursor: pointer;
     text-align: left;
-    justify-content: space-between;
     gap: 2px;
 
     box-sizing: border-box;
@@ -849,10 +881,6 @@
 .dropdown-component-item:hover {
 }
 
-.dropdown-component-selected {
-    border: none;
-}
-
 .dropdown-component-container {
     position: relative;
 }
@@ -862,11 +890,16 @@
     flex-wrap: nowrap;
     box-sizing: border-box;
     width: 100%;
+    align-items: center;
 }
 .column-for-dropdown-entry-with-additional-label {
     display: flex;
     flex-direction: column;
-    /*flex: 1;*/
+    white-space: nowrap;
+}
+.column-for-dropdown-entry-with-additional-label:last-child {
+    width: 100%;
+    text-align: right;
 }
 .gap-for-dropdown-entry-with-additional-label {
     margin: 0 0.7rem 0 0.7rem;
@@ -988,6 +1021,7 @@
 .render-component-selected > span {
     outline-style: solid;
     outline-width: 1px;
+    height: fit-content;
 }
 
 /* begin styling boolean switch component */
@@ -1066,14 +1100,13 @@
     align-items: center; /* place-items is an abbreviation for align-items and justify-items */
     justify-items: center;
     align-content: center;
-    border-width: 1pt;
+    border-width: 1px;
     border-style: dashed;
     border-radius: 4px;
 }
 
 .table-cell-component {
     display: flex;
-    align-self: auto;
     align-items: flex-start;
     box-sizing: border-box;
     align-self: baseline; /* isn't this the default? */
@@ -1100,7 +1133,7 @@
     align-items: center;
     align-content: center;
     justify-items: center;
-    border-width: 1pt;
+    border-width: 1px;
     border-style: dashed;
 }
 
@@ -1115,21 +1148,14 @@
 .reference-button {
     border: none;
     height: 12px;
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
     width: 16px;
 }
 .reference-arrow {
     height: 12px;
 }
-textarea {
-    outline: none;
-    vertical-align: top;
-}
 
-.render-component-selected > span {
-    height: fit-content;
-}
 .boolean-checkbox-component {
     vertical-align: top;
 }

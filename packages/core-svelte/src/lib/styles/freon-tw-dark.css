@@ -330,7 +330,7 @@ dark .error-tooltip {
     color: var(--color-dark-freon-350);
 }
 .dark .delete-icon {
-    fill: var(--color-dark-freon-accent-error, currentColor);
+    fill: var(--color-dark-freon-accent-button, currentColor);
 }
 .dark .add-icon {
     fill: var(--color-dark-freon-accent-button, currentColor);
