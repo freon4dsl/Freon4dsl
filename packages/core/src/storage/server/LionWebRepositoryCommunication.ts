@@ -42,7 +42,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * may not automatically propagate to the RepositoryClient. If your deployment requires
      * auth on the LionWeb repository, you may need to configure the RepositoryClient directly.
      */
-    setAuthToken(token: string | null): void {
+    setBearerAuthToken(token: string | null): void {
         if (token) {
             this.customHeaders['Authorization'] = `Bearer ${token}`;
         } else {

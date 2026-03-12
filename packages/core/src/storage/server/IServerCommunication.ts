@@ -31,7 +31,7 @@ export interface IServerCommunication {
      * Set a Bearer token to include in the Authorization header of every request.
      * Pass null to clear the token.
      */
-    setAuthToken(token: string | null): void;
+    setBearerAuthToken(token: string | null): void;
 
     /**
      * Set custom headers to include in every request.
