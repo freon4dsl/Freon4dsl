@@ -41,7 +41,7 @@
     <h1>Test for new components</h1>
     <div class="button-container">
         <a href=".">Basic tests</a>
-        <!--    <a href="./render">Tests that use RenderComponent</a>-->
+        <a href="./render">Tests that use RenderComponent</a>
         <a href="./dragdrop">Drag and Drop tests</a>
         <a href="./tabbing">Selection tests</a>
     </div>

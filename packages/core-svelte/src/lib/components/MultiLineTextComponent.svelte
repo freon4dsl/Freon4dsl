@@ -13,8 +13,7 @@
     let { box, readonly }: FreComponentProps<MultiLineTextBox> = $props();
 
     // Local variables
-    let id: string = $state(''); // an id for the html element
-    id = notNullOrUndefined(box) ? componentId(box) : 'text-with-unknown-box';
+    let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'text-with-unknown-box'); // an id for the HTML element
     let textArea: HTMLTextAreaElement; // the text area element on the screen
     let placeholder: string = $state('<enter>'); // the placeholder when value of text component is not present
     let text: string = $state('');

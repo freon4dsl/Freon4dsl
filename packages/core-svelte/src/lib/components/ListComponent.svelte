@@ -47,7 +47,7 @@
     // Local state variables
     let LOGGER: FreLogger = LIST_LOGGER;
     let id: string = $state(''); // an id for the HTML element showing the list
-    let htmlElement: HTMLSpanElement | undefined = $state(undefined);
+    let htmlElement: HTMLSpanElement;
     let isHorizontal: boolean = $state(true); // indicates whether the list should be shown horizontally or vertically
     let shownElements: Box[] = $state([]); // the parts of the list that are being shown
 
