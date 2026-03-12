@@ -1,0 +1,224 @@
+/* Shared colors */
+:root {
+    /* Shared Freon button colors */
+    --freon-button-bg: var(--color-light-base-600);
+    --freon-button-hover: var(--color-light-base-500);
+    --freon-button-border: var(--color-light-base-100);
+    --freon-button-text: var(--color-light-base-50);
+
+    /* Navbar */
+    --freon-navbar-bg: var(--color-light-base-50);
+    --freon-navbar-border: var(--color-light-base-200);
+    --freon-navbar-text: var(--color-light-base-700);
+
+    /* Toolbar */
+    --freon-toolbar-bg: var(--color-light-base-100);
+    --freon-toolbar-border: var(--color-light-base-100);
+    --freon-toolbar-text: var(--color-light-base-700);
+    --freon-toolbar-search-bg: var(--color-light-base-600);
+    --freon-toolbar-search-hover: var(--color-light-base-50);
+    --freon-toolbar-search-text: var(--color-light-base-900);
+    --freon-toolbar-search-placeholder: var(--color-light-base-100);
+    --freon-toolbar-accent-button-bg: var(--color-light-accent-700);
+
+    /* Tooltip */
+    --freon-tooltip-text: var(--color-light-base-900);
+    --freon-tooltip-bg: var(--color-light-accent-200);
+
+    /* ModelPanel */
+    --freon-modelpanel-bg: var(--color-light-base-50);
+    --freon-modelpanel-text: var(--color-light-base-900);
+    --freon-modelpanel-border: var(--color-light-base-200);
+    --freon-modelpanel-header-bg: var(--color-light-base-500);
+    --freon-modelpanel-header-text: var(--color-light-base-50);
+    --freon-modelpanel-section-bg: var(--color-light-base-200);
+    --freon-modelpanel-section-text: var(--color-light-base-900);
+    --freon-modelpanel-section-border: var(--color-light-base-800);
+    --freon-modelpanel-dropdown-bg: var(--color-light-base-100);
+    --freon-modelpanel-unit-bg: var(--color-light-base-100);
+    --freon-modelpanel-unit-selected-bg: var(--color-light-accent-100);
+    --freon-modelpanel-unit-text: var(--color-light-base-800);
+
+    /* Dialog buttons */
+    --freon-dialog-button-cancel-bg: var(--color-light-base-50);
+    --freon-dialog-button-cancel-text: var(--color-light-base-900);
+    --freon-dialog-button-cancel-border: var(--color-light-base-200);
+    --freon-dialog-button-cancel-hover-bg: var(--color-light-base-200);
+    --freon-dialog-button-cancel-hover-text: var(--color-light-base-700);
+
+    --freon-dialog-button-ok-bg: var(--color-light-base-600);
+    --freon-dialog-button-ok-text: var(--color-light-base-100);
+    --freon-dialog-button-ok-border: var(--color-light-base-200);
+    --freon-dialog-button-ok-hover-bg: var(--color-light-base-900);
+    --freon-dialog-button-ok-hover-text: var(--color-light-base-150);
+
+    /* Dialog input */
+    --freon-dialog-input-bg: var(--color-light-base-50);
+    --freon-dialog-input-border: var(--color-light-base-300);
+
+    /* Dialog content */
+    --freon-dialog-card-bg: var(--color-light-base-50);
+    --freon-dialog-section-bg: var(--color-light-base-100);
+    --freon-dialog-title-text: var(--color-light-base-900);
+    --freon-dialog-subtitle-text: var(--color-light-base-900);
+    --freon-dialog-text: var(--color-light-base-900);
+    --freon-dialog-value: var(--color-light-base-700);
+    --freon-dialog-link: var(--color-light-base-700);
+    --freon-dialog-icon: var(--color-light-base-900);
+    --freon-dialog-warning-text: var(--color-light-freon-error);
+    --freon-dialog-warning-bg: color-mix(in srgb, var(--color-light-freon-error) 10%, transparent);
+
+    --freon-dialog-shell-bg: var(--color-light-base-100);
+    --freon-dialog-shell-text: var(--color-light-base-900);
+    --freon-dialog-shell-border: var(--color-light-base-300);
+    --freon-dialog-shell-divider: var(--color-light-base-300);
+    --freon-dialog-backdrop: rgba(0, 0, 0, 0.8);
+
+    --freon-infopanel-bg: var(--color-light-base-50);
+    --freon-infopanel-border: var(--color-light-base-300);
+    --freon-infopanel-header-bg: var(--color-light-base-200);
+    --freon-infopanel-header-border: var(--color-light-base-300);
+    --freon-infopanel-title-text: var(--color-light-base-900);
+    --freon-infopanel-close-text: var(--color-light-base-900);
+    --freon-infopanel-content-text: var(--color-light-base-900);
+
+    --freon-infopanel-loading-text: var(--color-light-base-700);
+
+    --freon-infopanel-row-bg: var(--color-light-base-50);
+    --freon-infopanel-row-hover-bg: var(--color-light-base-100);
+    --freon-infopanel-row-border: var(--color-light-base-300);
+
+    --freon-infopanel-message-text: var(--color-light-base-900);
+    --freon-infopanel-empty-text: var(--color-light-base-700);
+
+    --freon-infopanel-action-border: var(--color-light-base-600);
+    --freon-infopanel-action-icon: var(--color-light-accent-900);
+    --freon-infopanel-action-bg: transparent;
+
+    --freon-infopanel-tree-title: var(--color-light-base-900);
+    --freon-infopanel-tree-text: var(--color-light-base-800);
+
+    --freon-infopanel-tree-row-border: var(--color-light-base-300);
+    --freon-infopanel-tree-toggle-text: var(--color-light-base-900);
+    --freon-infopanel-tree-chevron: var(--color-light-base-900);
+
+    --freon-infopanel-delta-row-bg: var(--color-light-base-50);
+    --freon-infopanel-delta-row-hover-bg: var(--color-light-base-100);
+    --freon-infopanel-delta-row-border: var(--color-light-base-300);
+    --freon-infopanel-delta-text: var(--color-light-base-900);
+    --freon-infopanel-delta-details-bg: var(--color-light-base-100);
+}
+
+.dark {
+    /* Shared Freon button colors */
+    --freon-button-bg: var(--color-dark-base-200);
+    --freon-button-hover: var(--color-dark-base-300);
+    --freon-button-border: var(--color-dark-base-700);
+    --freon-button-text: var(--color-dark-base-900);
+
+    /* Navbar */
+    --freon-navbar-bg: var(--color-dark-base-900);
+    --freon-navbar-border: var(--color-dark-base-800);
+    --freon-navbar-text: var(--color-dark-base-150);
+
+    /* Toolbar */
+    --freon-toolbar-bg: var(--color-dark-base-800);
+    --freon-toolbar-border: var(--color-dark-base-800);
+    --freon-toolbar-text: var(--color-dark-base-150);
+    --freon-toolbar-search-bg: var(--color-dark-base-200);
+    --freon-toolbar-search-hover: var(--color-dark-base-300);
+    --freon-toolbar-search-text: var(--color-dark-base-900);
+    --freon-toolbar-search-placeholder: var(--color-dark-base-700);
+    --freon-toolbar-accent-button-bg: var(--color-dark-accent-500);
+
+    /* Tooltip */
+    --freon-tooltip-text: var(--color-dark-base-900);
+    --freon-tooltip-bg: var(--color-dark-accent-200);
+
+    /* ModelPanel */
+    --freon-modelpanel-bg: var(--color-dark-base-900);
+    --freon-modelpanel-text: var(--color-dark-base-50);
+    --freon-modelpanel-border: var(--color-dark-base-600);
+
+    --freon-modelpanel-header-bg: var(--color-dark-base-700);
+    --freon-modelpanel-header-text: var(--color-dark-base-50);
+
+    --freon-modelpanel-section-bg: var(--color-dark-base-700);
+    --freon-modelpanel-section-text: var(--color-dark-base-50);
+    --freon-modelpanel-section-border: var(--color-dark-base-600);
+
+    --freon-modelpanel-dropdown-bg: var(--color-dark-base-700);
+
+    --freon-modelpanel-unit-bg: var(--color-dark-base-800);
+    --freon-modelpanel-unit-selected-bg: var(--color-dark-accent-800);
+    --freon-modelpanel-unit-text: var(--color-dark-base-100);
+
+    /* Dialog buttons */
+    --freon-dialog-button-cancel-bg: transparent;
+    --freon-dialog-button-cancel-text: var(--color-dark-base-400);
+    --freon-dialog-button-cancel-border: var(--color-dark-base-600);
+    --freon-dialog-button-cancel-hover-bg: var(--color-dark-base-600);
+    --freon-dialog-button-cancel-hover-text: var(--color-dark-base-900);
+
+    --freon-dialog-button-ok-bg: var(--color-dark-base-200);
+    --freon-dialog-button-ok-text: var(--color-dark-base-800);
+    --freon-dialog-button-ok-border: var(--color-dark-base-600);
+    --freon-dialog-button-ok-hover-bg: var(--color-dark-base-50);
+    --freon-dialog-button-ok-hover-text: var(--color-dark-base-700);
+
+    /* Dialog input */
+    --freon-dialog-input-bg: var(--color-dark-base-50);
+    --freon-dialog-input-border: var(--color-dark-base-500);
+
+    /* Dialog content */
+    --freon-dialog-card-bg: var(--color-dark-base-900);
+    --freon-dialog-section-bg: var(--color-dark-base-700);
+    --freon-dialog-title-text: var(--color-dark-base-50);
+    --freon-dialog-subtitle-text: var(--color-dark-base-50);
+    --freon-dialog-text: var(--color-dark-base-50);
+    --freon-dialog-value: var(--color-dark-base-100);
+    --freon-dialog-link: var(--color-dark-base-100);
+    --freon-dialog-icon: var(--color-dark-base-50);
+    --freon-dialog-warning-text: var(--color-dark-freon-error);
+    --freon-dialog-warning-bg: color-mix(in srgb, var(--color-dark-freon-error) 20%, transparent);
+
+    --freon-dialog-shell-bg: var(--color-dark-base-800);
+    --freon-dialog-shell-text: var(--color-dark-base-50);
+    --freon-dialog-shell-border: var(--color-dark-base-800);
+    --freon-dialog-shell-divider: var(--color-dark-base-700);
+    --freon-dialog-backdrop: rgba(0, 0, 0, 0.8);
+
+    --freon-infopanel-bg: var(--color-dark-base-800);
+    --freon-infopanel-border: var(--color-dark-base-700);
+    --freon-infopanel-header-bg: var(--color-dark-base-500);
+    --freon-infopanel-header-border: var(--color-dark-base-800);
+    --freon-infopanel-title-text: var(--color-dark-base-50);
+    --freon-infopanel-close-text: var(--color-dark-base-50);
+    --freon-infopanel-content-text: var(--color-dark-base-50);
+
+    --freon-infopanel-loading-text: var(--color-dark-base-100);
+
+    --freon-infopanel-row-bg: var(--color-dark-base-800);
+    --freon-infopanel-row-hover-bg: var(--color-dark-base-600);
+    --freon-infopanel-row-border: var(--color-dark-base-700);
+
+    --freon-infopanel-message-text: var(--color-dark-base-50);
+    --freon-infopanel-empty-text: var(--color-dark-base-100);
+
+    --freon-infopanel-action-border: var(--color-dark-base-500);
+    --freon-infopanel-action-icon: var(--color-dark-accent-50);
+    --freon-infopanel-action-bg: transparent;
+
+    --freon-infopanel-tree-title: var(--color-dark-base-50);
+    --freon-infopanel-tree-text: var(--color-dark-base-200);
+
+    --freon-infopanel-tree-row-border: var(--color-dark-base-800);
+    --freon-infopanel-tree-toggle-text: var(--color-dark-base-50);
+    --freon-infopanel-tree-chevron: var(--color-dark-base-50);
+
+    --freon-infopanel-delta-row-bg: var(--color-dark-base-800);
+    --freon-infopanel-delta-row-hover-bg: var(--color-dark-base-700);
+    --freon-infopanel-delta-row-border: var(--color-dark-base-700);
+    --freon-infopanel-delta-text: var(--color-dark-base-50);
+    --freon-infopanel-delta-details-bg: var(--color-dark-base-900);
+}

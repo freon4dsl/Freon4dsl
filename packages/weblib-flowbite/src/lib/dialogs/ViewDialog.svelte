@@ -7,7 +7,6 @@
     import { dialogs, WebappConfigurator } from "$lib"
     import { isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
     import { EditorRequestsHandler } from "$lib/language"
-    import { okButtonClass } from '$lib/stores/StylesStore.svelte';
 
     let allProjections: (ProjectionItem | undefined)[] = $derived(
         langInfo.projectionNames.map(view => {
@@ -38,18 +37,47 @@
 </script>
 
 <Dialog open={dialogs.selectViewsDialogVisible}>
-    <h3>"Select the projections to be shown"</h3>
-    <Checkbox checked disabled>Default</Checkbox>
-    {#each allProjections as option}
-        {#if !isNullOrUndefined(option)}
-            <Checkbox onchange={() => !isNullOrUndefined(option) ? option.selected = !option.selected: null}
-                      checked={option.selected}>{option ? option.name : "unknown view"}</Checkbox>
-        {/if}
-    {/each}
 
-    <div class="mt-4 flex flex-row justify-end">
-        <Button class={okButtonClass} onclick={() => applyChanges()} >
-            Apply changes
-        </Button>
+    <h3 class="freon-dialog-title">
+        Select the projections to be shown
+    </h3>
+
+    <div class="flex flex-col space-y-6" role="dialog">
+
+        <div class="freon-dialog-section p-4 flex flex-col gap-2">
+
+            <Checkbox checked disabled>
+                Default
+            </Checkbox>
+
+            {#each allProjections as option, index (index)}
+                {#if !isNullOrUndefined(option)}
+                    <Checkbox
+                        checked={option.selected}
+                        onchange={() =>
+                            !isNullOrUndefined(option)
+                                ? option.selected = !option.selected
+                                : null
+                        }
+                    >
+                        {option ? option.name : "unknown view"}
+                    </Checkbox>
+                {/if}
+            {/each}
+
+        </div>
+
+        <div class="mt-2 flex justify-end gap-3">
+
+            <Button
+                class="freon-dialog-btn freon-dialog-btn-ok"
+                onclick={() => applyChanges()}
+            >
+                Apply changes
+            </Button>
+
+        </div>
+
     </div>
+
 </Dialog>

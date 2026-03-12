@@ -7,7 +7,7 @@
 	import { ChevronRightOutline} from 'flowbite-svelte-icons';
     import { inDevelopment } from "../stores/WebappStores.svelte.js"
 
-	let currentBox: Box = $derived(selectedBoxes.value[0]);
+	let currentBox: Box = $derived(selectedBoxes.value[0]!);
     
 </script>
 

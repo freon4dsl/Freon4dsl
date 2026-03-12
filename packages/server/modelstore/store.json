@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 43,
+    "currentPostfix": 44,
     "models": [
         {
             "folder": "modelstore",
@@ -360,6 +360,10 @@
                 {
                     "file": "SomeNameOrOther.json",
                     "name": "SomeNameOrOther"
+                },
+                {
+                    "name": "HGERG",
+                    "file": "HGERG.json"
                 }
             ],
             "version": "1"
@@ -659,6 +663,5 @@
                 }
             ]
         }
-
     ]
 }

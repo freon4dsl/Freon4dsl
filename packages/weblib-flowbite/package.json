@@ -72,8 +72,8 @@
         "@freon4dsl/core": "~2.1.0",
         "@freon4dsl/core-svelte": "~2.1.0",
         "@lionweb/server-delta-shared": "0.4.0-beta.1",
-        "flowbite-svelte": "1.7.1",
-        "flowbite-svelte-icons": "2.2.1",
+        "flowbite-svelte": "1.31.0",
+        "flowbite-svelte-icons": "3.1.0",
         "mobx": "^6.13.6",
         "svelte": "^5.50.1"
     }

@@ -6,7 +6,6 @@
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
     import { FolderOpenSolid } from 'flowbite-svelte-icons';
-    import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
     import Dialog from "$lib/dialogs/Dialog.svelte"
 
     const initialHelperText: string = 'Enter the name of the new model.'
@@ -53,28 +52,47 @@
 </script>
 
 <Dialog open={dialogs.newModelDialogVisible}>
-    <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">New model</h3>
+
+    <h3 class="freon-dialog-title">
+        New model
+    </h3>
+
     <div class="flex flex-col space-y-6" role="dialog">
-        <div class="relative text-light-base-700">
-            <Input class={textInputClass}
-                   type="text"
-                   bind:value={newName}
-                   id="new-input"
-                   name="model-name"
-                   oninput={onInput}
+
+        <div class="relative">
+            <Input
+                class="freon-dialog-input"
+                type="text"
+                bind:value={newName}
+                id="new-input"
+                name="model-name"
+                oninput={onInput}
             />
-            <Helper class="text-sm ml-2 text-light-base-900 dark:text-dark-base-50">
+
+            <Helper class="freon-dialog-helper">
                 <span class="font-medium">{helperText}</span>
             </Helper>
         </div>
-        <div class="flex flex-row justify-end mt-0">
-            <Button onclick={handleCancel} class={cancelButtonClass}>
+
+        <div class="mt-2 flex justify-end gap-3">
+
+            <Button
+                onclick={handleCancel}
+                class="freon-dialog-btn freon-dialog-btn-cancel"
+            >
                 Cancel
             </Button>
-            <Button class={okButtonClass} onclick={handleSubmit} >
+
+            <Button
+                onclick={handleSubmit}
+                class="freon-dialog-btn freon-dialog-btn-ok"
+            >
                 <FolderOpenSolid class="w-4 h-4 me-2"/>
                 New
             </Button>
+
         </div>
+
     </div>
+
 </Dialog>
