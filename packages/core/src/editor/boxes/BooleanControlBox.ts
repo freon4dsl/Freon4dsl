@@ -1,3 +1,4 @@
+import { autorun } from "mobx"
 import { FREON } from "../../environment/index.js"
 import { Box } from "./internal.js";
 import type { FreNode } from "../../ast/index.js";
@@ -31,7 +32,6 @@ export class BooleanControlBox extends Box {
         FREON.astChanger.changeNamed("BooleanControlBox.setBoolean", () => {
             this.$setBoolean(newValue);
         })
-        this.isDirty();
     }
 
     getBoolean(): boolean | undefined {
@@ -49,6 +49,10 @@ export class BooleanControlBox extends Box {
         FreUtils.initializeObject(this, initializer);
         this.$getBoolean = getBoolean;
         this.$setBoolean = setBoolean;
+        autorun( () => {
+            this.getBoolean()
+            this.isDirty()
+        })
     }
 }
 

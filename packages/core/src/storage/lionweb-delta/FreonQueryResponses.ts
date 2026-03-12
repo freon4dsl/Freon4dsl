@@ -4,7 +4,7 @@ import type {
     UnsubscribeFromPartitionContentsResponse,
     ListPartitionsResponse,
     GetAvailableIdsResponse,
-    SubscribeToPartitionContentsRequest,
+    SubscribeToPartitionContentsRequest, LionWebId,
 } from "@lionweb/server-delta-shared"
 import { type ReceivingDelta } from "@lionweb/server-delta-client"
 import type { FreModelUnit } from "../../ast/index.js"
@@ -48,8 +48,14 @@ const ListPartitionsResponseFunction = (msg: ListPartitionsResponse): void => {
     }
 }
 
+type IdHandler = (ids: LionWebId[]) => void
+let setAvailableIds: IdHandler = (_ids: LionWebId[]) => { };
+export function setAvailableIdsHandler(handler: IdHandler): void {
+    setAvailableIds = handler
+}
 const GetAvailableIdsResponseFunction = (msg: GetAvailableIdsResponse): void => {
-    LOGGER.log("Called GetAvailableIdsResponseFunction " + msg.messageKind)
+    LOGGER.log("Called GetAvailableIdsResponseFunction " + msg.ids)
+    setAvailableIds(msg.ids)
 }
 
 export const queryResponseFunctions: ReceivingDelta[] = [

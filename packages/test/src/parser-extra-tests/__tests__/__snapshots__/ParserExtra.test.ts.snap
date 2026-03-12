@@ -858,7 +858,7 @@ PartsInitiatorTest {
         "$$owner": null,
         "$$propertyIndex": undefined,
         "$$propertyName": "",
-        "$id": "ID-2",
+        "$id": "LIMITED-NonOptionalLimited-ID-1",
         "$typename": "NonOptionalLimited",
         "_FRE_name": "SECOND",
       },

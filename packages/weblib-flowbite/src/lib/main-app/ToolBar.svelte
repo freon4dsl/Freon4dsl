@@ -12,7 +12,8 @@ import {
     UndoOutline,
     PlayOutline,
     ChevronRightOutline,
-    FloppyDiskSolid
+    FloppyDiskSolid,
+    FileImportOutline
 } from 'flowbite-svelte-icons';
 import { Button, Input, Tooltip } from 'flowbite-svelte';
 import { ENTER } from "@freon4dsl/core"
@@ -24,10 +25,13 @@ import { tooltipClass } from '$lib/stores/StylesStore.svelte';
  * the model has. The onchange event only triggers when the search text has changed.
  * @param event
  */
-function onKeydown(event: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement }) {
-    if (event.key === ENTER) {
-        EditorRequestsHandler.getInstance().findText(event.currentTarget.value);
-    }
+function onKeydown(event: KeyboardEvent) {
+    if (event.key !== ENTER) return;
+
+    const input = event.currentTarget;
+    if (!(input instanceof HTMLInputElement)) return;
+
+    EditorRequestsHandler.getInstance().findText(input.value);
 }
 
 const buttonCls: string= 'rounded-none font-normal px-2 py-1 mx-2' +
@@ -94,6 +98,9 @@ const searchFieldCls: string =
             <Button id="views-button" tabindex={-1} {disabled} class={buttonCls} onclick={() => {dialogs.selectViewsDialogVisible = true}}>
                 <EyeOutline class={iconCls}/>
             </Button>
+            <Button id="deltas-button" tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().showDeltas}>
+                <FileImportOutline class={iconCls}/>
+            </Button>
         </div>
             <!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
             <Tooltip tabindex={-1} triggeredBy="#model-button" placement="bottom" class={tooltipClass}>Show Model Information</Tooltip>
@@ -115,8 +122,8 @@ const searchFieldCls: string =
             <Input tabindex={-1}
                    {disabled}
                    id="search-navbar"
-                   class="rounded-none h-full border-l border-t-0 border-b-0 ps-10 py-1 {searchFieldCls}
-                   floatClass="{searchFieldCls}
+                   class="rounded-none h-full border-l border-t-0 border-b-0 ps-10 py-1 {searchFieldCls}"
+                   divClass={searchFieldCls}
                    size="sm"
                    placeholder="Search..."
                    onkeydown={onKeydown}

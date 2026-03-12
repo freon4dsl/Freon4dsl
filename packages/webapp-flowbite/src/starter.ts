@@ -11,11 +11,11 @@ import { CoreConfig, FREON, FreonDeltaClient, LionWebRepositoryCommunication, Se
 /**
  * Initialize everything
  */
-// CoreConfig.initializeWithServers(
+// CoreConfig.initialize(
 //     LanguageEnvironment.getInstance(),
-//     // ServerCommunication.getInstance(),
-//     LionWebRepositoryCommunication.getInstance(),
-//     new FreonDeltaClient()
+//     ServerCommunication.getInstance(),
+//     // LionWebRepositoryCommunication.getInstance(),
+//     // new FreonDeltaClient()
 // )
 CoreConfig.initialize(
     LanguageEnvironment.getInstance(),

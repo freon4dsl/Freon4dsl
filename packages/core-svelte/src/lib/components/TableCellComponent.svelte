@@ -50,6 +50,7 @@
     let {
         editor,
         box,
+        readonly,
         parentComponentId,
         parentOrientation,
         ondropOnCell
@@ -250,33 +251,48 @@
     }
 </script>
 
-<!-- on:blur is needed for on:mouseout -->
-<!-- Apparently, we cannot combine multiple inline style directives, as in -->
-<!--  style="grid-row: '{row}' grid-column: '{column}' {cssStyle}"-->
-<span
-    {id}
-    role="cell"
-    class="table-cell-component {orientation} {isHeader} {cssClass} {selectedCls} {box.cssClass}"
-    style:grid-row={row}
-    style:grid-column={column}
-    style={cssStyle}
-    onkeydown={onKeydown}
-    ondrop={(event) => drop(event)}
-    ondragenter={(event) => dragenter(event)}
-    ondragover={(event) => {
+{#if readonly}
+        <span
+            {id}
+            role="cell"
+            class="table-cell-component {orientation} {isHeader} {cssClass} {selectedCls} {box.cssClass} readonly"
+            style:grid-row={row}
+            style:grid-column={column}
+            style={cssStyle}
+            bind:this={htmlElement}
+            tabindex={-1}
+        >
+            <RenderComponent box={childBox} {editor} {readonly} />
+    </span>
+{:else}
+    <!-- on:blur is needed for on:mouseout -->
+    <!-- Apparently, we cannot combine multiple inline style directives, as in -->
+    <!--  style="grid-row: '{row}' grid-column: '{column}' {cssStyle}"-->
+    <span
+        {id}
+        role="cell"
+        class="table-cell-component {orientation} {isHeader} {cssClass} {selectedCls} {box.cssClass}"
+        style:grid-row={row}
+        style:grid-column={column}
+        style={cssStyle}
+        onkeydown={onKeydown}
+        ondrop={(event) => drop(event)}
+        ondragenter={(event) => dragenter(event)}
+        ondragover={(event) => {
                 event.preventDefault();
             }}
-    onmouseout={(event) => mouseout(event)}
-    onblur={() => {}}
-    oncontextmenu={(event) => showContextMenu(event)}
-    bind:this={htmlElement}
-    tabindex={-1}
->
+        onmouseout={(event) => mouseout(event)}
+        onblur={() => {}}
+        oncontextmenu={(event) => showContextMenu(event)}
+        bind:this={htmlElement}
+        tabindex={-1}
+    >
     {#if isHeader.length === 0 && box.isFirstInElementBox()}
                 <span class="drag-handle"
                       draggable="true"
                       ondragstart={(event) => dragstart(event)}
                       role="listitem"><DragHandle/></span>
     {/if}
-    <RenderComponent box={childBox} {editor} />
+        <RenderComponent box={childBox} {editor} {readonly} />
 </span>
+{/if}

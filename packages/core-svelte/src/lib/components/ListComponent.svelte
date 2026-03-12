@@ -43,7 +43,7 @@
     import DragHandle from "./images/DragHandle.svelte";
 
     // Props
-    let { editor, box }: FreComponentProps<ListBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<ListBox> = $props();
 
     // Local state variables
     let LOGGER: FreLogger = LIST_LOGGER;
@@ -233,14 +233,33 @@
     }
 </script>
 
-<!-- onblur is needed for onmouseout -->
-<span
-    class="{isHorizontal ? 'list-component-horizontal' : 'list-component-vertical'} {box.cssClass}"
-    {id}
-    bind:this={htmlElement}
-    style:grid-template-columns="auto"
-    style:grid-template-rows="auto"
->
+{#if readonly}
+    <span
+        class="{isHorizontal ? 'list-component-horizontal' : 'list-component-vertical'} {box.cssClass} readonly"
+        {id}
+        style:grid-template-columns="auto"
+        style:grid-template-rows="auto"
+    >
+        {#each shownElements as box, index (box.id)}
+            <span
+                class="list-item readonly"
+                style:grid-column={!isHorizontal ? 1 : index + 1}
+                style:grid-row={isHorizontal ? 1 : index + 1}
+                role="none"
+            >
+                <RenderComponent {box} {editor} {readonly} />
+            </span>
+        {/each}
+    </span>
+{:else}
+    <!-- onblur is needed for onmouseout -->
+    <span
+        class="{isHorizontal ? 'list-component-horizontal' : 'list-component-vertical'} {box.cssClass}"
+        {id}
+        bind:this={htmlElement}
+        style:grid-template-columns="auto"
+        style:grid-template-rows="auto"
+    >
     {#each shownElements as box, index (box.id)}
         <span
             class="list-item"
@@ -268,7 +287,8 @@
                   ondragstart={(event) => dragstart(event, id, index)}
                   role="listitem"><DragHandle/></span>
             {/if}
-            <RenderComponent {box} {editor} />
+            <RenderComponent {box} {editor} {readonly} />
         </span>
     {/each}
 </span>
+{/if}

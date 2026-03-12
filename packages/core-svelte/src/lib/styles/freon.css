@@ -142,7 +142,12 @@
      padding: 4px 6px 4px 6px;
      border: none;
  }
-
+/* Read-only state */
+.limited-checkbox-component-group.readonly:hover,
+.limited-checkbox-component-group.readonly:focus-within {
+    outline: none;
+    box-shadow: none;
+}
 /* Vertical layout modifier */
 .limited-checkbox-component-vertical {
     flex-direction: column;
@@ -209,12 +214,12 @@
     outline: none;
     box-shadow: 0 0 0 3px var(--limited-checkbox-focus-ring-color);
 }
-
 /* Disabled state */
 .limited-checkbox-component-input:disabled {
     cursor: default;
     border-color: var(--limited-checkbox-disabled-border-color);
     background-color: var(--limited-checkbox-disabled-background-color);
+    box-shadow: none;
 }
 
 .limited-checkbox-component-input:disabled:checked {

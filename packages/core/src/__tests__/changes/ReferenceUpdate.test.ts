@@ -1,12 +1,7 @@
 import { ReferenceUpdateManager } from "../../change-manager/index.js";
-import { describe, test, expect, beforeEach } from "vitest";
+import { describe, test, expect } from "vitest";
 import { CoreConfig, FREON } from "../../environment/index.js"
-import {
-    CalculatorModel,
-    InputFieldReference,
-    PlusExpression,
-    initializeLanguage,
-} from "./reference-change-model/internal.js";
+import { type CalculatorModel, type InputFieldReference, type PlusExpression, initializeLanguage } from "./reference-change-model/internal.js"
 import { ModelCreator } from "./ModelCreator.js";
 
 

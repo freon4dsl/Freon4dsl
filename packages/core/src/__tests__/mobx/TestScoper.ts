@@ -1,5 +1,5 @@
-import { MobxTestRoot } from "./MobxModel.js";
-import { FreNamedNode } from "../../ast/index.js";
+import { type MobxTestRoot } from "./MobxModel.js"
+import { type FreNamedNode } from "../../ast/index.js"
 
 export class TestScoper {
     private static instance: TestScoper = new TestScoper();

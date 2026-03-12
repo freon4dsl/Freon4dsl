@@ -4,7 +4,7 @@
     import type { FreComponentProps } from "../index.js";
     import { type Box} from "@freon4dsl/core";
 
-    let { editor, box }: FreComponentProps<Box> = $props();
+    let { editor, box, readonly }: FreComponentProps<Box> = $props();
 
     let top = $state(0);
     let height = $state(0);
@@ -42,7 +42,7 @@
     style="top: {top}px; height: {height}px;"
     role="contentinfo"
 >
-    <ErrorTooltip {box} {editor} hasErr={true} parentTop={top} parentLeft={2}>
+    <ErrorTooltip {box} {editor} {readonly} hasErr={true} parentTop={top} parentLeft={2}>
         <span class="error-marker" style="height: {height}px;">&nbsp</span>
     </ErrorTooltip>
 </span>

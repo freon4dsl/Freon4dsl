@@ -10,6 +10,7 @@ import type {
     ChildMovedInSameContainmentEvent,
 } from "@lionweb/server-delta-shared"
 import { type ReceivingDelta } from "@lionweb/server-delta-client"
+import { runInAction } from "mobx"
 import { findNode } from "../../ast-utils/FindNodes.js"
 import type { FreNode } from "../../ast/index.js"
 import { FREON } from "../../environment/index.js"
@@ -18,6 +19,7 @@ import { FreLogger } from "../../logging/index.js"
 import { isNullOrUndefined } from "../../util/index.js"
 import { FreLionwebSerializer } from "../serializer/index.js"
 import { ChunkUtil } from "./ChunkUtil.js"
+import { deltaList } from "./ProcessedDeltaList.js"
 
 const LOGGER = new FreLogger("FreonChildEvents")
 
@@ -36,7 +38,11 @@ const ChildAddedFunction = (msg: ChildAddedEvent): void => {
     }
     const childNode: FreNode = FreLionwebSerializer.getInstance().toTypeScriptInstance(ChunkUtil.deltaChunkToChunk(msg.newChild), msg.parent)
     LOGGER.log("NEW CHILD IS " + childNode?.freLanguageConcept())
-    
+
+    let originalNode: FreNode
+    runInAction(() => {
+        originalNode = parent.copy()
+    })
     FREON.astChanger.changeIgnore("ChildAdded event", () => {
         if (langProperty.isList) {
             parent[langProperty.name].splice(msg.index, 0, childNode)
@@ -44,6 +50,14 @@ const ChildAddedFunction = (msg: ChildAddedEvent): void => {
             parent[langProperty.name] = childNode
         }
     })
+    deltaList.add({
+        delta: msg,
+        originalNode: originalNode,
+        changedNode: childNode,
+        nodeName: undefined,
+        propertyName: langProperty.name,
+    })
+    
 }
 
 const ChildDeletedFunction = (msg: ChildDeletedEvent): void => {
@@ -59,6 +73,11 @@ const ChildDeletedFunction = (msg: ChildDeletedEvent): void => {
         LOGGER.error(`Property '${langProperty.name}' is not a part/containment`)
         return
     }
+
+    let originalNode: FreNode
+    runInAction(() => {
+        originalNode = parent.copy()
+    })
     FREON.astChanger.changeIgnore("ChildDeleted event", () => {
         if (langProperty.isList) {
             if ((parent[langProperty.name][msg.index] as FreNode)?.freId() !== msg.deletedChild) {
@@ -71,6 +90,13 @@ const ChildDeletedFunction = (msg: ChildDeletedEvent): void => {
             }
             parent[langProperty.name] = null
         }
+    })
+    deltaList.add({
+        delta: msg,
+        originalNode: originalNode,
+        changedNode: parent,
+        nodeName: undefined,
+        propertyName: langProperty.name,
     })
 }
 

@@ -6,7 +6,7 @@
 
     const LOGGER = GRID_LOGGER;
 
-    let { editor, box }: FreComponentProps<GridBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<GridBox> = $props();
 
     let id: string = $state('');
     let cells: GridCellBox[] = $state([]);
@@ -54,11 +54,12 @@
     style:grid-template-columns={templateColumns}
     style:grid-template-rows={templateRows}
     class="grid-component {cssClass}"
+    class:readonly={readonly}
     {id}
     tabIndex={0}
     bind:this={htmlElement}
 >
     {#each cells as cell (cell?.content?.node?.freId() + '-' + cell?.content?.id + cell?.role + '-grid')}
-        <GridCellComponent parentBox={box} box={cell} {editor} />
+        <GridCellComponent parentBox={box} box={cell} {editor} {readonly} />
     {/each}
 </div>

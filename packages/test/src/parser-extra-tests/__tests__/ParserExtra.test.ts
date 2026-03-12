@@ -16,7 +16,7 @@ describe("Parser on extra elements", () => {
 
     beforeEach(() => {
         // Ensure that ID's of created elements do not change.
-        FreUtils.resetId();
+        FREON.idProvider.reset()
     });
 
     test(" On lists of references to parts", () => {

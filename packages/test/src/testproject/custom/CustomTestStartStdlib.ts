@@ -11,21 +11,31 @@ export class CustomTestStartStdlib implements FreStdlib {
     get elements(): FreNamedNode[] {
         if (this.__elements.length === 0) {
             this.__elements.push(AA.create({
+                $id: "AA-1",
                 name: "EXTRA1"
                 // skip the other props, only the name is relevant to this test
             }));
-            this.__elements.push(AA.create({
-                name: "EXTRA2"
-                // skip the other props, only the name is relevant to this test
-            }));
-            this.__elements.push(BB.create({
-                name: "EXTRA1"
-                // skip the other props, only the name is relevant to this test
-            }));
-            this.__elements.push(BB.create({
-                name: "EXTRA2"
-                // skip the other props, only the name is relevant to this test
-            }));
+            this.__elements.push(
+                AA.create({
+                    $id: "AA-2",
+                    name: "EXTRA2",
+                    // skip the other props, only the name is relevant to this test
+                }),
+            )
+            this.__elements.push(
+                BB.create({
+                    $id: "BB-1",
+                    name: "EXTRA1",
+                    // skip the other props, only the name is relevant to this test
+                }),
+            )
+            this.__elements.push(
+                BB.create({
+                    $id: "BB-2",
+                    name: "EXTRA2",
+                    // skip the other props, only the name is relevant to this test
+                }),
+            )
         }
         return this.__elements;
     }}
