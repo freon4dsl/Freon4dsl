@@ -78,7 +78,9 @@
 .text-component,
 .text-component-text,
 .text-component-input,
-.text-component-input-wrapper {
+.text-component-input-wrapper,
+.optional-component,
+.optional-component-tooltip-anchor {
     vertical-align: top;
 }
 
@@ -797,9 +799,16 @@
 }
 
 /* Focus style */
-.numeric-slider-input:focus-visible::-webkit-slider-thumb,
+.numeric-slider-input:focus-visible::-webkit-slider-thumb {
+    box-shadow:
+            0 0 0 2px var(--numeric-slider-thumb-shadow-color),
+            0 0 0 5px var(--numeric-slider-focus-ring-color);
+}
+
 .numeric-slider-input:focus-visible::-moz-range-thumb {
-    box-shadow: 0 0 0 3px var(--numeric-slider-focus-ring-color);
+    box-shadow:
+            0 0 0 2px var(--numeric-slider-thumb-shadow-color),
+            0 0 0 5px var(--numeric-slider-focus-ring-color);
 }
 
 .numeric-slider-tooltip {
@@ -967,6 +976,9 @@
     /* to make it feel a bit smoother without being “animated” in a distracting way */
     transition: opacity 120ms ease, visibility 0s linear 120ms;
 }
+.optional-component-placeholder {
+    line-height: 1;
+}
 /* rule to show the tooltip */
 .optional-component-tooltip-anchor:hover .optional-component-tooltip,
 .optional-component-tooltip-anchor:focus-within .optional-component-tooltip {
@@ -979,6 +991,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    vertical-align: top;
 
     /* sizing */
     padding: 0;
