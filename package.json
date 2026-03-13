@@ -28,7 +28,6 @@
     "devDependencies": {
         "@prettier/sync": "^0.5.2",
         "@tsconfig/svelte": "5.0.4",
-        "@types/lodash": "4.17.4",
         "@types/node": "20.14.1",
         "@types/pegjs": "0.10.6",
         "cross-env": "7.0.3",
