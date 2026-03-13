@@ -87,11 +87,11 @@
     let conditionString: string = $state('false');
 
     function onChange() {
-        if (conditionString === 'false') {
-            optionalCond = false;
-        } else if (conditionString === 'true') {
-            optionalCond = true;
-        }
+        // if (conditionString === 'false') {
+        //     optionalCond = false;
+        // } else if (conditionString === 'true') {
+        //     optionalCond = true;
+        // }
     }
 </script>
 

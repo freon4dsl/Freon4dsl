@@ -4,44 +4,27 @@
  * 
  *********************************************/
 
-/* freon-component is the top component and consist of a gutter and an editor-component */
-.freon-component {
-    height: 100%;
-    width: 100%;
-    /*overflow-x: auto;*/
-    font-size: 14px;
-    font-style: normal;
-    font-weight: normal;
-    font-family: "Arial";
-    margin: 0px;
-    padding: 0px;
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 2px;
-    spellcheck: false;
-    /* Prevent accidental stacking-context/containing-block bugs */
-    transform: none !important; /* (don’t set transforms on the pane root) */
-    filter: none !important;
-    perspective: none !important;
-    /* Predictable sizing */
-    box-sizing: border-box;
-    /* The following is needed for the scrollbar to be only on the container of the FreonComponent, otherwise a second scrollbar might appear. */
-    /* Do not be a scroll owner */
-    overflow: visible;   /* or unset/inherit — but NOT auto/scroll */
-    /* Play nice inside flex/grid parents */
-    min-height: 0;       /* avoids flex/grid ancestors forcing scrollbars */
-    min-width: 0;        /* same for horizontal cases */
-    flex: 1 1 auto;      /* if it's inside a flex layout */
+/* standard sizes for all elements */
+:root {
+    --freon-font-size: 14px;
 
-    /* Base tokens (non-color) */
+    --freon-inline-font-size: var(--freon-font-size);
+    --freon-inline-line-height: 20px;
+    --freon-inline-row-height: 24px;
+    --freon-inline-height: var(--freon-inline-row-height);
+    --freon-inline-padding-x: 0.25rem;
+
     --freon-radio-size: 18px;
     --freon-radio-dot-size: 10px;
     --freon-radio-font-size: 0.95rem;
     --freon-radio-gap-inline: 0.5rem;
     --freon-radio-gap-block: 1rem;
 }
+
+:root {
+
+}
+
 /* Defaults for shared color tokens used by all radio groups. Overwritten in 'freon-light.css' etc. */
 .freon-radio-group {
     --freon-radio-label-color: #1f1f1f;
@@ -51,54 +34,94 @@
     --freon-radio-focus-ring-color: rgba(26, 115, 232, 0.3);
     --freon-radio-shadow-color: rgba(0, 0, 0, 0.2);
 }
+
+/* freon-component is the top component and consists of a gutter and an editor-component */
+.freon-component {
+    height: 100%;
+    width: 100%;
+    font-style: normal;
+    font-weight: normal;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 2px;
+    /* Prevent accidental stacking-context/containing-block bugs */
+    transform: none !important; /* (don’t set transforms on the pane root) */
+    filter: none !important;
+    perspective: none !important;
+    /* Predictable sizing */
+    box-sizing: border-box;
+    /* The following is needed for the scrollbar to be only on the container of the FreonComponent, otherwise a second scrollbar might appear. */
+    /* Do not be a scroll owner */
+    overflow: visible; /* or unset/inherit — but NOT auto/scroll */
+    /* Play nice inside flex/grid parents */
+    min-height: 0; /* avoids flex/grid ancestors forcing scrollbars */
+    min-width: 0; /* same for horizontal cases */
+    flex: 1 1 auto; /* if it's inside a flex layout */
+}
+
 .gutter {
     min-width: 4px;
     width: 8px;
+    height: 100%;
     box-sizing: border-box;
-    /* match editor-component height */
-    align-self: stretch;
-    /* remove the viewport constraint */
-    height: auto; /* or just delete any height rule */
-}
-.editor-component {
-    width: 100%;
-    flex: 1 1 auto;
-    min-height: 0;
-    min-width: 0;
-}
-.freon-overlay-root {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    pointer-events: none; /* don't block the editor */
 }
 
+.editor-component {
+    width: 100%;
+    flex: 1;
+}
+
+/***************************************
+ * Alignment on same row
+ ***************************************/
+.label-component,
+.text-component,
+.text-component-text,
+.text-component-input,
+.text-component-input-wrapper,
+.optional-component,
+.optional-component-tooltip-anchor {
+    vertical-align: top;
+}
+
+/***************************************
+ * Label component
+ ***************************************/
 .label-component:empty:before {
     content: attr(data-placeholdertext);
-    margin: 0 1px 0 1px;
-    padding: 0px 1px 0px 1px;
 }
 
 .label-component {
-    padding: 0px 1px 0px 1px;
-    margin: 1px;
-    white-space: normal;
+    box-sizing: border-box;
     display: inline-block;
+    white-space: normal;
+
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    min-height: var(--freon-inline-height);
+
+    padding-inline: var(--freon-inline-padding-x);
 }
+
+/***************************************
+ * List component
+ ***************************************/
 
 .list-component-horizontal {
     white-space: nowrap;
     display: grid;
-    padding: 0px;
-    border-width: 0pt;
+    padding: 0;
+    border-width: 0;
     border-style: none;
-    margin: 0px;
+    margin: 0;
     box-sizing: border-box;
 }
 
 .list-component-vertical {
-    padding: 0px;
-    border-width: 0pt;
+    padding: 0;
+    border-width: 0;
     border-style: none;
     margin: 1px;
     box-sizing: border-box;
@@ -119,7 +142,7 @@
 }
 
 .layout-component {
-    padding: 0px;
+    padding: 0;
     margin: 0 1px 0 1px;
     box-sizing: border-box;
 }
@@ -138,14 +161,21 @@
  *  LimitedCheckboxComponent
  *******************************************************/
 /* Default: horizontal layout */
- .limited-checkbox-component-group {
-     display: flex;
-     flex-wrap: wrap;     /* allows wrapping on small screens */
-     gap: 0.5rem 1rem;    /* row-gap and column-gap */
-     margin: 2px;
-     padding: 4px 6px 4px 6px;
-     border: none;
- }
+.limited-checkbox-component-group {
+    display: flex;
+    flex-wrap: wrap; /* allows wrapping on small screens */
+    gap: 0.5rem 1rem; /* row-gap and column-gap */
+    margin: 2px;
+    padding: 4px 6px 4px 6px;
+    border: none;
+}
+
+/* Read-only state */
+.limited-checkbox-component-group.readonly:hover,
+.limited-checkbox-component-group.readonly:focus-within {
+    outline: none;
+    box-shadow: none;
+}
 
 /* Vertical layout modifier */
 .limited-checkbox-component-vertical {
@@ -182,10 +212,9 @@
     position: relative;
 
     /* Smooth transitions */
-    transition:
-            border-color 0.15s ease-out,
-            background-color 0.15s ease-out,
-            box-shadow 0.15s ease-out;
+    transition: border-color 0.15s ease-out,
+    background-color 0.15s ease-out,
+    box-shadow 0.15s ease-out;
 }
 
 /* Checked state – filled box */
@@ -219,6 +248,7 @@
     cursor: default;
     border-color: var(--limited-checkbox-disabled-border-color);
     background-color: var(--limited-checkbox-disabled-background-color);
+    box-shadow: none;
 }
 
 .limited-checkbox-component-input:disabled:checked {
@@ -242,7 +272,7 @@
     display: inline-flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: var(--freon-radio-gap-inline) var(--freon-radio-gap-block);
+    gap: var(--freon-radio-gap-block) var(--freon-radio-gap-inline);
     align-items: center;
     padding: 4px 6px;
     margin: 2px;
@@ -286,6 +316,7 @@
     --freon-radio-focus-ring-color: var(--limited-radio-focus-ring-color);
     --freon-radio-shadow-color: var(--limited-radio-shadow-color);
 }
+
 /* Hide native input; use label pseudo-elements to draw circle/dot */
 .limited-radio-component-single input {
     position: absolute;
@@ -305,10 +336,9 @@
     box-sizing: border-box;
     display: inline-block;
     z-index: 1;
-    transition:
-            border-color 0.18s ease-out,
-            background-color 0.18s ease-out,
-            box-shadow 0.18s ease-out;
+    transition: border-color 0.18s ease-out,
+    background-color 0.18s ease-out,
+    box-shadow 0.18s ease-out;
 }
 
 /* Inner dot */
@@ -338,47 +368,57 @@
 }
 
 /* Focus */
-.limited-radio-component-single input:focus-visible
-+ .limited-radio-component-label::before {
+.limited-radio-component-single input:focus-visible + .limited-radio-component-label::before {
     box-shadow: 0 0 0 3px var(--freon-radio-focus-ring-color);
 }
 
 /*******************************************************
  *  ContextMenuComponent
  *******************************************************/
-/* The panel lives in the fixed overlay. Let it receive pointer events. */
-/* And make sure menus position correctly within the overlay layer. */
-.context-menu-panel {
-    pointer-events: auto;
-    position: absolute;
-}
 .contextmenu {
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 3px;
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 10;
+
     display: flex;
     flex-direction: column;
     gap: 2px;
-    position: absolute; /* relative to a 'relative' parent */
+
     min-width: 120px;
-    z-index: 10;
+    padding: 2px;
+
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
 }
+
 .contextmenu-button {
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+
+    min-height: var(--freon-inline-row-height);
+    padding-inline: var(--freon-inline-padding-x);
+
     border-radius: 2px;
-    padding: 0 1px 1px 0;
-    margin: 3px;
     cursor: pointer;
     text-align: left;
-    display: flex;
-    justify-content: space-between;
-    gap: 2px;
-    place-items: center;
+
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    white-space: nowrap;
 }
+
 .contextmenu-button:hover {
 }
+
 .contextmenu-shortcut {
-    /*font-size: 0.7em;*/
+    white-space: nowrap;
 }
+
 .contextmenu-hr {
     width: 100%;
     margin: 0;
@@ -392,11 +432,14 @@
     white-space: nowrap;
     z-index: 80;
 }
+
 .error-tooltip-list-content {
     padding-left: 20px;
 }
+
 .error-tooltip-single-content {
 }
+
 .error-marker {
     display: block;
     /* padding seems to be the only way to make the element visible without content*/
@@ -408,7 +451,7 @@
 
 .error-positioning {
     position: absolute;
-    left: 0px;
+    left: 0;
 }
 
 /*******************************************************
@@ -420,14 +463,13 @@
     justify-content: center;
     text-align: center;
     font-size: 0.8rem;
-    font-weight: 500;       /* Tailwind's font-medium */
-    padding: 6px 12px;      /* Compact and aligned with common UI kits */
-    border-radius: 0.5rem;  /* Tailwind's rounded-lg */
+    font-weight: 500; /* Tailwind's font-medium */
+    padding: 6px 12px; /* Compact and aligned with common UI kits */
+    border-radius: 0.5rem; /* Tailwind's rounded-lg */
 
-    transition:
-            box-shadow 0.2s ease,
-            background-color 0.2s ease,
-            border-color 0.2s ease;
+    transition: box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 /* Focus ring */
@@ -463,10 +505,9 @@
     position: relative;
 
     /* Smooth transitions */
-    transition:
-            border-color 0.15s ease-out,
-            background-color 0.15s ease-out,
-            box-shadow 0.15s ease-out;
+    transition: border-color 0.15s ease-out,
+    background-color 0.15s ease-out,
+    box-shadow 0.15s ease-out;
 }
 
 /* Checked state – filled box */
@@ -541,10 +582,9 @@
     display: inline-block;
     z-index: 1;
 
-    transition:
-            border-color 0.18s ease-out,
-            box-shadow 0.18s ease-out,
-            background-color 0.18s ease-out;
+    transition: border-color 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    background-color 0.18s ease-out;
 }
 
 /* Inner dot */
@@ -567,9 +607,8 @@
     border-radius: 50%;
     opacity: 1;
     transform: scale(0.8);
-    transition:
-            opacity 0.18s ease-out,
-            transform 0.18s ease-out;
+    transition: opacity 0.18s ease-out,
+    transform 0.18s ease-out;
     pointer-events: none;
     z-index: 0;
     background-color: color-mix(
@@ -583,6 +622,7 @@
 .boolean-radio-component-label input:checked {
     border-color: var(--freon-radio-dot-color);
 }
+
 .boolean-radio-component-label input:checked::before {
     transform: scale(1);
 }
@@ -596,69 +636,93 @@
 /*******************************************************
  *  TextComponent
  *******************************************************/
+.text-component {
+    display: inline-block;
+    white-space: nowrap;
+}
+
 .text-component-width {
     position: absolute;
     left: -9999px;
     display: inline-block;
-    padding: 0px;
-    margin: 1px;
     border: none;
     box-sizing: border-box;
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    padding-inline: var(--freon-inline-padding-x);
 }
 
 .text-component-input {
-    /* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
-    padding: 0px;
-    margin: 1px;
-    outline: none; 
-    /*width: 100%;*/
+    outline: none;
     box-sizing: border-box;
     border: none;
-    font-size: inherit;
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    height: var(--freon-inline-height);
+    padding-inline: var(--freon-inline-padding-x);
 }
 
 .text-component-text {
-    padding: 0px;
-    margin: 1px;
-    /*width: 100%;*/
-    white-space: normal;
     display: inline-block;
+    box-sizing: border-box;
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    min-height: var(--freon-inline-height);
+    padding-inline: var(--freon-inline-padding-x);
 }
 
 .text-component-placeholder {
-    padding: 0px;
-    margin: 1px;
-    white-space: normal;
     display: inline-block;
-}
-.text-component-action-placeholder {
-    padding: 0px;
-    margin: 1px;
-    white-space: normal;
-    display: inline-block;
+    box-sizing: border-box;
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    min-height: var(--freon-inline-height);
+    padding-inline: var(--freon-inline-padding-x);
 }
 
-.multiline-text-component {
-    padding: 1px;
-    margin: 1px;
-    white-space: normal;
+.text-component-action-placeholder {
     display: inline-block;
+    box-sizing: border-box;
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+    min-height: var(--freon-inline-height);
+    padding-inline: var(--freon-inline-padding-x);
+}
+
+/*******************************************************
+ *  Multiline TextComponent
+ *******************************************************/
+.multiline-text-component {
+    box-sizing: border-box;
+    display: block;
+
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+
+    padding-inline: 0.125rem;
+    margin: 0;
+
     height: auto;
+    min-height: calc(2 * var(--freon-inline-line-height));
+
     resize: both;
-    field-sizing: content;  
+    field-sizing: content;
+
+    outline: none;
+    vertical-align: top;
 }
 
 /*******************************************************
  *  NumericSliderComponent
  *******************************************************/
- .numeric-slider-component {
-     max-width: 320px;
-     margin-top: 1.5rem;
-     position: relative;
-     flex: 1;
-     display: flex;
-     align-items: center;
- }
+.numeric-slider-component {
+    max-width: 320px;
+    margin-top: 1.5rem;
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
 
 /* Base slider styling */
 .numeric-slider-input {
@@ -744,9 +808,14 @@
 }
 
 /* Focus style */
-.numeric-slider-input:focus-visible::-webkit-slider-thumb,
+.numeric-slider-input:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 2px var(--numeric-slider-thumb-shadow-color),
+    0 0 0 5px var(--numeric-slider-focus-ring-color);
+}
+
 .numeric-slider-input:focus-visible::-moz-range-thumb {
-    box-shadow: 0 0 0 3px var(--numeric-slider-focus-ring-color);
+    box-shadow: 0 0 0 2px var(--numeric-slider-thumb-shadow-color),
+    0 0 0 5px var(--numeric-slider-focus-ring-color);
 }
 
 .numeric-slider-tooltip {
@@ -780,33 +849,7 @@
     border-style: solid;
     border-color: var(--numeric-slider-tooltip-background-color) transparent transparent transparent;
 }
-/*******************************************************
- *  TextDropdownComponent
- *******************************************************/
-.text-dropdown-component {
-    display: inline-block;
-}
-.text-dropdown-component-text-wrapper {
-}
-.reference-button {
-    border: none;
-    height: 12px;
-    padding-left: 0px;
-    padding-right: 0px;
-    width: 16px;
-}
-.reference-arrow {
-    height: 12px;
-}
-.text-dropdown-panel {
-    position: absolute;
-    pointer-events: auto;
-}
-.dropdown-component-container {
-    display: inline-block;
-    max-height: 300px;
-    overflow-y: auto;
-}
+
 /*******************************************************
  *  DropdownComponent
  *******************************************************/
@@ -815,54 +858,76 @@
     border-style: solid;
     border-radius: 2px;
     opacity: 1;
+    z-index: 95;
     display: flex;
     flex-direction: column;
     gap: 2px;
     min-width: 120px;
     width: fit-content;
     margin-top: 3px;
+    position: absolute;
+    padding: 2px;
 }
+
 .dropdown-component-item {
     white-space: nowrap;
     border: none;
     border-radius: 2px;
-    padding: 0px;
-    margin: 5px;
     cursor: pointer;
     text-align: left;
-    display: flex;
-    justify-content: space-between;
     gap: 2px;
-    place-items: center;
+
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+
+    font-size: var(--freon-inline-font-size);
+    line-height: var(--freon-inline-line-height);
+
+    min-height: var(--freon-inline-row-height);
+    padding-inline: var(--freon-inline-padding-x);
 }
+
 .dropdown-component-error {
     display: block;
     white-space: nowrap;
     border: none;
 }
+
 .dropdown-component-item:hover {
 }
-.dropdown-component-selected {
-    border: none;
+
+.dropdown-component-container {
+    position: relative;
 }
+
 .dropdown-entry-with-additional-label {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     box-sizing: border-box;
     width: 100%;
+    align-items: center;
 }
+
 .column-for-dropdown-entry-with-additional-label {
     display: flex;
     flex-direction: column;
-    /*flex: 1;*/
+    white-space: nowrap;
 }
+
+.column-for-dropdown-entry-with-additional-label:last-child {
+    width: 100%;
+    text-align: right;
+}
+
 .gap-for-dropdown-entry-with-additional-label {
     margin: 0 0.7rem 0 0.7rem;
     flex: 1;
 }
+
 /*******************************************************
- *  BooleanInnerSwitchComponent
+ *  Inner Switch Component
  *******************************************************/
 .inner-switch-component button {
     margin: 4px 6px 4px 6px;
@@ -896,15 +961,17 @@
     align-items: flex-start;
     gap: 4px;
 }
+
 .optional-component-tooltip-anchor {
     position: relative;
     display: inline-flex;
     align-items: center;
 }
+
 .optional-component-tooltip { /* non-colors props */
     position: absolute;
-    bottom: 100%;   /* above */
-    left: 0;        /* align left edge with button */
+    bottom: 100%; /* above */
+    left: 0; /* align left edge with button */
 
     margin-bottom: 3px; /* gap between button and tooltip */
 
@@ -922,6 +989,11 @@
     /* to make it feel a bit smoother without being “animated” in a distracting way */
     transition: opacity 120ms ease, visibility 0s linear 120ms;
 }
+
+.optional-component-placeholder {
+    line-height: 1;
+}
+
 /* rule to show the tooltip */
 .optional-component-tooltip-anchor:hover .optional-component-tooltip,
 .optional-component-tooltip-anchor:focus-within .optional-component-tooltip {
@@ -929,11 +1001,13 @@
     visibility: visible;
     transition: opacity 120ms ease;
 }
+
 .optional-component-button { /* non-colors props */
     /* layout */
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    vertical-align: top;
 
     /* sizing */
     padding: 0;
@@ -944,19 +1018,22 @@
     /* visuals */
     cursor: pointer;
 }
+
 .optional-component-button.text-mode {
-    font-size: 0.85rem;        /* normal readable text */
+    font-size: 0.85rem; /* normal readable text */
     line-height: normal;
     justify-content: flex-start;
     padding: 2px 6px;
     margin-block: 2px; /* vertical spacing between rows */
     opacity: 0.5;
 }
+
 .delete-icon { /* non-colors props */
     width: 1em;
     height: 1em;
     flex-shrink: 0;
 }
+
 .add-icon { /* non-colors props */
     width: 1em;
     height: 1em;
@@ -970,12 +1047,15 @@
     box-sizing: border-box;
     display: flex;
 }
+
 .render-component-unselected {
     border: none;
 }
+
 .render-component-selected > span {
     outline-style: solid;
     outline-width: 1px;
+    height: fit-content;
 }
 
 /* begin styling boolean switch component */
@@ -1002,10 +1082,9 @@
     border-radius: 1.5em;
     border: var(--switch-border-width) solid var(--switch-border-color-off);
 
-    transition:
-            background-color 0.2s ease,
-            border-color 0.2s ease,
-            box-shadow 0.2s ease;
+    transition: background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 /* Knob */
@@ -1046,38 +1125,53 @@
     box-shadow: 2px 2px 8px var(--switch-shadow-color);
     outline: none; /* if you manage focus elsewhere */
 }
+
 /* end styling boolean switch component */
 
+/*******************************************************
+ *  TableComponent
+ *******************************************************/
 .table-component {
     display: inline-grid;
     grid-gap: 2px;
-    align-items: center; /* place-items is an abbreviation for align-items and justify-items */
-    justify-items: center;
-    align-content: center;
-    border-width: 1pt;
+
+    align-items: start;
+    justify-items: start;
+    align-content: start;
+
+    border-width: 1px;
     border-style: dashed;
     border-radius: 4px;
 }
 
 .table-cell-component {
     display: flex;
-    align-self: auto;
     align-items: flex-start;
     box-sizing: border-box;
-    align-self: baseline; /* isn't this the default? */
-    justify-self: baseline;
+    align-self: start;
+    justify-self: start;
     margin: 1px;
 }
 
 .table-cell-component-unselected {
     border: none;
 }
+
 .table-cell-component-selected {
     outline-style: solid;
     outline-width: 1px;
 }
 
 /* The container styling - needed to position the dropdown content */
+.text-dropdown-component {
+    display: inline-block;
+}
+
+.text-dropdown-component-text-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
 
 .grid-component {
     display: inline-grid;
@@ -1085,7 +1179,7 @@
     align-items: center;
     align-content: center;
     justify-items: center;
-    border-width: 1pt;
+    border-width: 1px;
     border-style: dashed;
 }
 
@@ -1097,14 +1191,26 @@
     margin: 1px;
 }
 
-textarea {
-    outline: none;
-    vertical-align: top;
+.reference-button {
+    border: none;
+    width: 16px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    line-height: 1;
+    position: relative;
+    top: -2px;
 }
 
-.render-component-selected > span {
-    height: fit-content;
+.reference-arrow {
+    height: 12px;
 }
+
 .boolean-checkbox-component {
     vertical-align: top;
 }

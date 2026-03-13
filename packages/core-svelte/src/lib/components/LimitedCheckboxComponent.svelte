@@ -15,16 +15,16 @@
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
-    let { editor, box }: FreComponentProps<LimitedControlBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<LimitedControlBox> = $props();
 
     const LOGGER = LIMITEDCHECKBOX_LOGGER;
 
-    let id: string = box.id;
-    let currentNames: string[] = $state(box.getNames());
-    let myEnum: string[] = box.getPossibleNames();
+    let id: string = $derived(box.id)
+    let currentNames: string[] = $derived(box.getNames());
+    let myEnum: string[] = $derived(box.getPossibleNames())
     let allElements: HTMLInputElement[] = $state([]);
-    let ariaLabel: string = box.propertyName;
-    let isHorizontal: boolean = box.horizontal;
+    let ariaLabel: string = $derived(box.propertyName)
+    let isHorizontal: boolean = $derived(box.horizontal);
 
     const onClick = (event: MouseEvent) => {
         // console.log("onClick")
@@ -51,7 +51,7 @@
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {
@@ -151,32 +151,62 @@
     };
 </script>
 
-<span
-  role="group"
-  aria-labelledby={ariaLabel}
-  {id}
-  class="limited-checkbox-component-group"
-  class:limited-checkbox-component-vertical={!isHorizontal}
->
-    {#each myEnum as nn, i}
-        <span class="limited-checkbox-component-single">
-            <label class="limited-checkbox-component-label">
-                <input
-                  class="limited-checkbox-component-input"
-                  type="checkbox"
-                  id="{id}-{nn}-{i}"
-                  value={nn}
-                  checked={isChecked(nn)}
-                  aria-label="checkbox-{nn}"
-                  aria-checked={isChecked(nn)}
-                  tabindex={0}
-                  onchange={() => changed(nn)}
-                  onclick={onClick}
-                  onkeydown={onKeyDown}
-                  bind:this={allElements[i]}
-                >
-                {nn}
-            </label>
-        </span>
-    {/each}
-</span>
+{#if readonly}
+    <span
+        role="group"
+        aria-labelledby={ariaLabel}
+        {id}
+        class="limited-checkbox-component-group readonly"
+        class:readonly={readonly}
+        class:limited-checkbox-component-vertical={!isHorizontal}
+    >
+        {#each myEnum as nn, i}
+            <span class="limited-checkbox-component-single readonly" class:readonly={readonly}>
+                <label class="limited-checkbox-component-label readonly" class:readonly={readonly}>
+                    <input
+                        class="limited-checkbox-component-input readonly" class:readonly={readonly}
+                        type="checkbox"
+                        id="{id}-{nn}-{i}"
+                        value={nn}
+                        checked={isChecked(nn)}
+                        aria-label="checkbox-{nn}"
+                        aria-checked={isChecked(nn)}
+                        tabindex={0}
+                        disabled
+                    >
+                    {nn}
+                </label>
+            </span>
+        {/each}
+    </span>
+{:else}
+    <span
+        role="group"
+        aria-labelledby={ariaLabel}
+        {id}
+        class="limited-checkbox-component-group"
+        class:limited-checkbox-component-vertical={!isHorizontal}
+    >
+        {#each myEnum as nn, i}
+            <span class="limited-checkbox-component-single">
+                <label class="limited-checkbox-component-label">
+                    <input
+                        class="limited-checkbox-component-input"
+                        type="checkbox"
+                        id="{id}-{nn}-{i}"
+                        value={nn}
+                        checked={isChecked(nn)}
+                        aria-label="checkbox-{nn}"
+                        aria-checked={isChecked(nn)}
+                        tabindex={0}
+                        onchange={() => changed(nn)}
+                        onclick={onClick}
+                        onkeydown={onKeyDown}
+                        bind:this={allElements[i]}
+                    >
+                    {nn}
+                </label>
+            </span>
+        {/each}
+    </span>
+{/if}

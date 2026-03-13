@@ -50,6 +50,7 @@
     let {
         editor,
         box,
+        readonly,
         parentComponentId,
         parentOrientation,
         ondropOnCell
@@ -59,9 +60,9 @@
 
     // local variables
     const LOGGER = TABLECELL_LOGGER;
-    let id: string = notNullOrUndefined(box)
+    let id: string = $derived(notNullOrUndefined(box)
         ? `cell-${componentId(box)}`
-        : 'table-cell-for-unknown-box';
+        : 'table-cell-for-unknown-box');
 
     let row: number = $state(0);
     let column: number = $state(0);
@@ -92,7 +93,7 @@
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {
@@ -104,7 +105,7 @@
     });
 
     // Note that this component is never part of a RenderComponent, therefore we must handle being selected here
-    let selectedCls: string = $state(''); // css class name for when the node is selected
+    let selectedCls: string = $state(''); // CSS class name for when the node is selected
 
     $effect(() => {
         // runs after the initial onMount
@@ -250,33 +251,48 @@
     }
 </script>
 
-<!-- on:blur is needed for on:mouseout -->
-<!-- Apparently, we cannot combine multiple inline style directives, as in -->
-<!--  style="grid-row: '{row}' grid-column: '{column}' {cssStyle}"-->
-<span
-    {id}
-    role="cell"
-    class="table-cell-component {orientation} {isHeader} {cssClass} {selectedCls} {box.cssClass}"
-    style:grid-row={row}
-    style:grid-column={column}
-    style={cssStyle}
-    onkeydown={onKeydown}
-    ondrop={(event) => drop(event)}
-    ondragenter={(event) => dragenter(event)}
-    ondragover={(event) => {
+{#if readonly}
+        <span
+            {id}
+            role="cell"
+            class="table-cell-component {orientation} {isHeader} {cssClass} {selectedCls} {box.cssClass} readonly"
+            style:grid-row={row}
+            style:grid-column={column}
+            style={cssStyle}
+            bind:this={htmlElement}
+            tabindex={-1}
+        >
+            <RenderComponent box={childBox} {editor} {readonly} />
+    </span>
+{:else}
+    <!-- on:blur is needed for on:mouseout -->
+    <!-- Apparently, we cannot combine multiple inline style directives, as in -->
+    <!--  style="grid-row: '{row}' grid-column: '{column}' {cssStyle}"-->
+    <span
+        {id}
+        role="cell"
+        class="table-cell-component {orientation} {isHeader} {cssClass} {selectedCls} {box.cssClass}"
+        style:grid-row={row}
+        style:grid-column={column}
+        style={cssStyle}
+        onkeydown={onKeydown}
+        ondrop={(event) => drop(event)}
+        ondragenter={(event) => dragenter(event)}
+        ondragover={(event) => {
                 event.preventDefault();
             }}
-    onmouseout={(event) => mouseout(event)}
-    onblur={() => {}}
-    oncontextmenu={(event) => showContextMenu(event)}
-    bind:this={htmlElement}
-    tabindex={-1}
->
+        onmouseout={(event) => mouseout(event)}
+        onblur={() => {}}
+        oncontextmenu={(event) => showContextMenu(event)}
+        bind:this={htmlElement}
+        tabindex={-1}
+    >
     {#if isHeader.length === 0 && box.isFirstInElementBox()}
                 <span class="drag-handle"
                       draggable="true"
                       ondragstart={(event) => dragstart(event)}
                       role="listitem"><DragHandle/></span>
     {/if}
-    <RenderComponent box={childBox} {editor} />
+        <RenderComponent box={childBox} {editor} {readonly} />
 </span>
+{/if}

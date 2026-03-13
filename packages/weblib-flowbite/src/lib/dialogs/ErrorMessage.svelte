@@ -3,7 +3,7 @@
 	import Dialog from "$lib/dialogs/Dialog.svelte"
 	import { InfoCircleSolid } from 'flowbite-svelte-icons';
 	import { CloseButton } from "flowbite-svelte"
-	
+
 	const close = () => {
 		userMessageOpen.value = false
 		WebappConfigurator.getInstance().langEnv?.editor?.selectionChanged()

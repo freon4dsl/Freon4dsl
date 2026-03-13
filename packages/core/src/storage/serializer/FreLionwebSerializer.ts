@@ -3,6 +3,7 @@ import type { LionWebJsonChunk, LionWebJsonContainment, LionWebJsonMetaPointer, 
 import { runInAction } from "mobx";
 import type { FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreNodeReference } from "../../ast/index.js";
+import { FREON } from "../../environment/index.js"
 import { FreLanguage } from "../../language/index.js";
 import type { FreLanguageProperty } from "../../language/index.js";
 import { FreLogger } from "../../logging/index.js";
@@ -197,7 +198,7 @@ export class FreLionwebSerializer implements FreSerializer {
             return null;
         }
         // Store id, so it will not be used for new instances
-        FreUtils.nodeIdProvider.usedId(tsObject.freId());
+        FREON.idProvider.usedId(tsObject.freId());
         const parsedLimiteds = this.convertPrimitiveProperties(tsObject, conceptMetaPointer.key, node);
         const parsedChildren = this.convertChildProperties(conceptMetaPointer.key, node);
         const parsedReferences = this.convertReferenceProperties(conceptMetaPointer.key, node);

@@ -15,7 +15,6 @@ import { SimpleIdProvider } from "./SimpleIdProvider.js";
 
 export class FreUtils {
     // Default generators initialized below the class declaration
-    static nodeIdProvider: IdProvider = new SimpleIdProvider("ID-");
     static boxIdProvider: IdProvider;
 
     /**
@@ -23,14 +22,13 @@ export class FreUtils {
      * Use only in tests to ensure the IDs there always start at 0.
      */
     static resetId(): void {
-        this.nodeIdProvider = new SimpleIdProvider("ID-");
         this.boxIdProvider = new SimpleIdProvider("BOX-");
     }
     /**
      * Returns a new unique ID for a {@link FreNode} by delegating to {@link nodeIdProvider}.
      */
     static ID(): string {
-        return this.nodeIdProvider.newId();
+        return FREON.idProvider.newId();
     }
     /**
      * Returns a new unique ID for a {@link Box} by delegating to {@link boxIdProvider}

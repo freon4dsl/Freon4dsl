@@ -114,7 +114,7 @@ export class OptionalBox extends Box {
             })
         } else {
             FREON.astChanger.change(() => {
-                self.node[self.propertyName] = []
+                (self.node[self.propertyName] as []).length = 0
             })
         }
         LOGGER.log(`removeContent ${this.id}: "${this.node[this.propertyName]}"`)
