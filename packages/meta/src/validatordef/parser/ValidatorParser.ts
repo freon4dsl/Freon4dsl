@@ -4,6 +4,7 @@ import { ValidatorChecker } from "../metalanguage/index.js";
 import type { ValidatorDef } from "../metalanguage/index.js";
 import { setCurrentFileName } from "./ValidatorCreators.js";
 import { setCurrentFileName as expressionFileName } from "../../langexpressions/parser/ExpressionCreators.js";
+// eslint-disable-next-line n/no-missing-import
 import { parse } from "./ValidatorGrammar.js";
 
 export class ValidatorParser extends FreGenericParser<ValidatorDef> {

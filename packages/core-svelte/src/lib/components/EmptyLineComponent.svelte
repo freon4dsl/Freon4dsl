@@ -7,7 +7,6 @@
     import type { EmptyLineBox } from '@freon4dsl/core';
     import { isNullOrUndefined } from '@freon4dsl/core';
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let { box, readonly }: FreComponentProps<EmptyLineBox> = $props();
     let id: string = $derived(isNullOrUndefined(box) ? componentId(box) : 'empty-line-for-unknown-box');
 </script>

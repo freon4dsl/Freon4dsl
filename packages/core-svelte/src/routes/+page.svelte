@@ -31,6 +31,7 @@
 
     let editor = new FreEditor(new FreProjectionHandler(), new FreLanguageEnvironment());
 
+    const readonly=false
     // for TryComponent
     let textVar2: string = $state('start try');
     let textBox2: TextBox = new TextBox(
@@ -185,7 +186,7 @@
         <a href="./render">Tests that use RenderComponent</a>
         <a href="./dragdrop">Drag and Drop tests</a>
         <a href="./tabbing">Selection tests</a>
-        <a href="./expandable">New Components</a>
+        <a Eslint errorhref="./expandable">New Components</a>
     </div>
 </div>
 
@@ -200,6 +201,7 @@
                 text=""
                 partOfDropdown={false}
                 toParent={(eventType, details) => {console.log(eventType + jsonAsString(details))} }
+                {readonly}
             />
             current value:
             {textVar}
@@ -209,34 +211,35 @@
             Test MultiLineTextComponent: <MultiLineTextComponent
                 box={multiTextBox}
                 {editor}
+                {readonly}
             />
             current value:
             {multiTextVar}
             <hr class="line" />
         </li>
         <li>
-            Test ButtonComponent: <ButtonComponent {editor} box={buttonBox} />
+            Test ButtonComponent: <ButtonComponent {editor} box={buttonBox} {readonly}/>
             <hr class="line" />
         </li>
         <li>
-            Test BooleanCheckboxComponent: <BooleanCheckboxComponent {editor} box={booleanBox} /> current
+            Test BooleanCheckboxComponent: <BooleanCheckboxComponent {editor} box={booleanBox} {readonly}/> current
             value:
             {boolVar}
             <hr class="line" />
         </li>
         <li>
-            Test BooleanRadioComponent: <BooleanRadioComponent {editor} box={booleanBox2} /> current
+            Test BooleanRadioComponent: <BooleanRadioComponent {editor} box={booleanBox2} {readonly}/> current
             value:
             {boolVar2}
             <hr class="line" />
         </li>
         <li>
-            Test InnerSwitchComponent: <InnerSwitchComponent {editor} box={booleanBox3} /> current value:
+            Test InnerSwitchComponent: <InnerSwitchComponent {editor} box={booleanBox3} {readonly}/> current value:
             {boolVar3}
             <hr class="line" />
         </li>
         <li>
-            Test BooleanSwitchComponent: <BooleanSwitchComponent {editor} box={booleanBox4} /> current
+            Test BooleanSwitchComponent: <BooleanSwitchComponent {editor} box={booleanBox4} {readonly}/> current
             value:
             {boolVar4}
             <hr class="line" />
@@ -250,7 +253,7 @@
             <hr class="line" />
         </li>
         <li>
-            Test NumericSliderComponent: <NumericSliderComponent {editor} box={numericBox1} />
+            Test NumericSliderComponent: <NumericSliderComponent {editor} box={numericBox1} {readonly}/>
             current value:
             {numVar1}
             <hr class="line" />
@@ -275,13 +278,13 @@
         <li>
             Test EmptyLineComponent: there should be a line break between the following two texts.
             TEXT1
-            <EmptyLineComponent {editor} box={elementBox} />
+            <EmptyLineComponent {editor} box={elementBox} {readonly}/>
             TEXT2
             <hr class="line" />
         </li>
         <li>
             Test SvgComponent:
-            <SvgComponent {editor} box={svgBox} />
+            <SvgComponent {editor} box={svgBox} {readonly}/>
             TODO: SvgBox needs viewBoxHeight, viewBoxWidth, viewPortHeight, viewPortWidth, and cssStyle.
             Have params for these in the constructor.
             <hr class="line" />

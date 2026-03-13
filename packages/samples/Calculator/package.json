@@ -16,7 +16,8 @@
         "test": "vitest run"
     },
     "devDependencies": {
-        "@freon4dsl/meta": "~2.1.0"
+        "@freon4dsl/meta": "~2.1.0",
+        "vitest": "3.2.4"
     },
     "dependencies": {
         "@freon4dsl/core": "~2.1.0",

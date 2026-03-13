@@ -167,7 +167,7 @@
                 // $selectedBoxes = [elemBox];
             }
             // determine the contents of the menu based on listBox, before showing the menu!
-            let items: MenuItem[] = [];
+            let items: MenuItem[];
             if (isActionBox(elemBox)) {
                 // the selected box is the placeholder => show different menu items
                 items = box.options(MenuOptionsType.placeholder);
@@ -224,8 +224,7 @@
             FREON.astChanger.changeNamed("ListComponent.Enter", () => {
                 execresult = action.execute(box, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, index + 1)
             })
-            // @ts-ignore
-            if (!!execresult) {
+            if (notNullOrUndefined(execresult)) {
                 execresult();
             }
         }
