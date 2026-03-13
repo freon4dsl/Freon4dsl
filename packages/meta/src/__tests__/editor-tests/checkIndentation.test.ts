@@ -7,8 +7,8 @@ import type {
     FreEditProjectionGroup,
     FreEditProjectionItem,
     FreEditUnit,
-    FreOptionalPropertyProjection,
 } from "../../editordef/metalanguage/index.js"
+import { FreOptionalPropertyProjection } from "../../editordef/metalanguage/index.js"
 import { describe, test, expect, beforeEach } from "vitest";
 import { resolveAstFile, resolveTestDir } from '../TestPathHelpers.js';
 

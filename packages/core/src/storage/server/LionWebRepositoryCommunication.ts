@@ -14,7 +14,7 @@ import { FreLanguage } from '../../language/index.js';
 const LOGGER = new FreLogger("LionWebRepositoryCommunication");
 
 export class LionWebRepositoryCommunication implements IServerCommunication {
-    client = new RepositoryClient("Freon", "default");
+    client = new RepositoryClient({clientId: "Freon", repository: "default"});
     lionweb_serial: FreSerializer = new FreLionwebSerializer();
     static instance: LionWebRepositoryCommunication;
 
