@@ -2,9 +2,9 @@
 // TEMPLATE ConceptTemplate.generateConceptPrivate(...)
 // ... and customized for the test !
 
-import { observablepart, type FreExpressionNode, FreNodeReference } from "../../../ast/index.js";
-import { FreParseLocation } from '../../../reader/index.js';
-import { CalcExpression, InputField } from "./internal.js";
+import { observablepart, type FreExpressionNode, type FreNodeReference } from "../../../ast/index.js"
+import { type FreParseLocation } from "../../../reader/index.js"
+import { CalcExpression, type InputField } from "./internal.js"
 
 /**
  * Class InputFieldReference is the implementation of the concept with the same name in the language definition file.

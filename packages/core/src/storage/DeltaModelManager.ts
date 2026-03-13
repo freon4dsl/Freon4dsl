@@ -8,7 +8,7 @@ import { newSignOnRequest } from "./lionweb-delta/commands.js"
 import { ModelManagementError } from "./IModelManager.js"
 import { ModelManager } from "./ModelManager.js"
 import { FreLionwebSerializer } from "./serializer/index.js"
-import type { FreUnitIdentifier } from "./server/index.js"
+import { type FreUnitIdentifier, LionwebDeltaIdProvider } from "./server/index.js"
 
 const LOGGER: FreLogger = new FreLogger("DeltaModelManager")
 
@@ -22,7 +22,8 @@ export class DeltaModelManager extends ModelManager {
     async createModel(name: string): Promise<FreModel | ModelManagementError> {
         const result = await super.createModel(name)
         const date = new Date()
-        FREON.deltaClient.deltaApiClient.sendRequest(newSignOnRequest(name, "FreonEditor-" + date.getHours() + ":" + date.getSeconds()))
+        FREON.deltaClient.deltaApiClient.sendRequest(newSignOnRequest(name, "FreonEditor-" + date.getHours() + ":" + date.getSeconds()));
+        ((FREON.idProvider) as LionwebDeltaIdProvider).sendIdRequest()
         return result
         //     LOGGER.log(`createModel ${name}`)
         //     const createRepository: CreateRepositoryAdminRequest = {
@@ -75,7 +76,8 @@ export class DeltaModelManager extends ModelManager {
         FREON.astChanger.cleanUndoRedo()
         // await FREON.deltaClient.connect()
         const date = new Date()
-        FREON.deltaClient.deltaApiClient.sendRequest(newSignOnRequest(name, "FreonEditor-" + date.getHours() + ":" + date.getSeconds()))
+        FREON.deltaClient.deltaApiClient.sendRequest(newSignOnRequest(name, "FreonEditor-" + date.getHours() + ":" + date.getSeconds()));
+        (FREON.idProvider as LionwebDeltaIdProvider).sendIdRequest();
         FREON.deltaClient.deltaApiClient.sendRequest(listPartitions)
         return this.model
     }

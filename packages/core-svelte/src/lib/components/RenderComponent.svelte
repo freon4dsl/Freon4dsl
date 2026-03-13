@@ -1,6 +1,5 @@
 <script lang="ts">
     import { RENDER_LOGGER } from './ComponentLoggers.js';
-    import { tick } from "svelte"
     // This component renders any box from the box model.
     // Depending on the box type the right component is used.
     // It also makes the rendered element selectable, including changing the style.
@@ -70,13 +69,12 @@
 
     const LOGGER = RENDER_LOGGER;
 
-    let { editor, box }: FreComponentProps<Box> = $props();
+    let { editor, box, readonly }: FreComponentProps<Box> = $props();
 
-    let id: string = $state('');
-    id = notNullOrUndefined(box) ? `render-${componentId(box)}` : 'render-for-unknown-box';
+    let id: string = $derived(notNullOrUndefined(box) ? `render-${componentId(box)}` : 'render-for-unknown-box');
     let element: HTMLElement | undefined = $state(undefined);
 
-    // css class name for when the node is selected
+    // CSS class name for when the node is selected
     let selectedCls: string = $derived.by(() => {
         LOGGER.log(`Render derived: selectedCls ${box?.id}`)
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
@@ -103,7 +101,7 @@
         }
     });
 
-    // css class name for when the node is erroneous
+    // CSS class name for when the node is erroneous
     let errorCls: string = $derived.by(() => {
         if (notNullOrUndefined(box) && box.hasError) {
             return 'render-component-error';
@@ -126,7 +124,7 @@
 
     const onClick = (event: MouseEvent) => {
         LOGGER.log(
-            'RenderComponent.onClick for box ' + box.role + ', selectable:' + box.selectable
+            `RenderComponent.onClick for box ${box.role} selectable: ${box.selectable} readonly: ${readonly}` 
         );
         // Note that click events on some components, like TextComponent, are already caught.
         // These components need to take care of setting the currently selected element themselves.
@@ -162,16 +160,17 @@
      Their children are, and each child gets its own surrounding RenderComponent.
 -->
 {#if isElementBox(box)}
-    <ElementComponent {box} {editor} />
+    <ElementComponent {box} {editor} {readonly} />
 {:else}
     {#if errMess.length > 0 && notNullOrUndefined(element)}
-        <ErrorMarker {box} {editor} />
+        <ErrorMarker {box} {editor} {readonly} />
     {/if}
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions a11y_click_events_have_key_events -->
     <!--	svelte-ignore a11y_click_events_have_key_events -->
     <span
         {id}
         class="render-component {errorCls} {selectedCls}"
+        class:readonly={readonly}
         onclick={onClick}
         bind:this={element}
         role="group"
@@ -179,55 +178,55 @@
         {#if box === null || box === undefined}
             <p class="error">[BOX IS NULL OR UNDEFINED]</p>
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.CHECKBOX}
-            <BooleanCheckboxComponent {box} {editor} />
+            <BooleanCheckboxComponent {box} {editor} {readonly} />
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.RADIO_BUTTON}
-            <BooleanRadioComponent {box} {editor} />
+            <BooleanRadioComponent {box} {editor} {readonly} />
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.SWITCH}
-            <SwitchComponent {box} {editor} />
+            <SwitchComponent {box} {editor} {readonly} />
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.INNER_SWITCH}
-            <InnerSwitchComponent {box} {editor} />
+            <InnerSwitchComponent {box} {editor} {readonly} />
         {:else if isNumberControlBox(box)}
-            <NumericSliderComponent {box} {editor} />
+            <NumericSliderComponent {box} {editor} {readonly} />
         {:else if isLimitedControlBox(box) && box.showAs === LimitedDisplay.RADIO_BUTTON}
-            <LimitedRadioComponent {box} {editor} />
+            <LimitedRadioComponent {box} {editor} {readonly} />
         {:else if isLimitedControlBox(box) && box.showAs === LimitedDisplay.CHECKBOX}
-            <LimitedCheckboxComponent {box} {editor} />
+            <LimitedCheckboxComponent {box} {editor} {readonly} />
         {:else if isButtonBox(box)}
-            <ButtonComponent {box} {editor} />
+            <ButtonComponent {box} {editor} {readonly} />
         {:else if isExternalBox(box)}
             {#if notNullOrUndefined(ExternalComponent)}
-                <ExternalComponent {box} {editor}></ExternalComponent>
+                <ExternalComponent {box} {editor} {readonly} ></ExternalComponent>
             {:else}
                 <p class="render-component-error">
                     [UNKNOWN EXTERNAL BOX TYPE: {box.externalComponentName}]
                 </p>
             {/if}
         {:else if isFragmentBox(box)}
-            <FragmentComponent {box} {editor} />
+            <FragmentComponent {box} {editor} {readonly} />
         {:else if isGridBox(box)}
-            <GridComponent {box} {editor} />
+            <GridComponent {box} {editor} {readonly} />
         {:else if isIndentBox(box)}
-            <IndentComponent {box} {editor} />
+            <IndentComponent {box} {editor} {readonly} />
         {:else if isLabelBox(box)}
-            <LabelComponent {box} {editor} />
+            <LabelComponent {box} {editor} {readonly} />
         {:else if isLayoutBox(box)}
-            <LayoutComponent {box} {editor} />
+            <LayoutComponent {box} {editor} {readonly} />
         {:else if isListBox(box)}
-            <ListComponent {box} {editor} />
+            <ListComponent {box} {editor} {readonly} />
         {:else if isOptionalBox(box)}
-            <OptionalComponent {box} {editor} />
+            <OptionalComponent {box} {editor} {readonly} />
         {:else if isSvgBox(box)}
-            <SvgComponent {box} {editor} />
+            <SvgComponent {box} {editor} {readonly} />
         {:else if isTableBox(box)}
-            <TableComponent {box} {editor} />
+            <TableComponent {box} {editor} {readonly} />
         {:else if isTextBox(box)}
-            <TextComponent {box} {editor} partOfDropdown={false} text="" isEditing={false} toParent={() => {} } />
+            <TextComponent {box} {editor} {readonly} partOfDropdown={false} text="" isEditing={false} toParent={() => {} } />
         {:else if isMultiLineTextBox(box)}
-            <MultiLineTextComponent {box} {editor} />
+            <MultiLineTextComponent {box} {editor} {readonly} />
         {:else if isActionBox(box) || isSelectBox(box) || isReferenceBox(box)}
-            <TextDropdownComponent {box} {editor} />
+            <TextDropdownComponent {box} {editor} {readonly} />
         {:else if isEmptyLineBox(box)}
-            <EmptyLineComponent {box} {editor} />
+            <EmptyLineComponent {box} {editor} {readonly} />
         {:else}
             <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
             <p class="render-component-unknown-box">[UNKNOWN BOX TYPE: {box['kind']}]</p>

@@ -72,29 +72,21 @@
     // for OptionalComponent
     let optionalNode: FreNode = new SimpleElement('optional');
     let content = layoutBox2;
-    let mustShow: boolean = false;
-    let optionalCond: boolean = $state(false);
-    let placeholder = new LabelBox(optionalNode, 'element-label-box', () => {
-        return 'placeholder';
-    });
+    let placeholder = 'placeholder';
     let optionalBox: OptionalBox = new OptionalBox(
         optionalNode,
         'optional',
-        () => {
-            return optionalCond;
-        },
-        content,
-        mustShow,
-        placeholder
+        placeholder,
+        content
     );
     let conditionString: string = $state('false');
 
     function onChange() {
-        if (conditionString === 'false') {
-            optionalCond = false;
-        } else if (conditionString === 'true') {
-            optionalCond = true;
-        }
+        // if (conditionString === 'false') {
+        //     optionalCond = false;
+        // } else if (conditionString === 'true') {
+        //     optionalCond = true;
+        // }
     }
 </script>
 

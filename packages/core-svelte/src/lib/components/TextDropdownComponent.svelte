@@ -33,9 +33,9 @@
     const LOGGER = TEXTDROPDOWN_LOGGER;
 
     // Props
-    let { editor, box }: FreComponentProps<AbstractChoiceBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<AbstractChoiceBox> = $props();
     // the textbox that is to be coupled to the TextComponent part
-    let textBox: TextBox = $state(box.textBox)!; // NB the initial value must be here, the effect starts to function after initialization
+    let textBox: TextBox = $derived(box.textBox)!; // NB the initial value must be here, the effect starts to function after initialization
     // True if box is a referencebox and referred is in the same unit
     let selectAbleReference: boolean = $state(false)
     // the dropdown part of this component
@@ -50,8 +50,7 @@
         selectAbleReference = isReferenceBox(box) && box.isSelectAble()
     });
     
-    let id: string = $state(''); // an id for the html element
-    id = notNullOrUndefined(box) ? componentId(box) : 'textdropdown-with-unknown-box';
+    let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'textdropdown-with-unknown-box'); // an id for the HTML element
     let isEditing: boolean = $state(false); // becomes true when the text field gets focus
     let dropdownShown: boolean = $state(false); // when true the dropdown element is shown
     let text: string = $state(''); // the text in the text field
@@ -191,7 +190,7 @@
         // wait until DOM updates and styles/layout settle
         await tick();
 
-        // now wait one more frame so images/css apply
+        // now wait one more frame so images/CSS apply
         requestAnimationFrame(() => {
             if (dropdownCmp) {
                 dropdownCmp?.scrollIntoViewIfNeeded();
@@ -527,6 +526,25 @@
     refresh();
 </script>
 
+{#if readonly}
+    <span
+        {id}
+        tabindex="-1"
+        class="text-dropdown-component {box.cssClass} readonly"
+        role="none"
+    >
+    <span class="text-dropdown-component-text-wrapper readonly">
+        <TextComponent
+            {editor} {readonly}
+            box={textBox}
+            partOfDropdown={true}
+            isEditing={false}
+            text={text}
+            toParent={fromInner}
+        />
+    </span>
+</span>
+{:else}
 <span
     {id}
     onkeydown={onKeyDown}
@@ -538,9 +556,9 @@
     class="text-dropdown-component {box.cssClass}"
     role="none"
 >
-    <div class="text-dropdown-component-text-wrapper">
+    <span class="text-dropdown-component-text-wrapper">
         <TextComponent
-            {editor}
+            {editor} {readonly}
             box={textBox}
             partOfDropdown={true}
             bind:isEditing
@@ -558,7 +576,7 @@
                 <ArrowUp />
             </button>
         {/if}
-    </div>
+    </span>
     {#if dropdownShown}
         <DropdownComponent
             bind:this={dropdownCmp}
@@ -568,3 +586,4 @@
         />
     {/if}
 </span>
+{/if}

@@ -8,8 +8,8 @@
     let { editor, box }: FreComponentProps<PartListReplacerBox> = $props();
 
     let panelOpen: boolean[] = $state([]);
-    let multipleStr: string | undefined = box.findParam("multi");
-    let multiplePar: boolean = $state(notNullOrUndefined(multipleStr) && multipleStr.length > 0);
+    let multipleStr: string | undefined = $derived(box.findParam("multi"));
+    let multiplePar: boolean = $derived(notNullOrUndefined(multipleStr) && multipleStr.length > 0);
     let headerContent: string[] = $state([]);
     // <html>Svelte: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'FreNode'.<br/>No index signature with a parameter of type 'string' was found on type 'FreNode'.
 

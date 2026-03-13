@@ -20,21 +20,21 @@
 
     const LOGGER = RADIO_LOGGER;
 
-    let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
+    let { editor, box, readonly }: FreComponentProps<BooleanControlBox> = $props();
 
-    let id: string = box.id;
+    let id: string = $derived(box.id);
     let trueElement: HTMLInputElement;
     let falseElement: HTMLInputElement;
     let undefinedElement: HTMLInputElement | undefined = $state(undefined);
-    let currentValue: boolean | undefined = $state(box.getBoolean());
-    let ariaLabel = box.propertyName;
-    let isHorizontal: boolean = box.horizontal;
+    let currentValue: boolean | undefined = $derived(box.getBoolean());
+    let ariaLabel = $derived(box.propertyName)
+    let isHorizontal: boolean = $derived(box.horizontal)
     let isOptional: boolean = $state(false); // is set in $effect to optionality from box
 
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {
@@ -117,13 +117,14 @@
     role="radiogroup"
     aria-labelledby={ariaLabel}
     class="freon-radio-group boolean-radio-component-group {box.cssClass}"
+    class:readonly={readonly}
     class:freon-radio-group-vertical={!isHorizontal}
     {id}
 >
-    <span class="freon-radio-item boolean-radio-component-single">
+    <span class="freon-radio-item boolean-radio-component-single" class:readonly={readonly}>
         <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
         <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
+        <label class="freon-radio-label boolean-radio-component-label" class:readonly={readonly} onclick={onClick}>
             <input
                 type="radio"
                 id="{id}-trueOne"
@@ -136,14 +137,15 @@
                 onchange={onChange}
                 onkeydown={onKeyDown}
                 bind:this={trueElement}
+                disabled={readonly}
             />
             {box.labels.yes}
         </label>
     </span>
-    <span class="freon-radio-item boolean-radio-component-single">
+    <span class="freon-radio-item boolean-radio-component-single" class:readonly={readonly}>
         <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
         <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
+        <label class="freon-radio-label boolean-radio-component-label" class:readonly={readonly} onclick={onClick}>
             <input
                 type="radio"
                 id="{id}-falseOne"
@@ -156,15 +158,16 @@
                 onchange={onChange}
                 onkeydown={onKeyDown}
                 bind:this={falseElement}
+                disabled={readonly}
             />
             {box.labels.no}
         </label>
     </span>
     {#if isOptional} 
-        <span class="freon-radio-item boolean-radio-component-single">
+        <span class="freon-radio-item boolean-radio-component-single" class:readonly={readonly}>
             <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
             <!-- svelte-ignore a11y_click_events_have_key_events -->
-            <label class="freon-radio-label boolean-radio-component-label" onclick={onClick}>
+            <label class="freon-radio-label boolean-radio-component-label" class:readonly={readonly} onclick={onClick}>
                 <input
                     type="radio"
                     id="{id}-undefinedOne"
@@ -177,6 +180,7 @@
                     onchange={onChange}
                     onkeydown={onKeyDown}
                     bind:this={undefinedElement}
+                    disabled={readonly}
                 />
                 {box.labels.unknown}
             </label>

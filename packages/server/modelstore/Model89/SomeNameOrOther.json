@@ -1,6 +1,11 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-Example",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-18",
@@ -20,6 +25,16 @@
             }
          ],
          "containments": [
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-ExampleUnit-documentation"
+               },
+               "children": [
+                  "ID-2"
+               ]
+            },
             {
                "containment": {
                   "language": "-key-Example",
@@ -53,6 +68,28 @@
          "references": [],
          "annotations": [],
          "parent": null
+      },
+      {
+         "id": "ID-2",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Documentation"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Documentation-text"
+               },
+               "value": "Some text to exlain what is happening in this unit.\n"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-18"
       },
       {
          "id": "ID-19",
@@ -145,7 +182,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "reference": "LIMITED-PrimitiveType-ID-0"
                   }
                ]
             }
@@ -181,7 +218,7 @@
                "targets": [
                   {
                      "resolveInfo": "Boolean",
-                     "reference": "ID-3"
+                     "reference": "LIMITED-PrimitiveType-ID-2"
                   }
                ]
             }
@@ -217,7 +254,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "reference": "LIMITED-PrimitiveType-ID-0"
                   }
                ]
             }
@@ -272,7 +309,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "LIMITED-PrimitiveType-ID-1"
                   }
                ]
             }
@@ -506,7 +543,8 @@
                },
                "children": [
                   "ID-34",
-                  "ID-35"
+                  "ID-35",
+                  "ID-3"
                ]
             }
          ],
@@ -520,7 +558,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "LIMITED-PrimitiveType-ID-1"
                   }
                ]
             }
@@ -607,7 +645,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "reference": "LIMITED-PrimitiveType-ID-0"
                   }
                ]
             }
@@ -644,6 +682,42 @@
                   {
                      "resolveInfo": "ent1",
                      "reference": "ID-19"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-31"
+      },
+      {
+         "id": "ID-3",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Parameter-name"
+               },
+               "value": "par3"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "++",
+                     "reference": "LIMITED-PrimitiveType-ID-3"
                   }
                ]
             }
@@ -744,7 +818,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "reference": "LIMITED-PrimitiveType-ID-0"
                   }
                ]
             }
@@ -780,7 +854,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "LIMITED-PrimitiveType-ID-1"
                   }
                ]
             }
@@ -923,7 +997,7 @@
                "targets": [
                   {
                      "resolveInfo": "Boolean",
-                     "reference": "ID-3"
+                     "reference": "LIMITED-PrimitiveType-ID-2"
                   }
                ]
             }
@@ -1056,7 +1130,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "LIMITED-PrimitiveType-ID-1"
                   }
                ]
             }

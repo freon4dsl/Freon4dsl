@@ -7,12 +7,14 @@ export const infoPanelShown = $state({
 
 export const searchResultLoading = $state({value: true});
 export const interpreterResultLoading = $state({value: true});
+export const deltaResultLoading = $state({ value: true })
 
 export interface ErrorInfoInterface {
     list: FreError[];
 }
 // the current list of search results that is shown in the editor
-export const searchResults: ErrorInfoInterface = $state({list: []});
+export const searchResults: ErrorInfoInterface = $state({ list: [] })
+export const searchText: {value: string} = $state({value: ""})
 
 
 export const errorsLoading = $state({value: true});
@@ -24,5 +26,6 @@ export const interpreterTrace: {value: TreeNodeData | undefined} = $state({value
 // the currently active tab and constants to indicate the tabs
 export const errorTab = "Errors";
 export const searchTab = "Search";
-export const interpreterTab = "Interpreter";
+export const interpreterTab = "Interpreter"
+export const deltaTab = "Processed Deltas"
 export const activeTab = $state({value: errorTab});

@@ -251,11 +251,7 @@ export class BoxProviderTemplate {
                         if (notNullOrUndefined(projectionName)) {
                             return superBoxProvider.getContentForSuper(projectionName);
                         } else {
-                            return BoxUtil.labelBox(
-                              ${elementVarName},
-                              "ERROR: no projection name provided for a super concept or interface",
-                              "super-projection-error-box1",
-                            );              
+                            return superBoxProvider.getContentForSuper("default")              
                         }
                     } else {
                         return BoxUtil.labelBox(${elementVarName},
@@ -263,7 +259,7 @@ export class BoxProviderTemplate {
                             'super-projection-error-box2'
                         );
                     }
-                }`;
+                }`
     }
 
     private generateProjectionForClassifier(

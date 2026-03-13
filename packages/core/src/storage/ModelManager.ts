@@ -23,6 +23,7 @@ export class ModelManager implements IModelManager {
                 this.currentModelChanged()
             }
         })
+        this.subscribe()
     }
 
     subscribe(): void {

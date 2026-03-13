@@ -14,14 +14,14 @@
         "errors-only": "svelte-check --threshold error --tsconfig ./tsconfig.json",
         "install-local": "npm install --registry http://localhost:4873",
         "format": "prettier --write .",
-        "styles": "cross-env NODE_ENV=production npx @tailwindcss/cli -i styles/webapp-styles.css -o ./public/site.css"
+        "styles": "cross-env NODE_ENV=production npx @tailwindcss/cli -i styles/webapp-styles.css -o ./public/site.css --minify"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^6.2.4",
         "@tailwindcss/vite": "^4.1.10",
         "@tailwindcss/cli": "^4.1.10",
         "@tsconfig/svelte": "^5.0.4",
-        "svelte-check": "^4.3.6",
+        "svelte-check": "^4.4.4",
         "svelte-preprocess": "^6.0.3",
         "tailwindcss": "^4.1.4",
         "typescript": "^5.8.2",

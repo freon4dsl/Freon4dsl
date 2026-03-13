@@ -2,7 +2,6 @@
     import { dialogs, editorInfo, setUserMessage, WebappConfigurator } from "$lib"
     import Dialog from "$lib/dialogs/Dialog.svelte"
     import { checkName } from "$lib/language/DialogHelpers"
-    import { cancelButtonClass, okButtonClass, textInputClass } from "$lib/stores/StylesStore.svelte"
     import { notNullOrUndefined } from "@freon4dsl/core"
     import { Button, Helper, Input } from "flowbite-svelte"
     import { FolderOpenSolid } from "flowbite-svelte-icons"
@@ -32,7 +31,7 @@
                     const name = newName
                     dialogs.newUnitDialogVisible = false;
                     resetVariables();
-                    const result = await WebappConfigurator.getInstance().newUnit(name, editorInfo.toBeCreated?.type);
+                    await WebappConfigurator.getInstance().newUnit(name, editorInfo.toBeCreated?.type);
                 } else {
                     setUserMessage('Cannot create a new unit, because its type is unknown.')
                 }
@@ -45,35 +44,51 @@
     const onInput = () => {
         helperText = checkName(newName);
     }
-
-    let  a = false
 </script>
 
 <Dialog open={dialogs.newUnitDialogVisible}>
-    <h3 class="text-xl font-medium">New {editorInfo.toBeCreated?.type} unit</h3>
+
+    <h3 class="freon-dialog-title">
+        New {editorInfo.toBeCreated?.type} unit
+    </h3>
+
     <div class="flex flex-col space-y-6" role="dialog">
-        <div class="relative text-light-base-700">
-            <Input class={textInputClass}
-                   type="text"
-                   bind:value={newName}
-                   id="new-input"
-                   name="unit-name"
-                   oninput={onInput}
+
+        <div class="relative">
+            <Input
+                class="freon-dialog-input"
+                type="text"
+                bind:value={newName}
+                id="new-input"
+                name="unit-name"
+                oninput={onInput}
             />
-            <Helper class="text-sm ml-2 text-light-base-900">
+
+            <Helper class="freon-dialog-helper">
                 <span class="font-medium">{helperText}</span>
             </Helper>
         </div>
+
     </div>
 
-    <div class="flex flex-row justify-end mt-0">
-        <Button onclick={handleCancel} class={cancelButtonClass}>
+    <div class="mt-2 flex justify-end gap-3">
+
+        <Button
+            onclick={handleCancel}
+            class="freon-dialog-btn freon-dialog-btn-cancel"
+        >
             Cancel
         </Button>
-        <Button class={okButtonClass} onclick={handleSubmit} >
+
+        <Button
+            onclick={handleSubmit}
+            class="freon-dialog-btn freon-dialog-btn-ok"
+        >
             <FolderOpenSolid class="w-4 h-4 me-2"/>
             New
         </Button>
+
     </div>
+
 </Dialog>
 
