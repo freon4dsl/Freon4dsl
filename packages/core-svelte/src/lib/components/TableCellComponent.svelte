@@ -149,7 +149,6 @@
             FREON.astChanger.changeNamed("ListComponent.Enter", () => {
                 execresult = action.execute(tableBox, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, selectedIndex)
             })
-            // @ts-ignore
             if (notNullOrUndefined(execresult)) {
                 execresult();
             }
@@ -234,7 +233,7 @@
             let index: number;
             // determine the contents of the menu based on box
             // if the selected box is the placeholder or a title/header => show different menu items
-            let items: MenuItem[] = [];
+            let items: MenuItem[];
             if (isActionBox(box.content)) {
                 items = box.options(MenuOptionsType.placeholder);
                 index = Number.MAX_VALUE;
