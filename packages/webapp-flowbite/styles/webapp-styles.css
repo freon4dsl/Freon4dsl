@@ -13,3 +13,9 @@
 /* Import local styles and overrides */
 @import './theme-colors-override.css';
 @import './externals-styles.css';
+
+/* Application typography */
+:root {
+    --freon-font-size: 0.875rem; /* normally this would be 14px */
+    --standard-font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}

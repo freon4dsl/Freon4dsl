@@ -60,9 +60,9 @@
 
     // local variables
     const LOGGER = TABLECELL_LOGGER;
-    let id: string = notNullOrUndefined(box)
+    let id: string = $derived(notNullOrUndefined(box)
         ? `cell-${componentId(box)}`
-        : 'table-cell-for-unknown-box';
+        : 'table-cell-for-unknown-box');
 
     let row: number = $state(0);
     let column: number = $state(0);
@@ -93,7 +93,7 @@
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {
@@ -105,7 +105,7 @@
     });
 
     // Note that this component is never part of a RenderComponent, therefore we must handle being selected here
-    let selectedCls: string = $state(''); // css class name for when the node is selected
+    let selectedCls: string = $state(''); // CSS class name for when the node is selected
 
     $effect(() => {
         // runs after the initial onMount

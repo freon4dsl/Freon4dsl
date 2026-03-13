@@ -42,7 +42,7 @@
     let freonRootElement: HTMLDivElement | undefined = $state(undefined); // The current main element of this component.
     let rootBox: Box = $state(dummyBox);
     let id: string = $derived(
-        // an id for the html element showing the rootBox
+        // an id for the HTML element showing the rootBox
         rootBox && rootBox !== dummyBox ? componentId(rootBox) : 'freon-component-with-unknown-box'
     );
 
@@ -264,18 +264,6 @@
     const clientRectangle = (): ClientRectangle => {
         LOGGER.log(`FreonComponent clientRect`)
         return freonRootElement?.getBoundingClientRect() || UndefinedRectangle
-    }
-
-    const visibleRectangle = async (): Promise<DOMRectReadOnly | null> => {
-        LOGGER.log(`FreonComponent visibleRect`)
-        const rect = await getVisibleRect(freonRootElement);
-        if (rect) {
-            LOGGER.log("visible size: " + rect.width + ", " + rect.height);
-            return rect;
-        } else {
-            LOGGER.log("freonRootElement was null, skipping");
-            return null;
-        }
     }
 
     $effect(() => {

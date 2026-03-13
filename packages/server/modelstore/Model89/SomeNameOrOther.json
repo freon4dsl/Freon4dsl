@@ -543,7 +543,8 @@
                },
                "children": [
                   "ID-34",
-                  "ID-35"
+                  "ID-35",
+                  "ID-3"
                ]
             }
          ],
@@ -681,6 +682,42 @@
                   {
                      "resolveInfo": "ent1",
                      "reference": "ID-19"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-31"
+      },
+      {
+         "id": "ID-3",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Parameter-name"
+               },
+               "value": "par3"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "++",
+                     "reference": "LIMITED-PrimitiveType-ID-3"
                   }
                ]
             }

@@ -1,7 +1,6 @@
 :root {
-
     /* ------------------------------------------------ */
-    /* Light mode BASE (warm neutral greys)             */
+    /* Light mode BASE (warm neutral greys) for the App */
     /* ------------------------------------------------ */
 
     --color-light-base-50:  #FAFBFB;
@@ -18,9 +17,8 @@
     --color-light-base-800: #2F3942;
     --color-light-base-900: #1E252B;
 
-
     /* ------------------------------------------------ */
-    /* Light mode ACCENT (soft teal)                    */
+    /* Light mode ACCENT (soft teal) for the App        */
     /* ------------------------------------------------ */
 
     --color-light-accent-50:  #ECFDFB;
@@ -34,36 +32,39 @@
     --color-light-accent-800: #0D514C;
     --color-light-accent-900: #093A36;
 
+    /* ------------------------------------------------ */
+    /* Light mode BASE for the Freon Component          */
+    /* ------------------------------------------------ */
+
+    /* Neutral scale (cooler grays than the default theme) */
+    --color-light-freon-900: #1C1F26;
+    --color-light-freon-800: #2A2E36;
+    --color-light-freon-700: #3B404A;
+    --color-light-freon-600: #525864;
+    --color-light-freon-500: #6C7280;
+    --color-light-freon-400: #8C92A1;
+    --color-light-freon-350: #A8ADBA;
+    --color-light-freon-300: #C8CDD8;
+    --color-light-freon-250: #E3E6EE;
+    --color-light-freon-200: #F4F6FB;
+    --color-light-freon-150: #F7F8FD;
+    --color-light-freon-100: #FAFBFF;
+    --color-light-freon-50: #FFFFFF;
+
+    /* Error */
+    --color-light-freon-error: #D64545;
+    --color-light-freon-error-soft: #FDECEC;
+
+    /* Accent family — Indigo */
+    /*--color-light-freon-accent-900: #2C2F6B;*/
+    /*--color-light-freon-accent-700: #3F44A3;*/
+    /*--color-light-freon-accent-500: #5A60D6;*/
+    /*--color-light-freon-accent-400: #7A7FF0;*/
+    /*--color-light-freon-accent-200: #C8CBFA;*/
+    /*--color-light-freon-accent-100: #ECEEFF;*/
 
     /* ------------------------------------------------ */
-    /* Freon UI palette (light mode)                    */
-    /* ------------------------------------------------ */
-
-    --color-light-freon-50:  #FAFBFB;
-    --color-light-freon-100: #F3F5F6;
-    --color-light-freon-150: #ECEFF1;
-    --color-light-freon-200: #E3E7EA;
-    --color-light-freon-250: #D7DDE1;
-    --color-light-freon-300: #C7CFD5;
-    --color-light-freon-350: #B7C0C7;
-    --color-light-freon-400: #9AA6AF;
-    --color-light-freon-500: #7C8892;
-    --color-light-freon-600: #606C76;
-    --color-light-freon-700: #47525C;
-    --color-light-freon-800: #2F3942;
-    --color-light-freon-900: #1E252B;
-
-    --color-light-freon-error:    #E0565B;
-    --color-light-freon-editable: #D2F6F2;
-    --color-light-freon-optional: #39BFB3;
-    --color-light-freon-border:   #116A63;
-    --color-light-freon-dropdown: #16877E;
-    --color-light-freon-button:   #A6ECE4;
-
-
-
-    /* ------------------------------------------------ */
-    /* Dark mode BASE                                   */
+    /* Dark mode BASE for the app                       */
     /* ------------------------------------------------ */
 
     --color-dark-base-50:  #F4F6F7;
@@ -80,9 +81,8 @@
     --color-dark-base-800: #22292F;
     --color-dark-base-900: #161B20;
 
-
     /* ------------------------------------------------ */
-    /* Dark mode ACCENT                                 */
+    /* Dark mode ACCENT for the app                     */
     /* ------------------------------------------------ */
 
     --color-dark-accent-50:  #E4FBF8;
@@ -96,52 +96,34 @@
     --color-dark-accent-800: #0C3F3B;
     --color-dark-accent-900: #082C29;
 
-
-
     /* ------------------------------------------------ */
-    /* Freon palette (dark mode)                        */
+    /* Dark mode BASE for the Freon Component          */
     /* ------------------------------------------------ */
 
-    --color-dark-freon-50:  #F4F6F7;
-    --color-dark-freon-100: #E3E7EA;
-    --color-dark-freon-150: #D2D8DD;
-    --color-dark-freon-200: #C2C9CF;
-    --color-dark-freon-250: #AEB7BE;
-    --color-dark-freon-300: #99A3AB;
-    --color-dark-freon-350: #86919A;
-    --color-dark-freon-400: #6E7A84;
-    --color-dark-freon-500: #56626C;
-    --color-dark-freon-600: #404B54;
-    --color-dark-freon-700: #2F383F;
-    --color-dark-freon-800: #22292F;
-    --color-dark-freon-900: #161B20;
+    /* Neutral scale */
+    --color-dark-freon-900: #121417;
+    --color-dark-freon-800: #1B1E24;
+    --color-dark-freon-700: #2A2E36;
+    --color-dark-freon-600: #3A3F4A;
+    --color-dark-freon-500: #525864;
+    --color-dark-freon-400: #707687;
+    --color-dark-freon-350: #8E94A4;
+    --color-dark-freon-300: #AEB4C4;
+    --color-dark-freon-250: #C9CEDB;
+    --color-dark-freon-200: #E0E3ED;
+    --color-dark-freon-150: #F0F2F8;
+    --color-dark-freon-100: #F7F8FC;
+    --color-dark-freon-50: #FFFFFF;
 
-    --color-dark-freon-error:    #E0565B;
-    --color-dark-freon-editable: #8FE1D9;
-    --color-dark-freon-optional: #31AFA5;
-    --color-dark-freon-border:   #105450;
-    --color-dark-freon-dropdown: #166F68;
-    --color-dark-freon-button:   #56C9BF;
+    /* Error */
+    --color-dark-freon-error: #FF6B6B;
+    --color-dark-freon-error-soft: #3B2023;
 
-
-
-    /* ------------------------------------------------ */
-    /* Colorblind safe variants                         */
-    /* ------------------------------------------------ */
-
-    --color-light-freon-accent-error: #E0565B;
-    --color-light-freon-accent-editable: #D2F6F2;
-    --color-light-freon-accent-optional: #39BFB3;
-    --color-light-freon-border-green: #116A63;
-    --color-light-freon-accent-dropdown: #16877E;
-    --color-light-freon-accent-button: #6FD9CF;
-    --freon-light-accent-lightgreen: #ECFDFB;
-
-    --color-dark-freon-accent-error: #E0565B;
-    --color-dark-freon-accent-editable: #8FE1D9;
-    --color-dark-freon-accent-optional: #31AFA5;
-    --color-dark-freon-border-green: #105450;
-    --color-dark-freon-accent-dropdown: #166F68;
-    --color-dark-freon-accent-button: #56C9BF;
-
+    /* Accent family — Indigo */
+    /*--color-dark-freon-accent-900: #2C2F6B;*/
+    /*--color-dark-freon-accent-700: #3F44A3;*/
+    /*--color-dark-freon-accent-500: #5A60D6;*/
+    /*--color-dark-freon-accent-400: #7A7FF0;*/
+    /*--color-dark-freon-accent-200: #C8CBFA;*/
+    /*--color-dark-freon-accent-100: #ECEEFF;*/
 }
