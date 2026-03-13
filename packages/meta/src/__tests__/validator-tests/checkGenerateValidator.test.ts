@@ -1,4 +1,4 @@
-import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
+import { type FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
 import { describe, test, expect, beforeEach, afterAll } from 'vitest';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { LanguageParser } from '../../languagedef/parser/LanguageParser.js';
@@ -6,7 +6,7 @@ import * as fs from "fs";
 import { FileUtil } from '../../utils/file-utils/index.js';
 import { ValidatorParser } from '../../validatordef/parser/ValidatorParser.js';
 import { ValidatorGenerator } from '../../validatordef/generator/index.js';
-import { ValidatorDef } from '../../validatordef/metalanguage/index.js';
+import { type ValidatorDef } from '../../validatordef/metalanguage/index.js';
 import { resolveAstFile, resolveOutDir, resolveTestDir } from '../TestPathHelpers.js';
 
 

@@ -224,8 +224,7 @@
             FREON.astChanger.changeNamed("ListComponent.Enter", () => {
                 execresult = action.execute(box, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, index + 1)
             })
-            // @ts-ignore
-            if (!!execresult) {
+            if (notNullOrUndefined(execresult)) {
                 execresult();
             }
         }

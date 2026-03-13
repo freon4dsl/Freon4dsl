@@ -1,10 +1,10 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
+import { type FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
 import { describe, test, expect, beforeEach } from "vitest";
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
-import { Checker } from '../../utils/basic-dependencies/index.js';
+import { type Checker } from "../../utils/basic-dependencies/index.js"
 import { ValidatorParser } from '../../validatordef/parser/ValidatorParser.js';
-import { ValidatorDef } from '../../validatordef/metalanguage/index.js';
+import { type ValidatorDef } from "../../validatordef/metalanguage/index.js"
 import { resolveAstFile, resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking the validator checker", () => {

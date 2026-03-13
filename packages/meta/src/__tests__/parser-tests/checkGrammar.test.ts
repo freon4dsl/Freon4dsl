@@ -1,11 +1,11 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { type FreMetaLanguage } from "../../languagedef/metalanguage/index.js"
 import { FileUtil } from "../../utils/file-utils/index.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { ReaderWriterGenerator } from "../../parsergen/ReaderWriterGenerator.js";
 import { FreEditParser } from "../../editordef/parser/FreEditParser.js";
 import * as fs from "fs";
-import { FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { type FreEditUnit } from "../../editordef/metalanguage/index.js"
 import { describe, test, expect, afterAll } from "vitest";
 import { resolveOutDir, resolveTestDir } from '../TestPathHelpers.js';
 

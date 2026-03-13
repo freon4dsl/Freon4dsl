@@ -150,7 +150,7 @@
                 execresult = action.execute(tableBox, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, selectedIndex)
             })
             // @ts-ignore
-            if (!!execresult) {
+            if (notNullOrUndefined(execresult)) {
                 execresult();
             }
         }
@@ -186,7 +186,7 @@
 
     const dragenter = (event: DragEvent): boolean => {
         let data: ListElementInfo | null = draggedElem.value;
-        if (!!data) {
+        if (notNullOrUndefined(data)) {
             if (isFreNodeReference(data.element)) {
                 LOGGER.log(`dragEnter item [${data.element.name}] from [${data.componentId}] in table [${id}] on position [${row},${column}]`);
             } else if (isFreNode(data.element)) {

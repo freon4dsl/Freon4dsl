@@ -1,7 +1,7 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { LanguageExpressionParser } from "../../langexpressions/parser/LanguageExpressionParser.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js"
 import { describe, test, expect } from "vitest";
 import { resolveTestDir } from '../TestPathHelpers.js';
 

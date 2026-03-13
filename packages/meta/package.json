@@ -50,6 +50,8 @@
         "vitest-tsconfig-paths": "3.4.1"
     },
     "dependencies": {
+        "@lionweb/json": "0.9.0-beta.0",
+        "@lionweb/json-utils": "0.9.0-beta.0",
         "@rushstack/ts-command-line": "^4.22.0",
         "@prettier/sync": "^0.5.2",
         "kotlin": "^1.5.21",
