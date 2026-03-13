@@ -84,7 +84,7 @@
             />
 
             <Button
-                class="freon-dialog-inline-btn absolute inset-y-0 right-0 flex items-center px-4 rounded-r-lg"
+                class="freon-dialog-btn-ok absolute inset-y-0 right-0 flex items-center px-4 rounded-r-lg"
                 onclick={newModel}
             >
                 <FolderPlusSolid class="w-4 h-4 me-2" />
