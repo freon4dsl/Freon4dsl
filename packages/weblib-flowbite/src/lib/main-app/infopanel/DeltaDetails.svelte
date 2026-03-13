@@ -11,15 +11,16 @@
     let editor = WebappConfigurator.getInstance().langEnv?.editor
     let originalNode = $derived(pDelta.originalNode)
     let originalBox: Box | undefined = $state(undefined)
-    let newEditor = $state(editor)
+    let newEditor: FreEditor | null = $state(null)
     let originalNodeEl: HTMLDivElement | null = null
 
-    $effect(() => {
+    // TODO Solve this in a better way, get rid of Svelte warnings
+    // $effect(() => {
         if (notNullOrUndefined(originalNode)) {
             newEditor = new FreEditor(editor!.projection, editor!.environment)
             originalBox = newEditor?.projection.getBox(originalNode);
         }
-    })
+    // })
     $effect( () => {
         if (open !== null) {
             // give changed property a "changed" style 

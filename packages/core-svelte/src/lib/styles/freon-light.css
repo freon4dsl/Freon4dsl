@@ -18,7 +18,7 @@
     --color-freon-button-component-hover-bg: var(--color-light-freon-accent-400);
     --color-freon-button-component-border: var(--color-light-freon-accent-700);
 
-    --color-freon-text-component-text-color: var(--color-light-freon-accent-700);
+    --color-freon-text-component-text-color: var(--color-light-freon-accent-500);
     --color-freon-text-component-input-bg: var(--color-light-freon-accent-200);
     --color-freon-text-component-input-hover-bg: var(--color-light-freon-accent-100);
     --color-freon-text-component-text-bg: color-mix(

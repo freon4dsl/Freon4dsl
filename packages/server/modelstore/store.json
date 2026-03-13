@@ -362,8 +362,8 @@
                     "name": "SomeNameOrOther"
                 },
                 {
-                    "name": "HGERG",
-                    "file": "HGERG.json"
+                    "name": "SecpondUnit",
+                    "file": "SecpondUnit.json"
                 }
             ],
             "version": "1"
