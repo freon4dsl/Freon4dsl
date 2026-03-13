@@ -8,11 +8,9 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "clean": "rm -rf node_modules/",
-        "typecheck": "tsc -p tsconfig.json --noEmit",
-        "generateTypes": "tsc -p tsconfig.build.json",
-        "build": "npm run generate && npm run typecheck && npm run generateTypes && rollup -c",
+        "build": "npm run generate && tsc",
         "build-samples": "npm run build",
-        "compile": "tsc && rollup --config",
+        "compile": "tsc",
         "test": "vitest run",
         "install-local": "npm install --registry http://localhost:4873",
         "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d src/defs",
