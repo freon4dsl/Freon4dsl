@@ -25,10 +25,10 @@
     } from "@freon4dsl/core"
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
     import { selectedBoxes } from './stores/AllStores.svelte.js';
-    import { clickOutsideConditional } from './svelte-utils/ClickOutside.js';
     import { type CaretDetails } from './svelte-utils/CaretDetails.js';
     import { tick } from 'svelte';
     import type DropdownCmp from "./DropdownComponent.svelte";
+    import { usePaneContext, portal, useOverlayListeners } from "./svelte-utils/OverlayPane.js"
 
     const LOGGER = TEXTDROPDOWN_LOGGER;
 
@@ -58,6 +58,20 @@
     let filteredOptions: SelectOption[] = $state([]); // the list of filtered options that are shown in the dropdown
     let allOptions: SelectOption[]; // all options as calculated by the editor
     let textComponent: TextComponent;
+
+    // elements for the use of the overlay to position the dropdown menu
+    const pane = usePaneContext();
+    let overlayRoot = $derived(pane?.getOverlayRoot() ?? null)
+    let dropdownAnchorEl: HTMLElement | null = $state(null)
+    let dropdownPanelEl: HTMLElement | null = $state(null)
+    let dropdownContentEl: HTMLElement | null = $state(null)
+    const listeners = useOverlayListeners(() => ({
+        pane,
+        enabled: dropdownShown,
+        closeFunc: hideDropdown,
+        inside: [dropdownAnchorEl, dropdownPanelEl, dropdownContentEl],
+        closeOnResize: true,
+    }));
 
     let setText = (value: string) => {
         LOGGER.log(`${box.id}: setting text to '${value}'`);
@@ -181,21 +195,64 @@
         makeFilteredOptionsUnique();
     };
 
+    function updateDropdownPos() {
+        if (!dropdownAnchorEl || !dropdownPanelEl || !dropdownContentEl || !overlayRoot) return;
+
+        const a = dropdownAnchorEl.getBoundingClientRect(); // viewport coords
+        const p = dropdownContentEl.getBoundingClientRect();  // current size
+        const o = overlayRoot.getBoundingClientRect();      // overlay coords
+
+        const ow = o.width;
+        const oh = o.height;
+
+        // anchor position relative to overlay
+        const anchorLeft = a.left - o.left;
+        const anchorTop = a.top - o.top;
+        const anchorBottom = a.bottom - o.top;
+
+        // prefer below
+        let left = anchorLeft;
+        let top = anchorBottom;
+
+        // if overflow right, shift left
+        if (left + p.width > ow) {
+            left = Math.max(0, ow - p.width);
+        }
+
+        // if overflow bottom, flip above
+        if (top + p.height > oh) {
+            top = Math.max(0, anchorTop - p.height);
+        }
+
+        // final clamp
+        left = Math.max(0, Math.min(left, ow - p.width));
+        top = Math.max(0, Math.min(top, oh - p.height));
+
+        // make the dropdown height dependent on the available space
+        const spaceBelow = oh - anchorBottom;
+        const spaceAbove = anchorTop;
+        const availableHeight =
+            top === anchorBottom ? spaceBelow : spaceAbove;
+
+        dropdownPanelEl.style.left = `${left}px`;
+        dropdownPanelEl.style.top = `${top}px`;
+        dropdownPanelEl.style.minWidth = `${a.width}px`;
+        dropdownContentEl.style.maxHeight = `${availableHeight}px`;
+    }
+
     const hideDropdown = () => {
         dropdownShown = false;
+        listeners.detach();
     };
 
     const showDropdown = async () => {
         dropdownShown = true;
         // wait until DOM updates and styles/layout settle
         await tick();
-
-        // now wait one more frame so images/CSS apply
-        requestAnimationFrame(() => {
-            if (dropdownCmp) {
-                dropdownCmp?.scrollIntoViewIfNeeded();
-            }
-        });
+        // wait two more frames
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+        updateDropdownPos();
+        listeners.attach();
     };
 
     function makeFilteredOptionsUnique() {
@@ -462,25 +519,6 @@
         }
     };
 
-    const onBlur = () => {
-        // We use onblur instead of onfocusout, because when the user selects an item in the dropdown list,
-        // the text component will trigger a focus out event. The focus out event from the text component
-        // always comes before the click in the dropdown. If we react to focus out by endEditing(), any click
-        // on the dropdown list will have no effect.
-        LOGGER.log('onBlur ' + id);
-        if (!document.hasFocus() || !selectedBoxes.value.includes(box)) {
-            endEditing();
-        }
-    };
-
-    /**
-     * The "click_outside" event was triggered because of `use:clickOutsideConditional`.
-     */
-    const onClickOutside = () => {
-        LOGGER.log('onClickOutside');
-        endEditing();
-    };
-
     const selectReferred = (event: Event) => {
         if (isReferenceBox(box)) {
             if (box.isSelectAble()) {
@@ -494,7 +532,7 @@
     };
 
     /** This function replaces the event handling in version 1.0.0 (for svelte v4). What used to be an event,
-     * now is a call to this function, where the param 'eventType' indicates the type of the former event, and
+     *  now is a call to this function, where the param 'eventType' indicates the type of the former event, and
      * 'details' are the information passed by the event.
      *
      * NB Here this function is called 'fromInner', in the child TextComponent it is called 'toParent'.
@@ -548,9 +586,6 @@
 <span
     {id}
     onkeydown={onKeyDown}
-    use:clickOutsideConditional={{ enabled: dropdownShown }}
-    onclick_outside={onClickOutside}
-    onblur={onBlur}
     oncontextmenu={() => endEditing()}
     tabindex="-1"
     class="text-dropdown-component {box.cssClass}"
@@ -578,12 +613,20 @@
         {/if}
     </span>
     {#if dropdownShown}
-        <DropdownComponent
-            bind:this={dropdownCmp}
-            bind:selected
-            bind:options={filteredOptions}
-            selectionChanged={itemSelected}
-        />
+        <div
+              class="text-dropdown-panel"
+              use:portal={overlayRoot}
+              bind:this={dropdownPanelEl}
+        >
+            <div class="dropdown-component-container" bind:this={dropdownContentEl}>
+                <DropdownComponent
+                      bind:this={dropdownCmp}
+                      bind:selected
+                      bind:options={filteredOptions}
+                      selectionChanged={itemSelected}
+                />
+            </div>
+        </div>
     {/if}
 </span>
 {/if}

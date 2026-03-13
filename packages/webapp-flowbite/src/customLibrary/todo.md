@@ -12,3 +12,5 @@ To help the memory, some things that still need to be done.
 - [ ] make generator for festival program (HTML or text format)
 - [ ] add validations
 - [ ] add email-input, phone-input, and url-input to the .edit file (use those from Graham)
+- [ ] DateRange: when entering date with numpad the message "End date was adjusted ..." appears,
+and number is not taken as value

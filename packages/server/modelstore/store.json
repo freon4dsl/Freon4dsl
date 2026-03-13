@@ -662,6 +662,26 @@
                     "file": "test2.json"
                 }
             ]
+        },
+        {
+            "name": "Festival1",
+            "folder": "Festival1",
+            "language": "FestivalPlan",
+            "version": "1",
+            "units": [
+                {
+                    "name": "pink1",
+                    "file": "pink1.json"
+                },
+                {
+                    "name": "StaffNeeded",
+                    "file": "StaffNeeded.json"
+                },
+                {
+                    "name": "hkaghkhgla",
+                    "file": "hkaghkhgla.json"
+                }
+            ]
         }
     ]
 }
