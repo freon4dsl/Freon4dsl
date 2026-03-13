@@ -220,13 +220,8 @@
             flushSync(); // flush any pending updates.
             // todo make 'UI' and 'editor' strings into a type
             editor.selectElementForBox(box);
-            // Get the caret position(s) of the current selection within the <span> element.
-            // To be used to set the same selection in the <input> element later on.
-            if (notNullOrUndefined(document.getSelection())) {
-                let { anchorOffset, focusOffset } = document.getSelection()!;
-                myHelper.setFromAndTo(anchorOffset, focusOffset);
-                LOGGER.log(`SETTING the caret: ${myHelper.from} ${myHelper.to}`)
-            }
+            // set the caret to include the whole string
+            myHelper.setFromAndTo(0,originalText.length)
         } else {
             // Get the caret position(s) from the editor, to be used to set
             // the same selection in the <input> element later on.
@@ -237,7 +232,6 @@
         originalText = text;
         await tick(); 
         // wait till the <input> is rendered 
-        // todo see whether this is really needed
         // Now set the width of <input>, and the caret position,
         // either based on the input from the editor, or from the UI.
         setInputWidth();
