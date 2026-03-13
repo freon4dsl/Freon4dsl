@@ -1,5 +1,5 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import type { FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage/index.js"
+import { type FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage/index.js"
 import type { LanguageExpressionTester } from "../../langexpressions/parser/LanguageExpressionTester.js"
 import { LanguageExpressionParser } from "../../langexpressions/parser/LanguageExpressionParser.js";
 import { describe, test, expect, beforeEach } from "vitest";
