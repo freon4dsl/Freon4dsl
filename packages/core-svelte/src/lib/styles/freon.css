@@ -20,6 +20,7 @@
     --freon-radio-gap-inline: 0.5rem;
     --freon-radio-gap-block: 1rem;
 }
+
 :root {
 
 }
@@ -53,11 +54,11 @@
     box-sizing: border-box;
     /* The following is needed for the scrollbar to be only on the container of the FreonComponent, otherwise a second scrollbar might appear. */
     /* Do not be a scroll owner */
-    overflow: visible;   /* or unset/inherit — but NOT auto/scroll */
+    overflow: visible; /* or unset/inherit — but NOT auto/scroll */
     /* Play nice inside flex/grid parents */
-    min-height: 0;       /* avoids flex/grid ancestors forcing scrollbars */
-    min-width: 0;        /* same for horizontal cases */
-    flex: 1 1 auto;      /* if it's inside a flex layout */
+    min-height: 0; /* avoids flex/grid ancestors forcing scrollbars */
+    min-width: 0; /* same for horizontal cases */
+    flex: 1 1 auto; /* if it's inside a flex layout */
 }
 
 .gutter {
@@ -66,6 +67,7 @@
     height: 100%;
     box-sizing: border-box;
 }
+
 .editor-component {
     width: 100%;
     flex: 1;
@@ -159,20 +161,22 @@
  *  LimitedCheckboxComponent
  *******************************************************/
 /* Default: horizontal layout */
- .limited-checkbox-component-group {
-     display: flex;
-     flex-wrap: wrap;     /* allows wrapping on small screens */
-     gap: 0.5rem 1rem;    /* row-gap and column-gap */
-     margin: 2px;
-     padding: 4px 6px 4px 6px;
-     border: none;
- }
+.limited-checkbox-component-group {
+    display: flex;
+    flex-wrap: wrap; /* allows wrapping on small screens */
+    gap: 0.5rem 1rem; /* row-gap and column-gap */
+    margin: 2px;
+    padding: 4px 6px 4px 6px;
+    border: none;
+}
+
 /* Read-only state */
 .limited-checkbox-component-group.readonly:hover,
 .limited-checkbox-component-group.readonly:focus-within {
     outline: none;
     box-shadow: none;
 }
+
 /* Vertical layout modifier */
 .limited-checkbox-component-vertical {
     flex-direction: column;
@@ -208,10 +212,9 @@
     position: relative;
 
     /* Smooth transitions */
-    transition:
-            border-color 0.15s ease-out,
-            background-color 0.15s ease-out,
-            box-shadow 0.15s ease-out;
+    transition: border-color 0.15s ease-out,
+    background-color 0.15s ease-out,
+    box-shadow 0.15s ease-out;
 }
 
 /* Checked state – filled box */
@@ -239,6 +242,7 @@
     outline: none;
     box-shadow: 0 0 0 3px var(--limited-checkbox-focus-ring-color);
 }
+
 /* Disabled state */
 .limited-checkbox-component-input:disabled {
     cursor: default;
@@ -312,6 +316,7 @@
     --freon-radio-focus-ring-color: var(--limited-radio-focus-ring-color);
     --freon-radio-shadow-color: var(--limited-radio-shadow-color);
 }
+
 /* Hide native input; use label pseudo-elements to draw circle/dot */
 .limited-radio-component-single input {
     position: absolute;
@@ -331,10 +336,9 @@
     box-sizing: border-box;
     display: inline-block;
     z-index: 1;
-    transition:
-            border-color 0.18s ease-out,
-            background-color 0.18s ease-out,
-            box-shadow 0.18s ease-out;
+    transition: border-color 0.18s ease-out,
+    background-color 0.18s ease-out,
+    box-shadow 0.18s ease-out;
 }
 
 /* Inner dot */
@@ -387,6 +391,7 @@
     border-style: solid;
     border-radius: 3px;
 }
+
 .contextmenu-button {
     box-sizing: border-box;
 
@@ -406,11 +411,14 @@
     line-height: var(--freon-inline-line-height);
     white-space: nowrap;
 }
+
 .contextmenu-button:hover {
 }
+
 .contextmenu-shortcut {
     white-space: nowrap;
 }
+
 .contextmenu-hr {
     width: 100%;
     margin: 0;
@@ -424,11 +432,14 @@
     white-space: nowrap;
     z-index: 80;
 }
+
 .error-tooltip-list-content {
     padding-left: 20px;
 }
+
 .error-tooltip-single-content {
 }
+
 .error-marker {
     display: block;
     /* padding seems to be the only way to make the element visible without content*/
@@ -452,14 +463,13 @@
     justify-content: center;
     text-align: center;
     font-size: 0.8rem;
-    font-weight: 500;       /* Tailwind's font-medium */
-    padding: 6px 12px;      /* Compact and aligned with common UI kits */
-    border-radius: 0.5rem;  /* Tailwind's rounded-lg */
+    font-weight: 500; /* Tailwind's font-medium */
+    padding: 6px 12px; /* Compact and aligned with common UI kits */
+    border-radius: 0.5rem; /* Tailwind's rounded-lg */
 
-    transition:
-            box-shadow 0.2s ease,
-            background-color 0.2s ease,
-            border-color 0.2s ease;
+    transition: box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 /* Focus ring */
@@ -495,10 +505,9 @@
     position: relative;
 
     /* Smooth transitions */
-    transition:
-            border-color 0.15s ease-out,
-            background-color 0.15s ease-out,
-            box-shadow 0.15s ease-out;
+    transition: border-color 0.15s ease-out,
+    background-color 0.15s ease-out,
+    box-shadow 0.15s ease-out;
 }
 
 /* Checked state – filled box */
@@ -573,10 +582,9 @@
     display: inline-block;
     z-index: 1;
 
-    transition:
-            border-color 0.18s ease-out,
-            box-shadow 0.18s ease-out,
-            background-color 0.18s ease-out;
+    transition: border-color 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    background-color 0.18s ease-out;
 }
 
 /* Inner dot */
@@ -599,9 +607,8 @@
     border-radius: 50%;
     opacity: 1;
     transform: scale(0.8);
-    transition:
-            opacity 0.18s ease-out,
-            transform 0.18s ease-out;
+    transition: opacity 0.18s ease-out,
+    transform 0.18s ease-out;
     pointer-events: none;
     z-index: 0;
     background-color: color-mix(
@@ -615,6 +622,7 @@
 .boolean-radio-component-label input:checked {
     border-color: var(--freon-radio-dot-color);
 }
+
 .boolean-radio-component-label input:checked::before {
     transform: scale(1);
 }
@@ -671,6 +679,7 @@
     min-height: var(--freon-inline-height);
     padding-inline: var(--freon-inline-padding-x);
 }
+
 .text-component-action-placeholder {
     display: inline-block;
     box-sizing: border-box;
@@ -706,14 +715,14 @@
 /*******************************************************
  *  NumericSliderComponent
  *******************************************************/
- .numeric-slider-component {
-     max-width: 320px;
-     margin-top: 1.5rem;
-     position: relative;
-     flex: 1;
-     display: flex;
-     align-items: center;
- }
+.numeric-slider-component {
+    max-width: 320px;
+    margin-top: 1.5rem;
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
 
 /* Base slider styling */
 .numeric-slider-input {
@@ -800,15 +809,13 @@
 
 /* Focus style */
 .numeric-slider-input:focus-visible::-webkit-slider-thumb {
-    box-shadow:
-            0 0 0 2px var(--numeric-slider-thumb-shadow-color),
-            0 0 0 5px var(--numeric-slider-focus-ring-color);
+    box-shadow: 0 0 0 2px var(--numeric-slider-thumb-shadow-color),
+    0 0 0 5px var(--numeric-slider-focus-ring-color);
 }
 
 .numeric-slider-input:focus-visible::-moz-range-thumb {
-    box-shadow:
-            0 0 0 2px var(--numeric-slider-thumb-shadow-color),
-            0 0 0 5px var(--numeric-slider-focus-ring-color);
+    box-shadow: 0 0 0 2px var(--numeric-slider-thumb-shadow-color),
+    0 0 0 5px var(--numeric-slider-focus-ring-color);
 }
 
 .numeric-slider-tooltip {
@@ -893,6 +900,7 @@
 .dropdown-component-container {
     position: relative;
 }
+
 .dropdown-entry-with-additional-label {
     display: flex;
     flex-direction: row;
@@ -901,15 +909,18 @@
     width: 100%;
     align-items: center;
 }
+
 .column-for-dropdown-entry-with-additional-label {
     display: flex;
     flex-direction: column;
     white-space: nowrap;
 }
+
 .column-for-dropdown-entry-with-additional-label:last-child {
     width: 100%;
     text-align: right;
 }
+
 .gap-for-dropdown-entry-with-additional-label {
     margin: 0 0.7rem 0 0.7rem;
     flex: 1;
@@ -950,15 +961,17 @@
     align-items: flex-start;
     gap: 4px;
 }
+
 .optional-component-tooltip-anchor {
     position: relative;
     display: inline-flex;
     align-items: center;
 }
+
 .optional-component-tooltip { /* non-colors props */
     position: absolute;
-    bottom: 100%;   /* above */
-    left: 0;        /* align left edge with button */
+    bottom: 100%; /* above */
+    left: 0; /* align left edge with button */
 
     margin-bottom: 3px; /* gap between button and tooltip */
 
@@ -976,9 +989,11 @@
     /* to make it feel a bit smoother without being “animated” in a distracting way */
     transition: opacity 120ms ease, visibility 0s linear 120ms;
 }
+
 .optional-component-placeholder {
     line-height: 1;
 }
+
 /* rule to show the tooltip */
 .optional-component-tooltip-anchor:hover .optional-component-tooltip,
 .optional-component-tooltip-anchor:focus-within .optional-component-tooltip {
@@ -986,6 +1001,7 @@
     visibility: visible;
     transition: opacity 120ms ease;
 }
+
 .optional-component-button { /* non-colors props */
     /* layout */
     display: inline-flex;
@@ -1002,19 +1018,22 @@
     /* visuals */
     cursor: pointer;
 }
+
 .optional-component-button.text-mode {
-    font-size: 0.85rem;        /* normal readable text */
+    font-size: 0.85rem; /* normal readable text */
     line-height: normal;
     justify-content: flex-start;
     padding: 2px 6px;
     margin-block: 2px; /* vertical spacing between rows */
     opacity: 0.5;
 }
+
 .delete-icon { /* non-colors props */
     width: 1em;
     height: 1em;
     flex-shrink: 0;
 }
+
 .add-icon { /* non-colors props */
     width: 1em;
     height: 1em;
@@ -1028,9 +1047,11 @@
     box-sizing: border-box;
     display: flex;
 }
+
 .render-component-unselected {
     border: none;
 }
+
 .render-component-selected > span {
     outline-style: solid;
     outline-width: 1px;
@@ -1061,10 +1082,9 @@
     border-radius: 1.5em;
     border: var(--switch-border-width) solid var(--switch-border-color-off);
 
-    transition:
-            background-color 0.2s ease,
-            border-color 0.2s ease,
-            box-shadow 0.2s ease;
+    transition: background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 /* Knob */
@@ -1105,14 +1125,20 @@
     box-shadow: 2px 2px 8px var(--switch-shadow-color);
     outline: none; /* if you manage focus elsewhere */
 }
+
 /* end styling boolean switch component */
 
+/*******************************************************
+ *  TableComponent
+ *******************************************************/
 .table-component {
     display: inline-grid;
     grid-gap: 2px;
-    align-items: center; /* place-items is an abbreviation for align-items and justify-items */
-    justify-items: center;
-    align-content: center;
+
+    align-items: start;
+    justify-items: start;
+    align-content: start;
+
     border-width: 1px;
     border-style: dashed;
     border-radius: 4px;
@@ -1122,14 +1148,15 @@
     display: flex;
     align-items: flex-start;
     box-sizing: border-box;
-    align-self: baseline; /* isn't this the default? */
-    justify-self: baseline;
+    align-self: start;
+    justify-self: start;
     margin: 1px;
 }
 
 .table-cell-component-unselected {
     border: none;
 }
+
 .table-cell-component-selected {
     outline-style: solid;
     outline-width: 1px;
@@ -1138,6 +1165,12 @@
 /* The container styling - needed to position the dropdown content */
 .text-dropdown-component {
     display: inline-block;
+}
+
+.text-dropdown-component-text-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
 }
 
 .grid-component {
@@ -1160,11 +1193,20 @@
 
 .reference-button {
     border: none;
-    height: 12px;
-    padding-left: 0;
-    padding-right: 0;
     width: 16px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    line-height: 1;
+    position: relative;
+    top: -2px;
 }
+
 .reference-arrow {
     height: 12px;
 }
