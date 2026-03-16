@@ -32,6 +32,7 @@ export class StdlibTemplate {
          */
         export class ${Names.stdlib(language)} implements ${Names.FreStdlib} {
             private static stdlib: ${Names.FreStdlib};           // the only instance of this class
+            private initialized: boolean = false;
 
             /**
              * This method implements the singleton pattern
@@ -43,17 +44,24 @@ export class StdlibTemplate {
                 return this.stdlib;
             }
 
-            public elements: ${Names.FreNamedNode}[] = [];    // the predefined elements of language ${language.name}
+            private _elements: ${Names.FreNamedNode}[] = [];    // the predefined elements of language ${language.name}
 
+            get elements() {
+                if (!this.initialized){
+                    for (const lib of freonConfiguration.customStdLibs) {
+                        ListUtil.addAllIfNotPresent<${Names.FreNamedNode}>(this._elements, lib.elements);
+                    }
+                    this.initialized = true
+                }
+                return this._elements;
+            }
+            
             /**
              * A private constructor, as demanded by the singleton pattern,
              * in which the list of predefined elements is filled.
              */
             private constructor() {
                 ${this.constructorText}
-                for (const lib of freonConfiguration.customStdLibs) {
-                    ListUtil.addAllIfNotPresent<${Names.FreNamedNode}>(this.elements, lib.elements);
-                }
             }
 
             /**
@@ -81,7 +89,7 @@ export class StdlibTemplate {
                 }
                 return undefined;
             }
-        }`;
+        }`
     }
 
     generateCustomStdlibClass(language: FreMetaLanguage): string {

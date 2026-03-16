@@ -25,9 +25,10 @@
 
     let myUnits: FreUnitIdentifier[] = $derived(
         editorInfo.unitIds?.length
-            ? [...editorInfo.unitIds].sort((u1, u2) => u1.name.localeCompare(u2.name))
+            ? editorInfo.unitIds
             : []
     )
+
     let selectedIndex: number = $derived(
         myUnits?.findIndex((u) => u.id === editorInfo.currentUnit?.id)
     )

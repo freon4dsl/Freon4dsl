@@ -19,10 +19,7 @@ export default defineConfig({
                 'svelte/motion',
 
                 // External project dependencies (provided by the consuming app)
-                '@freon4dsl/core',
-                '@material/web',
-                '@material/slider',
-                '@material/switch'
+                '@freon4dsl/core'
             ]
         }
     }
