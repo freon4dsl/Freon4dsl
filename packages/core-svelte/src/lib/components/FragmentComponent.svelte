@@ -6,7 +6,7 @@
     import { componentId } from './svelte-utils/index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    let { editor, box, readonly }: FreComponentProps<FragmentBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<FragmentBox> = $props();
 
     const LOGGER = FRAGMENT_LOGGER;
     let id: string = $state('');

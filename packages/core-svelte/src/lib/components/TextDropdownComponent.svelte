@@ -33,7 +33,7 @@
     const LOGGER = TEXTDROPDOWN_LOGGER;
 
     // Props
-    let { editor, box, readonly }: FreComponentProps<AbstractChoiceBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<AbstractChoiceBox> = $props();
     // the textbox that is to be coupled to the TextComponent part
     let textBox: TextBox = $derived(box.textBox)!; // NB the initial value must be here, the effect starts to function after initialization
     // True if box is a referencebox and referred is in the same unit
@@ -269,6 +269,7 @@
         });
         setFiltered(result);
     }
+
     function selectLastOption() {
         if (dropdownShown) {
             if (filteredOptions?.length !== 0) {

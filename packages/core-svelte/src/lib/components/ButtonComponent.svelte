@@ -3,7 +3,7 @@
     import { BUTTON_LOGGER } from './ComponentLoggers.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    let { editor, box, readonly }: FreComponentProps<ButtonBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<ButtonBox> = $props();
 
     const LOGGER = BUTTON_LOGGER;
     LOGGER.show();
