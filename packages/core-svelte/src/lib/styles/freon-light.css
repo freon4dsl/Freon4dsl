@@ -265,18 +265,14 @@
 .text-component-input {
     color: var(--color-freon-text-component-text-color);
     background: var(--color-freon-text-component-input-bg);
-    cursor: text;
-    outline: none;
 }
 
 .text-component-input::placeholder {
     color: var(--color-light-freon-250);
-    opacity: 0.7;
 }
 
 .text-component-input:hover {
     background: var(--color-freon-text-component-input-hover-bg);
-    cursor: text;
 }
 
 .text-component-input:focus,

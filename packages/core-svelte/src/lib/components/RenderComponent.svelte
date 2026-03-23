@@ -47,7 +47,7 @@
     import ListComponent from './ListComponent.svelte';
     import OptionalComponent from './OptionalComponent.svelte';
     import TableComponent from './TableComponent.svelte';
-    import TextComponent from './TextComponent.svelte';
+    import TextComponent2 from './TextComponent2.svelte';
     import TextDropdownComponent from './TextDropdownComponent.svelte';
     import SvgComponent from './SvgComponent.svelte';
     import ElementComponent from './ElementComponent.svelte';
@@ -220,7 +220,8 @@
         {:else if isTableBox(box)}
             <TableComponent {box} {editor} {readonly} />
         {:else if isTextBox(box)}
-            <TextComponent {box} {editor} {readonly} partOfDropdown={false} text="" isEditing={false} toParent={() => {} } />
+            <TextComponent2 {box} {editor} {readonly} />
+<!--            <TextComponent2 {box} {editor} {readonly} partOfDropdown={false} text="" isEditing={false} toParent={() => {} } />-->
         {:else if isMultiLineTextBox(box)}
             <MultiLineTextComponent {box} {editor} {readonly} />
         {:else if isActionBox(box) || isSelectBox(box) || isReferenceBox(box)}

@@ -1,4 +1,6 @@
 <script lang="ts">
+    // todo component does not react to arrow down
+    // todo component does not react correct to getting focus by shift-tab
     import { MULTILINETEXT_LOGGER } from './ComponentLoggers.js';
     import { componentId } from '../index.js';
     import { notNullOrUndefined, type MultiLineTextBox } from '@freon4dsl/core';
