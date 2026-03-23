@@ -154,7 +154,7 @@
      */
     // todo why is this function async?
     export async function setFocus(): Promise<void> {
-        console.log(`setFocus for ${box?.id} ${isEditing} && ${inputElement}`);
+        LOGGER.log(`setFocus for ${box?.id} ${isEditing} && ${inputElement}`);
         if (isEditing && notNullOrUndefined(inputElement)) {
             inputElement.focus();
             inputElement.select(); // selects all the text in the <input> element.
@@ -170,7 +170,7 @@
      * @param freCaret
      */
     const calculateCaret = (freCaret: FreCaret) => {
-        console.log(`${id}: setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]`);
+        LOGGER.log(`${id}: setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]`);
         // No need to flush any pending updates, method is being called from the box.
         switch (freCaret.position) {
             case FreCaretPosition.RIGHT_MOST: // type nr 2
@@ -379,7 +379,7 @@
 					break;
 				}
 				case DELETE: {
-                    console.log('TextComponent delete')
+                    LOGGER.log('TextComponent delete')
 					myHelper.handleDelete(event, editor);
 					break;
 				}
