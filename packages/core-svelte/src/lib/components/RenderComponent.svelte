@@ -47,7 +47,7 @@
     import ListComponent from './ListComponent.svelte';
     import OptionalComponent from './OptionalComponent.svelte';
     import TableComponent from './TableComponent.svelte';
-    import TextComponent2 from './TextComponent2.svelte';
+    import TextComponent from './TextComponent.svelte';
     import TextDropdownComponent from './TextDropdownComponent.svelte';
     import SvgComponent from './SvgComponent.svelte';
     import ElementComponent from './ElementComponent.svelte';
@@ -87,12 +87,12 @@
         );
         let isSelected: boolean = selectedBoxes.value.includes(box);
         // Ensure that the internal textbox inside an Action/Select/Reference box is selected if its parent box is.
-        if (isActionTextBox(box)) {
-            isSelected = isSelected || selectedBoxes.value.includes(box.parent);
-        }
-        if (isActionBox(box) || isSelectBox(box) || isReferenceBox(box)) {
-            isSelected = isSelected || selectedBoxes.value.includes(box._textBox);
-        }
+        // if (isActionTextBox(box)) {
+        //     isSelected = isSelected || selectedBoxes.value.includes(box.parent);
+        // }
+        // if (isActionBox(box) || isSelectBox(box) || isReferenceBox(box)) {
+        //     isSelected = isSelected || selectedBoxes.value.includes(box._textBox);
+        // }
         if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
             // do not set extra class, the control itself handles being selected
             return 'render-component-unselected';
@@ -220,8 +220,7 @@
         {:else if isTableBox(box)}
             <TableComponent {box} {editor} {readonly} />
         {:else if isTextBox(box)}
-            <TextComponent2 {box} {editor} {readonly} />
-<!--            <TextComponent2 {box} {editor} {readonly} partOfDropdown={false} text="" isEditing={false} toParent={() => {} } />-->
+            <TextComponent {box} {editor} {readonly} />
         {:else if isMultiLineTextBox(box)}
             <MultiLineTextComponent {box} {editor} {readonly} />
         {:else if isActionBox(box) || isSelectBox(box) || isReferenceBox(box)}

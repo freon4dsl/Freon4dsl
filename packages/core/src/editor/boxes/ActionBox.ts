@@ -78,7 +78,7 @@ export class ActionBox extends AbstractChoiceBox {
             result = this.tryToMatchRegExpAndExecuteAction(key, editor);
             if (result !== BehaviorExecutionResult.EXECUTED) {
                 // The action was not executed, so add 'key' to the text that is already present
-                this.textHelper.setText(this.textHelper.getText() + key);
+                // this.setText(this.getText() + key);
                 this.isDirty();
             }
         }

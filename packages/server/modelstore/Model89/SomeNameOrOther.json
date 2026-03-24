@@ -146,6 +146,19 @@
                "reference": {
                   "language": "-key-Example",
                   "version": "2023.1",
+                  "key": "-key-Entity-baseEntity"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "",
+                     "reference": null
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
                   "key": "-key-Entity-baseInterfaces"
                },
                "targets": []
@@ -455,7 +468,7 @@
                   "version": "2023.1",
                   "key": "-key-NumberLiteralExpression-value"
                },
-               "value": "56"
+               "value": "563333"
             }
          ],
          "containments": [],
@@ -765,7 +778,8 @@
                   "ID-49",
                   "ID-50",
                   "ID-4",
-                  "ID-5"
+                  "ID-5",
+                  "ID-6"
                ]
             },
             {
@@ -944,7 +958,7 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": "browser undo undo works"
+               "value": "browser undo works"
             }
          ],
          "containments": [],
@@ -989,6 +1003,28 @@
                   "key": "-key-Attribute-name"
                },
                "value": "may still AAAAP afterward"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-36"
+      },
+      {
+         "id": "ID-6",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "werass## Edge cases\n\n- [ ] empty string vs undefined  \n=> stored correctly (optional string logic)\n\n- [ ] very fast typing  \n=> no glitches\n\n- [ ] rapid focus switching  \n=> no crashes or lost state\n\n- [ ] selection + paste  \n=> replaces selection correctly\n\n- [ ] caret at boundaries + typing  \n=> correct navigation / insertionrtqqqq"
             }
          ],
          "containments": [],

@@ -1,10 +1,4 @@
-Remaining is to react to the paste/cut/copy buttons in the app!
-
 Error markers
-
-The biggest remaining item is making endEditing the true single exit point. Right now you’ve already moved in that direction, but the cancel/commit split and the protection against double-triggering still deserve one clean final shape.
-
-[x] Then there is undo/redo integration. You’ve defined the rules, but that part still depends on how the surrounding Freon component actually picks up shouldBeHandledByBrowser. That needs one careful end-to-end check.
 
 After that, I’d look at boundary behavior consistency for keys:
 

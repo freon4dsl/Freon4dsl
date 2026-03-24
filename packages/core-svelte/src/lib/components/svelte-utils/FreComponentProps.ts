@@ -54,9 +54,12 @@ export interface TextComponentProps<T extends Box> extends FreComponentProps<T> 
  * Properties for a DropdownComponent
  */
 export interface DropdownProps {
-    options: SelectOption[];
+    allOptions: SelectOption[];
+    matchingOptions: SelectOption[]; /* subset of allOptions that include all options that must be shown as matching */
     selected?: SelectOption;
     selectionChanged: (sel: SelectOption) => void;
+    filterOptions?: boolean; /* true → shorten the list to matching items
+                                false → show all items, but mark the matching ones */
 }
 
 /**

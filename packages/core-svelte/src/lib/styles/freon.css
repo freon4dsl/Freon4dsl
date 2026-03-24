@@ -103,6 +103,7 @@
     min-height: var(--freon-inline-height);
 
     padding-inline: var(--freon-inline-padding-x);
+    cursor: pointer;
 }
 
 /***************************************
@@ -636,65 +637,76 @@
 /*******************************************************
  *  TextComponent
  *******************************************************/
-.text-component {
-    font-size: var(--freon-inline-font-size);
-    line-height: var(--freon-inline-line-height);
-    height: var(--freon-inline-height);
-    padding-inline: var(--freon-inline-padding-x);
+ .text-component {
+     font-size: var(--freon-inline-font-size);
+     line-height: var(--freon-inline-line-height);
+     height: var(--freon-inline-height);
+     padding-inline: var(--freon-inline-padding-x);
+ }
+/* === The magic: make input look like text === */
+.text-component-input {
+    border: none;
+    outline: none;
+    background: transparent;
+
+    margin: 0;
+    padding: 0;
+
+    font: inherit;
+    color: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+
+    min-width: 1ch;
+
+    cursor: text;
+    box-sizing: border-box;
+    /*border-bottom: 1px solid transparent;*/
+    /*transition: background-color 0.12s ease, border-color 0.12s ease;*/
 }
 
-/*.text-component {*/
-/*    display: inline-block;*/
-/*    white-space: nowrap;*/
-/*}*/
+/* optional: subtle editing affordance */
+.text-component-input:focus {
+    outline: none;
+    /*border-bottom: 1px solid var(--color-accent);*/
+    /*background-color: rgba(0, 0, 0, 0.05);*/
+}
 
-/*.text-component-width {*/
-/*    position: absolute;*/
-/*    left: -9999px;*/
-/*    display: inline-block;*/
-/*    border: none;*/
-/*    box-sizing: border-box;*/
-/*    font-size: var(--freon-inline-font-size);*/
-/*    line-height: var(--freon-inline-line-height);*/
-/*    padding-inline: var(--freon-inline-padding-x);*/
-/*}*/
+/* placeholder should look like text placeholder, not browser default */
+.text-component-input::placeholder {
+    color: inherit;
+    opacity: 0.5;
+}
 
-/*.text-component-input {*/
-/*    outline: none;*/
-/*    box-sizing: border-box;*/
-/*    border: none;*/
-/*    font-size: var(--freon-inline-font-size);*/
-/*    line-height: var(--freon-inline-line-height);*/
-/*    height: var(--freon-inline-height);*/
-/*    padding-inline: var(--freon-inline-padding-x);*/
-/*}*/
+/* hidden span for measuring width */
+.text-component-width {
+    position: absolute;
+    visibility: hidden;
+    white-space: pre;
+    box-sizing: border-box;
 
-/*.text-component-text {*/
-/*    display: inline-block;*/
-/*    box-sizing: border-box;*/
-/*    font-size: var(--freon-inline-font-size);*/
-/*    line-height: var(--freon-inline-line-height);*/
-/*    min-height: var(--freon-inline-height);*/
-/*    padding-inline: var(--freon-inline-padding-x);*/
-/*}*/
+    line-height: inherit;
+    padding: 0;
+    margin: 0;
+    border: none;
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+}
 
-/*.text-component-placeholder {*/
-/*    display: inline-block;*/
-/*    box-sizing: border-box;*/
-/*    font-size: var(--freon-inline-font-size);*/
-/*    line-height: var(--freon-inline-line-height);*/
-/*    min-height: var(--freon-inline-height);*/
-/*    padding-inline: var(--freon-inline-padding-x);*/
-/*}*/
+.text-component-input.readonly {
+    display: inline-block;
+    min-width: 1ch;
+    white-space: pre;
+    cursor: default;
+    /*transition: none;*/
+}
 
-/*.text-component-action-placeholder {*/
-/*    display: inline-block;*/
-/*    box-sizing: border-box;*/
-/*    font-size: var(--freon-inline-font-size);*/
-/*    line-height: var(--freon-inline-line-height);*/
-/*    min-height: var(--freon-inline-height);*/
-/*    padding-inline: var(--freon-inline-padding-x);*/
-/*}*/
+.text-component-placeholder {
+    opacity: 0.5;
+    display: inline-block;
+}
+
 
 /*******************************************************
  *  Multiline TextComponent
