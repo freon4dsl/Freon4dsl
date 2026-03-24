@@ -148,7 +148,11 @@
      * *******************************************************************/
     /* effect to keep the width of the HTML correct */
     $effect(() => {
-        if (!readonly && widthSpan) {
+        // make this effect reactive to model changes
+        const _text = text;
+        const _placeholder = placeholder;
+
+        if (!readonly && widthSpan && inputElement) {
             setInputWidth();
         }
     });
@@ -162,7 +166,7 @@
         // do not yet have a value. Therefore, it is not useful to call this function from onMount!
         if (!!widthSpan && !!inputElement) {
             LOGGER.log(`setInputWidth for ${box?.id}`);
-            let value = inputElement.value ?? "";
+            let value = text ?? "";
 
             if (value.length === 0) {
                 value = placeholder;
@@ -279,9 +283,6 @@
             // revert to original value
             text = originalText ?? "";
             setInputWidth();
-
-            // go to the next editable element
-            editor.selectNextLeaf();
             return;
             // Note that onFocusOut() may still run afterward and call:  endEditing("focusout");
             // To avoid a loop, the variable 'isEnding' is set.
@@ -289,6 +290,7 @@
 
         let textToStore: string | undefined = text;
         /* When the value of an optional property of type string is the empty string, we store it as 'undefined'. */
+        // TODO this should still be tested
         const propDef = FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName);
         if (propDef && propDef.propertyKind === "primitive" && propDef.type === "string" && propDef.isOptional && text === "") {
             textToStore = undefined;
@@ -381,6 +383,7 @@
                 event.preventDefault();
                 event.stopPropagation();
             }
+            // TODO should FreonComponent handle this key stroke?
         }
         // END
         // If caret/selection can still move to end -> browser
@@ -391,6 +394,7 @@
                 event.stopPropagation();
                 return;
             }
+            // TODO should FreonComponent handle this key stroke?
         }
         // Ctrl+Backspace
         // Delete previous word if possible -> browser
@@ -401,6 +405,7 @@
                 event.stopPropagation();
                 return;
             }
+            // TODO should FreonComponent handle this key stroke?
         }
         // Ctrl+Delete
         // Delete next word if possible -> browser
@@ -411,6 +416,7 @@
                 event.stopPropagation();
                 return;
             }
+            // TODO should FreonComponent handle this key stroke?
         }
         // ARROW_LEFT
         //    Move caret in input if possible;
@@ -535,6 +541,7 @@
         const start = Math.max(0, inputElement.selectionStart ?? 0);
         const end = Math.max(start, inputElement.selectionEnd ?? start);
 
+        inputElement.focus();                      // important, because focus is on the copy button
         return value.slice(start, end);
     }
     function deleteSelection(): void {
@@ -557,6 +564,7 @@
         inputElement.value = newValue;
         text = newValue;
 
+        inputElement.focus();  // important, because focus is on the cut button
         // restore caret position
         inputElement.setSelectionRange(start, start);
 
@@ -578,7 +586,9 @@
 
         inputElement.value = newValue;
         text = newValue;
+        inputElement.focus();                      // important, because focus is on the paste button
         inputElement.setSelectionRange(newCaret, newCaret);
+        // editor.selectElementForBox(box);           // keeps editor selection aligned
         setInputWidth();
     }
     async function onPaste(e: ClipboardEvent) {

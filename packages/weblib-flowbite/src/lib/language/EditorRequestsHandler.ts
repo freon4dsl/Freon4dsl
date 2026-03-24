@@ -87,22 +87,18 @@ export class EditorRequestsHandler {
 
     redo = (): void => {
         const delta: FreDelta | undefined = AstActions.getInstance(this.langEnv!.editor).redo()
-        // TODO TEST
-        if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
+        if (delta !== undefined) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
         }
-        this.langEnv!.editor.selectionChanged()
     }
 
     undo = (): void => {
         const delta: FreDelta | undefined = AstActions.getInstance(this.langEnv!.editor).undo()
         LOGGER.log(`undo delta '${delta?.toString()}'`)
-        // TODO TEST
-        if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
+        if (delta !== undefined) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
         }
         // todo do we need to warn the user if the delta is undefined?
-        this.langEnv!.editor.selectionChanged()
     }
 
     cut = async (): Promise<void> => {

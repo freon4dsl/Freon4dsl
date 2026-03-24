@@ -20,7 +20,7 @@
 - [x] press Escape inside TC after typing  
 => value restored to original, next element has focus
 
-- [ ] programmatically set focus (editor)  TODO
+- [x] programmatically set focus (editor)
 => TC gets focus, caret position matches editor
 
 --- 7
@@ -121,36 +121,54 @@
 - [x] cut text  
 => removed + copied
 
---- 3 (+6+3+6+3+3+7)
+- [x] copy selected text using webapp button 
+  => clipboard contains selected text
+
+- [x] paste text using webapp button  
+  => inserted at caret
+
+- [x] cut text using webapp button  
+  => removed + copied
+
+--- 6 (+6+3+6+3+3+7)
 
 ## Undo / Redo
 
-- [ ] type text, press Ctrl/Cmd+Z  
+- [x] type text, press Ctrl/Cmd+Z  
 => browser undo works
 
-- [ ] no local changes, press Ctrl/Cmd+Z  
-=> Freon undo triggered
-
-- [ ] redo (Ctrl+Y / Cmd+Shift+Z)  
+- [x] redo (Ctrl+Y / Cmd+Shift+Z)  
 => correct behavior
+ 
+- [x] type text, commit and leave field, press Ctrl/Cmd+Z  
+=> Freon undo triggered, previous text restored
 
---- 3 (+3+6+3+6+3+3+7)
+- [x] type text, commit and leave field, press Ctrl/Cmd+Z, then Ctrl/Cmd+Y 
+=> Freon undo triggered, previous text restored, then change redone
+
+- [x] type text, press Undo button  
+  => browser undo works
+
+- [x] press Redo button  
+  => correct behavior
+
+--- 6 (+6+6+3+6+3+3+7)
 
 ## Validation / CharAllowed
 
-- [ ] type allowed character  
+- [x] type allowed character  
 => appears in input
 
-- [ ] type NOT allowed character  
+- [x] type NOT allowed character  
 => nothing inserted
 
-- [ ] type character that triggers GOTO_NEXT  
+- [x] type character that triggers GOTO_NEXT  
 => focus moves to next element
 
-- [ ] type character that triggers GOTO_PREVIOUS  
+- [x] type character that triggers GOTO_PREVIOUS  
 => focus moves to previous element
 
---- 4 (+3+3+6+3+6+3+3+7)
+--- 4 (+6+6+6+3+6+3+3+7)
 
 ## Focus & lifecycle
 
@@ -163,9 +181,9 @@
 - [x] press Escape  
 => value restored, NOT stored
 
-- [ ] after Escape, no extra commit occurs (no double save)
+- [x] after Escape, no extra commit occurs (no double save)
 
---- 4 (+4+3+3+6+3+6+3+3+7)
+--- 4 (+4+6+6+6+3+6+3+3+7)
 
 ## Auto-sizing
 
@@ -178,10 +196,10 @@
 - [x] delete text  
 => input shrinks correctly
 
-- [ ] empty text with placeholder  
+- [x] empty text with placeholder  
 => width matches placeholder
 
---- 4 (+4+4+3+3+6+3+6+3+3+7)
+--- 4 (+4+4+6+6+6+3+6+3+3+7)
 
 ## Readonly mode
 
@@ -193,23 +211,23 @@
 
 - [ ] text visually identical to editable (unfocused)
 
---- 3 (+4+4+4+3+3+6+3+6+3+3+7)
+--- 3 (+4+4+4+6+6+6+3+6+3+3+7)
 
 ## Edge cases
 
-- [ ] empty string vs undefined  
+- [ ] empty string vs undefined TODO
 => stored correctly (optional string logic)
 
-- [ ] very fast typing  
+- [x] very fast typing  
 => no glitches
 
-- [ ] rapid focus switching  
+- [x] rapid focus switching  
 => no crashes or lost state
 
-- [ ] selection + paste  
+- [x] selection + paste  
 => replaces selection correctly
 
-- [ ] caret at boundaries + typing  
+- [x] caret at boundaries + typing  
 => correct navigation / insertion
 
---- 5 (+3+4+4+4+3+3+6+3+6+3+3+7)
+--- 5 (+3+4+4+4+6+6+6+3+6+3+3+7)
