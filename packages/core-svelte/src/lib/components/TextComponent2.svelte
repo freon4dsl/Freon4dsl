@@ -122,6 +122,11 @@
             box.setFocus = setFocus
             box.refreshComponent = refresh
             box.getClientRectangle = clientRectangle
+            // the following are needed for copy/cut/paste from the webapp
+            box.setCaret = calculateCaret;
+            box.getSelectedText = getSelectedText;
+            box.insertAtSelection = insertAtSelection;
+            box.deleteSelection = deleteSelection;
         }
     })
     /*********************************************************************
