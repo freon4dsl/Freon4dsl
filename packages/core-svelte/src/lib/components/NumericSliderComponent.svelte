@@ -18,9 +18,9 @@
     let max: number = $derived(box.displayInfo!.max)!;
     let step: number = $derived(box.displayInfo!.step)!;
 
-    let inputElement: HTMLInputElement;
-    let tooltip: HTMLSpanElement;
-    let trackWrapper: HTMLSpanElement;
+    let inputElement: HTMLInputElement = $state()!;
+    let tooltip: HTMLSpanElement = $state()!;
+    let trackWrapper: HTMLSpanElement = $state()!;
 
     const onChange = (event: Event) => {
         LOGGER.log(

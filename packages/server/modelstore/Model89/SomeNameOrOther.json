@@ -124,9 +124,9 @@
                   "key": "-key-Entity-attributes"
                },
                "children": [
+                  "ID-22",
                   "ID-20",
-                  "ID-21",
-                  "ID-22"
+                  "ID-21"
                ]
             },
             {
@@ -153,6 +153,42 @@
          ],
          "annotations": [],
          "parent": "ID-18"
+      },
+      {
+         "id": "ID-22",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "qwerty"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "LIMITED-PrimitiveType-ID-0"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-19"
       },
       {
          "id": "ID-20",
@@ -219,42 +255,6 @@
                   {
                      "resolveInfo": "Boolean",
                      "reference": "LIMITED-PrimitiveType-ID-2"
-                  }
-               ]
-            }
-         ],
-         "annotations": [],
-         "parent": "ID-19"
-      },
-      {
-         "id": "ID-22",
-         "classifier": {
-            "language": "-key-Example",
-            "version": "2023.1",
-            "key": "-key-Attribute"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-name"
-               },
-               "value": "qwerty"
-            }
-         ],
-         "containments": [],
-         "references": [
-            {
-               "reference": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-declaredType"
-               },
-               "targets": [
-                  {
-                     "resolveInfo": "String",
-                     "reference": "LIMITED-PrimitiveType-ID-0"
                   }
                ]
             }
@@ -763,7 +763,9 @@
                   "ID-46",
                   "ID-48",
                   "ID-49",
-                  "ID-50"
+                  "ID-50",
+                  "ID-4",
+                  "ID-5"
                ]
             },
             {
@@ -898,7 +900,7 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": ""
+               "value": "Common may still run afterward "
             }
          ],
          "containments": [],
@@ -920,7 +922,7 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": ""
+               "value": "denied"
             }
          ],
          "containments": [],
@@ -942,7 +944,51 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": ""
+               "value": "browser undo undo works"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-36"
+      },
+      {
+         "id": "ID-4",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "insertAtSelection"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-36"
+      },
+      {
+         "id": "ID-5",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "may still AAAAP afterward"
             }
          ],
          "containments": [],

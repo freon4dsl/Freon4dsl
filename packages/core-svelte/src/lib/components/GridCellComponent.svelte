@@ -22,7 +22,7 @@
     let isHeader = $state('noheader');
     let cssStyle: string = $state('');
     let cssClass: string = $state('');
-    let htmlElement: HTMLElement;
+    let htmlElement: HTMLElement = $state()!;
 
     function refresh(from?: string): void {
         if (notNullOrUndefined(box)) {
