@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TEXT_LOGGER } from "$lib/components/ComponentLoggers"
+    import { TEXT_LOGGER } from "./ComponentLoggers.js"
     import { componentId, type FreComponentProps } from "./index.js"
     import { shouldBeHandledByBrowser } from "./stores/AllStores.svelte"
     import {

@@ -2,14 +2,14 @@
 
 ## Main suspicious points
 
-- [ ] **Arrow keys ignore dropdown state**
-    - Should possibly navigate dropdown when open
-    - Currently only text/navigation behavior
-
 - [ ] **Dropdown not triggered in shown code**
     - `showDropdown()` exists but no visible trigger
 
-- [ ] **Enter always navigates away**
+- [ ] **Arrow keys ignore dropdown state**
+        - Should possibly navigate dropdown when open
+      - Currently only text/navigation behavior
+
+- [x] **Enter always navigates away**
     - Even when input is invalid and reverted
     - Risk: user loses context
 

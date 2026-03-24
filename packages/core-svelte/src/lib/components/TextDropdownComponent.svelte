@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TEXT_LOGGER } from "$lib/components/ComponentLoggers"
+    import { TEXT_LOGGER } from "./ComponentLoggers.js"
     import { componentId, type FreComponentProps } from "./index.js"
     import { shouldBeHandledByBrowser } from "./stores/AllStores.svelte"
     import {
@@ -9,14 +9,16 @@
         type ClientRectangle,
         FreCaret,
         FreCaretPosition,
-        ARROW_LEFT, ENTER, ARROW_RIGHT, BACKSPACE, DELETE, SHIFT,
+        ARROW_LEFT, ARROW_UP, ARROW_DOWN, ENTER, ARROW_RIGHT, BACKSPACE, DELETE, SHIFT,
         CONTROL, ALT, TAB, ESCAPE,
         type AbstractChoiceBox,
         type SelectOption,
         isActionBox,
         isReferenceBox,
+        isSelectBox,
         jsonAsString,
         MatchUtil,
+        BehaviorExecutionResult
     } from "@freon4dsl/core"
     import {
         camelCaseToReadable, canDeleteNextWord, canDeletePreviousWord, canMoveCaretLeft,
@@ -30,10 +32,12 @@
         isSelectAllKey,
         isUndoKey
     } from "./svelte-utils/TC2-Utils.js"
+    import { CaretDetails } from "./svelte-utils/index.js"
     import { flushSync, tick } from "svelte"
-    import DropdownComponent from "$lib/components/DropdownComponent.svelte"
-    import type DropdownCmp from "$lib/components/DropdownComponent.svelte"
+    import DropdownComponent from "./DropdownComponent.svelte"
+    import type DropdownCmp from "./DropdownComponent.svelte"
     import { portal, useOverlayListeners, usePaneContext } from "./svelte-utils/OverlayPane.js"
+    import ArrowUp from "./images/ArrowUp.svelte"
 
     const LOGGER = TEXT_LOGGER;
 
@@ -47,7 +51,8 @@
         | "arrow-right"
         | "goto-next"
         | "goto-previous"
-        | "contextmenu";
+        | "contextmenu"
+        | "matched";
 
     // Props
     let { editor, box, readonly = false }: FreComponentProps<AbstractChoiceBox> = $props();
@@ -85,6 +90,9 @@
 
     // variable to guard against loops
     let isEnding = false;
+
+    // True if box is a reference box and referred is in the same unit
+    let selectAbleReference: boolean = $state(false)
 
     /* ========	The following variables are extra compared to the TextComponent =========== */
 
@@ -141,7 +149,20 @@
                 hasErr = false;
             }
             cssClass = box.cssClass;
-
+            if (isSelectBox(box)) {
+                // box may use a null value, which we cannot pass to dropdown
+                // therefore, we alter it here.
+                const tmp = box.getSelectedOption();
+                if (isNullOrUndefined(tmp)) {
+                    selected = undefined;
+                } else {
+                    selected = tmp;
+                }
+            }
+            // NB Not in an else if, because isSelectBox() is also true for ReferenceBox
+            if (isReferenceBox(box)) {
+                selectAbleReference = box.isSelectAble()
+            }
             // do not override text that the user is currently typing
             const isFocusedHere = document.activeElement === inputElement;
             if (!isFocusedHere && text !== newOriginalText) {
@@ -159,6 +180,7 @@
             box.setFocus = setFocus
             box.refreshComponent = refresh
             box.getClientRectangle = clientRectangle
+            selectAbleReference = isReferenceBox(box) && box.isSelectAble()
             // the following are needed for copy/cut/paste from the webapp
             // box.setCaret = calculateCaret;
             // box.getSelectedText = getSelectedText;
@@ -380,6 +402,7 @@
         }
         // Select All
         if (isSelectAllKey(event)) {
+            updateFilteredOptions({ content: text, caret: TODO })
             return;
         }
         // Undo / Redo
@@ -398,7 +421,11 @@
         if (event.key === ENTER) {
             event.preventDefault();
             event.stopPropagation();
-            endEditing("enter");
+            if (dropdownShown) {
+                chooseCurrentSelection(event)
+            } else {
+                endEditing("enter");
+            }
             // go to the next editable element
             editor.selectNextLeaf();
             return;
@@ -407,9 +434,10 @@
         if (event.key === ESCAPE) {
             event.preventDefault();
             event.stopPropagation();
-            endEditing("escape");
-            // go to the next editable element
-            editor.selectNextLeaf();
+            // todo restore text and update filteredOptions
+            // endEditing("escape");
+            // // go to the next editable element
+            // editor.selectNextLeaf();
             return;
         }
         // HOME
@@ -419,8 +447,11 @@
             if (!canMoveCaretToStart(inputElement)) {
                 event.preventDefault();
                 event.stopPropagation();
+            } else {
+                updateFilteredOptions({ content: text, caret: TODO })
+                event.stopPropagation();
+                return;
             }
-            // TODO should FreonComponent handle this key stroke?
         }
         // END
         // If caret/selection can still move to end -> browser
@@ -430,8 +461,11 @@
                 event.preventDefault();
                 event.stopPropagation();
                 return;
+            } else {
+                updateFilteredOptions({ content: text, caret: TODO })
+                event.stopPropagation();
+                return;
             }
-            // TODO should FreonComponent handle this key stroke?
         }
         // Ctrl+Backspace
         // Delete previous word if possible -> browser
@@ -441,8 +475,11 @@
                 event.preventDefault();
                 event.stopPropagation();
                 return;
+            } else {
+                updateFilteredOptions({ content: text, caret: TODO })
+                event.stopPropagation();
+                return;
             }
-            // TODO should FreonComponent handle this key stroke?
         }
         // Ctrl+Delete
         // Delete next word if possible -> browser
@@ -452,11 +489,14 @@
                 event.preventDefault();
                 event.stopPropagation();
                 return;
+            } else {
+                updateFilteredOptions({ content: text, caret: TODO })
+                event.stopPropagation();
+                return;
             }
-            // TODO should FreonComponent handle this key stroke?
         }
         // ARROW_LEFT
-        //    Move caret in input if possible;
+        //    Move caret in input if possible and update the filtered options;
         //    otherwise let Freon select previous editable node
         if (event.key === ARROW_LEFT) {
             if (!canMoveCaretLeft(inputElement)) {
@@ -466,12 +506,13 @@
                 event.stopPropagation();
                 return;
             } else {
+                updateFilteredOptions({ content: text, caret: TODO })
                 event.stopPropagation();
                 return;
             }
         }
         // ARROW_RIGHT
-        //    Move caret in input if possible;
+        //    Move caret in input if possible and update the filtered options;
         //    otherwise let Freon select next editable node
         if (event.key === ARROW_RIGHT) {
             if (!canMoveCaretRight(inputElement)) {
@@ -481,15 +522,31 @@
                 event.stopPropagation();
                 return;
             } else {
+                updateFilteredOptions({ content: text, caret: TODO })
                 event.stopPropagation();
                 return;
             }
+        }
+        // ARROW_DOWN or ARROW_UP
+        //    Move selection in dropdown
+        if (event.key === ARROW_DOWN || event.key === ARROW_UP) {
+            event.preventDefault();
+
+            if (dropdownShown) {
+                // move selection down in dropdown
+                dropdownCmp?.onArrowKey(event);
+            }
+            // else
+            // NOTE No explicit call to endEditing needed, as these events are handled by the FreonComponent,
+            // and if the selection leaves this component, a focusOut event will occur, which does exactly this.
+            return;
         }
         // BACKSPACE
         //    If browser can still delete something here → browser
         //    else → Freon handles it?
         if (event.key === BACKSPACE) {
             if (canUseBackspace(inputElement)) {
+                updateFilteredOptions({ content: text, caret: TODO })
                 event.stopPropagation();
                 return;
             } else {
@@ -504,6 +561,7 @@
         //    else → Freon handles it?
         if (event.key === DELETE) {
             if (canUseDelete(inputElement)) {
+                updateFilteredOptions({ content: text, caret: TODO })
                 event.stopPropagation();
                 return;
             } else {
@@ -540,6 +598,7 @@
         const end = Math.max(start, inputElement.selectionEnd ?? start);
 
         inputElement.focus();                      // important, because focus is on the copy button
+        updateFilteredOptions({ content: text, caret: TODO })
         return value.slice(start, end);
     }
     function deleteSelection(): void {
@@ -565,6 +624,7 @@
         inputElement.focus();  // important, because focus is on the cut button
         // restore caret position
         inputElement.setSelectionRange(start, start);
+        updateFilteredOptions({ content: text, caret: start })
 
         // keep autosize in sync
         setInputWidth();
@@ -586,7 +646,7 @@
         text = newValue;
         inputElement.focus();                      // important, because focus is on the paste button
         inputElement.setSelectionRange(newCaret, newCaret);
-        // editor.selectElementForBox(box);           // keeps editor selection aligned
+        updateFilteredOptions({ content: text, caret: newCaret })
         setInputWidth();
     }
     async function onPaste(e: ClipboardEvent) {
@@ -638,15 +698,38 @@
         }
     };
 
-    const selectReferred = (event: Event) => {
-        if (isReferenceBox(box)) {
-            if (box.isSelectAble()) {
-                box.selectReferred(editor);
-            } else {
-                editor.setUserMessage('Cannot jump to this element.');
+    const updateFilteredOptions = async (details: CaretDetails) => {
+        console.log(`updateFilteredOptions box(${box.id}) for ${box.kind}: ${jsonAsString(details)}, start: ${text.substring(0, details.caret)}`);
+        if (isActionBox(box)) {
+            // Try to match a regular expression, and execute the action that is associated with it
+            const result = box.tryToMatchRegExpAndExecuteAction(text, editor);
+            if (result === BehaviorExecutionResult.EXECUTED) {
+                endEditing("matched");
+                return;
             }
-            event.stopPropagation();
-            event.preventDefault();
+        }
+        allOptions = getOptions();
+        const prefix = text.substring(0, details.caret);
+        setFiltered(
+            MatchUtil.partiallyMatchingOptions(prefix, allOptions)
+        );
+
+        console.log(`updateFilteredOptions: ${filteredOptions.length}, ${filteredOptions[0]?.label}`);
+        // Only one option and has been fully typed in, use this option without waiting for the ENTER key
+        if (
+            filteredOptions.length === 1 &&
+            MatchUtil.isPrefixOf(prefix, filteredOptions[0].label) &&
+            filteredOptions[0].label.length === details.caret
+        ) {
+            box.executeOption(editor, filteredOptions[0]); // the result of the execution is ignored
+            if (isActionBox(box)) {
+                // ActionBox, action done, clear input text
+                text = '';
+            }
+            return;
+        }
+        if (!dropdownShown) {
+            await showDropdown();
         }
     };
 
@@ -711,6 +794,7 @@
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         updateDropdownPos();
         listeners.attach();
+        updateFilteredOptions({}) // todo
     };
 
     /* Helper function to make sure that the list in the dropdown has unique elements */
@@ -747,17 +831,69 @@
                 }
             }
         }
-        if (isActionBox(box)) {
-            // clear text for an action box
-            text = '';
-        }
-        // isEditing = false;
         hideDropdown();
+    };
+
+    const chooseCurrentSelection = (event: KeyboardEvent): void => {
+        console.log('chooseCurrentSelection, key: "' + event.key + '"' + ' selected: "' + selected?.label + '"')
+        let chosenOption: SelectOption | null = null;
+        if (filteredOptions.length <= 1) {
+            if (filteredOptions.length !== 0) {
+                console.log('chooseCurrentSelection: filteredOptions: "' + filteredOptions.map(o=> o.label) + '"');
+                // if there is just one option left, choose that one
+                chosenOption = filteredOptions[0];
+            } else {
+                // there are no valid options left
+                editor.setUserMessage('No valid selection');
+            }
+        } else {
+            // find the selected option and choose that one
+            const index = filteredOptions.findIndex((o) => o.id === selected?.id);
+            if (index >= 0 && index < filteredOptions.length) {
+                chosenOption = filteredOptions[index];
+            }
+        }
+        // store or execute the option
+        if (notNullOrUndefined(chosenOption)) {
+            console.log(`before storeOrExecute (chosen option) ${chosenOption.id} !== (box option) ${box.getSelectedOption()?.id}`)
+            // check on ids, because copies have been made of the options.
+            box.executeOption(editor, chosenOption); // the result of the execution is ignored
+            if (isActionBox(box)) {
+                // ActionBox, action done, clear input text
+                text = '';
+            }
+        } else {
+            //  no valid option, restore the original text
+            text = originalText;
+            // stop editing
+            hideDropdown();
+            editor.selectNextLeaf();
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
     };
     /*********************************************************************
      * END Functions for the dropdown
      * *******************************************************************/
 
+    /*********************************************************************
+     * Functions for the button to go to the referred node
+     * *******************************************************************/
+    const selectReferred = (event: Event) => {
+        if (isReferenceBox(box)) {
+            if (box.isSelectAble()) {
+                box.selectReferred(editor);
+            } else {
+                editor.setUserMessage('Cannot jump to this element.');
+            }
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    };
+    /*********************************************************************
+     * END Functions for the button to go to the referred node
+     * *******************************************************************/
 </script>
 
 {#if readonly}
@@ -809,6 +945,16 @@
 
             <span class="text-dropdown-component-width" bind:this={widthSpan}></span>
         </span>
+        {#if selectAbleReference}
+            <button
+                class="reference-button"
+                {id}
+                onclick={(event) => selectReferred(event)}
+                tabindex="-1"
+            >
+                <ArrowUp />
+            </button>
+        {/if}
         {#if dropdownShown}
             <div
                 class="text-dropdown-panel"
