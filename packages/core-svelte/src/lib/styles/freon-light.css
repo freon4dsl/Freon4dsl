@@ -41,6 +41,18 @@
     --color-freon-dropdown-component-item-hover-bg: var(--color-light-freon-accent-500);
     --color-freon-dropdown-component-selected-color: var(--color-light-freon-accent-700);
     --color-freon-dropdown-component-selected-bg: var(--color-light-freon-accent-200);
+    --dropdown-component-item-hover-bg: var(--color-light-freon-100);
+    --dropdown-component-item-selected-bg: var(--color-light-freon-accent-200);
+    --dropdown-component-item-selected-text: inherit;
+    --dropdown-component-item-selected-border: var(--color-light-freon-accent-400);
+
+    --dropdown-component-item-match-bg: var(--color-light-freon-accent-100);
+    --dropdown-component-item-match-text: inherit;
+    --dropdown-component-item-match-border: var(--color-light-freon-accent-200);
+
+    --dropdown-component-item-single-match-bg: var(--color-light-freon-accent-100);
+    --dropdown-component-item-single-match-text: inherit;
+    --dropdown-component-item-single-match-border: var(--color-light-freon-accent-400);
 
     --color-freon-optional-component-tooltip-border: var(--color-light-freon-accent-700);
     --color-freon-optional-component-tooltip-bg: var(--color-light-freon-accent-100);

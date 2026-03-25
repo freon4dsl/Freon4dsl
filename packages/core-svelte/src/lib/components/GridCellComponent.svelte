@@ -6,7 +6,7 @@
     import type { GridCellProps } from './svelte-utils/FreComponentProps.js';
 
     // properties
-    let { editor, box, readonly, parentBox }: GridCellProps<GridCellBox> = $props();
+    let { editor, box, readonly = false, parentBox }: GridCellProps<GridCellBox> = $props();
 
     type BoxTypeName = 'gridcellNeutral' | 'gridcellOdd' | 'gridcellEven';
 

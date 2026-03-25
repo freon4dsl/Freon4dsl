@@ -17,6 +17,23 @@
     let hasSingleMatch = $derived(matchCount === 1);
     let hasMultipleMatches = $derived(matchCount > 1);
 
+    /* a small effect that keeps the variables valid */
+    $effect(() => {
+        visibleOptions;
+        matchingOptions;
+        filterOptions;
+
+        if (visibleOptions.length === 0) {
+            selected = undefined;
+            return;
+        }
+
+        const stillVisible = visibleOptions.some(o => o.id === selected?.id);
+        if (!stillVisible) {
+            selected = matchingOptions.length > 0 ? matchingOptions[0] : visibleOptions[0];
+        }
+    });
+
     // Faster lookup for matching items
     let matchingIds = $derived.by(() => {
         return new Set(matchingOptions.map(o => o.id));
@@ -52,6 +69,7 @@
     * This makes sure the focus is still on the parent, e.g. an <input> in the parent still responds.
     * */
     export function onArrowKey(event: KeyboardEvent): void {
+        console.log('onArrowKey', event.key);
         if (event.ctrlKey || event.altKey || event.metaKey) {
             return;
         }
@@ -107,15 +125,30 @@
         }
     }
 
+    /**********************************************************************
+     * Functions used for styling
+     **********************************************************************/
     function itemClass(option: SelectOption): string {
-        if (isMatching(option)) {
-            if (hasSingleMatch) return "dropdown-component-item matched";
-            if (hasMultipleMatches) return "dropdown-component-item matched-multiple";
-        }
+        let result = "dropdown-component-item";
+
         if (option.id === selected?.id) {
-            return "dropdown-component-item dropdown-component-selected";
+            result += " dropdown-component-selected";
         }
-        return "dropdown-component-item";
+
+        if (isMatching(option)) {
+            if (hasSingleMatch) result += " matched";
+            else if (hasMultipleMatches) result += " matched-multiple";
+
+            if (isFirstMatch(option)) {
+                result += " first-match";
+            }
+        }
+
+        return result;
+    }
+
+    function isFirstMatch(option: SelectOption): boolean {
+        return matchingOptions.length > 0 && matchingOptions[0].id === option.id;
     }
 
     const showMatchIndicators = $derived(matchingOptions.length > 0 &&

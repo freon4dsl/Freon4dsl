@@ -699,7 +699,7 @@ export class FreEditor {
             box = this._selectedBox
         }
         const previous: Box = box?.nextLeafLeft
-        LOGGER.log("Select previous leaf is box " + previous?.role)
+        console.log("Select previous leaf is box " + previous?.role + ", " + previous.id + ", box: " + box.id)
         if (!!previous) {
             this.selectElementForBox(previous, FreCaret.RIGHT_MOST)
         }

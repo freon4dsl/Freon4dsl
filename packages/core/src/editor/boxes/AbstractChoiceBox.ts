@@ -1,6 +1,6 @@
 import { autorun } from "mobx"
 import type { FreNode } from "../../ast/index.js";
-import { FreUtils } from "../../util/index.js";
+import { FreUtils, jsonAsString } from "../../util/index.js"
 import { BehaviorExecutionResult } from "../util/index.js";
 import { type FreEditor } from "../internal.js";
 import { Box } from "./internal.js";
@@ -72,5 +72,21 @@ export abstract class AbstractChoiceBox extends Box {
 
     isEditable(): boolean {
         return true;
+    }
+
+    makeOptionsUnique(options: SelectOption[]): SelectOption[] {
+        console.log(`makeOptionsUnique options: ${options.map(o => o.label)}`);
+        // Remove doubles, to avoid errors. Check on the id, because identical labels are allowed!
+        const seen: string[] = [];
+        const result: SelectOption[] = [];
+        options.forEach((option) => {
+            if (seen.includes(option.id)) {
+                console.log(`makeOptionsUnique.Option box(${this.id})` + jsonAsString(option) + ' is a duplicate');
+            } else {
+                seen.push(option.id);
+                result.push(option);
+            }
+        });
+        return result;
     }
 }

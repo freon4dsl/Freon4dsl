@@ -69,7 +69,7 @@
 
     const LOGGER = RENDER_LOGGER;
 
-    let { editor, box, readonly }: FreComponentProps<Box> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<Box> = $props();
 
     let id: string = $derived(notNullOrUndefined(box) ? `render-${componentId(box)}` : 'render-for-unknown-box');
     let element: HTMLElement | undefined = $state(undefined);
@@ -86,13 +86,6 @@
           ']'
         );
         let isSelected: boolean = selectedBoxes.value.includes(box);
-        // Ensure that the internal textbox inside an Action/Select/Reference box is selected if its parent box is.
-        // if (isActionTextBox(box)) {
-        //     isSelected = isSelected || selectedBoxes.value.includes(box.parent);
-        // }
-        // if (isActionBox(box) || isSelectBox(box) || isReferenceBox(box)) {
-        //     isSelected = isSelected || selectedBoxes.value.includes(box._textBox);
-        // }
         if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
             // do not set extra class, the control itself handles being selected
             return 'render-component-unselected';

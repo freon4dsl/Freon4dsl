@@ -663,4 +663,3 @@
         <span class="text-component-width" bind:this={widthSpan}></span>
     </span>
 {/if}
-

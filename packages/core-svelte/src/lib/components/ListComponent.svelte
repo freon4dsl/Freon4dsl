@@ -42,7 +42,7 @@
     import DragHandle from "./images/DragHandle.svelte";
 
     // Props
-    let { editor, box, readonly }: FreComponentProps<ListBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<ListBox> = $props();
 
     // Local state variables
     let LOGGER: FreLogger = LIST_LOGGER;

@@ -16,9 +16,7 @@
         isActionBox,
         isReferenceBox,
         isSelectBox,
-        jsonAsString,
-        MatchUtil,
-        BehaviorExecutionResult
+        MatchUtil, BehaviorExecutionResult
     } from "@freon4dsl/core"
     import {
         camelCaseToReadable, canDeleteNextWord, canDeletePreviousWord, canMoveCaretLeft,
@@ -32,7 +30,6 @@
         isSelectAllKey,
         isUndoKey
     } from "./svelte-utils/TC2-Utils.js"
-    import { CaretDetails } from "./svelte-utils/index.js"
     import { flushSync, tick } from "svelte"
     import DropdownComponent from "./DropdownComponent.svelte"
     import type DropdownCmp from "./DropdownComponent.svelte"
@@ -41,6 +38,7 @@
 
     const LOGGER = TEXT_LOGGER;
 
+    type BoxType = 'action' | 'select';
     type FocusOrigin = "UI" | "editor";
     type CaretPosition = { start: number, end: number };
     type EndEditingReason =
@@ -73,6 +71,17 @@
     // variable for styling
     // svelte-ignore state_referenced_locally
     let cssClass: string | undefined = $state(box?.cssClass)
+    // True if box is a reference box and referred is in the same unit
+    let selectAbleReference: boolean = $state(false)
+    // indicates which type of box we are dealing with
+    let boxType: BoxType = $derived(isActionBox(box) ? 'action'  : 'select' );
+    // Indicates whether the user can use the TAB key to enter this component.
+    // Tab skips spaces before and after operators, which have specific roles.
+    let tabindex: number = $derived(notNullOrUndefined(box?.role)
+        ? box.role.startsWith('action-binary') || box.role.startsWith('action-exp')
+            ? -1
+            : 0
+        : 0);
 
     // Variables for showing errors
     let errorCls: string = $state(''); // CSS class name for when the node is erroneous
@@ -91,8 +100,8 @@
     // variable to guard against loops
     let isEnding = false;
 
-    // True if box is a reference box and referred is in the same unit
-    let selectAbleReference: boolean = $state(false)
+    // variable to let us know whether to open the dropdown when this component receives focus
+    let openDropdownOnFocus = $state(false);
 
     /* ========	The following variables are extra compared to the TextComponent =========== */
 
@@ -102,12 +111,12 @@
     let selected: SelectOption | undefined = $state(undefined); // the selected option in the dropdown
     let filteredOptions: SelectOption[] = $state([]); // the list of filtered options that are shown in the dropdown
     let allOptions: SelectOption[] = $state([]); // all options from the box
-    let useFilteredDropdown: boolean = $state(false); // which type of dropdown to use todo get this value from the edit config */
+    let useFilteredDropdown: boolean = $state(true); // which type of dropdown to use todo get this value from the edit config */
     const noOptionsId = 'noOptions'; // constant for when the box has no options
 
     // Elements for the use of the overlay to position the dropdown menu
     const pane = usePaneContext();
-    let overlayRoot = $derived(pane?.getOverlayRoot() ?? null)
+    let overlayRoot: HTMLElement | null = $state(null);
     let dropdownAnchorEl: HTMLElement | null = $state(null)
     let dropdownPanelEl: HTMLElement | null = $state(null)
     let dropdownContentEl: HTMLElement | null = $state(null)
@@ -288,8 +297,21 @@
             inputElement.setSelectionRange(fromPos, toPos);
         }
     }
+    /* Marks that upcoming focus was mouse-triggered. */
+    function onPointerDown(): void {
+        if (document.activeElement !== inputElement) {
+            openDropdownOnFocus = true;
+        }
+    }
+    /* Opens dropdown only when focus was mouse-triggered. */
     function onFocusIn(): void {
         void focusInput("UI");
+
+        if (openDropdownOnFocus) {
+            openDropdownOnFocus = false;
+            allOptions = getOptions();
+            void showDropdown(); // showDropdown() already calls updateFilteredOptions()
+        }
     }
     /**
      * This function determines the caret position of the <input> element programmatically.
@@ -346,16 +368,16 @@
             // Note that onFocusOut() may still run afterward and call:  endEditing("focusout");
             // To avoid a loop, the variable 'isEnding' is set.
         }
+        if (reason === "matched") {
+            hideDropdown();
+            return;
+        }
 
         if (dropdownShown) {
             allOptions = getOptions();
             let matchingOptions: SelectOption[] = MatchUtil.fullMatchingOptions(text, allOptions)
             if (matchingOptions.length === 1 && MatchUtil.isPrefixOf(text, matchingOptions[0].label)) {
-                box.executeOption(editor, matchingOptions[0]); // the result of the execution is ignored
-                if (isActionBox(box)) {
-                    // ActionBox, action done, clear input text
-                    text = '';
-                }
+                executeOption(matchingOptions[0]);
             } else {
                 // no valid option, restore the previous value
                 text = originalText;
@@ -366,6 +388,7 @@
         }
     }
     function onFocusOut(_event: FocusEvent): void {
+        openDropdownOnFocus = false; // reset, just in case
         endEditing("focusout");
     }
     /*********************************************************************
@@ -376,7 +399,9 @@
      * Functions for handling keyboard events
      * *******************************************************************/
     function onInput(_event: Event): void {
-        setInputWidth();
+        if (dropdownShown) {
+            updateFilteredOptions();
+        }
     }
     function onKeyDown(event: KeyboardEvent): void {
         LOGGER.log(
@@ -402,7 +427,7 @@
         }
         // Select All
         if (isSelectAllKey(event)) {
-            updateFilteredOptions({ content: text, caret: TODO })
+            updateFilteredOptions()
             return;
         }
         // Undo / Redo
@@ -417,27 +442,34 @@
                 return;
             }
         }
-        // ENTER → endEditing
+        // ENTER -> show dropdown if it is not shown,
+        // else choose selection from dropdown
         if (event.key === ENTER) {
             event.preventDefault();
             event.stopPropagation();
-            if (dropdownShown) {
-                chooseCurrentSelection(event)
-            } else {
-                endEditing("enter");
+
+            if (!dropdownShown) {
+                allOptions = getOptions();
+                void showDropdown();
+                return;
             }
-            // go to the next editable element
-            editor.selectNextLeaf();
+
+            // dropdown is open
+            if (selected) { // is set by DropdownComponent!
+                itemSelected(selected);
+            } else {
+                // todo what???
+            }
             return;
         }
-        // ESCAPE -> restore old value
+        // ESCAPE -> only hide the dropdown
         if (event.key === ESCAPE) {
             event.preventDefault();
             event.stopPropagation();
-            // todo restore text and update filteredOptions
-            // endEditing("escape");
-            // // go to the next editable element
-            // editor.selectNextLeaf();
+            text = originalText ?? "";
+            setInputWidth();
+            updateFilteredOptions();
+            hideDropdown();
             return;
         }
         // HOME
@@ -448,7 +480,7 @@
                 event.preventDefault();
                 event.stopPropagation();
             } else {
-                updateFilteredOptions({ content: text, caret: TODO })
+                updateFilteredOptionsSoon()
                 event.stopPropagation();
                 return;
             }
@@ -457,12 +489,13 @@
         // If caret/selection can still move to end -> browser
         // else -> let Freon component handle it
         if (isEndKey(event)) {
-            if (!canMoveCaretToEnd(inputElement)) {
-                event.preventDefault();
+            if (canMoveCaretToEnd(inputElement)) {
+                console.log("END key, canMoveCaretToEnd");
+                updateFilteredOptionsSoon()
                 event.stopPropagation();
                 return;
             } else {
-                updateFilteredOptions({ content: text, caret: TODO })
+                event.preventDefault();
                 event.stopPropagation();
                 return;
             }
@@ -471,12 +504,12 @@
         // Delete previous word if possible -> browser
         // else -> let Freon component handle it
         if (isDeletePreviousWordKey(event)) {
-            if (!canDeletePreviousWord(inputElement)) {
-                event.preventDefault();
+            if (canDeletePreviousWord(inputElement)) {
+                updateFilteredOptionsSoon()
                 event.stopPropagation();
                 return;
             } else {
-                updateFilteredOptions({ content: text, caret: TODO })
+                event.preventDefault();
                 event.stopPropagation();
                 return;
             }
@@ -485,12 +518,12 @@
         // Delete next word if possible -> browser
         // else -> let Freon component handle it
         if (isDeleteNextWordKey(event)) {
-            if (!canDeleteNextWord(inputElement)) {
-                event.preventDefault();
+            if (canDeleteNextWord(inputElement)) {
+                updateFilteredOptionsSoon()
                 event.stopPropagation();
                 return;
             } else {
-                updateFilteredOptions({ content: text, caret: TODO })
+                event.preventDefault();
                 event.stopPropagation();
                 return;
             }
@@ -499,14 +532,15 @@
         //    Move caret in input if possible and update the filtered options;
         //    otherwise let Freon select previous editable node
         if (event.key === ARROW_LEFT) {
-            if (!canMoveCaretLeft(inputElement)) {
-                endEditing('arrow-left');
-                editor.selectPreviousLeafIncludingExpressionPreOrPost();
-                event.preventDefault();
+            if (canMoveCaretLeft(inputElement)) {
+                updateFilteredOptionsSoon()
                 event.stopPropagation();
                 return;
             } else {
-                updateFilteredOptions({ content: text, caret: TODO })
+                endEditing('arrow-left');
+                console.log('arrow-left');
+                editor.selectPreviousLeafIncludingExpressionPreOrPost();
+                event.preventDefault();
                 event.stopPropagation();
                 return;
             }
@@ -515,14 +549,14 @@
         //    Move caret in input if possible and update the filtered options;
         //    otherwise let Freon select next editable node
         if (event.key === ARROW_RIGHT) {
-            if (!canMoveCaretRight(inputElement)) {
-                endEditing('arrow-right');
-                editor.selectNextLeafIncludingExpressionPreOrPost();
-                event.preventDefault();
+            if (canMoveCaretRight(inputElement)) {
+                updateFilteredOptionsSoon()
                 event.stopPropagation();
                 return;
             } else {
-                updateFilteredOptions({ content: text, caret: TODO })
+                endEditing('arrow-right');
+                editor.selectNextLeafIncludingExpressionPreOrPost();
+                event.preventDefault();
                 event.stopPropagation();
                 return;
             }
@@ -546,7 +580,7 @@
         //    else → Freon handles it?
         if (event.key === BACKSPACE) {
             if (canUseBackspace(inputElement)) {
-                updateFilteredOptions({ content: text, caret: TODO })
+                updateFilteredOptionsSoon()
                 event.stopPropagation();
                 return;
             } else {
@@ -561,7 +595,7 @@
         //    else → Freon handles it?
         if (event.key === DELETE) {
             if (canUseDelete(inputElement)) {
-                updateFilteredOptions({ content: text, caret: TODO })
+                updateFilteredOptionsSoon()
                 event.stopPropagation();
                 return;
             } else {
@@ -598,7 +632,6 @@
         const end = Math.max(start, inputElement.selectionEnd ?? start);
 
         inputElement.focus();                      // important, because focus is on the copy button
-        updateFilteredOptions({ content: text, caret: TODO })
         return value.slice(start, end);
     }
     function deleteSelection(): void {
@@ -624,10 +657,10 @@
         inputElement.focus();  // important, because focus is on the cut button
         // restore caret position
         inputElement.setSelectionRange(start, start);
-        updateFilteredOptions({ content: text, caret: start })
 
         // keep autosize in sync
         setInputWidth();
+        updateFilteredOptions()
     }
     function insertAtSelection(insertedText: string): void {
         flushSync();
@@ -646,8 +679,8 @@
         text = newValue;
         inputElement.focus();                      // important, because focus is on the paste button
         inputElement.setSelectionRange(newCaret, newCaret);
-        updateFilteredOptions({ content: text, caret: newCaret })
         setInputWidth();
+        updateFilteredOptions()
     }
     async function onPaste(e: ClipboardEvent) {
         LOGGER.log('TextDropdownComponent onPaste');
@@ -682,57 +715,9 @@
     /*********************************************************************
      * Functions for the dropdown
      * *******************************************************************/
-    /* Helper function, to not repeat this everywhere */
-    const setFiltered = (options: SelectOption[]): void => {
-        console.log(`setFiltered ${options.map((o) => o.label)}`);
-        filteredOptions = options;
-    };
-
-    let getOptions = (): SelectOption[] => {
-        LOGGER.log(`getOptions for box(${box.id})` + box?.id)
-        let result = box?.getOptions(editor);
-        if (isNullOrUndefined(result)) {
-            return [{ id: noOptionsId, label: '<no known options>' }];
-        } else {
-            return  makeOptionsUnique(result);
-        }
-    };
-
-    const updateFilteredOptions = async (details: CaretDetails) => {
-        console.log(`updateFilteredOptions box(${box.id}) for ${box.kind}: ${jsonAsString(details)}, start: ${text.substring(0, details.caret)}`);
-        if (isActionBox(box)) {
-            // Try to match a regular expression, and execute the action that is associated with it
-            const result = box.tryToMatchRegExpAndExecuteAction(text, editor);
-            if (result === BehaviorExecutionResult.EXECUTED) {
-                endEditing("matched");
-                return;
-            }
-        }
-        allOptions = getOptions();
-        const prefix = text.substring(0, details.caret);
-        setFiltered(
-            MatchUtil.partiallyMatchingOptions(prefix, allOptions)
-        );
-
-        console.log(`updateFilteredOptions: ${filteredOptions.length}, ${filteredOptions[0]?.label}`);
-        // Only one option and has been fully typed in, use this option without waiting for the ENTER key
-        if (
-            filteredOptions.length === 1 &&
-            MatchUtil.isPrefixOf(prefix, filteredOptions[0].label) &&
-            filteredOptions[0].label.length === details.caret
-        ) {
-            box.executeOption(editor, filteredOptions[0]); // the result of the execution is ignored
-            if (isActionBox(box)) {
-                // ActionBox, action done, clear input text
-                text = '';
-            }
-            return;
-        }
-        if (!dropdownShown) {
-            await showDropdown();
-        }
-    };
-
+    function refreshOverlayRoot() {
+        overlayRoot = pane?.getOverlayRoot() ?? null;
+    }
     /* Function to handle dropdown positioning */
     function updateDropdownPos() {
         if (!dropdownAnchorEl || !dropdownPanelEl || !dropdownContentEl || !overlayRoot) return;
@@ -777,16 +762,16 @@
         dropdownPanelEl.style.minWidth = `${a.width}px`;
         dropdownContentEl.style.maxHeight = `${availableHeight}px`;
     }
-
     /* Function to handle dropdown closing */
     const hideDropdown = () => {
         dropdownShown = false;
         listeners.detach();
     };
-
     /* Function to handle dropdown opening */
     const showDropdown = async () => {
-        console.log(`showDropdown: allOptions: ${box.getOptions(editor).map(o => o.id)}, box: ${box?.getSelectedOption()?.id}`)
+        console.log(`showDropdown: allOptions: ${allOptions.map(o => o.id)}, box: ${box?.getSelectedOption()?.id}`)
+
+        refreshOverlayRoot();
         dropdownShown = true;
         // wait until DOM updates and styles/layout settle
         await tick();
@@ -794,85 +779,106 @@
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         updateDropdownPos();
         listeners.attach();
-        updateFilteredOptions({}) // todo
+        updateFilteredOptions() // todo
     };
 
-    /* Helper function to make sure that the list in the dropdown has unique elements */
-    // todo this should be done in the box: getSelectedOption() should yield a unique list
-    function makeOptionsUnique(options: SelectOption[]): SelectOption[] {
-        console.log(`makeOptionsUnique options: ${options.map(o => o.label)}`);
-        // Remove doubles, to avoid errors. Check on the id, because identical labels are allowed!
-        const seen: string[] = [];
-        const result: SelectOption[] = [];
-        options.forEach((option) => {
-            if (seen.includes(option.id)) {
-                console.log(`makeOptionsUnique.Option box(${box.id})` + jsonAsString(option) + ' is a duplicate');
-            } else {
-                seen.push(option.id);
-                result.push(option);
+    function getOptions(): SelectOption[] {
+        LOGGER.log(`getOptions for box(${box.id})` + box?.id)
+        let result = box?.getOptions(editor);
+        if (isNullOrUndefined(result)) {
+            return [{ id: noOptionsId, label: '<no known options>' }];
+        } else {
+            return result;
+        }
+    }
+
+    /*
+     * Handles mouse caret movement / selection changes after they are complete.
+     * We use mouse up here, because after mouse drag / caret placement / selection,
+     * mouseup is the safer moment. click is less precise for selection scenarios.
+     */
+    function onMouseUpInInput(): void {
+        if (dropdownShown) {
+            updateFilteredOptionsSoon();
+        }
+    }
+
+    function updateFilteredOptionsSoon(): void {
+        requestAnimationFrame(() => {
+            if (dropdownShown) {
+                updateFilteredOptions();
             }
         });
-        return result;
     }
+
+    function updateFilteredOptions() {
+        console.log(`updateFilteredOptions box(${box.id}) for ${box.kind}`);
+        if (!inputElement) return;
+
+        if (!allOptions || allOptions.length === 0) {
+            filteredOptions = [];
+            return;
+        }
+        const start = inputElement.selectionStart ?? 0;
+        const end = inputElement.selectionEnd ?? start;
+
+        // use the *start* of selection as caret anchor
+        const caretPos = Math.min(start, end);
+        const prefix = text.substring(0, caretPos);
+        filteredOptions = MatchUtil.partiallyMatchingOptions(prefix, allOptions);
+
+        // adjust selected
+        if (filteredOptions.length > 0) {
+            selected = filteredOptions[0];
+        } else {
+            selected = allOptions[0];
+        }
+
+        tryAutoCommitOnCurrentInput(caretPos);
+    }
+
+    function tryAutoCommitOnCurrentInput(caretPos: number): void {
+        if (isActionBox(box)) {
+            // Try to match a regular expression, and execute the action that is associated with it
+            const result = box.tryToMatchRegExpAndExecuteAction(text, editor);
+            if (result === BehaviorExecutionResult.EXECUTED) { // todo ????
+                endEditing("matched");
+                return;
+            }
+        }
+        // Only one option and has been fully typed in, use this option without waiting for the ENTER key
+        const prefix = text.substring(0, caretPos);
+        const onlyOption = filteredOptions[0];
+
+        if (
+            filteredOptions.length === 1 &&
+            prefix.length === onlyOption.label.length &&
+            MatchUtil.isPrefixOf(prefix, onlyOption.label)
+        ) {
+            itemSelected(filteredOptions[0]);
+        }
+    }
+
+    function executeOption(option: SelectOption): void {
+        box.executeOption(editor, option); // the result of the execution is ignored
+        if (isActionBox(box)) {
+            // ActionBox, action done, clear input text
+            text = '';
+        }
+    }
+
     /**
      * This custom event is triggered by a click in the dropdown. The option that is clicked
      * is set as text in the <input> and the editing state is ended.
      */
     const itemSelected = (sel: SelectOption) => {
-        console.log(`itemSelected box(${box.id}) '${selected?.id}', allOptions: ${allOptions.map(o => o.label)}`);
-        const index = allOptions.findIndex((o) => o.id === sel.id);
-        if (index >= 0 && index < allOptions.length) {
-            const chosenOption = allOptions[index];
-            if (notNullOrUndefined(chosenOption)) {
-                box.executeOption(editor, chosenOption); // the result of the execution is ignored
-                if (isActionBox(box)) {
-                    // ActionBox, action done, clear input text
-                    text = '';
-                }
-            }
-        }
-        hideDropdown();
-    };
+        LOGGER.log(`itemSelected box(${box.id}) '${sel?.id}'`);
+        if (!box || !sel) return;
 
-    const chooseCurrentSelection = (event: KeyboardEvent): void => {
-        console.log('chooseCurrentSelection, key: "' + event.key + '"' + ' selected: "' + selected?.label + '"')
-        let chosenOption: SelectOption | null = null;
-        if (filteredOptions.length <= 1) {
-            if (filteredOptions.length !== 0) {
-                console.log('chooseCurrentSelection: filteredOptions: "' + filteredOptions.map(o=> o.label) + '"');
-                // if there is just one option left, choose that one
-                chosenOption = filteredOptions[0];
-            } else {
-                // there are no valid options left
-                editor.setUserMessage('No valid selection');
-            }
-        } else {
-            // find the selected option and choose that one
-            const index = filteredOptions.findIndex((o) => o.id === selected?.id);
-            if (index >= 0 && index < filteredOptions.length) {
-                chosenOption = filteredOptions[index];
-            }
-        }
-        // store or execute the option
-        if (notNullOrUndefined(chosenOption)) {
-            console.log(`before storeOrExecute (chosen option) ${chosenOption.id} !== (box option) ${box.getSelectedOption()?.id}`)
-            // check on ids, because copies have been made of the options.
-            box.executeOption(editor, chosenOption); // the result of the execution is ignored
-            if (isActionBox(box)) {
-                // ActionBox, action done, clear input text
-                text = '';
-            }
-        } else {
-            //  no valid option, restore the original text
-            text = originalText;
-            // stop editing
-            hideDropdown();
-            editor.selectNextLeaf();
-        }
-
-        event.preventDefault();
-        event.stopPropagation();
-    };
+        executeOption(sel);
+        text = sel.label;
+        endEditing("matched");
+    }
     /*********************************************************************
      * END Functions for the dropdown
      * *******************************************************************/
@@ -915,10 +921,9 @@
     <span
         {id}
         bind:this={dropdownAnchorEl}
-        onkeydown={onKeyDown}
         oncontextmenu={() => endEditing("contextmenu")}
         tabindex="-1"
-        class="text-dropdown-component {cssClass}"
+        class="text-box-{boxType} text-dropdown-component {cssClass}"
         role="none"
     >
         <span class={`${cssClass ?? ""} text-dropdown-component`}>
@@ -929,10 +934,12 @@
                 id="{id}-input"
                 bind:this={inputElement}
                 bind:value={text}
-                oninput={onInput}
+                onpointerdown={onPointerDown}
                 onfocusin={onFocusIn}
                 onfocusout={onFocusOut}
+                oninput={onInput}
                 onkeydown={onKeyDown}
+                onmouseup={onMouseUpInInput}
                 onpaste={onPaste}
                 oncopy={onCopy}
                 oncut={onCut}
@@ -975,75 +982,3 @@
         {/if}
     </span>
 {/if}
-
-<style>
-    .text-dropdown-component {
-        font-size: var(--freon-inline-font-size);
-        line-height: var(--freon-inline-line-height);
-        height: var(--freon-inline-height);
-        padding-inline: var(--freon-inline-padding-x);
-    }
-    /* === The magic: make input look like text === */
-    .text-dropdown-component-input {
-        border: none;
-        outline: none;
-        background: transparent;
-
-        margin: 0;
-        padding: 0;
-
-        font: inherit;
-        color: inherit;
-        line-height: inherit;
-        letter-spacing: inherit;
-
-        min-width: 1ch;
-
-        cursor: text;
-        box-sizing: border-box;
-        /*border-bottom: 1px solid transparent;*/
-        /*transition: background-color 0.12s ease, border-color 0.12s ease;*/
-    }
-
-    /* optional: subtle editing affordance */
-    .text-dropdown-component-input:focus {
-        outline: none;
-        /*border-bottom: 1px solid var(--color-accent);*/
-        /*background-color: rgba(0, 0, 0, 0.05);*/
-    }
-
-    /* placeholder should look like text placeholder, not browser default */
-    .text-dropdown-component-input::placeholder {
-        color: inherit;
-        opacity: 0.5;
-    }
-
-    /* hidden span for measuring width */
-    .text-dropdown-component-width {
-        position: absolute;
-        visibility: hidden;
-        white-space: pre;
-        box-sizing: border-box;
-
-        line-height: inherit;
-        padding: 0;
-        margin: 0;
-        border: none;
-        font: inherit;
-        letter-spacing: inherit;
-        line-height: inherit;
-    }
-
-    .text-dropdown-component-input.readonly {
-        display: inline-block;
-        min-width: 1ch;
-        white-space: pre;
-        cursor: default;
-        /*transition: none;*/
-    }
-
-    .text-dropdown-component-placeholder {
-        opacity: 0.5;
-        display: inline-block;
-    }
-</style>

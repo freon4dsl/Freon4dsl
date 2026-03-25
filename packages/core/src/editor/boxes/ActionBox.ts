@@ -53,7 +53,7 @@ export class ActionBox extends AbstractChoiceBox {
                     result.push(...options);
                 }
             });
-        return result;
+        return this.makeOptionsUnique(result);
     }
 
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
