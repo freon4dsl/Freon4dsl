@@ -126,7 +126,8 @@
                "children": [
                   "ID-22",
                   "ID-20",
-                  "ID-21"
+                  "ID-21",
+                  "ID-7"
                ]
             },
             {
@@ -266,8 +267,44 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "Boolean",
-                     "reference": "LIMITED-PrimitiveType-ID-2"
+                     "resolveInfo": "String",
+                     "reference": "LIMITED-PrimitiveType-ID-0"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-7",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "LIMITED-PrimitiveType-ID-0"
                   }
                ]
             }
@@ -289,7 +326,7 @@
                   "version": "2023.1",
                   "key": "-key-Method-name"
                },
-               "value": "meth56"
+               "value": "String"
             }
          ],
          "containments": [
@@ -321,8 +358,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "Integer",
-                     "reference": "LIMITED-PrimitiveType-ID-1"
+                     "resolveInfo": "ent1",
+                     "reference": "ID-19"
                   }
                ]
             }
@@ -833,8 +870,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "String",
-                     "reference": "LIMITED-PrimitiveType-ID-0"
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
                   }
                ]
             }
@@ -856,7 +893,7 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": "age"
+               "value": "xxx"
             }
          ],
          "containments": [],
@@ -892,11 +929,25 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": "rry"
+               "value": "Boolean"
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-36"
       },
@@ -918,7 +969,21 @@
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "LIMITED-PrimitiveType-ID-0"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-36"
       },
@@ -940,7 +1005,21 @@
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-36"
       },
@@ -962,7 +1041,21 @@
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-36"
       },
@@ -984,7 +1077,21 @@
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-36"
       },
@@ -1028,7 +1135,21 @@
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-36"
       },

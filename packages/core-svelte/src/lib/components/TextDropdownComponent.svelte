@@ -811,7 +811,7 @@
         });
     }
     function updateFilteredOptions() {
-        console.log(`updateFilteredOptions box(${box?.id}) for ${box?.kind}`);
+        LOGGER.log(`updateFilteredOptions box(${box?.id}) for ${box?.kind}`);
         if (!inputElement) return;
 
         // make sure allOptions has a value
@@ -842,7 +842,7 @@
         tryAutoCommitOnCurrentInput(caretPos);
     }
     function tryAutoCommitOnCurrentInput(caretPos: number): void {
-        console.log(`tryAutoCommitOnCurrentInput box(${box?.id}) for ${box?.kind}`);
+        LOGGER.log(`tryAutoCommitOnCurrentInput box(${box?.id}) for ${box?.kind}`);
         if (isActionBox(box)) {
             // Try to match a regular expression, and execute the action that is associated with it
             const result = box.tryToMatchRegExpAndExecuteAction(text, editor);
@@ -951,7 +951,7 @@
 
                 <span class="text-dropdown-component-width" bind:this={widthSpan}></span>
             </span>
-            {#if selectAbleReference}
+            {#if selectAbleReference && text?.trim().length > 0}
                 <button
                     class="reference-button"
                     {id}
