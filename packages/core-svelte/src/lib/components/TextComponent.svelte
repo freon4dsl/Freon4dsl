@@ -24,6 +24,8 @@
         isUndoKey
     } from "./svelte-utils/TC2-Utils.js"
     import { flushSync } from "svelte"
+    import ErrorTooltip from './ErrorTooltip.svelte';
+    import ErrorMarker from './ErrorMarker.svelte';
 
     const LOGGER = TEXT_LOGGER;
 
@@ -189,7 +191,7 @@
      * the browser or from the editor
      * *******************************************************************/
     async function focusInput(from: FocusOrigin): Promise<void> {
-        console.log(`focusInput for ${box?.id} from ${from}`);
+        LOGGER.log(`focusInput for ${box?.id} from ${from}`);
 
         if (!inputElement || !box) {
             LOGGER.error("focusInput: no inputElement or box");
@@ -213,7 +215,7 @@
 
         if (from === "editor") {
             if (alreadyFocused) {
-                console.log("skip focus/selection: already focused");
+                LOGGER.log("skip focus/selection: already focused");
                 return;
             }
 
@@ -225,7 +227,7 @@
             const fromPos = caretPosition.start >= 0 ? caretPosition.start : 0;
             const toPos = caretPosition.end >= 0 ? caretPosition.end : fromPos;
 
-            console.log(`focusInput setting selection ${fromPos} ${toPos}`);
+            LOGGER.log(`focusInput setting selection ${fromPos} ${toPos}`);
             inputElement.setSelectionRange(fromPos, toPos);
         }
     }
@@ -591,16 +593,8 @@
         // editor.selectElementForBox(box);           // keeps editor selection aligned
         setInputWidth();
     }
-    async function onPaste(e: ClipboardEvent) {
-        LOGGER.log('TextComponent onPaste');
-        shouldBeHandledByBrowser.value = true;
-    }
-    async function onCopy(e: ClipboardEvent) {
-        LOGGER.log('TextComponent onCopy');
-        shouldBeHandledByBrowser.value = true;
-    }
-    async function onCut(e: ClipboardEvent) {
-        LOGGER.log('TextComponent onCut');
+    function handleClipboard(action: string): void {
+        LOGGER.log(`TextDropdownComponent ${action}`);
         shouldBeHandledByBrowser.value = true;
     }
     /*********************************************************************
@@ -638,6 +632,10 @@
         </span>
     </span>
 {:else}
+    {#if errMess.length > 0 && box.isFirstInLine}
+        <ErrorMarker {editor} {readonly} {box} />
+    {/if}
+    <ErrorTooltip {editor} {readonly} {box} {hasErr} parentTop={0} parentLeft={0}>
     <span class={`${cssClass ?? ""} text-component`}>
         <input
             type="text"
@@ -650,9 +648,9 @@
             onfocusin={onFocusIn}
             onfocusout={onFocusOut}
             onkeydown={onKeyDown}
-            onpaste={onPaste}
-            oncopy={onCopy}
-            oncut={onCut}
+            onpaste={() => handleClipboard("onPaste")}
+            oncopy={() => handleClipboard("onCopy")}
+            oncut={() => handleClipboard("onCut")}
             {placeholder}
             autocomplete="off"
             autocapitalize="off"
@@ -662,4 +660,5 @@
 
         <span class="text-component-width" bind:this={widthSpan}></span>
     </span>
+    </ErrorTooltip>
 {/if}

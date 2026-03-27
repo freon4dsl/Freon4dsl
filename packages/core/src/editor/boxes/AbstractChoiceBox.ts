@@ -1,20 +1,20 @@
 import { autorun } from "mobx"
 import type { FreNode } from "../../ast/index.js";
 import { FreUtils, jsonAsString } from "../../util/index.js"
-import { BehaviorExecutionResult } from "../util/index.js";
+import { BehaviorExecutionResult } from "../util/index.js"
 import { type FreEditor } from "../internal.js";
 import { Box } from "./internal.js";
 import type { SelectOption } from "./internal.js";
 
 export abstract class AbstractChoiceBox extends Box {
-    kind: string = "AbstractChoiceBox";
-    placeholder: string;
-    _isFirstInLine: boolean;
+    kind: string = "AbstractChoiceBox"
+    placeholder: string
+    _isFirstInLine: boolean
 
     protected constructor(node: FreNode, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
-        super(node, role);
-        FreUtils.initializeObject(this, initializer);
-        this.placeholder = placeHolder;
+        super(node, role)
+        FreUtils.initializeObject(this, initializer)
+        this.placeholder = placeHolder
     }
 
     // If true, then this box should carry all error messages on the line.
@@ -26,13 +26,13 @@ export abstract class AbstractChoiceBox extends Box {
     }
 
     _getSelectedOption(): SelectOption | null {
-        return null;
+        return null
     }
 
-    set getSelectedOption( value: () => SelectOption | null) {
+    set getSelectedOption(value: () => SelectOption | null) {
         this._getSelectedOption = value
         // this.isDirty()
-        autorun( () => {
+        autorun(() => {
             this._getSelectedOption()
             this.isDirty()
         })
@@ -52,14 +52,14 @@ export abstract class AbstractChoiceBox extends Box {
     // @ts-ignore
     // parameter is present to support subclasses
     getOptions(editor: FreEditor): SelectOption[] {
-        return [];
+        return []
     }
 
     // @ts-ignore
     // parameter is present to support subclasses
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
-        console.error("AbstractChoiceBox.executeOption");
-        return BehaviorExecutionResult.NULL;
+        console.error("AbstractChoiceBox.executeOption")
+        return BehaviorExecutionResult.NULL
     }
 
     /** @internal
@@ -68,25 +68,44 @@ export abstract class AbstractChoiceBox extends Box {
      */
     update: () => void = () => {
         /* To be overwritten by `ActionComponent` */
-    };
+    }
 
     isEditable(): boolean {
-        return true;
+        return true
     }
 
     makeOptionsUnique(options: SelectOption[]): SelectOption[] {
-        console.log(`makeOptionsUnique options: ${options.map(o => o.label)}`);
+        console.log(`makeOptionsUnique options: ${options.map((o) => o.label)}`)
         // Remove doubles, to avoid errors. Check on the id, because identical labels are allowed!
-        const seen: string[] = [];
-        const result: SelectOption[] = [];
+        const seen: string[] = []
+        const result: SelectOption[] = []
         options.forEach((option) => {
             if (seen.includes(option.id)) {
-                console.log(`makeOptionsUnique.Option box(${this.id})` + jsonAsString(option) + ' is a duplicate');
+                console.log(`makeOptionsUnique.Option box(${this.id})` + jsonAsString(option) + " is a duplicate")
             } else {
-                seen.push(option.id);
-                result.push(option);
+                seen.push(option.id)
+                result.push(option)
             }
-        });
-        return result;
+        })
+        return result
+    }
+
+    /***********************************************************************************
+     * Functions for the paste/copy/cut actions from the webapp
+     ***********************************************************************************/
+    insertAtSelection: (insert: string) => void = (_insert: string) => {
+        // Default implementation, to be overridden by TextDropdownComponent
+        console.log("AbstractChoiceBox insertAtSelection")
+    }
+
+    getSelectedText: () => string = () => {
+        // Default implementation, to be overridden by TextDropdownComponent
+        console.log("AbstractChoiceBox getSelectedText")
+        return this.getText()
+    }
+
+    deleteSelection: () => void = () => {
+        // Default implementation, to be overridden by TextDropdownComponent
+        console.log("AbstractChoiceBox deleteSelection")
     }
 }

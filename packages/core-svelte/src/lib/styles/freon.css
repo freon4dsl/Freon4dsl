@@ -640,7 +640,6 @@
      font-size: var(--freon-inline-font-size);
      line-height: var(--freon-inline-line-height);
      height: var(--freon-inline-height);
-     padding-inline: var(--freon-inline-padding-x);
  }
 /* === The magic: make input look like text === */
 .text-component-input {
@@ -711,12 +710,12 @@
 /*******************************************************
  *  TextDropdownComponent
  *******************************************************/
- .text-dropdown-component {
+.text-dropdown-component {
      font-size: var(--freon-inline-font-size);
      line-height: var(--freon-inline-line-height);
      height: var(--freon-inline-height);
      padding-inline: var(--freon-inline-padding-x);
- }
+}
 /* === The magic: make input look like text === */
 .text-dropdown-component-input {
     border: none;

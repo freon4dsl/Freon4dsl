@@ -145,7 +145,7 @@
 - [x] with dropdown open and no valid final match, click outside  
   => original value is restored
 
-- [ ] with dropdown open and press ArrowLeft at start of text  **BUG!!!!**
+- [x] with dropdown open and press ArrowLeft at start of text
   => editing ends and selection moves to previous Freon leaf
 
 - [x] with dropdown open and press ArrowRight at end of text  
@@ -153,25 +153,19 @@
 
 ## Escape behavior
 
-- [X] type something, then press Escape  
+- [x] type something, then press Escape  
   => original value is restored
 
-- [ ] press Escape while dropdown is open  
-  => dropdown closes and original value is restored, selection stays in TDD
-
-- [ ] after Escape, focusout happens  
-  => no loop, no second unwanted commit
+- [x] press Escape while dropdown is open  
+  => dropdown closes, selection stays in TDD
 
 ## Interaction with model refresh
 
-- [ ] trigger refresh while TDD is not focused  
+- [x] trigger refresh while TDD is not focused  
   => text updates from box value
 
-- [ ] trigger refresh while TDD is focused and user is typing  
+- [ ] trigger refresh while TDD is focused and user is typing  TODO
   => current typing is not overwritten unexpectedly
-
-- [ ] refresh when selected option changes in the model  
-  => selected state and text stay consistent
 
 ## Reference button
 
@@ -180,25 +174,25 @@
 
 ## Action box specifics
 
-- [ ] choose an action option from dropdown  
+- [x] choose an action option from dropdown  
   => action executes, text is cleared if that is intended
 
-- [ ] auto-match path for action box regular expression  
+- [ ] auto-match path for action box regular expression  TODO
   => correct action executes immediately
 
-- [ ] after action execution by regex or dropdown choice  
+- [ ] after action execution by regex or dropdown choice TODO
   => no double execution on focusout or Enter
 
 ## Stability / no weirdness
 
-- [ ] rapidly type and move caret left/right  
+- [x] rapidly type and move caret left/right  
   => no crashes, no stale dropdown state
 
-- [ ] open and close dropdown repeatedly  
+- [x] open and close dropdown repeatedly  
   => no crashes, no duplicate listeners
 
-- [ ] click option with mouse several times in different sessions  
+- [x] click option with mouse several times in different sessions  
   => no double execution, no focus glitches
 
-- [ ] test any "no selection available" case  
+- [ ] test any "no selection available" case  TODO
   => component stays stable and does not crash :-)

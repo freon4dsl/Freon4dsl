@@ -227,7 +227,7 @@
 
     /* Functions to make the Component fit in the framework */
     const refresh = (why?: string): void => {
-        console.log("REFRESH OptionalBox: " + why)
+        LOGGER.log("REFRESH OptionalBox: " + why)
         contentBox = box.content
         isEmpty = box.isEmpty()
         placeholder = box.placeholder
@@ -235,9 +235,9 @@
     }
 
     async function setFocus(): Promise<void> {
-        console.log("setFocus on box " + box.role + " isEmpty " + isEmpty)
+        LOGGER.log("setFocus on box " + box.role + " isEmpty " + isEmpty)
         if (!isEmpty && notNullOrUndefined(contentComponent)) {
-            console.log("setting focus on content of optional")
+            LOGGER.log("setting focus on content of optional")
             editor.selectFirstLeafChildBox()
         } else if (notNullOrUndefined(addButtonComponent)) {
             addButtonComponent.focus()

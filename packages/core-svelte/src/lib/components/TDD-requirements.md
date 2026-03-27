@@ -1,79 +1,336 @@
-# TextDropdownComponent (TDD) – Additional Requirements
+# TextDropdownComponent (Freon) — Specification
 
-## Opening Behavior
+## Overview
 
-- Open the dropdown when the field gets focus through a mouse click.
-- Open the dropdown when the component already has focus and the user presses `Enter`.
-- Dropdown is closed upon `Escape`.
-- Do **not** automatically open the dropdown on:
-    - Tab focus
-    - Editor-driven focus
-- `ArrowDown` does **not** open the dropdown.
+The TextDropdownComponent is an inline editable text field with dropdown-assisted selection, backed by an `AbstractChoiceBox` model.
 
-## Dropdown Data
+It combines:
+- native `<input>` behavior
+- filtered dropdown selection
+- Freon editor navigation and execution
 
-- The dropdown works with two option lists:
-    - `allOptions`: all possible options from the box
-    - `filteredOptions`: options filtered based on user input
+The component supports both **SelectBox** and **ActionBox** semantics.
 
-## Filtering Behavior
+---
 
-- Filtering is based on:
-    - the full input text
-    - the current caret position
-- The text **before the caret** is treated as the intended prefix.
-- The dropdown should give immediate feedback:
-    - show whether the current prefix matches options
-    - help the user decide whether more typing is needed
+## Core Structure
 
-## Updating Filtered Options
+1. The component uses a single `<input>` when editable.
 
-- `filteredOptions` must update when:
-    - text changes (typing, paste, programmatic insert/delete)
-    - caret position changes (keyboard navigation)
-    - caret/selection changes via mouse interaction
-    - dropdown is opened
+2. The component uses a `<span>` when readonly:
+  - visually identical to the input
+  - no caret or editing behavior
 
-- Use:
-    - immediate update when text is changed programmatically
-    - deferred update (e.g. `requestAnimationFrame`) when the browser updates caret/text
+3. A dropdown panel is conditionally rendered:
+  - portaled into a shared overlay root
+  - positioned relative to the input
 
-## Matching / Auto-Execution
+---
 
-- When the user types a certain regular expression, try to match and execute the corresponding action immediately.
-- When exactly one filtered option remains and it has been fully typed, choose it immediately without waiting for `Enter`.
-- Keep commit logic shared between live matching and `Enter` / click selection as much as possible.
+## Visual Behavior
 
-## Interaction with Dropdown
+4. When NOT focused, the input appears as plain text.
 
-- When dropdown is open:
-    - `ArrowUp` / `ArrowDown` navigate options
-    - `Enter` executes the currently selected option
-    - mouse click executes the clicked option
-- `selected` has a single source of truth in the dropdown component and is passed back through binding.
-- When visible options change, the dropdown repairs `selected` so it always points to a visible option (or `undefined` if none exist).
+5. When focused:
+  - subtle editing cues are shown
+  - no layout shift occurs
 
-## Closing / End Editing
+6. Placeholder:
+  - styled as normal text (reduced opacity)
+  - derived from `box.placeholder`
 
-- `Escape` should restore the original value.
-- On leaving the component with the dropdown open:
-    - execute a fully matched option if there is exactly one
-    - otherwise restore the original value
-- A successful match/selection should close the dropdown without executing twice.
+---
 
-## Overlay Behavior
+## Auto-sizing
 
-- Dropdown is rendered in overlay (portal).
-- Dropdown:
-    - positions relative to input
-    - flips when hitting viewport edges
-    - closes on outside click / resize
+7. The input auto-sizes to its content:
+  - uses a hidden `<span>` for measurement
+  - uses `textContent`
+  - falls back to placeholder or `" "` when empty
+  - includes small caret buffer
 
-## General UX Intent
+---
 
-- User can quickly see:
-    - whether current input matches options
-    - whether more typing is needed
-- Keep behavior predictable:
-    - mouse → open immediately
-    - keyboard → explicit (`Enter`)
+## State Management
+
+8. Two text states are maintained:
+  - `originalText` → model value
+  - `text` → current editable value
+
+9. Additional dropdown state:
+  - `allOptions` → full option set
+  - `filteredOptions` → currently visible options
+  - `selected` → current selection candidate
+  - `dropdownShown` → visibility flag
+
+10. `hasChanges()` compares `text` with `originalText`
+
+---
+
+## Model Synchronization
+
+11. The component is driven by an `AbstractChoiceBox`
+
+12. `refresh()` updates:
+  - placeholder
+  - originalText
+  - error state
+  - cssClass
+  - selected option (for SelectBox)
+
+13. `text` is only overwritten when NOT focused
+
+---
+
+## Editing Lifecycle
+
+14. Editing ends via:
+  - focus leaving the component
+  - option execution (ENTER or click)
+  - ESCAPE (cancel)
+  - navigation to another node
+
+15. `endEditing(reason)`:
+  - `"cancelled"` → restore `text = originalText`
+  - `"matched"` → keep executed value
+  - always hides dropdown
+
+16. No reentrancy guard is used:
+  - lifecycle correctness is ensured via focus handling
+
+---
+
+## Focus & Interaction
+
+17. Focus origin is distinguished:
+  - `"UI"` → browser-driven
+  - `"editor"` → programmatic
+
+18. Pointer interaction:
+  - dropdown opens only when focus is newly gained
+  - clicking inside already-focused input does NOT reopen dropdown
+
+19. Focus-out behavior:
+  - editing ends only when focus leaves the component AND dropdown
+  - internal transitions do NOT cancel editing
+
+---
+
+## Dropdown Behavior
+
+20. Dropdown opens:
+  - on ENTER (if closed)
+  - on mouse focus (first click)
+  - when filtering is triggered while closed
+
+21. Dropdown is rendered in overlay:
+  - positioned relative to input
+  - flips above if needed
+  - constrained to available height
+
+22. Dropdown closes:
+  - on selection
+  - on ESCAPE
+  - on focus leaving component
+  - on overlay listeners (scroll/resize/outside click)
+
+---
+
+## Filtering & Selection
+
+23. Filtering is based on caret position:
+  - prefix = `text.substring(0, caretPos)`
+
+24. `filteredOptions` is computed using:
+  - `MatchUtil.partiallyMatchingOptions`
+
+25. Selection behavior:
+  - `selected` always resets to first filtered option
+  - ensures ENTER executes current best match
+  - prevents stale selection after typing
+
+26. If no options:
+  - fallback option `<no known options>` is used
+
+---
+
+## Auto-Commit Behavior
+
+27. ActionBox:
+  - attempts regex match via `tryToMatchRegExpAndExecuteAction`
+  - executes immediately on match
+
+28. SelectBox:
+  - auto-commits when:
+    - exactly one match
+    - full label typed
+
+---
+
+## Keyboard Behavior
+
+### General Principle
+
+29. Browser handles input unless explicitly overridden
+
+---
+
+### ENTER
+
+30. If dropdown closed:
+  - opens dropdown
+
+31. If dropdown open:
+  - executes `selected` option
+
+---
+
+### ESCAPE
+
+32. If dropdown open:
+  - closes dropdown
+
+33. Else:
+  - restores original text
+
+---
+
+### Arrow Keys
+
+34. ARROW_UP / ARROW_DOWN:
+  - if dropdown open → navigates dropdown
+  - if dropdown closed → event bubbles to Freon
+
+35. ARROW_LEFT / ARROW_RIGHT:
+  - if caret can move → browser handles
+  - else:
+    - navigate Freon nodes
+    - end editing
+
+---
+
+### HOME / END
+
+36. If movement possible → browser handles
+37. Else → prevent default
+
+---
+
+### Deletion Keys
+
+38. BACKSPACE / DELETE:
+  - if deletion possible → browser handles
+  - else → prevent default
+
+39. Ctrl+Backspace / Ctrl+Delete:
+  - same principle for word deletion
+
+---
+
+### Undo / Redo
+
+40. If `hasChanges()` → browser handles
+41. Else → Freon handles
+
+---
+
+### Select All
+
+42. Ctrl/Cmd + A:
+  - browser handles
+  - triggers dropdown filtering update
+
+---
+
+## Clipboard Behavior
+
+43. Clipboard operations are browser-handled:
+  - `onPaste`, `onCopy`, `onCut` set `shouldBeHandledByBrowser = true`
+
+44. Programmatic helpers:
+  - `getSelectedText()`
+  - `deleteSelection()`
+  - `insertAtSelection(text)`
+
+45. These:
+  - preserve selection
+  - restore focus
+  - sync DOM + state
+  - update width and filtering
+
+---
+
+## Dropdown Positioning
+
+46. Position is computed relative to overlay root
+
+47. Behavior:
+  - prefer below anchor
+  - flip above if needed
+  - clamp within viewport
+  - set max height dynamically
+
+48. Positioning occurs after:
+  - DOM render (`tick`)
+  - filtered content update
+  - layout stabilization (`requestAnimationFrame`)
+
+---
+
+## Overlay Integration
+
+49. Dropdown uses shared overlay root:
+  - prevents clipping
+  - avoids layout shifts
+
+50. Overlay listeners handle:
+  - outside click
+  - scroll
+  - resize
+
+---
+
+## Geometry / Editor Integration
+
+51. Component exposes rectangle via:
+  - input element (editable)
+  - span (readonly)
+
+52. Used by Freon editor for navigation and layout
+
+---
+
+## Reference Behavior
+
+53. If `ReferenceBox` and selectable:
+  - a button is shown
+
+54. Clicking the button:
+  - navigates to referenced node
+  - does not propagate event
+
+---
+
+## General Design Principles
+
+55. Model (`AbstractChoiceBox`) is the source of truth
+
+56. Local state may diverge temporarily during editing
+
+57. Dropdown selection is **derived**, not persistent:
+  - always reflects current text/caret
+
+58. Prefer:
+  - native browser behavior
+  - minimal interception
+  - explicit control only where needed
+
+59. Keyboard handling:
+  - only intercept when necessary
+  - allow bubbling when appropriate
+
+60. Component is designed for:
+  - predictability
+  - responsiveness
+  - tight integration with Freon editor
+  - intuitive text + selection workflow

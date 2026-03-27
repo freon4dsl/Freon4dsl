@@ -1,6 +1,6 @@
 import {
+    AbstractChoiceBox,
     AstActions,
-    deltaList,
     FreDelta,
     FreEditorUtil,
     type FreEnvironment,
@@ -11,9 +11,10 @@ import {
     type FreNode,
     FreProjectionHandler,
     FreSearcher,
-    isActionTextBox,
+    isActionBox,
     isNullOrUndefined,
     isRtError,
+    isSelectBox,
     isTextBox,
     notNullOrUndefined,
     TextBox,
@@ -102,7 +103,7 @@ export class EditorRequestsHandler {
     }
 
     cut = async (): Promise<void> => {
-        if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
+        if (isTextBox(this.langEnv!.editor.selectedBox) || isActionBox(this.langEnv!.editor.selectedBox) || isSelectBox(this.langEnv!.editor.selectedBox)) {
             // Do not use this.langEnv!.editor.copiedElement, we cannot copy a FreNode into a string.
             // Instead, use the clipboard, if possible.
             await this.cutPlainText(this.langEnv!.editor.selectedBox)
@@ -112,7 +113,7 @@ export class EditorRequestsHandler {
     }
 
     copy = async (): Promise<void> => {
-        if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
+        if (isTextBox(this.langEnv!.editor.selectedBox) || isActionBox(this.langEnv!.editor.selectedBox) || isSelectBox(this.langEnv!.editor.selectedBox)) {
             // Do not use this.langEnv!.editor.copiedElement, we cannot copy a FreNode into a string.
             // Instead, use the clipboard, if possible.
             // TODO
@@ -123,7 +124,7 @@ export class EditorRequestsHandler {
     }
 
     paste = async (): Promise<void> => {
-        if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
+        if (isTextBox(this.langEnv!.editor.selectedBox) || isActionBox(this.langEnv!.editor.selectedBox) || isSelectBox(this.langEnv!.editor.selectedBox)) {
             // Do not use this.langEnv!.editor.copiedElement, we cannot paste a FreNode into a string.
             // Instead, use the clipboard, if possible.
             await this.pastePlainText(this.langEnv!.editor.selectedBox)
@@ -132,7 +133,7 @@ export class EditorRequestsHandler {
         }
     }
 
-    private async pastePlainText(myBox: TextBox) {
+    private async pastePlainText(myBox: TextBox | AbstractChoiceBox) {
         const canReadClipboard: boolean = typeof navigator !== "undefined" && isSecureContext && !!navigator.clipboard?.readText
         if (!canReadClipboard) {
             setUserMessage("Clipboard access not available here. Use Ctrl/Cmd+V instead.", FreErrorSeverity.Warning)
@@ -160,7 +161,7 @@ export class EditorRequestsHandler {
         }
     }
 
-    private async copyPlainText(myBox: TextBox) {
+    private async copyPlainText(myBox: TextBox | AbstractChoiceBox) {
         const canWriteClipboard: boolean = typeof navigator !== "undefined" && isSecureContext && !!navigator.clipboard?.writeText
 
         if (!canWriteClipboard) {
@@ -187,7 +188,7 @@ export class EditorRequestsHandler {
         }
     }
 
-    private async cutPlainText(myBox: TextBox) {
+    private async cutPlainText(myBox: TextBox | AbstractChoiceBox) {
         const canWriteClipboard: boolean = typeof navigator !== "undefined" && isSecureContext && !!navigator.clipboard?.writeText
 
         if (!canWriteClipboard) {

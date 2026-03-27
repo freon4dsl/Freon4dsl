@@ -1,4 +1,4 @@
-# TextComponent (Freon) — Specification (DRAFT)
+# TextComponent (Freon) — Specification
 
 ## Overview
 
