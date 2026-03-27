@@ -76,11 +76,12 @@ export class ActionBox extends AbstractChoiceBox {
         } else {
             // Try if key matches a regular expression, and execute the action that is associated with it
             result = this.tryToMatchRegExpAndExecuteAction(key, editor);
-            if (result !== BehaviorExecutionResult.EXECUTED) {
+            // The following is now handled in the component:
+            // if (result !== BehaviorExecutionResult.EXECUTED) {
                 // The action was not executed, so add 'key' to the text that is already present
                 // this.setText(this.getText() + key);
-                this.isDirty();
-            }
+                // this.isDirty();
+            // }
         }
         return result;
     }
@@ -115,8 +116,4 @@ export class ActionBox extends AbstractChoiceBox {
 
 export function isActionBox(b: Box): b is ActionBox {
     return b?.kind === "ActionBox"; //  b instanceof ActionBox;
-}
-
-export function isActionTextBox(b: Box): boolean {
-    return b?.kind === "TextBox" && isActionBox(b?.parent);
 }

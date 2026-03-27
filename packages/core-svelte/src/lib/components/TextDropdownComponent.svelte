@@ -29,7 +29,7 @@
         isRedoKey,
         isSelectAllKey,
         isUndoKey
-    } from "./svelte-utils/TC2-Utils.js"
+    } from "./svelte-utils/TextComponentUtils.js"
     import { flushSync, tick } from "svelte"
     import DropdownComponent from "./DropdownComponent.svelte"
     import type DropdownCmp from "./DropdownComponent.svelte"

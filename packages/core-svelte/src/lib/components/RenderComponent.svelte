@@ -33,7 +33,6 @@
         type Box,
         BoolDisplay,
         LimitedDisplay,
-        isActionTextBox,
         notNullOrUndefined,
         type ClientRectangle,
         UndefinedRectangle

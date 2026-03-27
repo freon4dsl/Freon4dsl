@@ -22,7 +22,7 @@
         isRedoKey,
         isSelectAllKey,
         isUndoKey
-    } from "./svelte-utils/TC2-Utils.js"
+    } from "./svelte-utils/TextComponentUtils.js"
     import { flushSync } from "svelte"
     import ErrorTooltip from './ErrorTooltip.svelte';
     import ErrorMarker from './ErrorMarker.svelte';
