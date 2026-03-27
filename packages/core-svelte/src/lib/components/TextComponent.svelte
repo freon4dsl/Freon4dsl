@@ -1,6 +1,12 @@
 <script lang="ts">
     import { TEXT_LOGGER } from "./ComponentLoggers.js"
-    import { componentId, type FreComponentProps } from "./index.js"
+    import {
+        componentId, computeInputWidth, deleteSelectionFromInput,
+        type FreComponentProps,
+        getSelectedTextFromInput, insertAtSelectionInInput,
+        resetCaretPosition,
+        type TextCaretPosition, type TextInputClipboardContext
+    } from "./index.js"
     import { shouldBeHandledByBrowser } from "./stores/AllStores.svelte"
     import {
         FreLanguage,
@@ -30,7 +36,6 @@
     const LOGGER = TEXT_LOGGER;
 
     type FocusOrigin = "UI" | "editor";
-    type CaretPosition = { start: number, end: number };
     type EndEditingReason =
         | "focusout"
         | "enter"
@@ -72,7 +77,7 @@
     let inputWidth = $state("1ch");
 
     // variables for the caret position
-    let caretPosition: CaretPosition = $state({ start: -1, end: -1 });
+    let caretPosition: TextCaretPosition = $state({ start: -1, end: -1 });
 
     // variable to guard against loops
     let isEnding = false;
@@ -168,18 +173,7 @@
         // do not yet have a value. Therefore, it is not useful to call this function from onMount!
         if (!!widthSpan && !!inputElement) {
             LOGGER.log(`setInputWidth for ${box?.id}`);
-            let value = text ?? "";
-
-            if (value.length === 0) {
-                value = placeholder;
-                if (value.length === 0) {
-                    value = " ";
-                }
-            }
-
-            // Ensure that HTML tags in value are encoded, otherwise they will be seen as HTML => done by textContent.
-            widthSpan.textContent = value;
-            inputWidth = `${widthSpan.offsetWidth + 2}px`; // small buffer for caret
+            inputWidth = computeInputWidth(text, placeholder, widthSpan);
         }
     }
     /*********************************************************************
@@ -234,6 +228,7 @@
     function onFocusIn(): void {
         void focusInput("UI");
     }
+
     /**
      * This function determines the caret position of the <input> element programmatically.
      * The caret position is stored in 'from' and 'to', and used in 'startEditing'.
@@ -243,29 +238,7 @@
         LOGGER.log(`${id}: setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]`);
         // No need to flush any pending updates, method is being called from the box.
         const currentValue = inputElement?.value ?? text ?? "";
-        switch (freCaret.position) {
-            case FreCaretPosition.RIGHT_MOST: // type nr 2
-                caretPosition.start = caretPosition.end = currentValue.length;
-                break;
-            case FreCaretPosition.LEFT_MOST: // type nr 1
-                caretPosition.start = 0;
-                caretPosition.end = 0;
-                break;
-            case FreCaretPosition.UNSPECIFIED: // type nr 0
-                caretPosition.start = 0;
-                caretPosition.end = currentValue.length;
-                break;
-            case FreCaretPosition.INDEX: // type nr 3
-                const len = currentValue.length;
-                // make sure the given position is within the current text
-                caretPosition.start = Math.max(0, Math.min(freCaret.from, len));
-                caretPosition.end = Math.max(caretPosition.start, Math.min(freCaret.to, len));
-                break;
-            default:
-                caretPosition.start = 0;
-                caretPosition.end = currentValue.length;
-                break;
-        }
+        caretPosition = resetCaretPosition(freCaret, currentValue)
     }
     /************************************************************************
      * END Functions that react when this component gets focus either through
@@ -532,67 +505,33 @@
     /*********************************************************************
      * Functions for copy, cut and paste
      * *******************************************************************/
+    /* Functions to be triggered by external cut/copy/paste buttons.
+     * They are used through the box.
+     */
     function getSelectedText(): string {
-        flushSync(); // flush any pending updates
-
-        if (!inputElement) {
-            return "";
-        }
-
-        const value = inputElement.value ?? text ?? "";
-        const start = Math.max(0, inputElement.selectionStart ?? 0);
-        const end = Math.max(start, inputElement.selectionEnd ?? start);
-
-        inputElement.focus();                      // important, because focus is on the copy button
-        return value.slice(start, end);
+        return getSelectedTextFromInput(setContextForClipboard());
     }
     function deleteSelection(): void {
-        flushSync(); // ensure DOM and state are aligned
-
-        if (!inputElement) return;
-
-        const value = inputElement.value ?? text ?? "";
-        const start = inputElement.selectionStart ?? 0;
-        const end = inputElement.selectionEnd ?? start;
-
-        if (start === end) {
-            // nothing selected → nothing to delete
-            return;
-        }
-
-        const newValue = value.slice(0, start) + value.slice(end);
-
-        // update both DOM and state
-        inputElement.value = newValue;
-        text = newValue;
-
-        inputElement.focus();  // important, because focus is on the cut button
-        // restore caret position
-        inputElement.setSelectionRange(start, start);
-
-        // keep autosize in sync
-        setInputWidth();
+        deleteSelectionFromInput(setContextForClipboard());
     }
     function insertAtSelection(insertedText: string): void {
-        flushSync();
-
-        if (!inputElement) return;
-
-        const safeInsert = insertedText ?? "";
-        const value = inputElement.value ?? text ?? "";
-        const start = Math.max(0, inputElement.selectionStart ?? 0);
-        const end = Math.max(start, inputElement.selectionEnd ?? start);
-
-        const newValue = value.slice(0, start) + safeInsert + value.slice(end);
-        const newCaret = start + safeInsert.length;
-
-        inputElement.value = newValue;
-        text = newValue;
-        inputElement.focus();                      // important, because focus is on the paste button
-        inputElement.setSelectionRange(newCaret, newCaret);
-        // editor.selectElementForBox(box);           // keeps editor selection aligned
-        setInputWidth();
+        insertAtSelectionInInput(insertedText, setContextForClipboard());
     }
+    /* Helper function to set the context in which the common clipboard functions are being used. */
+    function setContextForClipboard(): TextInputClipboardContext {
+        return {
+            inputElement,
+            text,
+            setText: (value: string) => {
+                text = value;
+            },
+            afterChange: () => {
+                setInputWidth();
+            }
+        };
+    }
+
+    /* The only function that is triggered by the UI in this component itself */
     function handleClipboard(action: string): void {
         LOGGER.log(`TextDropdownComponent ${action}`);
         shouldBeHandledByBrowser.value = true;

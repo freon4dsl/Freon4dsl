@@ -1,6 +1,12 @@
 <script lang="ts">
     import { TEXT_LOGGER } from "./ComponentLoggers.js"
-    import { componentId, type FreComponentProps } from "./index.js"
+    import {
+        componentId, computeInputWidth, deleteSelectionFromInput,
+        type FreComponentProps,
+        getSelectedTextFromInput, insertAtSelectionInInput,
+        resetCaretPosition,
+        type TextInputClipboardContext
+    } from "./index.js"
     import { shouldBeHandledByBrowser } from "./stores/AllStores.svelte"
     import {
         notNullOrUndefined,
@@ -8,7 +14,6 @@
         UndefinedRectangle,
         type ClientRectangle,
         FreCaret,
-        FreCaretPosition,
         ARROW_LEFT, ARROW_UP, ARROW_DOWN, ENTER, ARROW_RIGHT, BACKSPACE, DELETE, SHIFT,
         CONTROL, ALT, TAB, ESCAPE,
         type AbstractChoiceBox,
@@ -72,6 +77,7 @@
     let boxType: BoxType = $derived(isActionBox(box) ? 'action'  : 'select' );
     // Indicates whether the user can use the TAB key to enter this component.
     // Tab skips spaces before and after operators, which have specific roles.
+    // todo still needed?
     let tabindex: number = $derived(notNullOrUndefined(box?.role)
         ? box.role.startsWith('action-binary') || box.role.startsWith('action-exp')
             ? -1
@@ -83,17 +89,21 @@
     let errMess: string[] = $state([]); // error message to be shown when element is hovered
     let hasErr: boolean = $state(false); // indicates whether this box has errors
 
-    // variables for the HTML parts
+    // Variables for the HTML parts
     let inputElement: HTMLInputElement | undefined = $state();
     let widthSpan: HTMLSpanElement | undefined = $state();
     let readonlyElement: HTMLSpanElement | undefined = $state();
     let inputWidth = $state("1ch");
 
-    // variables for the caret position
+    // Variables for the caret position
     let caretPosition: CaretPosition = $state({ start: -1, end: -1 });
 
-    // variable to let us know whether to open the dropdown when this component receives focus
+    // Variable to let us know whether to open the dropdown when this component receives focus
     let openDropdownOnFocus = $state(false);
+
+    // Variable to let us know whether auto execution behavior is expected when this component receives focus
+    // This is the case when the box is an actionBox, and only one option is available in allOptions.
+    let autoExecuteSingleActionOnFocus = $state(false);
 
     /* ========	The following variables are extra compared to the TextComponent =========== */
 
@@ -237,18 +247,7 @@
         // do not yet have a value. Therefore, it is not useful to call this function from onMount!
         if (!!widthSpan && !!inputElement) {
             LOGGER.log(`setInputWidth for ${box?.id}`);
-            let value = text ?? "";
-
-            if (value.length === 0) {
-                value = placeholder;
-                if (value.length === 0) {
-                    value = " ";
-                }
-            }
-
-            // Ensure that HTML tags in value are encoded, otherwise they will be seen as HTML => done by textContent.
-            widthSpan.textContent = value;
-            inputWidth = `${widthSpan.offsetWidth + 2}px`; // small buffer for caret
+            inputWidth = computeInputWidth(text, placeholder, widthSpan);
         }
     }
     /*********************************************************************
@@ -304,15 +303,27 @@
         // Only open dropdown when focus is gained, not when user interacts with an already focused input.
         if (document.activeElement !== inputElement) {
             openDropdownOnFocus = true;
+            autoExecuteSingleActionOnFocus = true;
         }
     }
     /* Opens dropdown only when focus was mouse-triggered. */
     function onFocusIn(): void {
         void focusInput("UI");
 
+        allOptions = getOptions();
+        if (autoExecuteSingleActionOnFocus) {
+            autoExecuteSingleActionOnFocus = false;
+
+            if (isActionBox(box) && allOptions.length === 1 && allOptions[0].id !== noOptions.id) {
+                openDropdownOnFocus = false; // reset just to be sure
+                executeOption(allOptions[0]);
+                // todo the selection is not right after execution, it should be the first editable child of the new node
+                return;
+            }
+        }
+
         if (openDropdownOnFocus) {
             openDropdownOnFocus = false;
-            allOptions = getOptions();
             void showDropdown(); // showDropdown() already calls updateFilteredOptions()
         }
     }
@@ -325,29 +336,7 @@
         LOGGER.log(`${id}: setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]`);
         // No need to flush any pending updates, method is being called from the box.
         const currentValue = inputElement?.value ?? text ?? "";
-        switch (freCaret.position) {
-            case FreCaretPosition.RIGHT_MOST: // type nr 2
-                caretPosition.start = caretPosition.end = currentValue.length;
-                break;
-            case FreCaretPosition.LEFT_MOST: // type nr 1
-                caretPosition.start = 0;
-                caretPosition.end = 0;
-                break;
-            case FreCaretPosition.UNSPECIFIED: // type nr 0
-                caretPosition.start = 0;
-                caretPosition.end = currentValue.length;
-                break;
-            case FreCaretPosition.INDEX: // type nr 3
-                const len = currentValue.length;
-                // make sure the given position is within the current text
-                caretPosition.start = Math.max(0, Math.min(freCaret.from, len));
-                caretPosition.end = Math.max(caretPosition.start, Math.min(freCaret.to, len));
-                break;
-            default:
-                caretPosition.start = 0;
-                caretPosition.end = currentValue.length;
-                break;
-        }
+        caretPosition = resetCaretPosition(freCaret, currentValue)
     }
     /************************************************************************
      * END Functions that react when this component gets focus either through
@@ -616,69 +605,34 @@
     /*********************************************************************
      * Functions for copy, cut and paste
      * *******************************************************************/
+
+    /* Functions to be triggered by external cut/copy/paste buttons.
+     * They are used through the box.
+     */
     function getSelectedText(): string {
-        flushSync(); // flush any pending updates
-
-        if (!inputElement) {
-            return "";
-        }
-        // 1. focus is on an outer button, so read selection immediately
-        const value = inputElement.value ?? text ?? "";
-        const start = Math.max(0, inputElement.selectionStart ?? 0);
-        const end = Math.max(start, inputElement.selectionEnd ?? start);
-
-        // 2. then restore focus
-        inputElement.focus(); // important, because focus is on the copy button
-        return value.slice(start, end);
+        return getSelectedTextFromInput(setContextForClipboard());
     }
     function deleteSelection(): void {
-        flushSync(); // ensure DOM and state are aligned
-
-        if (!inputElement) return;
-
-        const value = inputElement.value ?? text ?? "";
-        const start = inputElement.selectionStart ?? 0;
-        const end = inputElement.selectionEnd ?? start;
-
-        if (start === end) {
-            // nothing selected → nothing to delete
-            return;
-        }
-
-        const newValue = value.slice(0, start) + value.slice(end);
-
-        // update both DOM and state
-        inputElement.value = newValue;
-        text = newValue;
-
-        inputElement.focus();  // important, because focus is on the cut button
-        // restore caret position
-        inputElement.setSelectionRange(start, start);
-
-        // keep autosize in sync
-        setInputWidth();
-        updateFilteredOptions()
+        deleteSelectionFromInput(setContextForClipboard());
     }
     function insertAtSelection(insertedText: string): void {
-        flushSync();
-
-        if (!inputElement) return;
-
-        const safeInsert = insertedText ?? "";
-        const value = inputElement.value ?? text ?? "";
-        const start = Math.max(0, inputElement.selectionStart ?? 0);
-        const end = Math.max(start, inputElement.selectionEnd ?? start);
-
-        const newValue = value.slice(0, start) + safeInsert + value.slice(end);
-        const newCaret = start + safeInsert.length;
-
-        inputElement.value = newValue;
-        text = newValue;
-        inputElement.focus();                      // important, because focus is on the paste button
-        inputElement.setSelectionRange(newCaret, newCaret);
-        setInputWidth();
-        updateFilteredOptions()
+        insertAtSelectionInInput(insertedText, setContextForClipboard());
     }
+    /* Helper function to set the context in which the common clipboard functions are being used. */
+    function setContextForClipboard(): TextInputClipboardContext {
+        return {
+            inputElement,
+            text,
+            setText: (value: string) => {
+                text = value;
+            },
+            afterChange: () => {
+                setInputWidth();
+                updateFilteredOptions();
+            }
+        };
+    }
+    /* The only function that is triggered by the UI in this component itself */
     function handleClipboard(action: string): void {
         LOGGER.log(`TextDropdownComponent ${action}`);
         shouldBeHandledByBrowser.value = true;

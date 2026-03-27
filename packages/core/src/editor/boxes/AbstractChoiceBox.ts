@@ -5,6 +5,9 @@ import { BehaviorExecutionResult } from "../util/index.js"
 import { type FreEditor } from "../internal.js";
 import { Box } from "./internal.js";
 import type { SelectOption } from "./internal.js";
+import { FreLogger } from "../../logging/index.js"
+
+const LOGGER: FreLogger = new FreLogger("AbstractChoiceBox").mute()
 
 export abstract class AbstractChoiceBox extends Box {
     kind: string = "AbstractChoiceBox"
@@ -58,7 +61,7 @@ export abstract class AbstractChoiceBox extends Box {
     // @ts-ignore
     // parameter is present to support subclasses
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
-        console.error("AbstractChoiceBox.executeOption")
+        LOGGER.error("AbstractChoiceBox.executeOption")
         return BehaviorExecutionResult.NULL
     }
 
@@ -75,13 +78,13 @@ export abstract class AbstractChoiceBox extends Box {
     }
 
     makeOptionsUnique(options: SelectOption[]): SelectOption[] {
-        console.log(`makeOptionsUnique options: ${options.map((o) => o.label)}`)
+        LOGGER.log(`makeOptionsUnique options: ${options.map((o) => o.label)}`)
         // Remove doubles, to avoid errors. Check on the id, because identical labels are allowed!
         const seen: string[] = []
         const result: SelectOption[] = []
         options.forEach((option) => {
             if (seen.includes(option.id)) {
-                console.log(`makeOptionsUnique.Option box(${this.id})` + jsonAsString(option) + " is a duplicate")
+                LOGGER.log(`makeOptionsUnique.Option box(${this.id})` + jsonAsString(option) + " is a duplicate")
             } else {
                 seen.push(option.id)
                 result.push(option)
@@ -95,17 +98,17 @@ export abstract class AbstractChoiceBox extends Box {
      ***********************************************************************************/
     insertAtSelection: (insert: string) => void = (_insert: string) => {
         // Default implementation, to be overridden by TextDropdownComponent
-        console.log("AbstractChoiceBox insertAtSelection")
+        LOGGER.log("AbstractChoiceBox insertAtSelection")
     }
 
     getSelectedText: () => string = () => {
         // Default implementation, to be overridden by TextDropdownComponent
-        console.log("AbstractChoiceBox getSelectedText")
+        LOGGER.log("AbstractChoiceBox getSelectedText")
         return this.getText()
     }
 
     deleteSelection: () => void = () => {
         // Default implementation, to be overridden by TextDropdownComponent
-        console.log("AbstractChoiceBox deleteSelection")
+        LOGGER.log("AbstractChoiceBox deleteSelection")
     }
 }
