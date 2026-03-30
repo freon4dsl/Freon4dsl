@@ -11,18 +11,21 @@ import { CoreConfig, FreLanguage, FREON, FreonDeltaClient, LionWebRepositoryComm
 /**
  * Initialize everything
  */
-// await CoreConfig.initializeWithServers(
-//     LanguageEnvironment.getInstance(),
-//     // ServerCommunication.getInstance(),
-//     LionWebRepositoryCommunication.getInstance(),
-//     new FreonDeltaClient()
-// )
-CoreConfig.initialize(
+await CoreConfig.initializeWithServers(
     LanguageEnvironment.getInstance(),
-    ServerCommunication.getInstance(),
-    // LionWebRepositoryCommunication.getInstance(),
-    // new FreonDeltaClient()
+    // ServerCommunication.getInstance(),
+    LionWebRepositoryCommunication.getInstance(),
+    new FreonDeltaClient({
+        hostname: "192.168.100.1", port: 3005, timeout: 20000
+    })
 )
+// CoreConfig.initialize(
+//     LanguageEnvironment.getInstance(),
+//     ServerCommunication.getInstance(),
+//     // LionWebRepositoryCommunication.getInstance(),
+//     // new FreonDeltaClient()
+// )
+console.log(`Manager is of type ${FREON.modelManager.constructor.name}`)
 WebappConfigurator.getInstance()
 
 ServerCommunication.getInstance().SERVER_URL = "http://localhost:8001/"

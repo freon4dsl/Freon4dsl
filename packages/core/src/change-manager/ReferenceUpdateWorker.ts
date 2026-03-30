@@ -28,6 +28,8 @@ export class ReferenceUpdateWorker implements AstWorker {
         for (const childProp of referenceProperties) {
             const childValue = FreLanguage.getInstance().getReferencePropertyValue(node, childProp)
             for(const ref of childValue) {
+                // console.log(`XXX ${ref} - ${ref?.pathname}`)
+                // console.log(`XXXXXXXXXX ${ref["_FRE_pathname"]}`)
                 const foundIndex = ref.pathname.indexOf(this.delta.oldValue as string)
                 if (foundIndex > -1 && ref.referred === this.delta.owner) {
                     let newPathName = ref.pathname;
