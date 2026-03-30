@@ -5,33 +5,41 @@ import { includeIgnoreFile } from '@eslint/compat';
 import globals from 'globals';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript-eslint';
-import { globalIgnores } from "eslint/config"
+import { globalIgnores, defineConfig } from "eslint/config"
 const gitignorePath = fileURLToPath(new URL('.gitignore', import.meta.url));
 
-export default ts.config(
+export default defineConfig(
     includeIgnoreFile(gitignorePath),
-    globalIgnores([
-        ".svelte-kit/*"  
-    ]),
+    globalIgnores([".svelte-kit/*", "vite.config.ts", "vitest.config.ts", "svelte.config.js", "eslint.config.js", "**/__tests__/**"]),
     // We seem to need a ts.config.<anything> here, otherwise eslint complains that @typescript-eslint (as used below) is unknown.
     ts.configs.base,
     // The "n" plugin contains all kind of import rules
     nPlugin.configs["flat/recommended-module"],
-    {   files: [
-            "src/**/*"
-        ],
+    {
+        files: ["src/**/*", "**/*.svelte", "**/*.svelte.ts", "**/*.svelte.js"],
         rules: {
             "n/no-extraneous-import": [
                 "error",
                 {
-                    allowModules: ["vite", "eslint-config-prettier", "@eslint/compat", "globals", "eslint-plugin-n", "@vitest/eslint-plugin", "typescript-eslint"],
+                    allowModules: [
+                        "vite",
+                        "eslint-config-prettier",
+                        "@eslint/compat",
+                        "globals",
+                        "eslint-plugin-n",
+                        "@vitest/eslint-plugin",
+                        "typescript-eslint",
+                        "vitest",
+                        "@sveltejs/vite-plugin-svelte",
+                        "@tailwindcss/vite",
+                    ],
                     resolvePaths: [],
                 },
             ],
             "n/no-unpublished-import": [
                 "error",
                 {
-                    allowModules: ["vitest"],
+                    allowModules: ["vitest", "vite", "@sveltejs/vite-plugin-svelte", "@tailwindcss/vite"],
                 },
             ],
             // Extra rule to find missing "type" in imports
@@ -53,17 +61,17 @@ export default ts.config(
             // '@typescript-eslint/no-duplicate-type-constituents': 'error',
             // '@typescript-eslint/no-empty-object-type': 'error',
             // "@typescript-eslint/no-explicit-any": "error",
-            // '@typescript-eslint/no-extra-non-null-assertion': 'error',
+            "@typescript-eslint/no-extra-non-null-assertion": "error",
             // '@typescript-eslint/no-floating-promises': 'error',
-            // '@typescript-eslint/no-for-in-array': 'error',
+            "@typescript-eslint/no-for-in-array": "error",
             // 'no-implied-eval': 'off',
             // '@typescript-eslint/no-implied-eval': 'error',
-            // '@typescript-eslint/no-misused-new': 'error',
+            "@typescript-eslint/no-misused-new": "error",
             // '@typescript-eslint/no-misused-promises': 'error',
             // '@typescript-eslint/no-namespace': 'error',
-            // '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
+            "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
             // '@typescript-eslint/no-redundant-type-constituents': 'error',
-            // '@typescript-eslint/no-require-imports': 'error',
+            "@typescript-eslint/no-require-imports": "error",
             // '@typescript-eslint/no-this-alias': 'error',
             // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
             // '@typescript-eslint/no-unnecessary-type-constraint': 'error',

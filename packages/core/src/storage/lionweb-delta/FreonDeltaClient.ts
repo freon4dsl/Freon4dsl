@@ -1,4 +1,4 @@
-import { DeltaClient } from "@lionweb/server-delta-client"
+import { DeltaClient, type DeltaConfiguration } from "@lionweb/server-delta-client"
 import { wait } from "../../editor/index.js"
 import { adminResponseFunctions } from "./FreonAdminResponses.js"
 import { childEventFunctions } from "./FreonChildEvents.js"
@@ -14,8 +14,8 @@ export class FreonDeltaClient {
         return this._deltaApiClient
     }
 
-    constructor() {
-        this._deltaApiClient = new DeltaClient({}, [
+    constructor(config: DeltaConfiguration) {
+        this._deltaApiClient = new DeltaClient(config, [
             propertyEventFunctions,
             childEventFunctions,
             miscEventFunctions,

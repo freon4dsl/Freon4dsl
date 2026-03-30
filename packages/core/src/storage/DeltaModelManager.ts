@@ -8,7 +8,7 @@ import { newSignOnRequest } from "./lionweb-delta/commands.js"
 import { ModelManagementError } from "./IModelManager.js"
 import { ModelManager } from "./ModelManager.js"
 import { FreLionwebSerializer } from "./serializer/index.js"
-import { type FreUnitIdentifier, LionwebDeltaIdProvider } from "./server/index.js"
+import { type FreUnitIdentifier, type LionwebDeltaIdProvider } from "./server/index.js"
 
 const LOGGER: FreLogger = new FreLogger("DeltaModelManager")
 

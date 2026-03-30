@@ -39,7 +39,8 @@
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
-            "svelte": "./dist/index.js"
+            "svelte": "./dist/index.js",
+            "node": "./dist/index.js"
         }
     },
     "files": [
@@ -71,7 +72,7 @@
     "dependencies": {
         "@freon4dsl/core": "~2.1.0",
         "@freon4dsl/core-svelte": "~2.1.0",
-        "@lionweb/server-delta-shared": "0.4.0-beta.3",
+        "@lionweb/server-delta-shared": "0.4.0-beta.4",
         "flowbite-svelte": "1.31.0",
         "flowbite-svelte-icons": "3.1.0",
         "mobx": "^6.13.6",
