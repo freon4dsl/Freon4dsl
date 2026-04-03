@@ -149,39 +149,59 @@ export class FreUndoStackManager {
     }
 
     private reverseDelta(delta: FreDelta) {
+        this.reverseDeltaInternal(delta, true)
+    }
+
+    private reverseDeltaInternal(delta: FreDelta, wrapInAction: boolean) {
         LOGGER.log(`reverseDelta<${delta.constructor.name}>:  ${delta.toString()}  inTransaction '${this.inTransaction}'`)
         if (delta instanceof FrePartDelta || delta instanceof FrePrimDelta) {
             if (FreUndoStackManager.hasIndex(delta)) {
                 if (FreUndoStackManager.checkIndex(delta)) {
-                    runInAction(() => {
+                    this.applyWithOptionalAction(wrapInAction, () => {
                         delta.owner[delta.propertyName][delta.index] = delta.oldValue
                     })
                 } else {
                     LOGGER.error(`reverseDelta: cannot reverse ${delta.toString()} because the index is incorrect`)
                 }
             } else {
-                runInAction(() => {
+                this.applyWithOptionalAction(wrapInAction, () => {
                     delta.owner[delta.propertyName] = delta.oldValue
                 })
             }
         } else if (delta instanceof FrePartListDelta || delta instanceof FrePrimListDelta) {
             if (delta.removed.length > 0) {
-                runInAction(() => {
+                this.applyWithOptionalAction(wrapInAction, () => {
                     delta.owner[delta.propertyName].splice(delta.index, 0, ...delta.removed)
                 })
             }
             if (delta.added.length > 0) {
-                runInAction(() => {
+                this.applyWithOptionalAction(wrapInAction, () => {
                     delta.owner[delta.propertyName].splice(delta.index, delta.added.length)
                 })
             }
         } else if (delta instanceof FreTransactionDelta) {
-            // TODO when multiple sources of change are present, then a check is needed whether the state of the unit is such that this delta can be reversed
+            // Keep redo stack behavior identical (single transaction) while reducing
+            // MobX overhead by replaying all sub-deltas in one action.
             this.undoManager.startTransaction(false, this.changeSource)
-            for (const sub of delta.internalDeltas.reverse()) {
-                this.reverseDelta(sub)
+            try {
+                runInAction(() => {
+                    for (let i = delta.internalDeltas.length - 1; i >= 0; i--) {
+                        this.reverseDeltaInternal(delta.internalDeltas[i], false)
+                    }
+                })
+            } finally {
+                this.undoManager.endTransaction(this.changeSource)
             }
-            this.undoManager.endTransaction(this.changeSource)
+        }
+    }
+
+    private applyWithOptionalAction(wrapInAction: boolean, apply: () => void) {
+        if (wrapInAction) {
+            runInAction(() => {
+                apply()
+            })
+        } else {
+            apply()
         }
     }
 
