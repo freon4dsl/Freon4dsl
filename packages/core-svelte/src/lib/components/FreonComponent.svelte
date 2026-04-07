@@ -336,7 +336,7 @@
 >
     <div class="gutter"></div>
     <div class="editor-component">
-        <RenderComponent {editor} readonly={false} box={rootBox} />
+        <RenderComponent {editor} readonly={editor.readOnly} box={rootBox} />
     </div>
 </div>
 <!-- Here the only instance of ContextMenu is defined -->

@@ -50,6 +50,12 @@ export class FreEditor {
     scrollX: number = 0 // The amount of scrolling horizontally, to find the element above and under.
     scrollY: number = 0 // The amount of scrolling vertically, to find the element above and under.
 
+    /**
+     * When true, the editor does not allow mutations (delete, paste, undo/redo, text edits, etc.).
+     * Selection and navigation (expand/collapse, arrows) remain enabled for view-only use.
+     */
+    readOnly: boolean = false
+
     private _rootElement: FreNode = null // The model element to be shown in this editor.
     private _rootBox: Box | null = null // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
     private _selectedElement: FreNode = null // The model element, or the parent element of the property, that is currently selected in the editor.
@@ -408,6 +414,7 @@ export class FreEditor {
      * @param box
      */
     deleteBox(box: Box): void {
+        if (this.readOnly) return
         console.log(`deleteBox  ${box.id} for property ${box.propertyName}, box.kind: ${box.kind}`)
         const node: FreNode = box.node
         if (node.freIsUnit()) {
@@ -451,6 +458,7 @@ export class FreEditor {
      * @param deleteParent If true, delete the parent node as well, assuming it has only one property
      */
     deleteTextBox(box: Box, deleteParent: boolean): void {
+        if (this.readOnly) return
         this.DELETE_PARENT = deleteParent
         LOGGER.log(`deleteTextBox  ${box.id} for property ${box.propertyName}`)
         const propertyName = box.propertyName
