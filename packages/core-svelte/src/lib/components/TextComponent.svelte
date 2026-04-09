@@ -507,7 +507,6 @@
                 editor
             );
             if (executionResult !== BehaviorExecutionResult.EXECUTED) {
-                LOGGER.log(`TODO: Should display '${event.key}', but actionbox has no setText`)
                 actionBox.setText(event.key)
             }
         } else if (isTextBox(editor.selectedBox)) {
