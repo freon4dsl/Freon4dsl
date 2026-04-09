@@ -12,6 +12,10 @@
         FreLanguage,
         notNullOrUndefined,
         TextBox,
+        isTextBox,
+        ActionBox,
+        isActionBox,
+        BehaviorExecutionResult,
         UndefinedRectangle,
         type ClientRectangle, FreCaret, FreCaretPosition, CharAllowed, FreEditor,
         ARROW_LEFT, ENTER, ARROW_RIGHT, BACKSPACE, DELETE, SHIFT,
@@ -494,6 +498,20 @@
         LOGGER.log('handleGoToNext event ' + event.key);
         endEditing('goto-next');
         editor.selectNextLeafIncludingExpressionPreOrPost();
+        // Now try whether the typed character triggers an action.
+        if (isActionBox(editor.selectedBox)) {
+            const actionBox = editor.selectedBox as ActionBox;
+            const executionResult: BehaviorExecutionResult = actionBox.tryToExecute(
+                event.key,
+                editor
+            );
+            if (executionResult !== BehaviorExecutionResult.EXECUTED) {
+                LOGGER.log(`TODO: Should display '${event.key}', but actionbox has no setText`)
+                // actionBox.
+            }
+        } else if (isTextBox(editor.selectedBox)) {
+            (editor.selectedBox as TextBox).setText(event.key)
+        }
         event.preventDefault();
         event.stopPropagation();
     }
