@@ -148,6 +148,7 @@
         if (notNullOrUndefined(box)) {
             const newPlaceholder = camelCaseToReadable(box.placeholder);
             if (placeholder !== newPlaceholder) placeholder = newPlaceholder;
+            text = box.getText()
 
             const newOriginalText = box.getText() ?? "";
             if (originalText !== newOriginalText) originalText = newOriginalText;
@@ -260,7 +261,7 @@
      * the browser or from the editor
      * *******************************************************************/
     async function focusInput(from: FocusOrigin): Promise<void> {
-        LOGGER.log(`focusInput for ${box?.id} from ${from}`);
+        LOGGER.log(`focusInput for ${box?.id} from ${from} boxText is ${box.getText()}`);
 
         if (!inputElement || !box) {
             LOGGER.error("focusInput: no inputElement or box");

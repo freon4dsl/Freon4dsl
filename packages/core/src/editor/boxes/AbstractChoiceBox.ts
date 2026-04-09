@@ -13,6 +13,12 @@ export abstract class AbstractChoiceBox extends Box {
     kind: string = "AbstractChoiceBox"
     placeholder: string
     _isFirstInLine: boolean
+    /**
+     * Temporary text value, settable programmatically.
+     * Never stored in the AST.
+     * @private
+     */
+    private temporaryText: string = ""
 
     protected constructor(node: FreNode, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
         super(node, role)
@@ -44,9 +50,14 @@ export abstract class AbstractChoiceBox extends Box {
         return this._getSelectedOption
     }
 
+    setText(text: string): void {
+        this.temporaryText = text;
+        this.isDirty()
+    }
+    
     getText(): string {
         if (this.getSelectedOption() === null) {
-            return ""
+            return this.temporaryText
         } else {
             return this.getSelectedOption().label
         }

@@ -498,6 +498,7 @@
         LOGGER.log('handleGoToNext event ' + event.key);
         endEditing('goto-next');
         editor.selectNextLeafIncludingExpressionPreOrPost();
+        editor.selectedCaretPosition = FreCaret.RIGHT_MOST
         // Now try whether the typed character triggers an action.
         if (isActionBox(editor.selectedBox)) {
             const actionBox = editor.selectedBox as ActionBox;
@@ -507,7 +508,7 @@
             );
             if (executionResult !== BehaviorExecutionResult.EXECUTED) {
                 LOGGER.log(`TODO: Should display '${event.key}', but actionbox has no setText`)
-                // actionBox.
+                actionBox.setText(event.key)
             }
         } else if (isTextBox(editor.selectedBox)) {
             (editor.selectedBox as TextBox).setText(event.key)
