@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TEXT_LOGGER } from "./ComponentLoggers.js"
+    import { TEXTDROPDOWN_LOGGER } from "./ComponentLoggers.js"
     import {
         componentId, computeInputWidth, deleteSelectionFromInput,
         type FreComponentProps,
@@ -43,7 +43,7 @@
     import ErrorTooltip from './ErrorTooltip.svelte';
     import ErrorMarker from './ErrorMarker.svelte';
 
-    const LOGGER = TEXT_LOGGER;
+    const LOGGER = TEXTDROPDOWN_LOGGER;
 
     type BoxType = 'action' | 'select';
     type FocusOrigin = "UI" | "editor";
@@ -210,6 +210,7 @@
         return text !== originalText;
     }
     function executeOption(option: SelectOption): void {
+        LOGGER.log(`executeOption`)
         box.executeOption(editor, option); // the result of the execution is ignored
         if (isActionBox(box)) {
             // ActionBox, action done, clear input text
@@ -383,9 +384,9 @@
      * Functions for handling keyboard events
      * *******************************************************************/
     function onInput(_event: Event): void {
-        if (dropdownShown) {
+        // if (dropdownShown) {
             updateFilteredOptions();
-        }
+        // }
     }
     function onKeyDown(event: KeyboardEvent): void {
         LOGGER.log(
@@ -796,7 +797,7 @@
         tryAutoCommitOnCurrentInput(caretPos);
     }
     function tryAutoCommitOnCurrentInput(caretPos: number): void {
-        LOGGER.log(`tryAutoCommitOnCurrentInput box(${box?.id}) for ${box?.kind}`);
+        LOGGER.log(`tryAutoCommitOnCurrentInput box(${box?.id}) for ${box?.kind} caret pos ${caretPos} text '${text}'`);
         if (isActionBox(box)) {
             // Try to match a regular expression, and execute the action that is associated with it
             const result = box.tryToMatchRegExpAndExecuteAction(text, editor);
