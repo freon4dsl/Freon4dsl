@@ -21,7 +21,8 @@
         isActionBox,
         isReferenceBox,
         isSelectBox,
-        MatchUtil, BehaviorExecutionResult
+        MatchUtil, BehaviorExecutionResult,
+        isExpressionPreOrPost
     } from "@freon4dsl/core"
     import {
         camelCaseToReadable, canDeleteNextWord, canDeletePreviousWord, canMoveCaretLeft,
@@ -79,7 +80,7 @@
     // Tab skips spaces before and after operators, which have specific roles.
     // todo still needed?
     let tabindex: number = $derived(notNullOrUndefined(box?.role)
-        ? box.role.startsWith('action-binary') || box.role.startsWith('action-exp')
+        ? isExpressionPreOrPost(box)
             ? -1
             : 0
         : 0);
@@ -903,6 +904,7 @@
                     autocapitalize="off"
                     spellcheck={false}
                     name="freon_text_component"
+                    {tabindex}
                 />
 
                 <span class="text-dropdown-component-width" bind:this={widthSpan}></span>
