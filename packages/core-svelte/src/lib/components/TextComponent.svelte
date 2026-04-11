@@ -507,10 +507,8 @@
                 editor
             );
             if (executionResult !== BehaviorExecutionResult.EXECUTED) {
-                actionBox.setText(event.key)
+                actionBox.rememberText(event.key)
             }
-        } else if (isTextBox(editor.selectedBox)) {
-            (editor.selectedBox as TextBox).setText(event.key)
         }
         event.preventDefault();
         event.stopPropagation();
