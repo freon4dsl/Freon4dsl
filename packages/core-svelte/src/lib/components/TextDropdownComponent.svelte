@@ -311,7 +311,7 @@
     }
     /* Opens dropdown only when focus was mouse-triggered. */
     function onFocusIn(): void {
-        void focusInput("UI");
+        void focusInput("UI"); // the 'void' is used to show that the returned promise is ignored
 
         allOptions = getOptions();
         if (autoExecuteSingleActionOnFocus) {
@@ -386,8 +386,11 @@
      * Functions for handling keyboard events
      * *******************************************************************/
     function onInput(_event: Event): void {
+        console.log('onInput, dropdownShown:', dropdownShown);
         // if (dropdownShown) {
-            updateFilteredOptions();
+            updateFilteredOptionsSoon();
+        // } else {
+        //     showDropdown();
         // }
     }
     function onKeyDown(event: KeyboardEvent): void {
@@ -757,12 +760,8 @@
         requestAnimationFrame(() => { // wait for the DOM to settle, otherwise the selection start and end are incorrect
             if (!dropdownShown) {
                 allOptions = getOptions();
-                void showDropdown();
-                // this one does the updateFilteredOptions()
-                return;
-            }
-
-            if (dropdownShown) {
+                void showDropdown(); // this one does the updateFilteredOptions()
+            } else {
                 updateFilteredOptions();
             }
         });
