@@ -317,18 +317,23 @@
         if (autoExecuteSingleActionOnFocus) {
             autoExecuteSingleActionOnFocus = false;
 
-            if (isActionBox(box) && allOptions.length === 1 && allOptions[0].id !== noOptions.id) {
-                openDropdownOnFocus = false; // reset just to be sure
-                executeOption(allOptions[0]);
-                // todo the selection is not right after execution, it should be the first editable child of the new node
-                return;
-            }
+            executeSingleAction();
         }
 
         if (openDropdownOnFocus) {
             openDropdownOnFocus = false;
             void showDropdown(); // showDropdown() already calls updateFilteredOptions()
         }
+    }
+
+    function executeSingleAction(): boolean {
+        if (isActionBox(box) && allOptions.length === 1 && allOptions[0].id !== noOptions.id) {
+            openDropdownOnFocus = false; // reset just to be sure
+            executeOption(allOptions[0]);
+            // todo the selection is not right after execution, it should be the first editable child of the new node
+            return true;
+        }
+        return false
     }
     /**
      * This function determines the caret position of the <input> element programmatically.
@@ -439,6 +444,9 @@
             event.stopPropagation();
 
             if (!dropdownShown) {
+                if (executeSingleAction() ) {
+                    return;
+                }
                 allOptions = getOptions();
                 void showDropdown();
                 return;
