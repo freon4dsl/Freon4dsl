@@ -754,14 +754,14 @@
     }
     /* Updates filteredOptions -- after the DOM has settled */
     function updateFilteredOptionsSoon(): void {
-        if (!dropdownShown) {
-            allOptions = getOptions();
-            void showDropdown();
-            // this one does the updateFilteredOptions(), no need to wait
-            return;
-        }
+        requestAnimationFrame(() => { // wait for the DOM to settle, otherwise the selection start and end are incorrect
+            if (!dropdownShown) {
+                allOptions = getOptions();
+                void showDropdown();
+                // this one does the updateFilteredOptions()
+                return;
+            }
 
-        requestAnimationFrame(() => {
             if (dropdownShown) {
                 updateFilteredOptions();
             }
