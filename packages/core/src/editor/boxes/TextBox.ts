@@ -181,9 +181,9 @@ export class TextBox extends Box {
      * This function is called after the text changes in the browser.
      * It ensures that the SelectableComponent will calculate the new coordinates.
      */
-    update: () => void = () => {
-        /* To be overwritten by `TextComponent` */
-    }
+    // update: () => void = () => {
+    //     /* To be overwritten by `TextComponent` */
+    // }
 
     isEditable(): boolean {
         return true

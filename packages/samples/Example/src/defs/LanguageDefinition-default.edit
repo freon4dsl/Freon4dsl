@@ -7,7 +7,7 @@ global {
 
 
 Attribute {
-    [ ${name} : ${declaredType} ]
+    [ ${name} : ${declaredType} ${extra multiline}]
 }
 Entity {
     [

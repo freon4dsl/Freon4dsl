@@ -793,24 +793,26 @@
 /*******************************************************
  *  Multiline TextComponent
  *******************************************************/
-.multiline-text-component {
+.multiline-text-component-input {
     box-sizing: border-box;
     display: block;
 
     font-size: var(--freon-inline-font-size);
     line-height: var(--freon-inline-line-height);
+    height: var(--freon-inline-height);
+    padding-inline: var(--freon-inline-padding-x);
 
-    padding-inline: 0.125rem;
     margin: 0;
-
-    height: auto;
     min-height: calc(2 * var(--freon-inline-line-height));
 
     resize: both;
     field-sizing: content;
+    width: 100%;
 
     outline: none;
     vertical-align: top;
+    white-space: pre-wrap; /* makes sure '\n' is displayed correctly */
+    color: inherit;
 }
 
 /*******************************************************

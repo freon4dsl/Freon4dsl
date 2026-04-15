@@ -318,14 +318,36 @@
     opacity: 0.5;
 }
 
-.multiline-text-component {
+/*******************************************************
+ *  MultiLineTextComponent
+ *******************************************************/
+
+.multiline-text-component-input {
     color: var(--color-light-freon-900);
 }
 
-.multiline-text-component:focus {
+.multiline-text-component-input:focus {
     color: var(--color-light-freon-900);
     background-color: var(--color-freon-multiline-text-component-focus-bg);
     box-shadow: 0 0 0 3px var(--freon-focus-ring);
+}
+
+/*******************************************************
+ *  TextDropdownComponent
+ *******************************************************/
+
+.text-dropdown-component .text-component-text {
+    color: var(--color-freon-text-dropdown-text);
+}
+
+.text-dropdown-component .text-component-input {
+    color: var(--color-light-freon-50);
+    background: var(--color-freon-text-dropdown-input-bg);
+}
+
+.reference-button {
+    background-color: transparent;
+    color: var(--color-light-freon-50);
 }
 
 /*******************************************************
@@ -495,20 +517,6 @@
 /*******************************************************
  *  Other ...
  *******************************************************/
-.reference-button {
-    background-color: transparent;
-    color: var(--color-light-freon-50);
-}
-
-.text-dropdown-component .text-component-text {
-    color: var(--color-freon-text-dropdown-text);
-}
-
-.text-dropdown-component .text-component-input {
-    color: var(--color-light-freon-50);
-    background: var(--color-freon-text-dropdown-input-bg);
-}
-
 .brackets {
     color: var(--color-light-freon-400);
 }

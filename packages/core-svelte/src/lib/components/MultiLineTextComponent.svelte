@@ -72,7 +72,7 @@
 
 <span>
 <textarea
-    class="{box.cssClass} multilinetext-box multiline-text-component"
+    class="{box.cssClass} multiline-text-component"
     class:readonly={readonly}
     {id}
     onfocusout={readonly ? undefined : onFocusOut}

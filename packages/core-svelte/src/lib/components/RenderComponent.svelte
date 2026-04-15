@@ -37,7 +37,7 @@
         type ClientRectangle,
         UndefinedRectangle
     } from "@freon4dsl/core"
-    import MultiLineTextComponent from './MultiLineTextComponent.svelte';
+    import MultiLineTextComponent from './MultiLineTextComponent2.svelte';
     import EmptyLineComponent from './EmptyLineComponent.svelte';
     import GridComponent from './GridComponent.svelte';
     import IndentComponent from './IndentComponent.svelte';
