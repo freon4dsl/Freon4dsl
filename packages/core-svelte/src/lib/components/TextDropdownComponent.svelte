@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TEXT_LOGGER } from "./ComponentLoggers.js"
+    import { TEXTDROPDOWN_LOGGER } from "./ComponentLoggers.js"
     import {
         componentId, computeInputWidth, deleteSelectionFromInput,
         type FreComponentProps,
@@ -21,7 +21,8 @@
         isActionBox,
         isReferenceBox,
         isSelectBox,
-        MatchUtil, BehaviorExecutionResult
+        MatchUtil, BehaviorExecutionResult,
+        isExpressionPreOrPost
     } from "@freon4dsl/core"
     import {
         camelCaseToReadable, canDeleteNextWord, canDeletePreviousWord, canMoveCaretLeft,
@@ -43,7 +44,7 @@
     import ErrorTooltip from './ErrorTooltip.svelte';
     import ErrorMarker from './ErrorMarker.svelte';
 
-    const LOGGER = TEXT_LOGGER;
+    const LOGGER = TEXTDROPDOWN_LOGGER;
 
     type BoxType = 'action' | 'select';
     type FocusOrigin = "UI" | "editor";
@@ -79,7 +80,7 @@
     // Tab skips spaces before and after operators, which have specific roles.
     // todo still needed?
     let tabindex: number = $derived(notNullOrUndefined(box?.role)
-        ? box.role.startsWith('action-binary') || box.role.startsWith('action-exp')
+        ? isExpressionPreOrPost(box)
             ? -1
             : 0
         : 0);
@@ -116,7 +117,6 @@
     let useFilteredDropdown: boolean = $state(false); // which type of dropdown to use todo get this value from the edit config */
     const noOptions: SelectOption = { id: 'noOptions', label: '<no known options>' }; // constant for when the box has no options
 
-
     // Elements for the use of the overlay to position the dropdown menu
     const pane = usePaneContext();
     let overlayRoot: HTMLElement | null = $state(null);
@@ -130,7 +130,6 @@
         inside: [dropdownAnchorEl, dropdownPanelEl, dropdownContentEl],
         closeOnResize: true,
     }));
-
 
     /*********************************************************************
      * Functions needed in every Freon component
@@ -148,6 +147,7 @@
         if (notNullOrUndefined(box)) {
             const newPlaceholder = camelCaseToReadable(box.placeholder);
             if (placeholder !== newPlaceholder) placeholder = newPlaceholder;
+            text = box.getText()
 
             const newOriginalText = box.getText() ?? "";
             if (originalText !== newOriginalText) originalText = newOriginalText;
@@ -210,15 +210,26 @@
         return text !== originalText;
     }
     function executeOption(option: SelectOption): void {
+        LOGGER.log(`executeOption`)
         box.executeOption(editor, option); // the result of the execution is ignored
         if (isActionBox(box)) {
             // ActionBox, action done, clear input text
             text = '';
         } else {
-            // set because the loop setting the model element back to the input takes too long
-            text = option.label; // set because the loop setting the model element back to the input takes too long
+            // set it here, because the loop setting the model element back to the input takes too long
+            text = option.label;
         }
         endEditing("matched");
+    }
+
+    function executeSingleAction(): boolean {
+        if (isActionBox(box) && allOptions.length === 1 && allOptions[0].id !== noOptions.id) {
+            openDropdownOnFocus = false; // reset just to be sure
+            executeOption(allOptions[0]);
+            // todo the selection is not right after execution, it should be the first editable child of the new node
+            return true;
+        }
+        return false
     }
     /*********************************************************************
      * END Helper functions
@@ -259,7 +270,7 @@
      * the browser or from the editor
      * *******************************************************************/
     async function focusInput(from: FocusOrigin): Promise<void> {
-        LOGGER.log(`focusInput for ${box?.id} from ${from}`);
+        LOGGER.log(`focusInput for ${box?.id} from ${from} boxText is ${box.getText()}`);
 
         if (!inputElement || !box) {
             LOGGER.error("focusInput: no inputElement or box");
@@ -300,26 +311,25 @@
     }
     /* Marks that upcoming focus was mouse-triggered. */
     function onPointerDown(): void {
-        // Only open dropdown when focus is gained, not when user interacts with an already focused input.
+        // See requirement 18
         if (document.activeElement !== inputElement) {
             openDropdownOnFocus = true;
             autoExecuteSingleActionOnFocus = true;
+        } else if (!dropdownShown) {
+            // TAB → click case: no focus event will come, so act now
+            allOptions = getOptions();
+            void showDropdown();
         }
     }
     /* Opens dropdown only when focus was mouse-triggered. */
     function onFocusIn(): void {
-        void focusInput("UI");
+        void focusInput("UI"); // the 'void' is used to show that the returned promise is ignored
 
         allOptions = getOptions();
         if (autoExecuteSingleActionOnFocus) {
             autoExecuteSingleActionOnFocus = false;
 
-            if (isActionBox(box) && allOptions.length === 1 && allOptions[0].id !== noOptions.id) {
-                openDropdownOnFocus = false; // reset just to be sure
-                executeOption(allOptions[0]);
-                // todo the selection is not right after execution, it should be the first editable child of the new node
-                return;
-            }
+            executeSingleAction();
         }
 
         if (openDropdownOnFocus) {
@@ -383,9 +393,9 @@
      * Functions for handling keyboard events
      * *******************************************************************/
     function onInput(_event: Event): void {
-        if (dropdownShown) {
-            updateFilteredOptions();
-        }
+        // if (dropdownShown) {
+            updateFilteredOptionsSoon();
+        // }
     }
     function onKeyDown(event: KeyboardEvent): void {
         LOGGER.log(
@@ -433,6 +443,9 @@
             event.stopPropagation();
 
             if (!dropdownShown) {
+                if (executeSingleAction() ) {
+                    return;
+                }
                 allOptions = getOptions();
                 void showDropdown();
                 return;
@@ -751,15 +764,11 @@
     }
     /* Updates filteredOptions -- after the DOM has settled */
     function updateFilteredOptionsSoon(): void {
-        if (!dropdownShown) {
-            allOptions = getOptions();
-            void showDropdown();
-            // this one does the updateFilteredOptions(), no need to wait
-            return;
-        }
-
-        requestAnimationFrame(() => {
-            if (dropdownShown) {
+        requestAnimationFrame(() => { // wait for the DOM to settle, otherwise the selection start and end are incorrect
+            if (!dropdownShown) {
+                allOptions = getOptions();
+                void showDropdown(); // this one does the updateFilteredOptions()
+            } else {
                 updateFilteredOptions();
             }
         });
@@ -796,7 +805,12 @@
         tryAutoCommitOnCurrentInput(caretPos);
     }
     function tryAutoCommitOnCurrentInput(caretPos: number): void {
-        LOGGER.log(`tryAutoCommitOnCurrentInput box(${box?.id}) for ${box?.kind}`);
+        LOGGER.log(`tryAutoCommitOnCurrentInput box(${box?.id}) for ${box?.kind} caret pos ${caretPos} text '${text}', original text '${originalText}'`);
+
+        if (text === originalText) {
+            LOGGER.log('no execution')
+            return;
+        }
         if (isActionBox(box)) {
             // Try to match a regular expression, and execute the action that is associated with it
             const result = box.tryToMatchRegExpAndExecuteAction(text, editor);
@@ -901,6 +915,7 @@
                     autocapitalize="off"
                     spellcheck={false}
                     name="freon_text_component"
+                    {tabindex}
                 />
 
                 <span class="text-dropdown-component-width" bind:this={widthSpan}></span>

@@ -12,6 +12,10 @@
         FreLanguage,
         notNullOrUndefined,
         TextBox,
+        isTextBox,
+        ActionBox,
+        isActionBox,
+        BehaviorExecutionResult,
         UndefinedRectangle,
         type ClientRectangle, FreCaret, FreCaretPosition, CharAllowed, FreEditor,
         ARROW_LEFT, ENTER, ARROW_RIGHT, BACKSPACE, DELETE, SHIFT,
@@ -494,6 +498,18 @@
         LOGGER.log('handleGoToNext event ' + event.key);
         endEditing('goto-next');
         editor.selectNextLeafIncludingExpressionPreOrPost();
+        editor.selectedCaretPosition = FreCaret.RIGHT_MOST
+        // Now try whether the typed character triggers an action.
+        if (isActionBox(editor.selectedBox)) {
+            const actionBox = editor.selectedBox as ActionBox;
+            const executionResult: BehaviorExecutionResult = actionBox.tryToExecute(
+                event.key,
+                editor
+            );
+            if (executionResult !== BehaviorExecutionResult.EXECUTED) {
+                actionBox.rememberText(event.key)
+            }
+        }
         event.preventDefault();
         event.stopPropagation();
     }
