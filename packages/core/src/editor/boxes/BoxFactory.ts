@@ -458,7 +458,7 @@ export class BoxFactory {
         result.placeholder = placeHolder;
         result.getOptions = getOptions;
         result.getSelectedOption = getSelectedOption;
-        result.executeOption = selectOption;
+        result._innerSelectOption = selectOption;
         FreUtils.initializeObject(result, initializer);
 
         return result;

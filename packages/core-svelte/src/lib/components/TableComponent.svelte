@@ -34,7 +34,7 @@
     let templateColumns: string = $state('');
     let templateRows: string = $state('');
     let cssClass: string = $state('');
-    let htmlElement: HTMLElement;
+    let htmlElement: HTMLElement = $state()!;
     let myMetaType: DragAndDropType;
     
     $effect(() => {

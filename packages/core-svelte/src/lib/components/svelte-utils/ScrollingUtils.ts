@@ -1,7 +1,6 @@
 // Utilities created by ChatGPT on August 28, 2025
 
-import { type OverlayPane } from "./OverlayPane.js";
-import { FreLogger, isNullOrUndefined, notNullOrUndefined } from '@freon4dsl/core';
+import { FreLogger, notNullOrUndefined } from '@freon4dsl/core';
 
 // Treat these as scrollable values (Safari still uses 'overlay' in places)
 const SCROLLABLE_VALUES = new Set(["auto", "scroll", "overlay"]);

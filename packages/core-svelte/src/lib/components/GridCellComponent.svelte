@@ -6,7 +6,7 @@
     import type { GridCellProps } from './svelte-utils/FreComponentProps.js';
 
     // properties
-    let { editor, box, readonly, parentBox }: GridCellProps<GridCellBox> = $props();
+    let { editor, box, readonly = false, parentBox }: GridCellProps<GridCellBox> = $props();
 
     type BoxTypeName = 'gridcellNeutral' | 'gridcellOdd' | 'gridcellEven';
 
@@ -22,7 +22,7 @@
     let isHeader = $state('noheader');
     let cssStyle: string = $state('');
     let cssClass: string = $state('');
-    let htmlElement: HTMLElement;
+    let htmlElement: HTMLElement = $state()!;
 
     function refresh(from?: string): void {
         if (notNullOrUndefined(box)) {

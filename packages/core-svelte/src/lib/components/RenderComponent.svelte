@@ -33,7 +33,6 @@
         type Box,
         BoolDisplay,
         LimitedDisplay,
-        isActionTextBox,
         notNullOrUndefined,
         type ClientRectangle,
         UndefinedRectangle
@@ -86,13 +85,6 @@
           ']'
         );
         let isSelected: boolean = selectedBoxes.value.includes(box);
-        // Ensure that the internal textbox inside an Action/Select/Reference box is selected if its parent box is.
-        if (isActionTextBox(box)) {
-            isSelected = isSelected || selectedBoxes.value.includes(box.parent);
-        }
-        if (isActionBox(box) || isSelectBox(box) || isReferenceBox(box)) {
-            isSelected = isSelected || selectedBoxes.value.includes(box._textBox);
-        }
         if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
             // do not set extra class, the control itself handles being selected
             return 'render-component-unselected';
@@ -220,7 +212,7 @@
         {:else if isTableBox(box)}
             <TableComponent {box} {editor} {readonly} />
         {:else if isTextBox(box)}
-            <TextComponent {box} {editor} {readonly} partOfDropdown={false} text="" isEditing={false} toParent={() => {} } />
+            <TextComponent {box} {editor} {readonly} />
         {:else if isMultiLineTextBox(box)}
             <MultiLineTextComponent {box} {editor} {readonly} />
         {:else if isActionBox(box) || isSelectBox(box) || isReferenceBox(box)}
