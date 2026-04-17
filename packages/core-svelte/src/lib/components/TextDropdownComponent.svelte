@@ -216,15 +216,15 @@
             // ActionBox, action done, clear input text
             text = '';
         } else {
-            // set because the loop setting the model element back to the input takes too long
-            text = option.label; // set because the loop setting the model element back to the input takes too long
+            // set it here, because the loop setting the model element back to the input takes too long
+            text = option.label;
         }
         endEditing("matched");
     }
 
     function executeSingleAction(): boolean {
         if (isActionBox(box) && allOptions.length === 1 && allOptions[0].id !== noOptions.id) {
-            // openDropdownOnFocus = false; // reset just to be sure
+            openDropdownOnFocus = false; // reset just to be sure
             executeOption(allOptions[0]);
             // todo the selection is not right after execution, it should be the first editable child of the new node
             return true;
@@ -312,7 +312,6 @@
     /* Marks that upcoming focus was mouse-triggered. */
     function onPointerDown(): void {
         // See requirement 18
-        console.log(`document.activeElement !== inputElement: ${document.activeElement !== inputElement}, dropdownShown: ${dropdownShown}, guard: ${document.activeElement !== inputElement || !dropdownShown}`)
         if (document.activeElement !== inputElement) {
             openDropdownOnFocus = true;
             autoExecuteSingleActionOnFocus = true;
@@ -332,7 +331,7 @@
 
             executeSingleAction();
         }
-        console.log(`onFocusIn openDropdownOnFocus: ${openDropdownOnFocus}`)
+
         if (openDropdownOnFocus) {
             openDropdownOnFocus = false;
             void showDropdown(); // showDropdown() already calls updateFilteredOptions()
@@ -371,7 +370,7 @@
         hideDropdown();
     }
     function onFocusOut(event: FocusEvent): void {
-        // openDropdownOnFocus = false; // reset, just in case
+        openDropdownOnFocus = false; // reset, just in case
 
         const next = event.relatedTarget as Node | null;
         // check whether focus stays 'within' this component
@@ -394,11 +393,8 @@
      * Functions for handling keyboard events
      * *******************************************************************/
     function onInput(_event: Event): void {
-        console.log('onInput, dropdownShown:', dropdownShown);
         // if (dropdownShown) {
             updateFilteredOptionsSoon();
-        // } else {
-        //     showDropdown();
         // }
     }
     function onKeyDown(event: KeyboardEvent): void {
@@ -809,7 +805,12 @@
         tryAutoCommitOnCurrentInput(caretPos);
     }
     function tryAutoCommitOnCurrentInput(caretPos: number): void {
-        LOGGER.log(`tryAutoCommitOnCurrentInput box(${box?.id}) for ${box?.kind} caret pos ${caretPos} text '${text}'`);
+        LOGGER.log(`tryAutoCommitOnCurrentInput box(${box?.id}) for ${box?.kind} caret pos ${caretPos} text '${text}', original text '${originalText}'`);
+
+        if (text === originalText) {
+            LOGGER.log('no execution')
+            return;
+        }
         if (isActionBox(box)) {
             // Try to match a regular expression, and execute the action that is associated with it
             const result = box.tryToMatchRegExpAndExecuteAction(text, editor);
