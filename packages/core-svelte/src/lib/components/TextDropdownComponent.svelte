@@ -117,7 +117,6 @@
     let useFilteredDropdown: boolean = $state(false); // which type of dropdown to use todo get this value from the edit config */
     const noOptions: SelectOption = { id: 'noOptions', label: '<no known options>' }; // constant for when the box has no options
 
-
     // Elements for the use of the overlay to position the dropdown menu
     const pane = usePaneContext();
     let overlayRoot: HTMLElement | null = $state(null);
@@ -131,7 +130,6 @@
         inside: [dropdownAnchorEl, dropdownPanelEl, dropdownContentEl],
         closeOnResize: true,
     }));
-
 
     /*********************************************************************
      * Functions needed in every Freon component
@@ -223,6 +221,16 @@
         }
         endEditing("matched");
     }
+
+    function executeSingleAction(): boolean {
+        if (isActionBox(box) && allOptions.length === 1 && allOptions[0].id !== noOptions.id) {
+            // openDropdownOnFocus = false; // reset just to be sure
+            executeOption(allOptions[0]);
+            // todo the selection is not right after execution, it should be the first editable child of the new node
+            return true;
+        }
+        return false
+    }
     /*********************************************************************
      * END Helper functions
      * *******************************************************************/
@@ -303,10 +311,15 @@
     }
     /* Marks that upcoming focus was mouse-triggered. */
     function onPointerDown(): void {
-        // Only open dropdown when focus is gained, not when user interacts with an already focused input.
+        // See requirement 18
+        console.log(`document.activeElement !== inputElement: ${document.activeElement !== inputElement}, dropdownShown: ${dropdownShown}, guard: ${document.activeElement !== inputElement || !dropdownShown}`)
         if (document.activeElement !== inputElement) {
             openDropdownOnFocus = true;
             autoExecuteSingleActionOnFocus = true;
+        } else if (!dropdownShown) {
+            // TAB → click case: no focus event will come, so act now
+            allOptions = getOptions();
+            void showDropdown();
         }
     }
     /* Opens dropdown only when focus was mouse-triggered. */
@@ -319,21 +332,11 @@
 
             executeSingleAction();
         }
-
+        console.log(`onFocusIn openDropdownOnFocus: ${openDropdownOnFocus}`)
         if (openDropdownOnFocus) {
             openDropdownOnFocus = false;
             void showDropdown(); // showDropdown() already calls updateFilteredOptions()
         }
-    }
-
-    function executeSingleAction(): boolean {
-        if (isActionBox(box) && allOptions.length === 1 && allOptions[0].id !== noOptions.id) {
-            openDropdownOnFocus = false; // reset just to be sure
-            executeOption(allOptions[0]);
-            // todo the selection is not right after execution, it should be the first editable child of the new node
-            return true;
-        }
-        return false
     }
     /**
      * This function determines the caret position of the <input> element programmatically.
@@ -368,7 +371,7 @@
         hideDropdown();
     }
     function onFocusOut(event: FocusEvent): void {
-        openDropdownOnFocus = false; // reset, just in case
+        // openDropdownOnFocus = false; // reset, just in case
 
         const next = event.relatedTarget as Node | null;
         // check whether focus stays 'within' this component
