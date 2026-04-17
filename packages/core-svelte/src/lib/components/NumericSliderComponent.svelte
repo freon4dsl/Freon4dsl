@@ -8,7 +8,7 @@
     const LOGGER = NUMERICSLIDER_LOGGER;
 
     // Props
-    let { editor, box, readonly }: FreComponentProps<NumberControlBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<NumberControlBox> = $props();
 
     // Variables set from the box.
     // box.displayInfo is completely set, it is done in NumberControlBox constructor

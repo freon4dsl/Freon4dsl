@@ -72,6 +72,12 @@
     width: 100%;
     flex: 1;
 }
+.freon-overlay-root {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none; /* don't block the editor */
+}
 
 /***************************************
  * Alignment on same row
@@ -375,6 +381,12 @@
 /*******************************************************
  *  ContextMenuComponent
  *******************************************************/
+/* The panel lives in the fixed overlay. Let it receive pointer events. */
+/* And make sure menus position correctly within the overlay layer. */
+.context-menu-panel {
+    pointer-events: auto;
+    position: absolute;
+}
 .contextmenu {
     box-sizing: border-box;
     position: absolute;
@@ -849,7 +861,33 @@
     border-style: solid;
     border-color: var(--numeric-slider-tooltip-background-color) transparent transparent transparent;
 }
-
+/*******************************************************
+ *  TextDropdownComponent
+ *******************************************************/
+.text-dropdown-component {
+    display: inline-block;
+}
+.text-dropdown-component-text-wrapper {
+}
+.reference-button {
+    border: none;
+    height: 12px;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 16px;
+}
+.reference-arrow {
+    height: 12px;
+}
+.text-dropdown-panel {
+    position: absolute;
+    pointer-events: auto;
+}
+.dropdown-component-container {
+    display: inline-block;
+    max-height: 300px;
+    overflow-y: auto;
+}
 /*******************************************************
  *  DropdownComponent
  *******************************************************/
@@ -858,17 +896,13 @@
     border-style: solid;
     border-radius: 2px;
     opacity: 1;
-    z-index: 95;
     display: flex;
     flex-direction: column;
     gap: 2px;
     min-width: 120px;
     width: fit-content;
     margin-top: 3px;
-    position: absolute;
-    padding: 2px;
 }
-
 .dropdown-component-item {
     white-space: nowrap;
     border: none;
@@ -887,14 +921,15 @@
     min-height: var(--freon-inline-row-height);
     padding-inline: var(--freon-inline-padding-x);
 }
-
 .dropdown-component-error {
     display: block;
     white-space: nowrap;
     border: none;
 }
-
 .dropdown-component-item:hover {
+}
+.dropdown-component-selected {
+    border: none;
 }
 
 .dropdown-component-container {
@@ -925,9 +960,8 @@
     margin: 0 0.7rem 0 0.7rem;
     flex: 1;
 }
-
 /*******************************************************
- *  Inner Switch Component
+ *  BooleanInnerSwitchComponent
  *******************************************************/
 .inner-switch-component button {
     margin: 4px 6px 4px 6px;
@@ -1162,11 +1196,6 @@
     outline-width: 1px;
 }
 
-/* The container styling - needed to position the dropdown content */
-.text-dropdown-component {
-    display: inline-block;
-}
-
 .text-dropdown-component-text-wrapper {
     display: inline-flex;
     align-items: center;
@@ -1209,6 +1238,10 @@
 
 .reference-arrow {
     height: 12px;
+}
+textarea {
+    outline: none;
+    vertical-align: top;
 }
 
 .boolean-checkbox-component {

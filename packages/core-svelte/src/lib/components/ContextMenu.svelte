@@ -3,18 +3,28 @@
 
     /**
      *  This component combines a menu with a submenu. The positions of both the menu and the submenu are determined
-     *  such that the complete menu stays within the boundaries of the editor viewport. The state of the editor
-     *  viewport is stored in the EditorViewportStore (by FreonComponent).
+     *  such that the complete menu stays within the boundaries of the editor viewport.
+     *  Note that the component is rendered as part of an overlay that is provided by the FreonComponent.
      */
-    import { calculatePos } from './svelte-utils/CommonFunctions.js';
-    import { clickOutsideConditional } from './svelte-utils/ClickOutside.js';
     import { type MainComponentProps } from './svelte-utils/FreComponentProps.js';
     import { tick } from 'svelte';
-    import { type ClientRectangle, MenuItem } from '@freon4dsl/core';
+    import { MenuItem } from '@freon4dsl/core';
     import { contextMenuVisible } from './stores/AllStores.svelte.js';
+    import { usePaneContext, portal, useOverlayListeners } from "./svelte-utils/OverlayPane.js"
 
-    // items for the context menu
+    // props
     let { editor }: MainComponentProps = $props();
+
+    // elements for the use of the overlay
+    const pane = usePaneContext();
+    let overlayRoot = $derived(pane?.getOverlayRoot() ?? null)
+    const listeners = useOverlayListeners(() => ({
+        pane,
+        enabled: contextMenuVisible.value,
+        closeFunc: hide,
+        inside: [panelEl],
+        closeOnResize: true,
+    }));
 
     // local variables
     const LOGGER = CONTEXTMENU_LOGGER;
@@ -22,9 +32,6 @@
     let submenuItems: MenuItem[] = $state([]);
     let elementIndex: number; // the index of the element in a list to which this menu is coupled
 
-    // browser/window dimension (height and width)
-    let innerWidth = $state(0);
-    let innerHeight = $state(0);
     // dimension (height and width) of context menu
     let menuHeight = $state(0);
     let menuWidth = $state(0);
@@ -40,6 +47,7 @@
     // height of items in menu and sub menu
     let itemHeight = $state(40);
     let submenuOpen = $state(false);
+    let panelEl: HTMLElement | null = $state(null);
 
     /**
      * This function shows the context menu. Note that the items to be shown should
@@ -54,30 +62,60 @@
         elementIndex = index;
         contextMenuVisible.value = true;
         submenuOpen = false;
+
         // wait for the menu to be rendered, because we need its sizes for the positioning
         await tick();
+        // let any selection-triggered scrolling settle
+        await new Promise<void>((resolve) =>
+            requestAnimationFrame(() =>
+                requestAnimationFrame(() => resolve())
+            )
+        );
         // get the position of the mouse relative to the editor view
         getContextMenuPosition(event);
+        // attach listeners for scrolling, (!) after waiting for all elements to be
+        // rendered, because only then 'panelEl' has a value.
+        listeners.attach();
     }
 
     /** This function is used to get the position of the context menu. */
     function getContextMenuPosition(event: MouseEvent) {
-        const rect: ClientRectangle = editor.getClientRectangle();
-        // Because there can be a navigation bar or anything else above the editor element,
-        // and we have to position the context menu in the editor element,
-        // we use this calculation instead of event.clientX and event.clientY.
-        top = event.pageY - rect.y;
-        left = event.pageX - rect.x;
-        // Determine whether the menu would be shown within the viewport.
-        // Use the event.clientXY for this because this is the distance between the mouse click and the top/left side
-        // of the window. The height/width of the window must be able to contain the menu at this position.
-        if (innerHeight < event.clientY + menuHeight)
-            top = top - menuHeight;
-        if (innerWidth < event.clientX + menuWidth)
-            left = left - menuWidth;
-        LOGGER.log(`ContextMenu posX: ${left}, posY: ${top}, event.pageX: ${event.pageX}, event.pageY: ${event.pageY},
-event.clientX: ${event.clientX}, event.clientY: ${event.clientY}, innerWidth: ${innerWidth}, innerHeight: ${innerHeight},
-editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
+        // overlay coordinates
+        const overlay = pane?.getOverlayRoot();
+        const r = overlay?.getBoundingClientRect();
+
+        // fallback (shouldn't happen once overlay exists)
+        const ox = r?.left ?? 0;
+        const oy = r?.top ?? 0;
+        const ow = r?.width ?? window.innerWidth;
+        const oh = r?.height ?? window.innerHeight;
+
+        // mouse position relative to overlay
+        const clickX = event.clientX - ox;
+        const clickY = event.clientY - oy;
+
+        // prefer below/right of pointer - with a little gap
+        const GAP = 2;
+        let x = clickX + GAP;
+        let y = clickY + GAP;
+
+        // flip horizontally if needed
+        if (x + menuWidth > ow) {
+            x = clickX - menuWidth;
+        }
+
+        // flip vertically if needed
+        if (y + menuHeight > oh) {
+            y = clickY - menuHeight;
+        }
+
+        // final clamp
+        left = Math.max(0, Math.min(x, ow - menuWidth));
+        top = Math.max(0, Math.min(y, oh - menuHeight));
+
+        LOGGER.log(
+            `ContextMenu left:${left}, top:${top}, clientX:${event.clientX}, clientY:${event.clientY}, ox: ${ox},  menuW:${menuWidth}, menuH:${menuHeight}`,
+        );
     }
 
     /**
@@ -87,6 +125,8 @@ editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
         LOGGER.log('CONTEXTMENU hide');
         contextMenuVisible.value = false;
         submenuOpen = false;
+
+        listeners.detach();
     }
 
     /**
@@ -94,14 +134,34 @@ editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
      */
     async function openSub(itemIndex: number) {
         submenuOpen = true;
-        await tick(); // wait in order to determine the size of the submenu
-        // determine the 'normal' position of the sub menu, which is
-        // (itemHeight px) lower than the main menu, 20 px left to the end of the item
-        topSub = top + itemHeight + itemIndex * (itemHeight + 2 + 3 + 4); // add 2 for gap, 3 for margin, 4 for padding
-        leftSub = left + submenuWidth - 20;
-        // calculate the right position of the sub menu based on the size of the viewport
-        topSub = calculatePos(innerWidth, submenuWidth, topSub);
-        leftSub = calculatePos(innerHeight, submenuHeight, leftSub);
+        await tick(); // submenuWidth/submenuHeight must be known
+
+        const overlay = pane?.getOverlayRoot();
+        const r = overlay?.getBoundingClientRect();
+        const ow = r?.width ?? window.innerWidth;
+        const oh = r?.height ?? window.innerHeight;
+
+        // align submenu with the clicked item
+        const itemTop = top + itemIndex * itemHeight;
+
+        // prefer opening to the right
+        let x = left + menuWidth - 10;
+        if (x + submenuWidth > ow) {
+            x = left - submenuWidth + 10;
+        }
+        // prefer aligning submenu top with parent item
+        let y = itemTop;
+        // if submenu would run below viewport, move it up
+        if (y + submenuHeight > oh) {
+            y = oh - submenuHeight;
+        }
+        // if still above top, clamp
+        if (y < 0) {
+            y = 0;
+        }
+
+        leftSub = Math.max(0, Math.min(x, ow - submenuWidth));
+        topSub = Math.max(0, Math.min(y, oh - submenuHeight));
     }
 
     /**
@@ -138,10 +198,13 @@ editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
     }
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight />
-
-<div use:clickOutsideConditional={{ enabled: contextMenuVisible.value }} onclick_outside={hide}>
-    {#if contextMenuVisible.value}
+{#if contextMenuVisible.value}
+    <!-- IMPORTANT: clickOutside must be on the *portaled* panel, not on a wrapper outside the portal -->
+    <div
+        class="context-menu-panel"
+        use:portal={overlayRoot}
+        bind:this={panelEl}
+    >
         <nav use:getContextMenuDimension class="contextmenu" style="top: {top}px; left: {left}px">
             {#each _items as item, index}
                 {#if item.label === '---'}
@@ -183,5 +246,5 @@ editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
                 {/each}
             </nav>
         {/if}
-    {/if}
-</div>
+    </div>
+{/if}

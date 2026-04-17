@@ -14,7 +14,7 @@
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
-    let { editor, box, readonly }: FreComponentProps<LayoutBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<LayoutBox> = $props();
 
     let LOGGER: FreLogger = LAYOUT_LOGGER;
     let id: string = $state('');

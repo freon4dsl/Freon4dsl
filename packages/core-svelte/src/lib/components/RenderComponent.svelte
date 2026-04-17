@@ -69,7 +69,7 @@
 
     const LOGGER = RENDER_LOGGER;
 
-    let { editor, box, readonly }: FreComponentProps<Box> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<Box> = $props();
 
     let id: string = $derived(notNullOrUndefined(box) ? `render-${componentId(box)}` : 'render-for-unknown-box');
     let element: HTMLElement | undefined = $state(undefined);

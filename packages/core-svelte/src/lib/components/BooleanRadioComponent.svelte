@@ -20,7 +20,7 @@
 
     const LOGGER = RADIO_LOGGER;
 
-    let { editor, box, readonly }: FreComponentProps<BooleanControlBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<BooleanControlBox> = $props();
 
     let id: string = $derived(box.id);
     let trueElement: HTMLInputElement;
