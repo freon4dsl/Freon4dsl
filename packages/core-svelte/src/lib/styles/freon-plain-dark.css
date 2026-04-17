@@ -232,11 +232,14 @@
 }
 
 .contextmenu-button {
+    color: var(--color-dark-freon-900);
     background: none;
     border: none;
 }
 
 .contextmenu-button:hover {
+    color: var(--color-dark-freon-900);
+    background-color: var(--color-dark-freon-50);
     background: var(--color-dark-freon-800);
 }
 
@@ -247,7 +250,9 @@
 .contextmenu-hr {
     border-top: solid 1px var(--color-dark-freon-700);
 }
-
+/*******************************************************
+ *  ErrorTooltipComponent
+ *******************************************************/
 .error-tooltip {
     border: 1px solid var(--color-dark-freon-error);
     box-shadow: 1px 1px 1px var(--color-dark-freon-error);
