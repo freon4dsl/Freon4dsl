@@ -712,7 +712,7 @@ export class FreEditor {
         const next: Box = box?.nextLeafRight
         LOGGER.log("Select next leaf is box " + next?.role)
         if (!!next) {
-            this.selectElementForBox(next, FreCaret.UNSPECIFIED)
+            this.selectElementForBox(next, FreCaret.LEFT_MOST)
         }
     }
 
