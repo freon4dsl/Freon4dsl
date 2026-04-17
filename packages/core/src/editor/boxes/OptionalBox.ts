@@ -114,7 +114,7 @@ export class OptionalBox extends Box {
             })
         } else {
             FREON.astChanger.change(() => {
-                self.node[self.propertyName] = []
+                (self.node[self.propertyName] as []).length = 0
             })
         }
         LOGGER.log(`removeContent ${this.id}: "${this.node[this.propertyName]}"`)
@@ -125,7 +125,7 @@ export class OptionalBox extends Box {
      * Returns true when the property that is contained in this Optional Box is not present / not set.
      */
     isEmpty(): boolean {
-        console.log(`isEmpty for property ${this.propertyName} of concept ${this.nodeConcept}`)
+        LOGGER.log(`isEmpty for property ${this.propertyName} of concept ${this.nodeConcept}`)
         if (isNullOrUndefined(this.propDef)) {
             LOGGER.log(`Cannot find property definition for property ${this.propertyName} of concept ${this.nodeConcept}.`)
             return false

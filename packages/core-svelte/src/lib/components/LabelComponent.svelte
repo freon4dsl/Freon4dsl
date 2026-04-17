@@ -8,11 +8,11 @@
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    let { box }: FreComponentProps<LabelBox> = $props();
+    let { box, readonly = false }: FreComponentProps<LabelBox> = $props();
 
     const LOGGER = LABEL_LOGGER;
 
-    let id: string = notNullOrUndefined(box) ? componentId(box) : 'label-for-unknown-box';
+    let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'label-for-unknown-box');
     let element: HTMLSpanElement | undefined = $state(undefined);
     let style: string = $state('');
     let cssClass: string = $state('');
@@ -38,6 +38,6 @@
 </script>
 
 <!-- todo the 'text' here may contain spaces and other nasty stuff, should clean it up before using it as class-->
-<span class="label-component {text} {cssClass}" {style} bind:this={element} {id}>
+<span class="label-component {text} {cssClass}" class:readonly={readonly} {style} bind:this={element} {id}>
     {text}
 </span>

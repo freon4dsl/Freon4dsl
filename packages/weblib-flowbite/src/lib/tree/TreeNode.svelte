@@ -14,37 +14,37 @@
     }
 </script>
 
-<li>
-    <div class="flex flex-end p-0 m-0 w-full border-b border-light-base-300 dark:border-dark-base-800">
-    <button onclick={toggle} style="cursor: pointer;" tabindex="0">
-        {#if data.children}
-            {#if expanded}
-                <AngleDownOutline class="ms-0 inline h-3 w-3 dark:text-dark-base-50" />
+<li class="freon-infopanel-tree-node">
+    <div class="freon-infopanel-tree-row">
+        <button
+            onclick={toggle}
+            tabindex="0"
+            class="freon-infopanel-tree-toggle"
+        >
+            {#if data.children}
+                {#if expanded}
+                    <AngleDownOutline class="freon-infopanel-tree-chevron" />
+                {:else}
+                    <AngleRightOutline class="freon-infopanel-tree-chevron" />
+                {/if}
+
+                <span>{data.name}</span>
             {:else}
-                <AngleRightOutline class="ms-0 inline h-3 w-3 dark:text-dark-base-50" />
+                <span class="freon-infopanel-tree-leaf">{data.name}</span>
             {/if}
-            {data.name}
-        {:else}
-            <span class="pl-[1rem]">{data.name}</span>
-        {/if}
-    </button>
-    {#if data.aboutNode}
-        <button class="bg-transparent border-2 border-light-base-600 hover:border-light-base-600 h-7 w-7 rounded-full inline-flex items-center ml-auto mr-1"
-                onclick={() => goToNode(data.aboutNode)}>
-            <ArrowRightOutline class="h-5 w-5 ms-0.5 text-light-accent-900 dark:text-dark-accent-50"/>
         </button>
-    {/if}
+
+        {#if data.aboutNode}
+            <button
+                class="freon-infopanel-action"
+                onclick={() => goToNode(data.aboutNode)}
+            >
+                <ArrowRightOutline class="freon-infopanel-action-icon" />
+            </button>
+        {/if}
     </div>
 
     {#if expanded && data.children}
         <TreeView dataList={data.children} />
     {/if}
 </li>
-
-<style>
-    li {
-        text-align: -webkit-match-parent;
-        padding-left: 1rem;
-    }
-
-</style>

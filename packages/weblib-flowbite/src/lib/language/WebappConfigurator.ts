@@ -556,6 +556,7 @@ export class WebappConfigurator {
         if (notNullOrUndefined(store?.model)) {
             editorInfo.modelName = store?.model?.name
             editorInfo.unitIds = store.getUnitIdentifiers()
+            editorInfo.unitIds.sort((u1, u2) => u1.name.localeCompare(u2.name))
             editorInfo.unitsInTabs.forEach(unitInTab => {
                 const unitId = store.getUnitIdentifiers().find(uid => uid.id === unitInTab.id)
                 if (notNullOrUndefined(unitId) && unitInTab.name !== unitId?.name) {

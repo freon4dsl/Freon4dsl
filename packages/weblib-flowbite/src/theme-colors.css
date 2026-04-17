@@ -39,12 +39,16 @@
     --color-light-freon-700: #974A04;
     --color-light-freon-800: #753D03;
     --color-light-freon-900: #532F02;
-    --color-light-freon-error: #FF4C4C;
-    --color-light-freon-editable: #FFD0B3;
-    --color-light-freon-optional: #DB6506;
-    --color-light-freon-border: #47651A;
-    --color-light-freon-dropdown: #5B7F20;
-    --color-light-freon-button: #D6E9BA;
+    --color-light-freon-error: #D64545;
+    --color-light-freon-error-soft: #FDECEC;
+
+    /* Accent family — Indigo */
+    --color-light-freon-accent-900: #2C2F6B;
+    --color-light-freon-accent-700: #3F44A3;
+    --color-light-freon-accent-500: #5A60D6;
+    --color-light-freon-accent-400: #7A7FF0;
+    --color-light-freon-accent-200: #C8CBFA;
+    --color-light-freon-accent-100: #ECEEFF;
 
     /* Colors for the Flowbite webapp */
     --color-dark-base-50: #FEFEFA;
@@ -85,11 +89,13 @@
     --color-dark-freon-700: #47651A;
     --color-dark-freon-800: #334C14;
     --color-dark-freon-900: #213409;
-    --color-dark-freon-error: #FF4C4C;
-    --color-dark-freon-editable: #FFD0B3;
-    --color-dark-freon-optional: #DB6506;
-    --color-dark-freon-border: #47651A;
-    --color-dark-freon-dropdown: #5B7F20;
-    --color-dark-freon-button: #98CA32;
+    --color-dark-freon-error: #FF6B6B;
+    --color-dark-freon-error-soft: #3B2023;
+    --color-dark-freon-accent-900: #2C2F6B;
+    --color-dark-freon-accent-700: #3F44A3;
+    --color-dark-freon-accent-500: #5A60D6;
+    --color-dark-freon-accent-400: #7A7FF0;
+    --color-dark-freon-accent-200: #C8CBFA;
+    --color-dark-freon-accent-100: #ECEEFF;
 }
 

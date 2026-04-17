@@ -5,10 +5,9 @@
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    let { editor, box }: FreComponentProps<ElementBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<ElementBox> = $props();
 
     const LOGGER = ELEMENT_LOGGER;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let id: string = $state('');
 
     let childBox: Box | undefined = $state(undefined);
@@ -42,6 +41,6 @@
 
 {#if notNullOrUndefined(childBox)}
     <span class="element-component element-component-{box.node.freLanguageConcept()}" tabindex={tabbable}>
-        <RenderComponent box={childBox} {editor} />
+        <RenderComponent box={childBox} {editor} {readonly} />
     </span>
 {/if}

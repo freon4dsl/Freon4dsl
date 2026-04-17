@@ -3,6 +3,7 @@ import type { AstWorker } from "../ast-utils/index.js";
 import { FreLanguage, type FreLanguageProperty } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
 import { type FrePrimDelta } from "./FreDelta.js"
+import { isNullOrUndefined } from "../util"
 
 const LOGGER = new FreLogger("ReferenceUpdateWorker").mute();
 
@@ -19,6 +20,10 @@ export class ReferenceUpdateWorker implements AstWorker {
     }
 
     execBefore(node: FreNode): boolean {
+        if (isNullOrUndefined(this.delta.oldValue) || (this.delta.oldValue as string).length === 0) {
+            // there are no old references that need updating
+            return false
+        }
         // find node properties (children) of type reference
         const referenceProperties: FreLanguageProperty[] = FreLanguage.getInstance().getPropertiesOfKind(
             node.freLanguageConcept(),
@@ -37,7 +42,7 @@ export class ReferenceUpdateWorker implements AstWorker {
                 }
             }
         }
-        return false;   //UT: is returning true makes more sense here?
+        return false;   //UT: is returning true making more sense here?
     }
 
     // @ts-ignore

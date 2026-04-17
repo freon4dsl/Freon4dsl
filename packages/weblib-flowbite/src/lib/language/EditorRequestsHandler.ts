@@ -1,4 +1,5 @@
 import {
+    AbstractChoiceBox,
     AstActions,
     FreDelta,
     FreEditorUtil,
@@ -10,9 +11,10 @@ import {
     type FreNode,
     FreProjectionHandler,
     FreSearcher,
-    isActionTextBox,
+    isActionBox,
     isNullOrUndefined,
     isRtError,
+    isSelectBox,
     isTextBox,
     notNullOrUndefined,
     TextBox,
@@ -20,7 +22,7 @@ import {
 } from "@freon4dsl/core"
 import { runInAction } from "mobx"
 import { WebappConfigurator } from "../language/index.js"
-import { editorInfo, infoPanelShown, setUserMessage, userMessageOpen } from "../stores/index.js"
+import { deltaResultLoading, deltaTab, editorInfo, infoPanelShown, setUserMessage, userMessageOpen } from "../stores/index.js"
 import {
     activeTab,
     errorsLoading,
@@ -34,6 +36,7 @@ import {
     searchTab,
 } from "../stores/InfoPanelStore.svelte"
 import { TreeNodeData } from "../tree/TreeNodeData.js"
+import { goToNode } from "$lib/ts-utils/CommonFunctions"
 
 const LOGGER = new FreLogger("EditorRequestsHandler") // .mute();
 
@@ -85,26 +88,22 @@ export class EditorRequestsHandler {
 
     redo = (): void => {
         const delta: FreDelta | undefined = AstActions.getInstance(this.langEnv!.editor).redo()
-        // TODO TEST
-        if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
+        if (delta !== undefined) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
         }
-        this.langEnv!.editor.selectionChanged()
     }
 
     undo = (): void => {
         const delta: FreDelta | undefined = AstActions.getInstance(this.langEnv!.editor).undo()
         LOGGER.log(`undo delta '${delta?.toString()}'`)
-        // TODO TEST
-        if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
+        if (delta !== undefined) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
         }
         // todo do we need to warn the user if the delta is undefined?
-        this.langEnv!.editor.selectionChanged()
     }
 
     cut = async (): Promise<void> => {
-        if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
+        if (isTextBox(this.langEnv!.editor.selectedBox) || isActionBox(this.langEnv!.editor.selectedBox) || isSelectBox(this.langEnv!.editor.selectedBox)) {
             // Do not use this.langEnv!.editor.copiedElement, we cannot copy a FreNode into a string.
             // Instead, use the clipboard, if possible.
             await this.cutPlainText(this.langEnv!.editor.selectedBox)
@@ -114,7 +113,7 @@ export class EditorRequestsHandler {
     }
 
     copy = async (): Promise<void> => {
-        if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
+        if (isTextBox(this.langEnv!.editor.selectedBox) || isActionBox(this.langEnv!.editor.selectedBox) || isSelectBox(this.langEnv!.editor.selectedBox)) {
             // Do not use this.langEnv!.editor.copiedElement, we cannot copy a FreNode into a string.
             // Instead, use the clipboard, if possible.
             // TODO
@@ -125,7 +124,7 @@ export class EditorRequestsHandler {
     }
 
     paste = async (): Promise<void> => {
-        if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
+        if (isTextBox(this.langEnv!.editor.selectedBox) || isActionBox(this.langEnv!.editor.selectedBox) || isSelectBox(this.langEnv!.editor.selectedBox)) {
             // Do not use this.langEnv!.editor.copiedElement, we cannot paste a FreNode into a string.
             // Instead, use the clipboard, if possible.
             await this.pastePlainText(this.langEnv!.editor.selectedBox)
@@ -134,7 +133,7 @@ export class EditorRequestsHandler {
         }
     }
 
-    private async pastePlainText(myBox: TextBox) {
+    private async pastePlainText(myBox: TextBox | AbstractChoiceBox) {
         const canReadClipboard: boolean = typeof navigator !== "undefined" && isSecureContext && !!navigator.clipboard?.readText
         if (!canReadClipboard) {
             setUserMessage("Clipboard access not available here. Use Ctrl/Cmd+V instead.", FreErrorSeverity.Warning)
@@ -162,7 +161,7 @@ export class EditorRequestsHandler {
         }
     }
 
-    private async copyPlainText(myBox: TextBox) {
+    private async copyPlainText(myBox: TextBox | AbstractChoiceBox) {
         const canWriteClipboard: boolean = typeof navigator !== "undefined" && isSecureContext && !!navigator.clipboard?.writeText
 
         if (!canWriteClipboard) {
@@ -189,7 +188,7 @@ export class EditorRequestsHandler {
         }
     }
 
-    private async cutPlainText(myBox: TextBox) {
+    private async cutPlainText(myBox: TextBox | AbstractChoiceBox) {
         const canWriteClipboard: boolean = typeof navigator !== "undefined" && isSecureContext && !!navigator.clipboard?.writeText
 
         if (!canWriteClipboard) {
@@ -226,12 +225,7 @@ export class EditorRequestsHandler {
         // console.log("Errors: " + modelErrors.list.map(err => err.message).join("\n"));
         errorsLoading.value = false
         if (!isNullOrUndefined(modelErrors.list[0])) {
-            const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn
-            if (Array.isArray(nodes)) {
-                WebappConfigurator.getInstance().selectElement(nodes[0])
-            } else {
-                WebappConfigurator.getInstance().selectElement(nodes)
-            }
+            goToNode(modelErrors.list[0].reportedOn)
         }
     }
 
@@ -275,6 +269,23 @@ export class EditorRequestsHandler {
         }
     }
 
+    showDeltas = (): void => {
+        deltaResultLoading.value = true
+        activeTab.value = deltaTab
+        infoPanelShown.value = true
+        deltaResultLoading.value = false
+        // if (!isNullOrUndefined(deltaList.deltas[0])) {
+        //     const nodes: FreNode | FreNode[] | undefined = deltaList.deltas[0].changedNode
+        //     if (isNullOrUndefined(nodes)) {
+        //         // todo
+        //     } else if (Array.isArray(nodes)) {
+        //         WebappConfigurator.getInstance().selectElement(nodes[0])
+        //     } else {
+        //         WebappConfigurator.getInstance().selectElement(nodes)
+        //     }
+        // }
+    }
+
     findText(stringToFind: string) {
         // todo loading of errors and search results should also depend on whether something has changed in the unit shown
         // console.log("findText called: " + stringToFind);
@@ -298,7 +309,9 @@ export class EditorRequestsHandler {
     private showSearchResults(results: FreNode[], stringToFind: string) {
         const itemsToShow: FreError[] = []
         if (!results || results.length === 0) {
-            itemsToShow.push(new FreError("No results for " + stringToFind, results[0], "", FreErrorSeverity.Info))
+            // todo change the FreError interface to allow undefined as node
+            const node = WebappConfigurator.getInstance().langEnv?.editor.selectedElement // a dummy, because there is no node to jump to
+            itemsToShow.push(new FreError("No results for " + stringToFind, node!, "", FreErrorSeverity.Info))
         } else {
             for (const elem of results) {
                 // todo show some part of the text string instead of the element id

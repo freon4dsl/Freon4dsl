@@ -271,17 +271,17 @@ export class ConceptUtils {
                 static create(data: Partial<${myName}>): ${myName} {
                     const result = new ${myName}(data.$id);
                     ${concept
-            .allProperties()
-            .map(
-                (freProp) =>
-                    `${
-                        freProp.isList
-                            ? `if (notNullOrUndefined(data.${freProp.name})) {
+                        .allProperties()
+                        .map(
+                            (freProp) =>
+                                `${
+                                    freProp.isList
+                                        ? `if (notNullOrUndefined(data.${freProp.name})) {
                                 data.${freProp.name}.forEach(x =>
                                     result.${freProp.name}.push(x)
                                 );
                             }`
-                            : `if (notNullOrUndefined(data.${freProp.name})) {
+                                        : `if (notNullOrUndefined(data.${freProp.name})) {
                                 result.${freProp.name} = data.${freProp.name};
                             ${
                                 allPartsToInitialize.find((ip) => ip.part === freProp)
@@ -290,9 +290,9 @@ export class ConceptUtils {
                                     : ``
                             }   
                             }`
-                    }`,
-            )
-            .join("\n")}
+                                }`,
+                        )
+                        .join("\n")}
                     if (notNullOrUndefined(data.parseLocation)) {
                         result.parseLocation = data.parseLocation;
                     }

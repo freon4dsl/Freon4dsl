@@ -27,14 +27,14 @@
     const LOGGER = TABLE_LOGGER;
 
     // Props
-    let { editor, box }: FreComponentProps<TableBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<TableBox> = $props();
 
-    let id = notNullOrUndefined(box) ? componentId(box) : 'table-for-unknown-box';
+    let id = $derived(notNullOrUndefined(box) ? componentId(box) : 'table-for-unknown-box');
     let cells: TableCellBox[] = $state([]);
     let templateColumns: string = $state('');
     let templateRows: string = $state('');
     let cssClass: string = $state('');
-    let htmlElement: HTMLElement;
+    let htmlElement: HTMLElement = $state()!;
     let myMetaType: DragAndDropType;
     
     $effect(() => {
@@ -72,7 +72,7 @@
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
-     * the html needs to have its tabindex set, and its needs to be bound
+     * the HTML needs to have its tabindex set, and its needs to be bound
      * to a variable.
      */
     async function setFocus(): Promise<void> {
@@ -133,21 +133,42 @@
     };
 </script>
 
-<span
-    style:grid-template-columns={templateColumns}
-    style:grid-template-rows={templateRows}
-    class="table-component {cssClass}"
-    {id}
-    tabIndex={-1}
-    bind:this={htmlElement}
->
-    {#each cells as cell (cell.content.id + '-' + cell.row + '-' + cell.column)}
-        <TableCellComponent
-            box={cell}
-            {editor}
-            parentComponentId={id}
-            parentOrientation={box.direction}
-            ondropOnCell={drop}
-        />
-    {/each}
-</span>
+{#if readonly}
+    <span
+        style:grid-template-columns={templateColumns}
+        style:grid-template-rows={templateRows}
+        class="table-component {cssClass} readonly"
+        {id}
+        tabIndex={-1}
+        bind:this={htmlElement}
+    >
+        {#each cells as cell (cell.content.id + '-' + cell.row + '-' + cell.column)}
+            <TableCellComponent
+                box={cell}
+                {editor} {readonly}
+                parentComponentId={id}
+                parentOrientation={box.direction}
+                ondropOnCell={() => {}}
+            />
+        {/each}
+    </span>
+{:else}
+    <span
+        style:grid-template-columns={templateColumns}
+        style:grid-template-rows={templateRows}
+        class="table-component {cssClass}"
+        {id}
+        tabIndex={-1}
+        bind:this={htmlElement}
+    >
+        {#each cells as cell (cell.content.id + '-' + cell.row + '-' + cell.column)}
+            <TableCellComponent
+                box={cell}
+                {editor} {readonly}
+                parentComponentId={id}
+                parentOrientation={box.direction}
+                ondropOnCell={drop}
+            />
+        {/each}
+    </span>
+{/if}

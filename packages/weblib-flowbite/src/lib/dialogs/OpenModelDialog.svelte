@@ -6,7 +6,6 @@
     import { WebappConfigurator } from "$lib/language"
     import { setUserMessage } from "$lib/stores/UserMessageStore.svelte"
     import { FolderOpenSolid } from "flowbite-svelte-icons"
-    import { cancelButtonClass, okButtonClass, radioInputClass, radioLabelClass } from "$lib/stores/StylesStore.svelte"
 
     // let errorText: string = $state("")
     let modelToOpen = $state("")
@@ -39,25 +38,47 @@
 </script>
 
 <Dialog open={dialogs.openModelDialogVisible}>
-    <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Open model</h3>
+
+    <h3 class="freon-dialog-title">
+        Open model
+    </h3>
+
     <div class="flex flex-col space-y-6" role="dialog">
-        <div class="grid grid-cols-3 mb-3 p-2">
+
+        <div class="grid grid-cols-3 p-2">
             {#each serverInfo.allModelNames as model, index (index)}
-                <label class={radioLabelClass}>
-                    <input type="radio"
-                           class="{radioInputClass}" name="models" onchange={() => {modelToOpen = model;}}>
+                <label class="freon-radio-label">
+                    <input
+                        type="radio"
+                        name="models"
+                        class="freon-radio-input"
+                        onchange={() => { modelToOpen = model; }}
+                    >
                     {model}
                 </label>
             {/each}
         </div>
-        <div class="flex flex-row justify-end">
-            <Button onclick={cancel} class={cancelButtonClass}>
+
+        <div class="mt-2 flex justify-end gap-3">
+
+            <Button
+                onclick={cancel}
+                class="freon-dialog-btn freon-dialog-btn-cancel"
+            >
                 Cancel
             </Button>
-            <Button class={okButtonClass} onclick={openModel} >
+
+            <Button
+                onclick={openModel}
+                class="freon-dialog-btn freon-dialog-btn-ok"
+            >
                 <FolderOpenSolid class="w-4 h-4 me-2"/>
-                Open</Button>
+                Open
+            </Button>
+
         </div>
+
     </div>
+
 </Dialog>
 

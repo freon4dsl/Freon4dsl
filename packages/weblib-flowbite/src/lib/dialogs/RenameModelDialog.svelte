@@ -6,7 +6,6 @@
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
     import { PenSolid } from 'flowbite-svelte-icons';
-    import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
 
     let errorText: string = $state('');
     let newName: string = $state('');
@@ -34,7 +33,7 @@
             if (notNullOrUndefined(existing) && existing.length > 0 && existing.indexOf(newName) !== -1) {
                 errorText = `Cannot create model '${newName}', because a model with that name already exists on the server.`;
             } else {
-                WebappConfigurator.getInstance().renameModel(newName);
+                await WebappConfigurator.getInstance().renameModel(newName);
                 resetVariables();
                 WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
             }
@@ -49,29 +48,47 @@
 </script>
 
 <Dialog open={dialogs.renameModelDialogVisible}>
-    <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Rename model</h3>
+
+    <h3 class="freon-dialog-title">
+        Rename model
+    </h3>
 
     <div class="flex flex-col space-y-6" role="dialog">
-        <div class="relative text-light-base-700">
-            <Input class={textInputClass}
-                   type="text"
-                   bind:value={newName}
-                   id="new-input"
-                   name="model-name"
-                   oninput={onInput}
+
+        <div class="relative">
+            <Input
+                class="freon-dialog-input"
+                type="text"
+                bind:value={newName}
+                id="new-input3"
+                name="model-name"
+                oninput={onInput}
             />
-            <Helper class="text-sm ml-2 text-light-base-900">
+
+            <Helper class="freon-dialog-helper">
                 <span class="font-medium">{errorText}</span>
             </Helper>
-            <div class="mt-4 flex flex-row justify-end">
-                <Button onclick={handleCancel} class={cancelButtonClass}>
-                    Cancel
-                </Button>
-                <Button class={okButtonClass} onclick={handleSubmit} >
-                    <PenSolid class="w-4 h-4 me-2"/>
-                    Rename
-                </Button>
-            </div>
         </div>
+
+        <div class="mt-2 flex justify-end gap-3">
+
+            <Button
+                onclick={handleCancel}
+                class="freon-dialog-btn freon-dialog-btn-cancel"
+            >
+                Cancel
+            </Button>
+
+            <Button
+                onclick={handleSubmit}
+                class="freon-dialog-btn freon-dialog-btn-ok"
+            >
+                <PenSolid class="w-4 h-4 me-2"/>
+                Rename
+            </Button>
+
+        </div>
+
     </div>
+
 </Dialog>

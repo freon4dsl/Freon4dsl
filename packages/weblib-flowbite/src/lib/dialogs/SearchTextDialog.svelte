@@ -3,7 +3,6 @@
     import { Button, Input, Card } from "flowbite-svelte"
     import { dialogs } from "$lib/stores/WebappStores.svelte"
     import { EditorRequestsHandler } from "$lib/language"
-    import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
     import { PenSolid } from 'flowbite-svelte-icons';
     import Dialog from "$lib/dialogs/Dialog.svelte"
 
@@ -25,29 +24,44 @@
 </script>
 
 <Dialog open={dialogs.searchTextDialogVisible}>
+
+    <h3 class="freon-dialog-title">
+        Search for text
+    </h3>
+
     <div class="flex flex-col space-y-6" role="dialog">
 
-        <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Search for text</h3>
-        <Card class="flex flex-col space-y-6 bg-light-base-50 shadow my-2 p-6 max-w-full">
-            <div class="relative text-light-base-700">
-                <Input class={textInputClass}
+        <div class="freon-dialog-section p-6">
+            <div class="relative">
+                <Input
+                    class="freon-dialog-input"
                     type="text"
                     bind:value={textToFind}
-                    id="new-input"
-                    name="model-name"
+                    id="search-text-input"
+                    name="search-text"
                 />
             </div>
-        </Card>
+        </div>
+
     </div>
 
-    <div class="mt-4 flex flex-row justify-end">
-        <Button onclick={handleCancel} class={cancelButtonClass}>
+    <div class="mt-2 flex justify-end gap-3">
+
+        <Button
+            onclick={handleCancel}
+            class="freon-dialog-btn freon-dialog-btn-cancel"
+        >
             Cancel
         </Button>
-        <Button class={okButtonClass} onclick={handleSubmit} >
+
+        <Button
+            onclick={handleSubmit}
+            class="freon-dialog-btn freon-dialog-btn-ok"
+        >
             <PenSolid class="w-4 h-4 me-2"/>
             Search
         </Button>
+
     </div>
 
 </Dialog>

@@ -19,7 +19,7 @@ describe("Parser properties of type", () => {
 
     beforeEach(() => {
         // Ensure that ID's of created elements do not change.
-        FreUtils.resetId();
+        FREON.idProvider.reset()
     });
 
     test(" Primitive ", () => {
