@@ -25,10 +25,6 @@ CoreConfig.initialize(
 )
 WebappConfigurator.getInstance()
 
-const div = new DivideExpression()
-div.left
-FreLanguage
-
 ServerCommunication.getInstance().SERVER_URL = "http://localhost:8001/"
 
 setDevelopment(true)
