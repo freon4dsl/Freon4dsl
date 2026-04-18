@@ -15,6 +15,6 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "20.12.11",
-    "@rushstack/ts-command-line": "4.11.0"
+    "@rushstack/ts-command-line": "4.22.0"
   }
 }

@@ -1,5 +1,5 @@
-import { RepositoryClient } from "@lionweb/server-client";
-import type { ClientResponse } from "@lionweb/server-client";
+import { RepositoryClient } from "@lionweb/server-http-client";
+import type { ClientResponse } from "@lionweb/server-http-client";
 import type { ListPartitionsResponse } from "@lionweb/server-shared";
 import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";

@@ -30,7 +30,7 @@
         "check-imports": "bash ../../scripts/check-import-extensions.sh"
     },
     "devDependencies": {
-        "vitest": "3.2.4"
+        "vitest": "4.1.4"
     },
     "dependencies": {
         "@types/koa": "3.0.1",
@@ -41,6 +41,6 @@
         "@koa/router": "14.0.0",
         "@koa/cors": "5.0.0",
         "supertest": "^7.0.0",
-        "tslib": "^2.8.1"
+        "tslib": "2.8.1"
     }
 }
