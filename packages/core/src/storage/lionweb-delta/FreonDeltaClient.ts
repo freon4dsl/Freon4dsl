@@ -14,8 +14,8 @@ export class FreonDeltaClient {
         return this._deltaApiClient
     }
 
-    constructor(config: DeltaConfiguration) {
-        this._deltaApiClient = new DeltaClient(config, [
+    constructor(clientId: string, config: DeltaConfiguration) {
+        this._deltaApiClient = new DeltaClient(clientId, config, [
             propertyEventFunctions,
             childEventFunctions,
             miscEventFunctions,

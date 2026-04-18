@@ -67,7 +67,6 @@ export class DeltaModelManager extends ModelManager {
         LOGGER.log(`openModel ${name}`)
         const listPartitions: ListPartitionsRequest = {
             messageKind: "ListPartitionsRequest",
-            depthLimit: 0,
             queryId: "query-id",
             depthLimit: 0,
             additionalInfos: [],

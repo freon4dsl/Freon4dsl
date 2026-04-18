@@ -15,9 +15,10 @@ await CoreConfig.initializeWithServers(
     LanguageEnvironment.getInstance(),
     // ServerCommunication.getInstance(),
     LionWebRepositoryCommunication.getInstance(),
-    new FreonDeltaClient({
-        hostname: "192.168.100.1", port: 3005, timeout: 20000
-    })
+    new FreonDeltaClient("freon", {
+        // hostname: "192.168.100.1", port: 3005, timeout: 20000
+        hostname: "127.0.0.1", port: 3005, timeout: 20000
+    }),
 )
 // CoreConfig.initialize(
 //     LanguageEnvironment.getInstance(),
