@@ -2,11 +2,11 @@ import type { PropertyAddedEvent, PropertyChangedEvent, PropertyDeletedEvent } f
 import { type ReceivingDelta } from "@lionweb/server-delta-client"
 import { runInAction } from "mobx"
 import { findNode } from "../../ast-utils/FindNodes.js"
-import type { FreNode } from "../../ast/index.js"
+import { type FreNode, FreNodeReference } from "../../ast/index.js"
 import { FREON } from "../../environment/index.js"
 import { FreLanguage } from "../../language/index.js"
 import { FreLogger } from "../../logging/index.js"
-import { isNullOrUndefined } from "../../util/index.js"
+import { isNullOrUndefined, notNullOrUndefined } from "../../util/index.js"
 import { deltaList } from "./ProcessedDeltaList.js"
 
 const LOGGER = new FreLogger("FreonPropertyEvents")
@@ -51,13 +51,21 @@ const PropertyChangedFunction = (msg: PropertyChangedEvent): void => {
     }
     const classifierMP = FreLanguage.getInstance().classifier(node.freLanguageConcept()).key
     const langProperty = FreLanguage.getInstance().classifierPropertyByKey(classifierMP, msg.property.key)
+    const propertyType = FreLanguage.getInstance().concept(langProperty.type)
     let originalNode: FreNode
     runInAction(() => {
         originalNode = node.copy()
     })
-    FREON.astChanger.changeIgnore("PropertyChanged event", () => {
-        node[langProperty.name] = msg.newValue
-    })
+    if (notNullOrUndefined(propertyType) && propertyType?.isLimited) {
+        const newRef = FreNodeReference.createFromLionWeb(msg.newValue, null, propertyType.typeName)
+        FREON.astChanger.changeIgnore("PropertyChanged for limited event", () => {
+            node[langProperty.name] = newRef
+        })
+    } else {
+        FREON.astChanger.changeIgnore("PropertyChanged event", () => {
+            node[langProperty.name] = msg.newValue
+        })
+    }
     deltaList.add({
         delta: msg,
         originalNode: originalNode,

@@ -2,7 +2,7 @@ import { FreTyperMerger } from "../../typerdef/parser/index.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { FretClassifierSpec, FretInferenceRule, FretTypeRule, TyperDef } from "../../typerdef/metalanguage/index.js";
+import { FretClassifierSpec, FretInferenceRule, FretTypeRule, TyperDef } from "../../typerdef/metalanguage/index.js"
 import { describe, test, expect, beforeEach } from "vitest";
 import { resolveTestDir } from '../TestPathHelpers.js';
 
