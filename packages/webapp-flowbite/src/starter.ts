@@ -17,9 +17,20 @@ await CoreConfig.initializeWithServers(
     LionWebRepositoryCommunication.getInstance(),
     new FreonDeltaClient("freon", {
         // hostname: "192.168.100.1", port: 3005, timeout: 20000
-        hostname: "127.0.0.1", port: 3005, timeout: 20000
+        hostname: "127.0.0.1",
+        port: 3005,
+        timeout: 20000,
     }),
 )
+// await CoreConfig.initializeWithDeltaServer(
+//     LanguageEnvironment.getInstance(),
+//     new FreonDeltaClient("freon", {
+//         // hostname: "192.168.100.1", port: 3005, timeout: 20000
+//         hostname: "127.0.0.1",
+//         port: 3005,
+//         timeout: 20000,
+//     }),
+// )
 // CoreConfig.initialize(
 //     LanguageEnvironment.getInstance(),
 //     ServerCommunication.getInstance(),
@@ -29,7 +40,9 @@ await CoreConfig.initializeWithServers(
 console.log(`Manager is of type ${FREON.modelManager.constructor.name}`)
 WebappConfigurator.getInstance()
 
-ServerCommunication.getInstance().SERVER_URL = "http://localhost:8001/"
+// ServerCommunication.getInstance().SERVER_URL = "http://localhost:8001/"
+
+LionWebRepositoryCommunication.getInstance().SERVER_URL = "http://localhost:8001/"
 
 setDevelopment(true)
 configureExternals()
