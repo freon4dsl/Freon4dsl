@@ -53,7 +53,7 @@
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
-        console.log(
+        LOGGER.log(
             'FreonComponent onKeyDown: ' +
                 event.key +
                 ' ctrl: ' +

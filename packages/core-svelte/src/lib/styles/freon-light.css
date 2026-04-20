@@ -350,6 +350,10 @@
     color: var(--color-light-freon-50);
 }
 
+.reference-arrow {
+    fill: var(--color-freon-reference-arrow);
+}
+
 /*******************************************************
  *  NumericSliderComponent
  *******************************************************/
@@ -523,8 +527,4 @@
 
 .drag-handle-icon {
     fill: var(--color-light-freon-400);
-}
-
-.reference-arrow {
-    fill: var(--color-freon-reference-arrow);
 }

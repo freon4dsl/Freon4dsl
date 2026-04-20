@@ -799,7 +799,8 @@
 
     font-size: var(--freon-inline-font-size);
     line-height: var(--freon-inline-line-height);
-    height: var(--freon-inline-height);
+    height: auto;
+    overflow: hidden; /* optional, prevents scrollbar flicker */
     padding-inline: var(--freon-inline-padding-x);
 
     margin: 0;

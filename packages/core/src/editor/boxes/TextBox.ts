@@ -177,14 +177,6 @@ export class TextBox extends Box {
         this.setCaret({ position: FreCaretPosition.INDEX, from: from, to: from })
     }
 
-    /** @internal
-     * This function is called after the text changes in the browser.
-     * It ensures that the SelectableComponent will calculate the new coordinates.
-     */
-    // update: () => void = () => {
-    //     /* To be overwritten by `TextComponent` */
-    // }
-
     isEditable(): boolean {
         return true
     }

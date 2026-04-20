@@ -44,7 +44,6 @@ concept Method {
 concept Attribute {
     reference declaredType: Type;
     name: identifier;
-    extra: string;
 }
 
 concept Parameter  {
