@@ -358,12 +358,8 @@
             "name": "Model89",
             "units": [
                 {
-                    "file": "SomeNameOrOther.json",
-                    "name": "SomeNameOrOther"
-                },
-                {
-                    "name": "SecpondUnit",
-                    "file": "SecpondUnit.json"
+                    "name": "SomeNameOrOther",
+                    "file": "SomeNameOrOther.json"
                 }
             ],
             "version": "1"

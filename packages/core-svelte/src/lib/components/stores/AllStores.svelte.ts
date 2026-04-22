@@ -1,6 +1,5 @@
 import ContextMenu from '../ContextMenu.svelte';
 import type { Box, ListElementInfo } from '@freon4dsl/core';
-import type { PaneLike } from '../svelte-utils/PaneLike.js';
 
 export type GridIndex = { row: number; column: number };
 
@@ -21,6 +20,3 @@ export const draggedFrom: { value: string } = $state({ value: '' });
 export const activeElem: { value: GridIndex | undefined } = $state({ value: undefined });
 // id of the svelte component that contains the 'active' element
 export const activeIn: { value: string } = $state({ value: '' });
-
-// pointer to the FreonComponent, to be able to do scrolling if needed
-export const editorPane: { value: PaneLike | undefined } = $state({ value: undefined });

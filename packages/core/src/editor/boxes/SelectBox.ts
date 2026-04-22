@@ -32,20 +32,26 @@ export class SelectBox extends AbstractChoiceBox {
     }
     
     getOptions(editor: FreEditor): SelectOption[] {
-        // console.log("Options for " + this.element.freLanguageConcept() + this.getAllOptions(editor).map(opt => {
+        // console.log("Options for " + this.node.freLanguageConcept() + this.getAllOptions(editor).map(opt => {
         //     opt.label
         // }))
-        return this.getAllOptions(editor);
+        return this.makeOptionsUnique(this.getAllOptions(editor));
     }
 
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
+        // console.log(`SelectBox: executeOption: ${option.label}`)
         const result: BehaviorExecutionResult = this._innerSelectOption(editor, option);
+        // todo When this select box is an expression operator, the innerSelectOption already sets a new editor selection.
+        //  The following code should in that case not be executed
         if (result === BehaviorExecutionResult.EXECUTED) {
+            // console.log("innerSelectOption IS executed")
             this.isDirty()
             // TODO Might need an index as well
             const nodeBox: Box = editor.findBoxForNode(this.node, this.propertyName)?.nextLeafRight
-            editor.selectElementForBox(nodeBox)
             // console.log(`SelectBox: executeOption: ${option.label} box.kind: ${nodeBox.role}`)
+            editor.selectElementForBox(nodeBox)
+        // } else {
+        //     console.log("innerSelectOption NOT executed")
         }
         return result
     }

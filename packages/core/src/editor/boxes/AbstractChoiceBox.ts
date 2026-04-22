@@ -1,93 +1,41 @@
 import { autorun } from "mobx"
 import type { FreNode } from "../../ast/index.js";
-import { FreUtils } from "../../util/index.js";
-import { BehaviorExecutionResult, type FreCaret } from "../util/index.js";
-import { BoxFactory, type FreEditor } from "../internal.js";
-import { Box, ChoiceTextHelper, type TextBox } from "./internal.js";
+import { FreUtils, jsonAsString } from "../../util/index.js"
+import { BehaviorExecutionResult } from "../util/index.js"
+import { type FreEditor } from "../internal.js";
+import { Box } from "./internal.js";
 import type { SelectOption } from "./internal.js";
+import { FreLogger } from "../../logging/index.js"
+
+const LOGGER: FreLogger = new FreLogger("AbstractChoiceBox").mute()
 
 export abstract class AbstractChoiceBox extends Box {
-    kind: string = "AbstractChoiceBox";
-    placeholder: string;
-    caretPosition: number = -1;
-    _textBox: TextBox;
-    textHelper: ChoiceTextHelper;
+    kind: string = "AbstractChoiceBox"
+    placeholder: string
+    _isFirstInLine: boolean
 
     protected constructor(node: FreNode, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
-        super(node, role);
-        FreUtils.initializeObject(this, initializer);
-        this.placeholder = placeHolder;
-        this.textHelper = new ChoiceTextHelper();
-        this._textBox = BoxFactory.text(
-            node,
-            "action-" + role + "-textbox",
-            () => {
-                /* To be overwritten by `SelectComponent` */
-                return this.textHelper.getText();
-            },
-            (value: string) => {
-                /* To be overwritten by `SelectComponent` */
-                this.textHelper.setText(value);
-            },
-            {
-                parent: this,
-                selectable: true,
-                placeHolder: placeHolder,
-            },
-        );
-        this.textHelper.box = this._textBox;
-    }
-    
-    override get children(): Box[] {
-        return [this.textBox]
-    }
-
-    get textBox(): TextBox {
-        // TODO Does this need to be done every time the textbox is requested?
-        //      Or could this move to the constructor?
-        this._textBox.propertyName = this.propertyName;
-        this._textBox.propertyIndex = this.propertyIndex;
-        return this._textBox;
-    }
-
-    override set hasError(val: boolean) {
-        this._hasError = val;
-        this._textBox.hasError = val;
-        this.isDirty();
-    }
-
-    override get errorMessages(): string[] {
-        return this._textBox.errorMessages;
-    }
-
-    override addErrorMessage(val: string | string[]) {
-        // this._errorMessages.push(val);
-        this._textBox.addErrorMessage(val);
-        this.isDirty();
-    }
-
-    override resetErrorMessages() {
-        this._errorMessages = [];
-        this._textBox.resetErrorMessages();
-        this.isDirty();
+        super(node, role)
+        FreUtils.initializeObject(this, initializer)
+        this.placeholder = placeHolder
     }
 
     // If true, then this box should carry all error messages on the line.
     set isFirstInLine(v: boolean) {
-        this._textBox.isFirstInLine = v
+        this._isFirstInLine = v
     }
     get firstInLine(): boolean {
-        return this._textBox.isFirstInLine
+        return this._isFirstInLine
     }
 
     _getSelectedOption(): SelectOption | null {
-        return null;
+        return null
     }
 
-    set getSelectedOption( value: () => SelectOption | null) {
+    set getSelectedOption(value: () => SelectOption | null) {
         this._getSelectedOption = value
         // this.isDirty()
-        autorun( () => {
+        autorun(() => {
             this._getSelectedOption()
             this.isDirty()
         })
@@ -96,35 +44,26 @@ export abstract class AbstractChoiceBox extends Box {
         return this._getSelectedOption
     }
 
-    // protected setSelectedOptionExec(value: () => SelectOption | null): SelectOption | null {
-    //     this._getSelectedOption = value
-    //     this.isDirty()
-    //     autorun( () => {
-    //         this._getSelectedOption()
-    //         this.isDirty()
-    //     })
-    // }
+    getText(): string {
+        if (this.getSelectedOption() === null) {
+            return ""
+        } else {
+            return this.getSelectedOption().label
+        }
+    }
 
     // @ts-ignore
     // parameter is present to support subclasses
     getOptions(editor: FreEditor): SelectOption[] {
-        return [];
+        return []
     }
 
     // @ts-ignore
     // parameter is present to support subclasses
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
-        console.error("AbstractChoiceBox.executeOption");
-        return BehaviorExecutionResult.NULL;
+        LOGGER.error("AbstractChoiceBox.executeOption")
+        return BehaviorExecutionResult.NULL
     }
-
-    setCaret: (caret: FreCaret, editor: FreEditor) => void = (caret: FreCaret, editor: FreEditor) => {
-        if (!!this.textBox) {
-            this.textBox.setCaret(caret);
-            // todo remove if and when editor.selectedCaretPosition can be removed
-            editor.selectedCaretPosition = caret;
-        }
-    };
 
     /** @internal
      * This function is called after the text changes in the browser.
@@ -132,23 +71,44 @@ export abstract class AbstractChoiceBox extends Box {
      */
     update: () => void = () => {
         /* To be overwritten by `ActionComponent` */
-    };
-
-    /** @internal
-     * Simulate a KeyBoard event
-     */
-    // triggerKeyPressEvent: (key: string) => void = () => {
-    //     /* To be overwritten by `AbstractChoiceComponent` */
-    // };
-
-    /** @internal
-     * Simulate a KeyBoard event
-     */
-    // triggerKeyDownEvent: (key: FreKey) => void = () => {
-    //     /* To be overwritten by `AbstractChoiceComponent` */
-    // };
+    }
 
     isEditable(): boolean {
-        return true;
+        return true
+    }
+
+    makeOptionsUnique(options: SelectOption[]): SelectOption[] {
+        LOGGER.log(`makeOptionsUnique options: ${options.map((o) => o.label)}`)
+        // Remove doubles, to avoid errors. Check on the id, because identical labels are allowed!
+        const seen: string[] = []
+        const result: SelectOption[] = []
+        options.forEach((option) => {
+            if (seen.includes(option.id)) {
+                LOGGER.log(`makeOptionsUnique.Option box(${this.id})` + jsonAsString(option) + " is a duplicate")
+            } else {
+                seen.push(option.id)
+                result.push(option)
+            }
+        })
+        return result
+    }
+
+    /***********************************************************************************
+     * Functions for the paste/copy/cut actions from the webapp
+     ***********************************************************************************/
+    insertAtSelection: (insert: string) => void = (_insert: string) => {
+        // Default implementation, to be overridden by TextDropdownComponent
+        LOGGER.log("AbstractChoiceBox insertAtSelection")
+    }
+
+    getSelectedText: () => string = () => {
+        // Default implementation, to be overridden by TextDropdownComponent
+        LOGGER.log("AbstractChoiceBox getSelectedText")
+        return this.getText()
+    }
+
+    deleteSelection: () => void = () => {
+        // Default implementation, to be overridden by TextDropdownComponent
+        LOGGER.log("AbstractChoiceBox deleteSelection")
     }
 }

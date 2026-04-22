@@ -124,9 +124,10 @@
                   "key": "-key-Entity-attributes"
                },
                "children": [
+                  "ID-22",
                   "ID-20",
                   "ID-21",
-                  "ID-22"
+                  "ID-7"
                ]
             },
             {
@@ -146,6 +147,19 @@
                "reference": {
                   "language": "-key-Example",
                   "version": "2023.1",
+                  "key": "-key-Entity-baseEntity"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "",
+                     "reference": null
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
                   "key": "-key-Entity-baseInterfaces"
                },
                "targets": []
@@ -153,6 +167,42 @@
          ],
          "annotations": [],
          "parent": "ID-18"
+      },
+      {
+         "id": "ID-22",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "qwerty"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "LIMITED-PrimitiveType-ID-0"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-19"
       },
       {
          "id": "ID-20",
@@ -217,8 +267,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "Boolean",
-                     "reference": "LIMITED-PrimitiveType-ID-2"
+                     "resolveInfo": "String",
+                     "reference": "LIMITED-PrimitiveType-ID-0"
                   }
                ]
             }
@@ -227,7 +277,7 @@
          "parent": "ID-19"
       },
       {
-         "id": "ID-22",
+         "id": "ID-7",
          "classifier": {
             "language": "-key-Example",
             "version": "2023.1",
@@ -240,7 +290,7 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": "qwerty"
+               "value": ""
             }
          ],
          "containments": [],
@@ -276,7 +326,7 @@
                   "version": "2023.1",
                   "key": "-key-Method-name"
                },
-               "value": "meth56"
+               "value": "String"
             }
          ],
          "containments": [
@@ -308,8 +358,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "Integer",
-                     "reference": "LIMITED-PrimitiveType-ID-1"
+                     "resolveInfo": "ent1",
+                     "reference": "ID-19"
                   }
                ]
             }
@@ -455,7 +505,7 @@
                   "version": "2023.1",
                   "key": "-key-NumberLiteralExpression-value"
                },
-               "value": "56"
+               "value": "563333"
             }
          ],
          "containments": [],
@@ -763,7 +813,10 @@
                   "ID-46",
                   "ID-48",
                   "ID-49",
-                  "ID-50"
+                  "ID-50",
+                  "ID-4",
+                  "ID-5",
+                  "ID-6"
                ]
             },
             {
@@ -817,8 +870,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "String",
-                     "reference": "LIMITED-PrimitiveType-ID-0"
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
                   }
                ]
             }
@@ -840,7 +893,7 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": "age"
+               "value": "xxx"
             }
          ],
          "containments": [],
@@ -876,11 +929,25 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": "rry"
+               "value": "Boolean"
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-36"
       },
@@ -898,11 +965,25 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": ""
+               "value": "Common may still run afterward "
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "LIMITED-PrimitiveType-ID-0"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-36"
       },
@@ -920,11 +1001,25 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": ""
+               "value": "denied"
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-36"
       },
@@ -942,11 +1037,119 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": ""
+               "value": "browser undo works"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-36"
+      },
+      {
+         "id": "ID-4",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "insertAtSelection"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-36"
+      },
+      {
+         "id": "ID-5",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "may still AAAAP afterward"
             }
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
+         "parent": "ID-36"
+      },
+      {
+         "id": "ID-6",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "werass## Edge cases\n\n- [ ] empty string vs undefined  \n=> stored correctly (optional string logic)\n\n- [ ] very fast typing  \n=> no glitches\n\n- [ ] rapid focus switching  \n=> no crashes or lost state\n\n- [ ] selection + paste  \n=> replaces selection correctly\n\n- [ ] caret at boundaries + typing  \n=> correct navigation / insertionrtqqqq"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-36"
       },

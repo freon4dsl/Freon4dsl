@@ -33,7 +33,7 @@
     } from './stores/AllStores.svelte.js';
     import type { MainComponentProps } from './svelte-utils/FreComponentProps.js';
     import { getNearestScrollContainer } from './svelte-utils/ScrollingUtils.js';
-    import { type PaneLike, providePaneContext } from './svelte-utils/PaneLike.js';
+    import { type OverlayPane, providePaneContext } from './svelte-utils/OverlayPane.js';
 
     let LOGGER = FREON_LOGGER;
 
@@ -97,30 +97,6 @@
                             }
                             editor.selectionChanged()
                             stopEvent(event);
-                        }
-                        break;
-                    case 'x': // ctrl-x => CUT
-                        if (!shouldBeHandledByBrowser.value) {
-                            LOGGER.log('Ctrl-x: CUT');
-                            AstActions.getInstance(editor).cut();
-                            stopEvent(event);
-                        }
-                        break;
-                    case 'c': // ctrl-c => COPY
-                        if (!shouldBeHandledByBrowser.value) {
-                            LOGGER.log('Ctrl-c: COPY');
-                            AstActions.getInstance(editor).copy();
-                            stopEvent(event);
-                        }
-                        break;
-                    case 'v': // ctrl-v => PASTE
-                        if (!shouldBeHandledByBrowser.value) {
-                            LOGGER.log('Ctrl-v: PASTE');
-                            AstActions.getInstance(editor).paste();
-                            stopEvent(event);
-                        } else {
-                            LOGGER.log('Ctrl-v: Handled by browser');
-                            // stopEvent(event);
                         }
                         break;
                     case 'h': // ctrl-h => SEARCH
@@ -213,6 +189,47 @@
             }
         }
     };
+
+    function handlePasteEvent(event: ClipboardEvent): void {
+        LOGGER.log("FreonComponent handlePasteEvent");
+
+        if (!shouldBeHandledByBrowser.value) {
+            console.log('Ctrl-v: PASTE');
+            AstActions.getInstance(editor).paste();
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            // let browser do its bit, but reset the flag
+            shouldBeHandledByBrowser.value = false;
+        }
+    }
+
+    function handleCopyEvent(event: ClipboardEvent): void {
+        LOGGER.log("FreonComponent handleCopyEvent");
+
+        if (!shouldBeHandledByBrowser.value) {
+            console.log('Ctrl-c: COPY');
+            AstActions.getInstance(editor).copy();
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            // let browser do its bit, but reset the flag
+            shouldBeHandledByBrowser.value = false;
+        }
+    }
+
+    function handleCutEvent(event: ClipboardEvent): void {
+        LOGGER.log("FreonComponent handleCutEvent");
+        if (!shouldBeHandledByBrowser.value) {
+            console.log('Ctrl-x: CUT');
+            AstActions.getInstance(editor).cut();
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            // let browser do its bit, but reset the flag
+            shouldBeHandledByBrowser.value = false;
+        }
+    }
 
     /**
      * Keep track of the scrolling position in the editor, so we know exactly where boxes are
@@ -321,14 +338,21 @@
     refreshSelection('Initialize FreonComponent');
 
     // Make sure the right functions are available for the Dropdown component to be able to scroll if needed.
-    const paneApi: PaneLike = { getVisibleRect, getScrollContainer };
+    function getOverlayRoot(): HTMLElement | null {
+        return overlayRootElement;
+    }
+    const paneApi: OverlayPane = { getVisibleRect, getScrollContainer, getOverlayRoot }
     providePaneContext(paneApi);
+    let overlayRootElement: HTMLElement | null = null;
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <div
     class={'freon-component'}
     onkeydown={onKeyDown}
+    onpaste={handlePasteEvent}
+    oncopy={handleCopyEvent}
+    oncut={handleCutEvent}
     onscroll={onScroll}
     bind:this={freonRootElement}
     {id}
@@ -338,7 +362,12 @@
     <div class="editor-component">
         <RenderComponent {editor} readonly={false} box={rootBox} />
     </div>
+
+    <!-- shared overlay host for this Freon root instance -->
+    <div class="freon-overlay-root" bind:this={overlayRootElement}></div>
 </div>
-<!-- Here the only instance of ContextMenu is defined -->
+<!-- Here the only instance of ContextMenu is defined.
+     It does not live “next to” the root;
+     it will portal into overlayRootElement -->
 <!-- TODO make some default items for the context menu -->
 <ContextMenu bind:this={contextMenu.instance} {editor} />
