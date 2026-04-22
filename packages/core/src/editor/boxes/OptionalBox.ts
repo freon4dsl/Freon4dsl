@@ -125,7 +125,7 @@ export class OptionalBox extends Box {
      * Returns true when the property that is contained in this Optional Box is not present / not set.
      */
     isEmpty(): boolean {
-        console.log(`isEmpty for property ${this.propertyName} of concept ${this.nodeConcept}`)
+        LOGGER.log(`isEmpty for property ${this.propertyName} of concept ${this.nodeConcept}`)
         if (isNullOrUndefined(this.propDef)) {
             LOGGER.log(`Cannot find property definition for property ${this.propertyName} of concept ${this.nodeConcept}.`)
             return false

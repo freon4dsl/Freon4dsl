@@ -68,7 +68,7 @@
     let column: number = $state(0);
     let orientation: BoxTypeName = 'gridcellNeutral';
     let childBox: Box = $state()!;
-    let htmlElement: HTMLElement;
+    let htmlElement: HTMLElement = $state()!;
     let isHeader = $state('');
     let cssStyle: string = '';
     let cssClass: string = $state('');

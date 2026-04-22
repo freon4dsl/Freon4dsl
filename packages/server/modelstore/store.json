@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 46,
+    "currentPostfix": 49,
     "models": [
         {
             "folder": "modelstore",
@@ -358,12 +358,8 @@
             "name": "Model89",
             "units": [
                 {
-                    "file": "SomeNameOrOther.json",
-                    "name": "SomeNameOrOther"
-                },
-                {
-                    "name": "SecpondUnit",
-                    "file": "SecpondUnit.json"
+                    "name": "SomeNameOrOther",
+                    "file": "SomeNameOrOther.json"
                 }
             ],
             "version": "1"

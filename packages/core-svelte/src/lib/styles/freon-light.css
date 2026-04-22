@@ -41,6 +41,18 @@
     --color-freon-dropdown-component-item-hover-bg: var(--color-light-freon-accent-500);
     --color-freon-dropdown-component-selected-color: var(--color-light-freon-accent-700);
     --color-freon-dropdown-component-selected-bg: var(--color-light-freon-accent-200);
+    --dropdown-component-item-hover-bg: var(--color-light-freon-100);
+    --dropdown-component-item-selected-bg: var(--color-light-freon-accent-200);
+    --dropdown-component-item-selected-text: inherit;
+    --dropdown-component-item-selected-border: var(--color-light-freon-accent-400);
+
+    --dropdown-component-item-match-bg: var(--color-light-freon-accent-100);
+    --dropdown-component-item-match-text: inherit;
+    --dropdown-component-item-match-border: var(--color-light-freon-accent-200);
+
+    --dropdown-component-item-single-match-bg: var(--color-light-freon-accent-100);
+    --dropdown-component-item-single-match-text: inherit;
+    --dropdown-component-item-single-match-border: var(--color-light-freon-accent-400);
 
     --color-freon-optional-component-tooltip-border: var(--color-light-freon-accent-700);
     --color-freon-optional-component-tooltip-bg: var(--color-light-freon-accent-100);
@@ -265,18 +277,14 @@
 .text-component-input {
     color: var(--color-freon-text-component-text-color);
     background: var(--color-freon-text-component-input-bg);
-    cursor: text;
-    outline: none;
 }
 
 .text-component-input::placeholder {
     color: var(--color-light-freon-250);
-    opacity: 0.7;
 }
 
 .text-component-input:hover {
     background: var(--color-freon-text-component-input-hover-bg);
-    cursor: text;
 }
 
 .text-component-input:focus,

@@ -61,7 +61,7 @@
     --color-freon-numeric-slider-thumb-border: var(--color-dark-freon-accent-400);
 
     --color-freon-dropdown-component-border: var(--color-dark-freon-700, var(--color-dark-freon-700));
-    --color-freon-dropdown-component-bg: var(--color-dark-freon-800);
+    --color-freon-dropdown-component-bg: var(--color-dark-freon-700);
     --color-freon-dropdown-component-item-hover-bg: var(--color-dark-freon-accent-500);
     --color-freon-dropdown-component-selected-color: var(--color-dark-freon-accent-400);
     --color-freon-dropdown-component-selected-bg: color-mix(
@@ -105,8 +105,20 @@
     --color-freon-text-dropdown-input-bg: var(--color-dark-freon-accent-700);
 
     --color-freon-reference-arrow: var(--color-dark-freon-accent-400);
-}
 
+    --dropdown-component-item-hover-bg: var(--color-dark-freon-100);
+    --dropdown-component-item-selected-bg: var(--color-dark-freon-accent-200);
+    --dropdown-component-item-selected-text: inherit;
+    --dropdown-component-item-selected-border: var(--color-dark-freon-accent-400);
+
+    --dropdown-component-item-match-bg: var(--color-dark-freon-accent-100);
+    --dropdown-component-item-match-text: inherit;
+    --dropdown-component-item-match-border: var(--color-dark-freon-accent-200);
+
+    --dropdown-component-item-single-match-bg: var(--color-dark-freon-accent-100);
+    --dropdown-component-item-single-match-text: inherit;
+    --dropdown-component-item-single-match-border: var(--color-dark-freon-accent-400);
+}
 .dark .freon-component {
     color: var(--color-dark-freon-50);
     background-color: var(--color-dark-freon-900);
@@ -219,11 +231,12 @@
 }
 
 .dark .contextmenu-button {
+    color: var(--color-dark-freon-900);
     background: none;
-    border: none;
 }
 
 .dark .contextmenu-button:hover {
+    color: var(--color-dark-freon-100);
     background: var(--color-dark-freon-800);
 }
 
@@ -234,6 +247,10 @@
 .dark .contextmenu-hr {
     border-top: solid 1px var(--color-dark-freon-700);
 }
+
+/*******************************************************
+ *  ErrorTooltipComponent
+ *******************************************************/
 
 .dark .error-tooltip {
     border: 1px solid var(--color-dark-freon-error);

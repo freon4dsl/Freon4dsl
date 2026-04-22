@@ -99,30 +99,6 @@
                             stopEvent(event);
                         }
                         break;
-                    case 'x': // ctrl-x => CUT
-                        if (!shouldBeHandledByBrowser.value) {
-                            LOGGER.log('Ctrl-x: CUT');
-                            AstActions.getInstance(editor).cut();
-                            stopEvent(event);
-                        }
-                        break;
-                    case 'c': // ctrl-c => COPY
-                        if (!shouldBeHandledByBrowser.value) {
-                            LOGGER.log('Ctrl-c: COPY');
-                            AstActions.getInstance(editor).copy();
-                            stopEvent(event);
-                        }
-                        break;
-                    case 'v': // ctrl-v => PASTE
-                        if (!shouldBeHandledByBrowser.value) {
-                            LOGGER.log('Ctrl-v: PASTE');
-                            AstActions.getInstance(editor).paste();
-                            stopEvent(event);
-                        } else {
-                            LOGGER.log('Ctrl-v: Handled by browser');
-                            // stopEvent(event);
-                        }
-                        break;
                     case 'h': // ctrl-h => SEARCH
                         // todo
                         stopEvent(event);
@@ -213,6 +189,47 @@
             }
         }
     };
+
+    function handlePasteEvent(event: ClipboardEvent): void {
+        LOGGER.log("FreonComponent handlePasteEvent");
+
+        if (!shouldBeHandledByBrowser.value) {
+            console.log('Ctrl-v: PASTE');
+            AstActions.getInstance(editor).paste();
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            // let browser do its bit, but reset the flag
+            shouldBeHandledByBrowser.value = false;
+        }
+    }
+
+    function handleCopyEvent(event: ClipboardEvent): void {
+        LOGGER.log("FreonComponent handleCopyEvent");
+
+        if (!shouldBeHandledByBrowser.value) {
+            console.log('Ctrl-c: COPY');
+            AstActions.getInstance(editor).copy();
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            // let browser do its bit, but reset the flag
+            shouldBeHandledByBrowser.value = false;
+        }
+    }
+
+    function handleCutEvent(event: ClipboardEvent): void {
+        LOGGER.log("FreonComponent handleCutEvent");
+        if (!shouldBeHandledByBrowser.value) {
+            console.log('Ctrl-x: CUT');
+            AstActions.getInstance(editor).cut();
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            // let browser do its bit, but reset the flag
+            shouldBeHandledByBrowser.value = false;
+        }
+    }
 
     /**
      * Keep track of the scrolling position in the editor, so we know exactly where boxes are
@@ -333,6 +350,9 @@
 <div
     class={'freon-component'}
     onkeydown={onKeyDown}
+    onpaste={handlePasteEvent}
+    oncopy={handleCopyEvent}
+    oncut={handleCutEvent}
     onscroll={onScroll}
     bind:this={freonRootElement}
     {id}

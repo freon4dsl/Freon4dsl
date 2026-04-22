@@ -1,4 +1,6 @@
 <script lang="ts">
+    // todo component does not react to arrow down
+    // todo component does not react correct to getting focus by shift-tab
     import { MULTILINETEXT_LOGGER } from './ComponentLoggers.js';
     import { componentId } from '../index.js';
     import { notNullOrUndefined, type MultiLineTextBox } from '@freon4dsl/core';
@@ -10,7 +12,7 @@
     const LOGGER = MULTILINETEXT_LOGGER;
 
     // Props
-    let { box, readonly }: FreComponentProps<MultiLineTextBox> = $props();
+    let { box, readonly = false }: FreComponentProps<MultiLineTextBox> = $props();
 
     // Local variables
     let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'text-with-unknown-box'); // an id for the HTML element

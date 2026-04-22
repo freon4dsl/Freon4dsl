@@ -2,7 +2,7 @@ import type { FreModelUnit, FreNode, FreOwnerDescriptor } from "../ast/index.js"
 import type { FreDelta } from "../change-manager/index.js"
 import { FREON } from "../environment/CoreConfig.js"
 import { FreErrorSeverity } from "../validator/index.js"
-import { type Box, type FreEditor, isActionBox, isActionTextBox, isListBox } from "../editor/index.js"
+import { type Box, type FreEditor, isActionBox, isListBox } from "../editor/index.js"
 import { FreLanguage } from "../language/index.js"
 import { FreLogger } from "../logging/index.js"
 import { runInAction } from "mobx"
@@ -77,27 +77,21 @@ export class AstActions {
             const currentSelection: Box = this.editor.selectedBox
             const element: FreNode = currentSelection.node
             if (!!currentSelection) {
-                if (isActionTextBox(currentSelection)) {
-                    if (isActionBox(currentSelection.parent)) {
-                        if (FreLanguage.getInstance().metaConformsToType(tobepasted, currentSelection.parent.conceptName)) {
-                            // allow subtypes
-                            // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
-                            this.pasteInElement(element, currentSelection.parent.propertyName)
-                        } else {
-                            this.editor.setUserMessage("Cannot paste a " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning)
-                        }
+                if (isActionBox(currentSelection)) {
+                    if (FreLanguage.getInstance().metaConformsToType(tobepasted, currentSelection.conceptName)) {
+                        // allow subtypes
+                        // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
+                        this.pasteInElement(element, currentSelection.propertyName)
+                    } else {
+                        this.editor.setUserMessage("Cannot paste a " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning)
                     }
                 } else {
                     // Walk up the box tree to find a ListBox ancestor
-                    const listBox = this.findListBoxAncestor(currentSelection);
+                    const listBox = this.findListBoxAncestor(currentSelection)
                     if (listBox) {
                         if (FreLanguage.getInstance().metaConformsToType(tobepasted, element.freLanguageConcept())) {
                             // allow subtypes
-                            this.pasteInElement(
-                                element.freOwnerDescriptor().owner,
-                                listBox.propertyName,
-                                element.freOwnerDescriptor().propertyIndex + 1,
-                            )
+                            this.pasteInElement(element.freOwnerDescriptor().owner, listBox.propertyName, element.freOwnerDescriptor().propertyIndex + 1)
                         } else {
                             this.editor.setUserMessage("Cannot paste a " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning)
                         }

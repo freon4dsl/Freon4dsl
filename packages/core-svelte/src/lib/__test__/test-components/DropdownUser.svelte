@@ -23,9 +23,10 @@
         <input bind:value={selected.label} />
         {#if dropdownShown}
             <DropdownComponent
-                options={filteredOptions}
+                allOptions={filteredOptions}
+                matchingOptions={filteredOptions}
                 bind:selected
-                selectionChanged={(sel: SelectOption) => selectionChanged(sel)}
+                selectionChanged={(sel) => selectionChanged(sel)}
             />
         {/if}
         <span style="height:8rem">Current value: {selected.id}</span>

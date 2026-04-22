@@ -27,14 +27,14 @@
     const LOGGER = TABLE_LOGGER;
 
     // Props
-    let { editor, box, readonly }: FreComponentProps<TableBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<TableBox> = $props();
 
     let id = $derived(notNullOrUndefined(box) ? componentId(box) : 'table-for-unknown-box');
     let cells: TableCellBox[] = $state([]);
     let templateColumns: string = $state('');
     let templateRows: string = $state('');
     let cssClass: string = $state('');
-    let htmlElement: HTMLElement;
+    let htmlElement: HTMLElement = $state()!;
     let myMetaType: DragAndDropType;
     
     $effect(() => {
