@@ -44,14 +44,14 @@
     // elements for the use of the overlay to position the dropdown menu
     const pane = usePaneContext()
     let overlayRoot = $derived(pane?.getOverlayRoot() ?? null)
-    let dropdownAnchorEl: HTMLElement | null = $state(null)
+    // let dropdownAnchorEl: HTMLElement | null = $state(null)
     let dropdownPanelEl: HTMLElement | null = $state(null)
     let dropdownContentEl: HTMLElement | null = $state(null)
     const listeners = useOverlayListeners(() => ({
         pane,
         enabled: dropdownShown,
         closeFunc: hideDropdown,
-        inside: [dropdownAnchorEl, dropdownPanelEl, dropdownContentEl],
+        inside: [addButtonComponent, dropdownPanelEl, dropdownContentEl],
         closeOnResize: true
     }))
 
@@ -71,10 +71,10 @@
 
     /* Functions that handle the dropdown */
 	function updateDropdownPos() {
-		if (!dropdownAnchorEl || !dropdownPanelEl || !dropdownContentEl || !overlayRoot) return;
+		if (!addButtonComponent || !dropdownPanelEl || !dropdownContentEl || !overlayRoot) return;
 
 		const layout = computeDropdownLayout(
-			dropdownAnchorEl.getBoundingClientRect(),
+			addButtonComponent.getBoundingClientRect(),
 			dropdownContentEl.getBoundingClientRect(),
 			overlayRoot.getBoundingClientRect()
 		);
@@ -281,7 +281,7 @@
                   bind:this={addButtonComponent}
               >
 				  {#if showPlaceholderButton}
-					<span class="optional-component-placeholder">+ {placeholder}</span>
+					<span class="optional-component-placeholder">+ {placeholder} opt</span>
 				  {:else}
 					<AddIcon />
 				  {/if}

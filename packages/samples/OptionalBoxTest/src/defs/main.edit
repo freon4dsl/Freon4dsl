@@ -4,6 +4,8 @@ Unit1 {
     [
     Optional Box Test ${self.name}
     ${self.schedule}
+
+    some names to be used as references: ${self.referables horizontal separator[, ]}
     ]
 }
 
@@ -16,6 +18,8 @@ EventSchedule {
         [? stringProp ${stringProp}]
         [? numberProp ${numberProp} met iets er achter]
         [? booleanProp ${booleanProp}]
+        [? single reference ${refProp}]
+        [? multi reference ${multRefProp}]
     ]
     trigger = "event schedule"
 }
@@ -51,3 +55,4 @@ EventTimeOfDay {
     trigger = "starting by: Time of day event must start"
 }
 
+toBeReferred {[${self.name}]}

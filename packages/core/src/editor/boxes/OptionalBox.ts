@@ -5,7 +5,7 @@ import type { FreEditor } from "../FreEditor.js"
 import { autorun } from "mobx"
 import type { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index.js"
 import { FreUtils, isNullOrUndefined } from "../../util/index.js"
-import { BehaviorExecutionResult, createOptions, executeSingleBehavior } from "../util/index.js"
+import { BehaviorExecutionResult, createOptionsForOptional, executeSingleBehavior } from "../util/index.js"
 import { FreLogger } from "../../logging/index.js"
 import { FreLanguage, type FreLanguageProperty } from "../../language/index.js"
 import { isBooleanControlBox } from "./BooleanControlBox.js"
@@ -54,8 +54,8 @@ export class OptionalBox extends Box {
             }
             return []
         } else {
-            LOGGER.log("getOptions for " + this.$id + "- " + this.conceptOfProperty + "." + this.propertyName)
-            return createOptions(editor, this.node, this, this.conceptOfProperty)
+            console.log("getOptions for " + this.$id + "- " + this.conceptOfProperty + "." + this.propertyName)
+            return createOptionsForOptional(editor, this.node, this, this.propDef)
         }
     }
 

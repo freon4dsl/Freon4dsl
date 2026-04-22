@@ -242,7 +242,7 @@ export class UtilRefHelpers {
             BoxFactory.action(
                 node,
                 RoleProvider.property(node.freLanguageConcept(), propertyName, "new-list-item"),
-                `+${propertyName}`,
+                `+ ${propertyName}`,
                 {
                     propertyName: `${propertyName}`,
                     // conceptName: FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName).type
