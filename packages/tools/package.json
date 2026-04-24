@@ -14,7 +14,7 @@
         "@logtape/pretty": "2.0.5",
         "@logtape/file": "2.0.5",
         "@duplojs/zod-to-typescript": "0.4.2",
-        "@rushstack/ts-command-line": "4.22.0",
+        "@rushstack/ts-command-line": "5.3.9",
         "@types/node": "20.12.11",
         "cmd-ts": "^0.13.0",
         "commander": "^14.0.0",
