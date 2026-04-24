@@ -2,20 +2,25 @@ import { mount } from 'svelte'
 import { FlowbiteFreonLayout, WebappConfigurator, setDevelopment } from "@freon4dsl/weblib-flowbite"
 import { configureExternals } from "./externals.js"
 import { configureLoggers } from "./loggers.js"
-import { DivideExpression, LanguageEnvironment } from "@freon4dsl/samples-example"
+import { LanguageEnvironment } from "@freon4dsl/samples-example"
 // import { LanguageEnvironment } from "@freon4dsl/samples-course-schedule"
 // import { LanguageEnvironment } from "@freon4dsl/samples-scoper-test"
 // import { LanguageEnvironment } from "@freon4dsl/samples-prim-projections"
 import { CoreConfig, FreLanguage, FREON, FreonDeltaClient, LionWebRepositoryCommunication, ServerCommunication } from "@freon4dsl/core"
 
 /**
- * Initialize everything
+ * Initialize everything fpor use with LionWeb Delta Protocol
  */
 // await CoreConfig.initializeWithServers(
 //     LanguageEnvironment.getInstance(),
 //     // ServerCommunication.getInstance(),
 //     LionWebRepositoryCommunication.getInstance(),
-//     new FreonDeltaClient()
+//     new FreonDeltaClient("freon", {
+//         // hostname: "192.168.100.1", port: 3005, timeout: 20000
+//         hostname: "127.0.0.1",
+//         port: 3005,
+//         timeout: 20000,
+//     }),
 // )
 CoreConfig.initialize(
     LanguageEnvironment.getInstance(),
@@ -23,9 +28,12 @@ CoreConfig.initialize(
     // LionWebRepositoryCommunication.getInstance(),
     // new FreonDeltaClient()
 )
+console.log(`Manager is of type ${FREON.modelManager.constructor.name}`)
 WebappConfigurator.getInstance()
 
 ServerCommunication.getInstance().SERVER_URL = "http://localhost:8001/"
+
+// LionWebRepositoryCommunication.getInstance().SERVER_URL = "http://localhost:8001/"
 
 setDevelopment(true)
 configureExternals()

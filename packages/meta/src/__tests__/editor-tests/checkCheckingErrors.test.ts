@@ -1,9 +1,9 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js"
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
-import { Checker } from "../../utils/basic-dependencies/index.js";
+import type { Checker } from "../../utils/basic-dependencies/index.js"
 import { FreEditParser } from "../../editordef/parser/FreEditParser.js";
-import { FreEditUnit } from "../../editordef/metalanguage/index.js";
+import type { FreEditUnit } from "../../editordef/metalanguage/index.js"
 import { describe, test, expect, beforeEach } from "vitest";
 import { resolveAstFile, resolveTestDir } from '../TestPathHelpers.js';
 

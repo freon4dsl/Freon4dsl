@@ -1,5 +1,5 @@
-import { RepositoryClient } from "@lionweb/server-client";
-import type { ClientResponse } from "@lionweb/server-client";
+import { RepositoryClient } from "@lionweb/server-http-client";
+import type { ClientResponse } from "@lionweb/server-http-client";
 import type { ListPartitionsResponse } from "@lionweb/server-shared";
 import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
@@ -14,7 +14,7 @@ import { FreLanguage } from '../../language/index.js';
 const LOGGER = new FreLogger("LionWebRepositoryCommunication");
 
 export class LionWebRepositoryCommunication implements IServerCommunication {
-    client = new RepositoryClient("Freon", "default");
+    client = new RepositoryClient({clientId: "Freon", repository: "default", hostname: "127.0.0.1", port: "3005"});
     lionweb_serial: FreSerializer = new FreLionwebSerializer();
     static instance: LionWebRepositoryCommunication;
 
@@ -104,7 +104,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * @param unit
      */
     async saveModelUnit(modelName: string, unitIdentifier: FreUnitIdentifier, unit: FreNamedNode): Promise<VoidServerResponse> {
-        LOGGER.log(`LionWebRepositoryCommunication.saveModelUnit ${modelName}/${unitIdentifier.name}`);
+        LOGGER.log(`saveModelUnit ${modelName}/${unitIdentifier.name}`);
         if (
             !!unitIdentifier.name &&
             unitIdentifier.name.length > 0 &&

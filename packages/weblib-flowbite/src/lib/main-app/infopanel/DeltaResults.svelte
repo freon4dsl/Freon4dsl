@@ -30,7 +30,7 @@
 
     deltaList.deltaProcessed = (_p: ProcessedDelta) => {
         console.log(`deltaList.deltaProcessed ${deltaList.deltas.length}`)
-            deltas = deltaList.deltas
+        deltas = deltaList.deltas
     }    
     // mock node to go to in the editor panel
     // let changedNode = WebappConfigurator.getInstance().langEnv?.editor.selectedElement

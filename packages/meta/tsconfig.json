@@ -84,7 +84,7 @@
     "node_modules",
     "coverage",
     "config",
-    "src/**/*.test.ts"
+    "src/__tests__"
   ]
 
 }

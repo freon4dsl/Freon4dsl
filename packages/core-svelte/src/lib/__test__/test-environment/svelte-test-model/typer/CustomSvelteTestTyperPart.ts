@@ -9,11 +9,13 @@ import type {FreNode, FreType, FreTyper} from "@freon4dsl/core";
 export class CustomSvelteTestTyperPart implements FreTyper {
     mainTyper!: FreTyper;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isType(node: FreNode): boolean | undefined {
         return undefined;
     }
 
-    inferType(node: FreNode): FreType | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    inferType(_node: FreNode): FreType | undefined {
         return undefined;
     }
 

@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { CalculatorModelEnvironment } from "../freon/config/CalculatorModelEnvironment.js";
 import {CalculatorModel} from "../freon/language/index.js";
-import { CoreConfig, FreModelUnit } from "@freon4dsl/core"
+import { CoreConfig, type FreModelUnit } from "@freon4dsl/core"
 
 describe("Parser test", () => {
     CoreConfig.initialize(CalculatorModelEnvironment.getInstance(), null)
