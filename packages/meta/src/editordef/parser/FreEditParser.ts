@@ -9,6 +9,7 @@ import {
     FreEditChecker,
 } from "../metalanguage/index.js";
 import { setCurrentFileName as editFileName } from "./FreEditCreators.js";
+// eslint-disable-next-line n/no-missing-import
 import { parse } from "./FreEditGrammar.js";
 
 export class FreEditParser extends FreGenericParser<FreEditUnit> {

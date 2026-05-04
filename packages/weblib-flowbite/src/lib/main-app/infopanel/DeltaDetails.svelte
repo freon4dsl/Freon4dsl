@@ -10,8 +10,8 @@
 
     let editor = WebappConfigurator.getInstance().langEnv?.editor
     let originalNode = $derived(pDelta.originalNode)
-    let newEditor: FreEditor | undefined = $derived(notNullOrUndefined(editor) ? new FreEditor(editor.projection, editor.environment) : undefined)
-    let originalBox: Box | undefined = $derived(notNullOrUndefined(originalNode) ? newEditor?.projection.getBox(originalNode) : undefined)
+    let newEditor: FreEditor | undefined = notNullOrUndefined(editor) ? new FreEditor(editor.projection, editor.environment) : undefined
+    let originalBox: Box | undefined = notNullOrUndefined(originalNode) ? newEditor?.projection.getBox(originalNode) : undefined
     let originalNodeEl: HTMLDivElement | null = null
 
     // TODO Check using 'derived' for these vars instead of the effect
@@ -23,22 +23,35 @@
     // })
 
 
-    $effect( () => {
-        if (open !== null) {
-            // give changed property a "changed" style 
-            const newbox = editor?.findBoxForNode(pDelta.changedNode!, pDelta.propertyName)
-            const origbox = newEditor!.findBoxForNode2(pDelta.originalNode!, pDelta.propertyName)
-            console.log(`ORIG BOX ${origbox?.kind} NEW BOX ${newbox?.kind}`)
-                if (notNullOrUndefined(origbox)) {
-                    newEditor!.selectElement(pDelta.originalNode!, pDelta.propertyName)
-                    origbox.cssClass = "changed"
-                }
-                if (notNullOrUndefined(newbox)) {
-                    // newEditor!.selectElement(pDelta.originalNode!, pDelta.propertyName)
-                    // newbox.cssClass = "changed"
-                }
-        }
-    })
+    // $effect( () => {
+    //     console.log(`DeltaDetail.$effect ${pDelta?.changedNode?.freId()}.${pDelta?.propertyName}`)
+    //     if (open !== null) {
+    //         // give changed property a "changed" style 
+    //         const newbox = editor?.findBoxForNode(pDelta.changedNode!, pDelta.propertyName)
+    //         const origbox = newEditor!.findBoxForNode2(pDelta.originalNode!, pDelta.propertyName)
+    //         if (notNullOrUndefined(origbox)) {
+    //             newEditor!.selectElement(pDelta.originalNode!, pDelta.propertyName)
+    //             origbox.cssClass = "changed"
+    //         }
+    //     }
+    // })
+    // $effect( () => {
+    //     console.log(`DeltaDetail.$effect ${pDelta?.changedNode?.freId()}.${pDelta?.propertyName}`)
+    //     if (open !== null) {
+    //         // give changed property a "changed" style 
+    //         const newbox = editor?.findBoxForNode(pDelta.changedNode!, pDelta.propertyName)
+    //         const origbox = newEditor!.findBoxForNode2(pDelta.originalNode!, pDelta.propertyName)
+    //         console.log(`ORIG BOX ${origbox?.kind} NEW BOX ${newbox?.kind}`)
+    //             if (notNullOrUndefined(origbox)) {
+    //                 newEditor!.selectElement(pDelta.originalNode!, pDelta.propertyName)
+    //                 origbox.cssClass = "changed"
+    //             }
+    //             if (notNullOrUndefined(newbox)) {
+    //                 // newEditor!.selectElement(pDelta.originalNode!, pDelta.propertyName)
+    //                 // newbox.cssClass = "changed"
+    //             }
+    //     }
+    // })
 
     let nodeId = $derived(originalNode? originalNode.freId() : "unknown")
 

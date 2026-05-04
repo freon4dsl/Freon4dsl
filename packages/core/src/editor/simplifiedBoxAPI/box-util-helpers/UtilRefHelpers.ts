@@ -56,8 +56,8 @@ export class UtilRefHelpers {
                 return scoper
                     .getVisibleNodes(node, propType)
                     .filter((node) => notNullOrUndefined(node.name) && node.name !== "")
-                    .map((node) => ({
-                        id: node.name,
+                    .map((node, index: number) => ({
+                        id: node.name + index,
                         label: node.name,
                         additional_label: this.makeAdditionalLabel(node),
                         node: node

@@ -229,7 +229,8 @@ export class ModelManager implements IModelManager {
         FREON.astChanger.change(() => {
             this.model.addUnit(unit)
         })
-        await this.saveUnit(unit)
+        LOGGER.log(`addUnit added ${unit?.name}`)
+        await FREON.server.createModelUnit(this.model.name, unit)
     }
 
     /**
@@ -276,6 +277,7 @@ export class ModelManager implements IModelManager {
     async saveUnit(unit: FreModelUnit): Promise<void | ModelManagementError> {
         LOGGER.log(`saveModelUnit`)
         if (this.dirtyUnits.has(unit)) {
+            LOGGER.log(`Saving unit`)
             const serverResponse = await FREON.server.saveModelUnit(
                 this.model.name,
                 {
@@ -285,12 +287,15 @@ export class ModelManager implements IModelManager {
                 },
                 unit,
             )
+            LOGGER.log(`server response: ${JSON.stringify(serverResponse)}`)
             if (serverResponse.errors.length === 0) {
                 this.dirtyUnits.delete(unit)
             } else {
                 this.onError(serverResponse.errors[0])
                 return new ModelManagementError(`${serverResponse.errors[0]})`)
             }
+        } else {
+            LOGGER.log(`NOT Saving unit, not dirty`)
         }
     }
 
@@ -309,6 +314,7 @@ export class ModelManager implements IModelManager {
      ***********************************************************/
 
     primChanged = (delta: FrePrimDelta) => {
+        LOGGER.log(`primChanged ${delta.propertyName}`)
         if (this.getUnits().includes(delta.unit)) {
             this.dirtyUnits.add(delta.unit)
             if (delta.owner.freIsUnit() && delta.propertyName === "name" && typeof (delta.oldValue === "string")) {
@@ -319,16 +325,19 @@ export class ModelManager implements IModelManager {
         }
     }
     partChanged = (delta: FrePartDelta) => {
+        LOGGER.log(`primChanged ${delta.propertyName}`)
         if (this.getUnits().includes(delta.unit)) {
             this.dirtyUnits.add(delta.unit)
         }
     }
     listElementChanged = (delta: FrePartDelta | FrePrimDelta) => {
+        LOGGER.log(`primChanged ${delta.propertyName}`)
         if (this.getUnits().includes(delta.unit)) {
             this.dirtyUnits.add(delta.unit)
         }
     }
     listChanged = (delta: FrePartListDelta | FrePrimListDelta) => {
+        LOGGER.log(`primChanged ${delta.propertyName}`)
         if (this.getUnits().includes(delta.unit)) {
             this.dirtyUnits.add(delta.unit)
         }

@@ -54,7 +54,7 @@ const NoOpEventFunction = (msg: NoOpEvent): void => {
         console.log("Called NoOpEventFunction " + msg.messageKind)
 }
 
-export const eventFunctions: ReceivingDelta[] = [
+export const miscEventFunctions: ReceivingDelta[] = [
     {
         messageKind: "ClassifierChanged",
         // @ts-expect-error TS2322

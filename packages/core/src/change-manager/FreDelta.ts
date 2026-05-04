@@ -168,11 +168,7 @@ export class DeltaUtil {
         }
         let ownerName: string = node["name"]
         if (ownerName === null || ownerName === undefined) {
-            if (typeof node?.freLanguageConcept === "function") {
-                ownerName = node?.freLanguageConcept()
-            } else {
-                return "NullDefined"
-            }
+            ownerName = node?.freLanguageConcept();
         }
         return ownerName;
     }
