@@ -1,25 +1,19 @@
-import { CoreConfig } from "@freon4dsl/core"
-import {
-    FreMetaBinaryExpressionConcept,
-    FreMetaClassifier,
-    FreMetaLanguage,
-    FreMetaLimitedConcept,
-} from "../../languagedef/metalanguage/index.js";
+import { FreMetaBinaryExpressionConcept, type FreMetaClassifier, type FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage/index.js"
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
-import { Checker, LOG2USER } from "../../utils/basic-dependencies/index.js";
+import { type Checker, LOG2USER } from "../../utils/basic-dependencies/index.js"
 import { Names } from '../../utils/on-lang/index.js';
 import { FreEditParser } from "../../editordef/parser/FreEditParser.js";
 import {
     ForType,
-    FreEditClassifierProjection,
+    type FreEditClassifierProjection,
     FreEditNormalProjection,
     FreEditProjectionDirection,
     FreEditProjectionGroup,
     FreEditPropertyProjection,
-    FreEditUnit,
+    type FreEditUnit,
     ListJoinType,
-} from "../../editordef/metalanguage/index.js";
+} from "../../editordef/metalanguage/index.js"
 import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator.js";
 import { describe, test, expect } from "vitest";
 import { resolveTestDir } from '../TestPathHelpers.js';

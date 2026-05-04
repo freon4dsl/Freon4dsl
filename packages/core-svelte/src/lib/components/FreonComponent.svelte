@@ -78,13 +78,12 @@
                         if (!shouldBeHandledByBrowser.value) {
                             LOGGER.log('Ctrl-z: UNDO');
                             const delta = AstActions.getInstance(editor).undo();
-                            LOGGER.log(`FreonComponent undu '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
+                            LOGGER.log(`FreonComponent undo '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
                             if (delta !== undefined && !editor.isBoxInTree(editor.selectedBox)) {
                                 FreEditorUtil.selectAfterUndo(editor, delta)
                             }
                             editor.selectionChanged()
                             stopEvent(event);
-                            
                         }
                         break;
                     case 'y': // ctrl-y => REDO
@@ -179,12 +178,23 @@
                     stopEvent(event);
                     break;
                 case ARROW_DOWN:
-                    editor.selectBoxBelow(editor.selectedBox);
-                    stopEvent(event);
+                    if (!shouldBeHandledByBrowser.value) {
+                        console.log('FreonComponent ARROW_DOWN: ')
+                        editor.selectBoxBelow(editor.selectedBox);
+                        stopEvent(event);
+                    } else {
+                        shouldBeHandledByBrowser.value = false
+                        console.log('FreonComponent ARROW_DOWN: for browser')
+                    }
                     break;
                 case ARROW_UP:
-                    editor.selectBoxAbove(editor.selectedBox);
-                    stopEvent(event);
+                    if (!shouldBeHandledByBrowser.value) {
+                        editor.selectBoxAbove(editor.selectedBox);
+                        stopEvent(event);
+                    } else {
+                        shouldBeHandledByBrowser.value = false
+                        console.log('FreonComponent ARROW_UP: for browser')
+                    }
                     break;
             }
         }

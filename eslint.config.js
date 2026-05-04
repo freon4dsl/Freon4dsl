@@ -1,26 +1,54 @@
 import prettier from 'eslint-config-prettier';
+import vitest from "@vitest/eslint-plugin"
 import nPlugin from "eslint-plugin-n";
 import { includeIgnoreFile } from '@eslint/compat';
 import globals from 'globals';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript-eslint';
-const gitignorePath = fileURLToPath(new URL('../../.gitignore', import.meta.url));
+import { globalIgnores, defineConfig } from "eslint/config"
+const gitignorePath = fileURLToPath(new URL('.gitignore', import.meta.url));
 
-export default ts.config(
-	includeIgnoreFile(gitignorePath),
+export default defineConfig(
+    includeIgnoreFile(gitignorePath),
+    globalIgnores([".svelte-kit/*", "vite.config.ts", "vitest.config.ts", "svelte.config.js", "eslint.config.js", "**/__tests__/**"]),
     // We seem to need a ts.config.<anything> here, otherwise eslint complains that @typescript-eslint (as used below) is unknown.
     ts.configs.base,
     // The "n" plugin contains all kind of import rules
     nPlugin.configs["flat/recommended-module"],
     {
-        "rules": { 
+        files: ["src/**/*", "**/*.svelte", "**/*.svelte.ts", "**/*.svelte.js"],
+        rules: {
+            "n/no-extraneous-import": [
+                "error",
+                {
+                    allowModules: [
+                        "vite",
+                        "eslint-config-prettier",
+                        "@eslint/compat",
+                        "globals",
+                        "eslint-plugin-n",
+                        "@vitest/eslint-plugin",
+                        "typescript-eslint",
+                        "vitest",
+                        "@sveltejs/vite-plugin-svelte",
+                        "@tailwindcss/vite",
+                    ],
+                    resolvePaths: [],
+                },
+            ],
+            "n/no-unpublished-import": [
+                "error",
+                {
+                    allowModules: ["vitest", "vite", "@sveltejs/vite-plugin-svelte", "@tailwindcss/vite"],
+                },
+            ],
             // Extra rule to find missing "type" in imports
             "@typescript-eslint/consistent-type-imports": "error",
             // catches missing.js extension in import
             "n/no-missing-import": "error",
             /** Below are the ts.configs.recommendedTypeChecked rules as defined in
-             *  https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/eslintrc/recommended-type-checked.ts 
-             *  
+             *  https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/eslintrc/recommended-type-checked.ts
+             *
              *  TODO Turn these rules on and fix the problems they show
              */
             // '@typescript-eslint/await-thenable': 'error',
@@ -29,25 +57,25 @@ export default ts.config(
             // '@typescript-eslint/no-array-constructor': 'error',
             // '@typescript-eslint/no-array-delete': 'error',
             // '@typescript-eslint/no-base-to-string': 'error',
-            // '@typescript-eslint/no-duplicate-enum-values': 'error',
+            "@typescript-eslint/no-duplicate-enum-values": "error",
             // '@typescript-eslint/no-duplicate-type-constituents': 'error',
             // '@typescript-eslint/no-empty-object-type': 'error',
-            // '@typescript-eslint/no-explicit-any': 'error',
-            // '@typescript-eslint/no-extra-non-null-assertion': 'error',
+            // "@typescript-eslint/no-explicit-any": "error",
+            "@typescript-eslint/no-extra-non-null-assertion": "error",
             // '@typescript-eslint/no-floating-promises': 'error',
-            // '@typescript-eslint/no-for-in-array': 'error',
+            "@typescript-eslint/no-for-in-array": "error",
             // 'no-implied-eval': 'off',
             // '@typescript-eslint/no-implied-eval': 'error',
-            // '@typescript-eslint/no-misused-new': 'error',
+            "@typescript-eslint/no-misused-new": "error",
             // '@typescript-eslint/no-misused-promises': 'error',
             // '@typescript-eslint/no-namespace': 'error',
-            // '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
+            "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
             // '@typescript-eslint/no-redundant-type-constituents': 'error',
-            // '@typescript-eslint/no-require-imports': 'error',
+            "@typescript-eslint/no-require-imports": "error",
             // '@typescript-eslint/no-this-alias': 'error',
             // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
             // '@typescript-eslint/no-unnecessary-type-constraint': 'error',
-            // '@typescript-eslint/no-unsafe-argument': 'error',
+            // "@typescript-eslint/no-unsafe-argument": "error",
             // '@typescript-eslint/no-unsafe-assignment': 'error',
             // '@typescript-eslint/no-unsafe-call': 'error',
             // '@typescript-eslint/no-unsafe-declaration-merging': 'error',
@@ -72,26 +100,42 @@ export default ts.config(
             // '@typescript-eslint/restrict-template-expressions': 'error',
             // '@typescript-eslint/triple-slash-reference': 'error',
             // '@typescript-eslint/unbound-method': 'error'
+            // ...vitest.configs.recommended.rules,
         },
     },
-	prettier,
-	{
-		languageOptions: {
-			globals: {
-				...globals.browser,
-				...globals.node
-			}
-		}
-	},
-	{
-		files: ['**/*.ts', '**/*.js'],
+    prettier,
+    {
+        languageOptions: {
+            globals: {
+                ...globals.browser,
+                ...globals.node,
+            },
+        },
+    },
+    {
+        files: ["**/*.ts", "**/*.js", "**/__tests__/**/*.ts"],
+        plugins: {
+            vitest,
+        },
 
-		languageOptions: {
-			parserOptions: {
-				parser: ts.parser, 
+        languageOptions: {
+            parserOptions: {
+                parser: ts.parser,
+                parerOptions: {
+                    ecmaVersion: "latest",
+                    sourceType: "module",
+                    project: "tsconfig-base.ts",
+                },
+                // projectService: true,
                 // Setting necessary to get type information from the typescript compiler for typing rules to work.
-                projectService: true
-			}
-		}
-	}
-);
+                // projectService: true,
+                //     {
+                //     allowDefaultProject: ["eslint.config.js", "src/__tests__/*ts"]
+                // }
+            },
+            globals: {
+                ...vitest.environments.env.globals,
+            },
+        },
+    },
+)

@@ -1,5 +1,4 @@
-import pkg from 'lodash';
-const { isEqual } = pkg;
+import { isEqual } from "es-toolkit"
 
 import { autorun, makeObservable, observable } from "mobx";
 import { type FreEnvironment, FREON } from "../environment/index.js"

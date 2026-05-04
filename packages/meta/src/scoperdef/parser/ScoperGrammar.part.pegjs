@@ -2,7 +2,9 @@
 // Needs to be concatenated with the Basic and Expression grammars.
 // The necessary import statements for all grammars should be defined here:
 {{
+// eslint-disable-next-line n/no-missing-import
 import * as create from "./ScoperCreators.js";
+// eslint-disable-next-line n/no-missing-import
 import * as expCreate from "../../langexpressions/parser/ExpressionCreators.js";
 }}
 
