@@ -15,7 +15,7 @@ export class LionwebDeltaIdProvider implements IdProvider {
         const getIdRequest: GetAvailableIdsRequest = {
             messageKind: "GetAvailableIdsRequest",
             queryId: "whatever",
-            count: 400,
+            count: 100,
             additionalInfos: [],
         }
         this.queryRunning = true

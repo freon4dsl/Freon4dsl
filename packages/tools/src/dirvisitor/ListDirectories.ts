@@ -1,4 +1,4 @@
-import { DirectoryWorker } from "./DirectoryWalker.js";
+import { type DirectoryWorker } from "./DirectoryWalker.js";
 
 /**
  * Worker that prints a line for each directory and file visited by a DirectoryWalker.

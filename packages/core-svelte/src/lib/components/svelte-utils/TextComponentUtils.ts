@@ -71,7 +71,7 @@ export function isDeleteNextWordKey(event: KeyboardEvent): boolean {
     );
 }
 
-export function canMoveCaretToStart(input: HTMLInputElement | undefined): boolean {
+export function canMoveCaretToStart(input: HTMLInputElement | HTMLTextAreaElement | undefined): boolean {
     if (!input) return false;
 
     const start = input.selectionStart ?? 0;
@@ -80,7 +80,7 @@ export function canMoveCaretToStart(input: HTMLInputElement | undefined): boolea
     return start !== 0 || end !== 0;
 }
 
-export function canMoveCaretToEnd(input: HTMLInputElement | undefined): boolean {
+export function canMoveCaretToEnd(input: HTMLInputElement | HTMLTextAreaElement | undefined): boolean {
     if (!input) return false;
 
     const value = input.value ?? '';
@@ -90,7 +90,7 @@ export function canMoveCaretToEnd(input: HTMLInputElement | undefined): boolean 
     return start !== value.length || end !== value.length;
 }
 
-export function canDeletePreviousWord(input: HTMLInputElement | undefined): boolean {
+export function canDeletePreviousWord(input: HTMLInputElement | HTMLTextAreaElement | undefined): boolean {
     if (!input) return false;
 
     const start = input.selectionStart ?? 0;
@@ -99,7 +99,7 @@ export function canDeletePreviousWord(input: HTMLInputElement | undefined): bool
     return start !== end || start > 0;
 }
 
-export function canDeleteNextWord(input: HTMLInputElement | undefined): boolean {
+export function canDeleteNextWord(input: HTMLInputElement | HTMLTextAreaElement | undefined): boolean {
     if (!input) return false;
 
     const value = input.value ?? '';
@@ -109,7 +109,7 @@ export function canDeleteNextWord(input: HTMLInputElement | undefined): boolean 
     return start !== end || end < value.length;
 }
 
-export function canMoveCaretLeft(input: HTMLInputElement | undefined): boolean {
+export function canMoveCaretLeft(input: HTMLInputElement | HTMLTextAreaElement | undefined): boolean {
     if (!input) return false;
 
     const start = input.selectionStart ?? 0;
@@ -118,7 +118,7 @@ export function canMoveCaretLeft(input: HTMLInputElement | undefined): boolean {
     return start !== end || start > 0;
 }
 
-export function canMoveCaretRight(input: HTMLInputElement | undefined): boolean {
+export function canMoveCaretRight(input: HTMLInputElement | HTMLTextAreaElement | undefined): boolean {
     if (!input) return false;
 
     const value = input.value ?? '';
@@ -128,7 +128,7 @@ export function canMoveCaretRight(input: HTMLInputElement | undefined): boolean 
     return start !== end || end < value.length;
 }
 
-export function canUseBackspace(input: HTMLInputElement | undefined): boolean {
+export function canUseBackspace(input: HTMLInputElement | HTMLTextAreaElement | undefined): boolean {
     if (!input) return false;
 
     const start = input.selectionStart ?? 0;
@@ -137,7 +137,7 @@ export function canUseBackspace(input: HTMLInputElement | undefined): boolean {
     return start !== end || start > 0;
 }
 
-export function canUseDelete(input: HTMLInputElement | undefined): boolean {
+export function canUseDelete(input: HTMLInputElement | HTMLTextAreaElement | undefined): boolean {
     if (!input) return false;
 
     const value = input.value ?? '';
@@ -179,14 +179,14 @@ export function resetCaretPosition(freCaret: FreCaret, currentValue: string): Te
 import { flushSync } from 'svelte';
 
 export type TextInputClipboardContext = {
-    inputElement: HTMLInputElement | undefined;
+    inputElement: HTMLInputElement | HTMLTextAreaElement | undefined;
     text: string;
     setText: (value: string) => void;
     afterChange?: () => void;
 };
 
 /* Helper function in the following three clipboard functions */
-function getSafeSelection(input: HTMLInputElement): { start: number; end: number } {
+function getSafeSelection(input: HTMLInputElement | HTMLTextAreaElement): { start: number; end: number } {
     const start = Math.max(0, input.selectionStart ?? 0);
     const end = Math.max(start, input.selectionEnd ?? start);
     return { start, end };
@@ -300,4 +300,20 @@ export function computeInputWidth(
 
     // Add small buffer for caret
     return `${widthSpan.offsetWidth + 2}px`;
+}
+
+export function isAtFirstLine(el: HTMLTextAreaElement): boolean {
+    const pos = el.selectionStart ?? 0;
+    const value = el.value ?? '';
+
+    // If there is no newline before the caret, we are on the first line
+    return value.lastIndexOf('\n', pos - 1) === -1;
+}
+
+export function isAtLastLine(el: HTMLTextAreaElement): boolean {
+    const pos = el.selectionStart ?? 0;
+    const value = el.value ?? '';
+
+    // If there is no newline after the caret, we are on the last line
+    return value.indexOf('\n', pos) === -1;
 }
