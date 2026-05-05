@@ -25,8 +25,6 @@ import { CoreConfig, FreLanguage, FREON, FreonDeltaClient, LionWebRepositoryComm
 CoreConfig.initialize(
     LanguageEnvironment.getInstance(),
     ServerCommunication.getInstance(),
-    // LionWebRepositoryCommunication.getInstance(),
-    // new FreonDeltaClient()
 )
 console.log(`Manager is of type ${FREON.modelManager.constructor.name}`)
 WebappConfigurator.getInstance()

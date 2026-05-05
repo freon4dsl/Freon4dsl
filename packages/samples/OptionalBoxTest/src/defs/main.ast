@@ -8,6 +8,7 @@ model Test1 {
 modelunit Unit1 {
     name: identifier;
 	schedule: EventSchedule;
+    referables: toBeReferred[];
 }
 
 concept EventSchedule {
@@ -18,6 +19,8 @@ concept EventSchedule {
     stringProp?: string;
     numberProp?: number;
     booleanProp?: boolean;
+    reference refProp?: toBeReferred;
+    reference multRefProp: toBeReferred[];
 }
 
 concept EventStart {
@@ -53,4 +56,8 @@ concept EventTimeOfDay {
     startTimeAsString: string;
     startHour: number;
     startMinute: number;
+}
+
+concept toBeReferred {
+    name: identifier;
 }
