@@ -178,9 +178,11 @@ export class FreUndoStackManager {
         } else if (delta instanceof FreTransactionDelta) {
             // TODO when multiple sources of change are present, then a check is needed whether the state of the unit is such that this delta can be reversed
             this.undoManager.startTransaction(false, this.changeSource)
-            for (const sub of delta.internalDeltas.reverse()) {
-                this.reverseDelta(sub)
-            }
+            runInAction( () => {
+                for (const sub of delta.internalDeltas.reverse()) {
+                    this.reverseDelta(sub)
+                }
+            })
             this.undoManager.endTransaction(this.changeSource)
         }
     }
