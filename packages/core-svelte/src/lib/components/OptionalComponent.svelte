@@ -19,6 +19,7 @@
 	import AddIcon from "./images/AddIcon.svelte"
 	import { tick } from "svelte"
 	import { OPTIONAL_LOGGER } from "$lib/components/ComponentLoggers.js"
+	import { computeDropdownLayout } from "$lib/components/svelte-utils/DropdownUtils"
 
 	const LOGGER = OPTIONAL_LOGGER
 
@@ -43,14 +44,14 @@
     // elements for the use of the overlay to position the dropdown menu
     const pane = usePaneContext()
     let overlayRoot = $derived(pane?.getOverlayRoot() ?? null)
-    let dropdownAnchorEl: HTMLElement | null = $state(null)
+    // let dropdownAnchorEl: HTMLElement | null = $state(null)
     let dropdownPanelEl: HTMLElement | null = $state(null)
     let dropdownContentEl: HTMLElement | null = $state(null)
     const listeners = useOverlayListeners(() => ({
         pane,
         enabled: dropdownShown,
         closeFunc: hideDropdown,
-        inside: [dropdownAnchorEl, dropdownPanelEl, dropdownContentEl],
+        inside: [addButtonComponent, dropdownPanelEl, dropdownContentEl],
         closeOnResize: true
     }))
 
@@ -69,49 +70,20 @@
     }
 
     /* Functions that handle the dropdown */
-    function updateDropdownPos() {
-        if (!dropdownAnchorEl || !dropdownPanelEl || !dropdownContentEl || !overlayRoot) return
+	function updateDropdownPos() {
+		if (!addButtonComponent || !dropdownPanelEl || !dropdownContentEl || !overlayRoot) return;
 
-        const a = dropdownAnchorEl.getBoundingClientRect() // viewport coords
-        const p = dropdownContentEl.getBoundingClientRect()  // current size
-        const o = overlayRoot.getBoundingClientRect()      // overlay coords
+		const layout = computeDropdownLayout(
+			addButtonComponent.getBoundingClientRect(),
+			dropdownContentEl.getBoundingClientRect(),
+			overlayRoot.getBoundingClientRect()
+		);
 
-        const ow = o.width
-        const oh = o.height
-
-        // anchor position relative to overlay
-        const anchorLeft = a.left - o.left
-        const anchorTop = a.top - o.top
-        const anchorBottom = a.bottom - o.top
-
-        // prefer below
-        let left = anchorLeft
-        let top = anchorBottom
-
-        // if overflow right, shift left
-        if (left + p.width > ow) {
-            left = Math.max(0, ow - p.width)
-        }
-
-        // if overflow bottom, flip above
-        if (top + p.height > oh) {
-            top = Math.max(0, anchorTop - p.height)
-        }
-
-        // final clamp
-        left = Math.max(0, Math.min(left, ow - p.width))
-        top = Math.max(0, Math.min(top, oh - p.height))
-
-        // make the dropdown height dependent on the available space
-        const spaceBelow = oh - anchorBottom
-		const availableHeight =
-            top === anchorBottom ? spaceBelow : anchorTop
-
-        dropdownPanelEl.style.left = `${left}px`
-        dropdownPanelEl.style.top = `${top}px`
-        dropdownPanelEl.style.minWidth = `${a.width}px`
-        dropdownContentEl.style.maxHeight = `${availableHeight}px`
-    }
+		dropdownPanelEl.style.left = `${layout.left}px`;
+		dropdownPanelEl.style.top = `${layout.top}px`;
+		dropdownPanelEl.style.minWidth = `${layout.minWidth}px`;
+		dropdownContentEl.style.maxHeight = `${layout.maxHeight}px`;
+	}
 
     const hideDropdown = () => {
         dropdownShown = false
@@ -124,7 +96,7 @@
         await tick()
         // wait two more frames
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
-        updateDropdownPos()
+		updateDropdownPos()
         listeners.attach()
     }
 
@@ -145,43 +117,46 @@
         // isEmpty = false;
     }
 
-    const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log(`onKeyDown: box(${box.id}) [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}` + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedOption?.id + " dropdown:" + dropdownShown)
-        if (dropdownShown) {
-            if (!event.ctrlKey && !event.altKey) {
-                switch (event.key) {
-					case ARROW_DOWN: {
-						dropdownCmp?.onArrowKey(event);
-						break;
-					}
-					case ARROW_UP: {
-						dropdownCmp?.onArrowKey(event);
-						break;
-					}
-                    case ENTER: {
-                        // user wants current selection
-                        // find the chosen option
-                        handleEnterOrControlSpace(event)
-                        break
-                    }
-                    default: {
-                        // handled by FreonComponent
-                    }
-                }
-            }
-        } else {
-            if (!isEmpty) {
-                switch (event.key) {
-                    case BACKSPACE:
-                    case DELETE: {
-                        remove()
-                        event.stopPropagation()
-                        event.preventDefault()
-                    }
-                }
-            }
-        }
-    }
+	const onKeyDown = (event: KeyboardEvent) => {
+		LOGGER.log(
+			`onKeyDown: box(${box.id}) [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}] meta [${event.metaKey}], selectedId: ${selectedOption?.id} dropdown:${dropdownShown}`
+		);
+
+		// Ignore modifier combinations (except where explicitly handled)
+		if (event.ctrlKey || event.altKey || event.metaKey) {
+			return;
+		}
+
+		// === DROPDOWN OPEN ===
+		if (dropdownShown) {
+			if (event.key === ARROW_DOWN || event.key === ARROW_UP) {
+				dropdownCmp?.onArrowKey(event);
+				return;
+			}
+
+			if (event.key === ENTER) {
+				handleEnterOrControlSpace(event);
+				return;
+			}
+
+			// everything else: let Freon / browser handle
+			return;
+		}
+
+		// === DROPDOWN CLOSED ===
+		if (isEmpty) {
+			return;
+		}
+
+		if (event.key === BACKSPACE || event.key === DELETE) {
+			remove();
+			event.stopPropagation();
+			event.preventDefault();
+			return;
+		}
+
+		// default: let Freon / browser handle
+	};
 
     function handleEnterOrControlSpace(event: KeyboardEvent): void {
         let chosenOption: SelectOption | null = null
@@ -257,40 +232,40 @@
 	<span class="optional-component {box.cssClass} readonly" {id}
           role="none"
     >
-	{#if isEmpty}
-		<span class="optional-component-tooltip-anchor readonly">
-		  <button
-              class="optional-component-button {showPlaceholderButton ? 'text-mode' : ''} readonly"
-              aria-label="Add optional component"
-          >
-			  {#if showPlaceholderButton}
-				<span class="optional-component-placeholder readonly">{placeholder}</span>
-			  {:else}
-				<AddIcon />
-			  {/if}
-		  </button>
+		{#if isEmpty}
+			<span class="optional-component-tooltip-anchor readonly">
+			  <button
+				  class="optional-component-button {showPlaceholderButton ? 'text-mode' : ''} readonly"
+				  aria-label="Add optional component"
+			  >
+				  {#if showPlaceholderButton}
+					<span class="optional-component-placeholder readonly">+ {placeholder}</span>
+				  {:else}
+					<AddIcon />
+				  {/if}
+			  </button>
 
-		  <span class="optional-component-tooltip" role="tooltip">
-			Add {placeholder}
-		  </span>
-		</span>
-	{:else}
-		<span class="optional-component-tooltip-anchor">
-		  <button
-              class="optional-component-button"
-              aria-label="Remove optional component"
-              tabindex="-1"
-          >
-			<DeleteIcon />
-		  </button>
+			  <span class="optional-component-tooltip" role="tooltip">
+				Add {placeholder}
+			  </span>
+			</span>
+		{:else}
+			<span class="optional-component-tooltip-anchor">
+			  <button
+				  class="optional-component-button"
+				  aria-label="Remove optional component"
+				  tabindex="-1"
+			  >
+				<DeleteIcon />
+			  </button>
 
-		  <span class="optional-component-tooltip" role="tooltip">
-			Remove {placeholder}
-		  </span>
-		</span>
-		<RenderComponent box={contentBox} {editor} {readonly} />
-	{/if}
-</span>
+			  <span class="optional-component-tooltip" role="tooltip">
+				Remove {placeholder}
+			  </span>
+			</span>
+			<RenderComponent box={contentBox} {editor} {readonly} />
+		{/if}
+	</span>
 {:else}
 	<span class="optional-component {box.cssClass}" {id}
           onkeydown={onKeyDown}
@@ -306,7 +281,7 @@
                   bind:this={addButtonComponent}
               >
 				  {#if showPlaceholderButton}
-					<span class="optional-component-placeholder">{placeholder}</span>
+					<span class="optional-component-placeholder">+ {placeholder} opt</span>
 				  {:else}
 					<AddIcon />
 				  {/if}

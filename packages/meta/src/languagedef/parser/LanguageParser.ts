@@ -2,6 +2,7 @@ import fs from "fs";
 import { FreMetaLanguage } from "../metalanguage/index.js";
 import { FreGenericParser } from "../../utils/basic-dependencies/index.js";
 import { parseIds } from "./IdParser.js";
+// eslint-disable-next-line n/no-missing-import
 import { parse } from "./LanguageGrammar.js";
 import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName, setIdMap } from "./LanguageCreators.js";
 import { FreLangChecker } from "../checking/index.js";

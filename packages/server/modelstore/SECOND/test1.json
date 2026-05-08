@@ -1,0 +1,79 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-OptionalBoxTest",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-15",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-Unit1"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-Unit1-name"
+               },
+               "value": "test1"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-Unit1-schedule"
+               },
+               "children": [
+                  "ID-16"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-16",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-EventSchedule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-stringProp"
+               }
+            },
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-numberProp"
+               }
+            },
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-booleanProp"
+               }
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-15"
+      }
+   ]
+}

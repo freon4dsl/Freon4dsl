@@ -33,7 +33,8 @@ export class CoreConfig implements ICoreConfig {
         FREON = new CoreConfig(env, server, undefined)
     }
 
-    static initializeWithDeltaServer(env: FreEnvironment, deltaClient: FreonDeltaClient) {
+    static async initializeWithDeltaServer(env: FreEnvironment, deltaClient: FreonDeltaClient) {
+        await deltaClient.connect()
         FREON = new CoreConfig(env, undefined, deltaClient)
     }
 

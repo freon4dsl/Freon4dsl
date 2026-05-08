@@ -10,7 +10,7 @@ import {
     observableprimlist,
     FreNodeBaseImpl,
     FreUtils,
-    FreParseLocation,
+    notNullOrUndefined,
 } from "@freon4dsl/core";
 import type { FreModelUnit } from "@freon4dsl/core";
 import { ShowCasePart } from "./ShowCasePart.js";
@@ -51,13 +51,12 @@ export class ShowCaseUnit extends FreNodeBaseImpl implements FreModelUnit {
     prim: string; // implementation of prim
     numlist: number[]; // implementation of numlist
     name: string; // implementation of name
-    // @ts-ignore
-    part: ShowCasePart; // implementation of part 'part'
+    part!: ShowCasePart; // implementation of part 'part'
     partlist: ShowCasePart[]; // implementation of part 'partlist'
 
     constructor(id?: string) {
         super();
-        if (!!id) {
+        if (notNullOrUndefined(id)) {
             this.$id = id;
         } else {
             this.$id = FreUtils.ID(); // uuid.v4();
