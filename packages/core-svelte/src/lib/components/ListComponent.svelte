@@ -210,24 +210,25 @@
     }
 
     const onKeyDown = (event: KeyboardEvent, index: number) => {
-        if (event.key === ENTER) {
-            // Create a new list element after the node at index
-            event.stopPropagation()
-            const action: FreCreatePartAction = new FreCreatePartAction({
-                trigger: { meta: MetaKey.None, key: ENTER, code: ENTER },
-                activeInBoxRoles: [box.role, "action-" + box.role + "-textbox"],
-                conceptName: box.conceptName,
-                propertyName: box.propertyName,
-                boxRoleToSelect: undefined,
-            })
-            let execresult: () => void;
-            FREON.astChanger.changeNamed("ListComponent.Enter", () => {
-                execresult = action.execute(box, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, index + 1)
-            })
-            if (notNullOrUndefined(execresult)) {
-                execresult();
-            }
-        }
+        // if (event.key === ENTER) {
+        //     // Create a new list element after the node at index
+        //     event.stopPropagation()
+        //     const action: FreCreatePartAction = new FreCreatePartAction({
+        //         trigger: { meta: MetaKey.None, key: ENTER, code: ENTER },
+        //         activeInBoxRoles: [box.role, "action-" + box.role + "-textbox"],
+        //         conceptName: box.conceptName,
+        //         propertyName: box.propertyName,
+        //         boxRoleToSelect: undefined,
+        //     })
+        //     let execresult: () => void;
+        //     FREON.astChanger.changeNamed("ListComponent.Enter", () => {
+        //         execresult = action.execute(box, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, index + 1)
+        //     })
+        //     // @ts-ignore
+        //     if (!!execresult) {
+        //         execresult();
+        //     }
+        // }
     }
 </script>
 
