@@ -45,7 +45,7 @@
         "lint": "eslint"
     },
     "devDependencies": {
-        "vite": "8.0.10",
+        "vite": "8.0.11",
         "vitest": "4.1.4",
         "vite-tsconfig-paths": "^5.0.1",
         "vitest-tsconfig-paths": "3.4.1"
