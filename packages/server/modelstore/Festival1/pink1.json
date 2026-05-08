@@ -1,0 +1,406 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-festivities",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-21",
+         "classifier": {
+            "language": "-key-festivities",
+            "version": "2023.1",
+            "key": "-key-Schedule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Schedule-name"
+               },
+               "value": "pink1"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Schedule-performances"
+               },
+               "children": [
+                  "ID-43",
+                  "ID-46",
+                  "ID-71",
+                  "ID-47"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Schedule-stages"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-43",
+         "classifier": {
+            "language": "-key-festivities",
+            "version": "2023.1",
+            "key": "-key-Performance"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Performance-artist"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Neon Reverie",
+                     "reference": "ID-11"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Performance-day"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Day 3",
+                     "reference": "ID-127"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-21"
+      },
+      {
+         "id": "ID-46",
+         "classifier": {
+            "language": "-key-festivities",
+            "version": "2023.1",
+            "key": "-key-Performance"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Performance-technicalRequirements"
+               },
+               "children": [
+                  "ID-48"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Performance-artist"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Luna Vale",
+                     "reference": "ID-8"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Performance-day"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Day 1",
+                     "reference": "ID-123"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-21"
+      },
+      {
+         "id": "ID-48",
+         "classifier": {
+            "language": "-key-festivities",
+            "version": "2023.1",
+            "key": "-key-TechnicalRequirements"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TechnicalRequirements-powerRequirements"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TechnicalRequirements-soundChannels"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TechnicalRequirements-lightingNeeds"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TechnicalRequirements-specialEffects"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-46"
+      },
+      {
+         "id": "ID-71",
+         "classifier": {
+            "language": "-key-festivities",
+            "version": "2023.1",
+            "key": "-key-Performance"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-21"
+      },
+      {
+         "id": "ID-47",
+         "classifier": {
+            "language": "-key-festivities",
+            "version": "2023.1",
+            "key": "-key-Performance"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Performance-timeSlot"
+               },
+               "children": [
+                  "ID-65"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Performance-technicalRequirements"
+               },
+               "children": [
+                  "ID-51"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Performance-artist"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Electric Orchard",
+                     "reference": "ID-28"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Performance-day"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Day 2",
+                     "reference": "ID-125"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-21"
+      },
+      {
+         "id": "ID-65",
+         "classifier": {
+            "language": "-key-festivities",
+            "version": "2023.1",
+            "key": "-key-TimeSlot"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TimeSlot-startTime"
+               },
+               "children": [
+                  "ID-63"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TimeSlot-endTime"
+               },
+               "children": [
+                  "ID-64"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-47"
+      },
+      {
+         "id": "ID-63",
+         "classifier": {
+            "language": "-key-festivities",
+            "version": "2023.1",
+            "key": "-key-TimeValue"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TimeValue-hour"
+               },
+               "value": "15"
+            },
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TimeValue-minute"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-65"
+      },
+      {
+         "id": "ID-64",
+         "classifier": {
+            "language": "-key-festivities",
+            "version": "2023.1",
+            "key": "-key-TimeValue"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TimeValue-hour"
+               },
+               "value": "16"
+            },
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TimeValue-minute"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-65"
+      },
+      {
+         "id": "ID-51",
+         "classifier": {
+            "language": "-key-festivities",
+            "version": "2023.1",
+            "key": "-key-TechnicalRequirements"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TechnicalRequirements-powerRequirements"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TechnicalRequirements-soundChannels"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TechnicalRequirements-lightingNeeds"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-TechnicalRequirements-specialEffects"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-47"
+      }
+   ]
+}

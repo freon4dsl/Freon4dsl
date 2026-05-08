@@ -1,0 +1,58 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-festivities",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-85",
+         "classifier": {
+            "language": "-key-festivities",
+            "version": "2023.1",
+            "key": "-key-Resources"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Resources-name"
+               },
+               "value": "StaffNeeded"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Resources-staff"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Resources-equipment"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-festivities",
+                  "version": "2023.1",
+                  "key": "-key-Resources-vendors"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      }
+   ]
+}
