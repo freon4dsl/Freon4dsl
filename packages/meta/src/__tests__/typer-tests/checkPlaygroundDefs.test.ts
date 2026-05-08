@@ -1,10 +1,10 @@
-import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
+import { type FreMetaLanguage } from "../../languagedef/metalanguage/index.js"
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
-import { TyperDef } from '../../typerdef/metalanguage/index.js';
+import { type TyperDef } from "../../typerdef/metalanguage/index.js"
 import { FreTyperMerger } from '../../typerdef/parser/index.js';
 import { describe, test, expect, beforeEach } from "vitest";
-import { FretClassifierSpec } from "../../typerdef/metalanguage/index.js"
+import { type FretClassifierSpec } from "../../typerdef/metalanguage/index.js"
 import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking typer", () => {

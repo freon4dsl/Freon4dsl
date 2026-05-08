@@ -43,6 +43,7 @@
     import ArrowUp from "./images/ArrowUp.svelte"
     import ErrorTooltip from './ErrorTooltip.svelte';
     import ErrorMarker from './ErrorMarker.svelte';
+    import { computeDropdownLayout } from "$lib/components/svelte-utils/DropdownUtils"
 
     const LOGGER = TEXTDROPDOWN_LOGGER;
 
@@ -678,45 +679,16 @@
     function updateDropdownPos() {
         if (!dropdownAnchorEl || !dropdownPanelEl || !dropdownContentEl || !overlayRoot) return;
 
-        const a = dropdownAnchorEl.getBoundingClientRect(); // viewport coords
-        const p = dropdownContentEl.getBoundingClientRect();  // current size
-        const o = overlayRoot.getBoundingClientRect();      // overlay coords
+        const layout = computeDropdownLayout(
+            dropdownAnchorEl.getBoundingClientRect(),
+            dropdownContentEl.getBoundingClientRect(),
+            overlayRoot.getBoundingClientRect()
+        );
 
-        const ow = o.width;
-        const oh = o.height;
-
-        // anchor position relative to overlay
-        const anchorLeft = a.left - o.left;
-        const anchorTop = a.top - o.top;
-        const anchorBottom = a.bottom - o.top;
-
-        // prefer below
-        let left = anchorLeft;
-        let top = anchorBottom;
-
-        // if overflow right, shift left
-        if (left + p.width > ow) {
-            left = Math.max(0, ow - p.width);
-        }
-
-        // if overflow bottom, flip above
-        if (top + p.height > oh) {
-            top = Math.max(0, anchorTop - p.height);
-        }
-
-        // final clamp
-        left = Math.max(0, Math.min(left, ow - p.width));
-        top = Math.max(0, Math.min(top, oh - p.height));
-
-        // make the dropdown height dependent on the available space
-        const spaceBelow = oh - anchorBottom;
-        const availableHeight =
-            top === anchorBottom ? spaceBelow : anchorTop;
-
-        dropdownPanelEl.style.left = `${left}px`;
-        dropdownPanelEl.style.top = `${top}px`;
-        dropdownPanelEl.style.minWidth = `${a.width}px`;
-        dropdownContentEl.style.maxHeight = `${availableHeight}px`;
+        dropdownPanelEl.style.left = `${layout.left}px`;
+        dropdownPanelEl.style.top = `${layout.top}px`;
+        dropdownPanelEl.style.minWidth = `${layout.minWidth}px`;
+        dropdownContentEl.style.maxHeight = `${layout.maxHeight}px`;
     }
     /* Function to handle dropdown closing */
     const hideDropdown = () => {

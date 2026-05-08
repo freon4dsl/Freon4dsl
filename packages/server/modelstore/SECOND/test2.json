@@ -1,0 +1,488 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-OptionalBoxTest",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-2",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-Unit1"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-Unit1-name"
+               },
+               "value": "test2"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-Unit1-schedule"
+               },
+               "children": [
+                  "ID-3"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-Unit1-referables"
+               },
+               "children": [
+                  "ID-5",
+                  "ID-9",
+                  "ID-10",
+                  "ID-11",
+                  "ID-12",
+                  "ID-13",
+                  "ID-20"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-3",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-EventSchedule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-stringProp"
+               },
+               "value": null
+            },
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-numberProp"
+               },
+               "value": "0"
+            },
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-booleanProp"
+               },
+               "value": "false"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-eventStart"
+               },
+               "children": [
+                  "ID-4"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-eventWindow"
+               },
+               "children": [
+                  "ID-14"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-eventRepeat"
+               },
+               "children": [
+                  "ID-7"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-eventTimeOfDay"
+               },
+               "children": [
+                  "ID-8"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-refProp"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Gijs",
+                     "reference": "ID-20"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventSchedule-multRefProp"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Wim",
+                     "reference": "ID-11"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-2"
+      },
+      {
+         "id": "ID-4",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-EventStart"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventStart-startDay"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-3"
+      },
+      {
+         "id": "ID-14",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-EventWindow"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventWindow-daysBefore"
+               },
+               "value": "0"
+            },
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventWindow-daysAfter"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-3"
+      },
+      {
+         "id": "ID-7",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-RepeatCondition"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-RepeatCondition-maxRepeats"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-RepeatCondition-repeatUnit"
+               },
+               "children": [
+                  "ID-17"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-RepeatCondition-until"
+               },
+               "children": [
+                  "ID-22"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-3"
+      },
+      {
+         "id": "ID-17",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-Daily"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-7"
+      },
+      {
+         "id": "ID-22",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-ScheduleExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-ScheduleExpression-value"
+               },
+               "value": "fhjkg"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-7"
+      },
+      {
+         "id": "ID-8",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-EventTimeOfDay"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventTimeOfDay-startTimeAsString"
+               },
+               "value": "sbfbdfra"
+            },
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventTimeOfDay-startHour"
+               },
+               "value": "0"
+            },
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-EventTimeOfDay-startMinute"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-3"
+      },
+      {
+         "id": "ID-5",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-toBeReferred"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-toBeReferred-name"
+               },
+               "value": "Aap"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-2"
+      },
+      {
+         "id": "ID-9",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-toBeReferred"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-toBeReferred-name"
+               },
+               "value": "Noot"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-2"
+      },
+      {
+         "id": "ID-10",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-toBeReferred"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-toBeReferred-name"
+               },
+               "value": "Mies"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-2"
+      },
+      {
+         "id": "ID-11",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-toBeReferred"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-toBeReferred-name"
+               },
+               "value": "Wim"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-2"
+      },
+      {
+         "id": "ID-12",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-toBeReferred"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-toBeReferred-name"
+               },
+               "value": "Zus"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-2"
+      },
+      {
+         "id": "ID-13",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-toBeReferred"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-toBeReferred-name"
+               },
+               "value": "Jet"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-2"
+      },
+      {
+         "id": "ID-20",
+         "classifier": {
+            "language": "-key-OptionalBoxTest",
+            "version": "2023.1",
+            "key": "-key-toBeReferred"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-OptionalBoxTest",
+                  "version": "2023.1",
+                  "key": "-key-toBeReferred-name"
+               },
+               "value": "Gijs"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-2"
+      }
+   ]
+}

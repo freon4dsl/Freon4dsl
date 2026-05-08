@@ -1,10 +1,10 @@
 import { issuestoString, LanguageRegistry, LionWebValidator } from "@lionweb/validation"
-import { LionWebJsonChunk } from "@lionweb/json"
+import type { LionWebJsonChunk } from "@lionweb/json"
 import * as fs from "fs"
-import { IRouterContext } from "@koa/router"
+import type { IRouterContext } from "@koa/router"
 import * as path from "node:path"
 import { FileUtil } from "./FileUtil.js"
-import { StoreCatalog } from "./StoreCatalog.js"
+import type { StoreCatalog } from "./StoreCatalog.js"
 
 const storeFolder = "./modelstore";
 

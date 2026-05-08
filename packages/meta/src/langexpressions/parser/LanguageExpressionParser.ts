@@ -3,6 +3,7 @@ import { FileUtil } from "../../utils/file-utils/index.js"
 import type { ParseLocation } from '../../utils/no-dependencies/index.js';
 import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker.js";
 import type { LanguageExpressionTester } from "./LanguageExpressionTester.js";
+// eslint-disable-next-line n/no-missing-import
 import { parse } from "./ExpressionGrammar.js";
 import { setCurrentFileName } from "./ExpressionCreators.js";
 import fs from 'fs';

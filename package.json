@@ -1,10 +1,12 @@
 {
     "name": "freon4dsl",
+    "type": "module",
     "private": true,
     "scripts": {
         "rebuild": "npm run clean && npm install && npm run build && npm run test",
         "rebuild-local": "npm run clean && npm run install-local && npm run build && npm run test",
         "rebuild-dev": "npm run clean && npm install && npm run build-dev",
+        "rebuild-dev-local": "npm run clean && npm run install-local && npm run build-dev",
         "clean": "rm -f package-lock.json && rm -rf node_modules/ && npm run clean --workspaces --if-present",
         "clean-all": "npm run clean-all --workspaces --if-present",
         "start": "npm run start --stream --parallel",
@@ -22,12 +24,13 @@
         "test": "npm run test --workspaces --if-present",
         "release-beta": "npm run release-beta --workspaces --if-present",
         "prettier": "prettier --write --print-width 120 --tab-width 4 packages/*/src/**/*.ts packages/*/src/**/*.tsx packages/*/src/**/*.css",
-        "check-imports": "npm run check-imports --workspaces --if-present"
+        "check-imports": "npm run check-imports --workspaces --if-present",
+        "check-dependencies": "npx  syncpack lint --source 'package.json' --source 'packages/*/package.json'",
+        "list-dependencies": "npx  syncpack list --source 'package.json' --source 'packages/*/package.json'"
     },
     "devDependencies": {
         "@prettier/sync": "^0.5.2",
         "@tsconfig/svelte": "5.0.4",
-        "@types/lodash": "4.17.4",
         "@types/node": "20.14.1",
         "@types/pegjs": "0.10.6",
         "cross-env": "7.0.3",
@@ -45,10 +48,10 @@
         "svelte-check": "^4.4.4",
         "typescript-svelte-plugin": "^0.3.50",
         "ts-node": "^10.9.2",
-        "tslib": "^2.8.1",
+        "tslib": "2.8.1",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.48.1",
-        "@typescript-eslint/utils": "8.56.1", 
+        "@typescript-eslint/utils": "8.56.1",
         "@vitest/eslint-plugin": "1.6.9 "
     },
     "engines": {
