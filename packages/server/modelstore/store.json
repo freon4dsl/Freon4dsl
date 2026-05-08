@@ -360,10 +360,6 @@
                 {
                     "file": "SomeNameOrOther.json",
                     "name": "SomeNameOrOther"
-                },
-                {
-                    "name": "SecpondUnit",
-                    "file": "SecpondUnit.json"
                 }
             ],
             "version": "1"
