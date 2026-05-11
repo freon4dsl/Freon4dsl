@@ -20,13 +20,7 @@ router.get("/getModelUnit", async (ctx: RouterContext) => {
     if (unitname === undefined) return
 
     console.log(`GetModelUnit: ${modelname}/${unitname}`)
-
     await ModelRequests.getModelUnit(modelname, unitname, ctx)
-
-    if (ctx.status === 404) {
-        // only override status when it is not set
-        ctx.status = 200
-    }
 });
 
 router.get("/getModelList", async (ctx: RouterContext) => {
@@ -34,10 +28,6 @@ router.get("/getModelList", async (ctx: RouterContext) => {
     const version = queryParam(ctx, "version")
     console.log(`getModelList for language '${language}'`);
     await ModelRequests.getModelList(ctx, language, version)
-    if (ctx.status === 404) {
-        // only override status when it is not set
-        ctx.status = 200
-    }
 });
 
 router.get("/getUnitList", async (ctx: RouterContext) => {
@@ -45,10 +35,6 @@ router.get("/getUnitList", async (ctx: RouterContext) => {
     if (model === undefined) return
     console.log(`getUnitList: ${model}`)
     await ModelRequests.getUnitList(model, ctx)
-
-    if (ctx.status === 404) {
-        ctx.status = 200
-    }
 });
 router.put("/saveModel", async (ctx: RouterContext) => {
     const model = requireQueryParam(ctx, "model")
@@ -58,10 +44,6 @@ router.put("/saveModel", async (ctx: RouterContext) => {
     const version = queryParam(ctx, "version")
     console.log(`saveModel: ${model} language: ${language}`)
     await ModelRequests.saveModel(model, language, version, ctx)
-
-    if (ctx.status === 404) {
-        ctx.status = 200
-    }
 });
 router.put("/saveModelUnit", async (ctx: RouterContext) => {
     const model = requireQueryParam(ctx, "model")
@@ -72,10 +54,6 @@ router.put("/saveModelUnit", async (ctx: RouterContext) => {
 
     console.log(`saveModelUnit: ${model}/${unit}`)
     await ModelRequests.saveModelUnit(model, unit, ctx)
-
-    if (ctx.status === 404) {
-        ctx.status = 200
-    }
 });
 
 // todo: should be 'router.delete("/deleteModelUnit", ...)', but this may require changing the client too
@@ -88,10 +66,6 @@ router.get("/deleteModelUnit", async (ctx: RouterContext) => {
 
     console.log(`DeleteModelUnit: ${model}/${name}`)
     await ModelRequests.deleteModelUnit(model, name, ctx)
-
-    if (ctx.status === 404) {
-        ctx.status = 200
-    }
 });
 
 // todo: should be 'router.delete("/deleteModel", ...)', but this may require changing the client too
@@ -101,10 +75,6 @@ router.get("/deleteModel", async (ctx: RouterContext) => {
 
     console.log(`DeleteModel: ${model}`)
     await ModelRequests.deleteModel(model, ctx)
-
-    if (ctx.status === 404) {
-        ctx.status = 200
-    }
 })
 
 router.put("/renameModel", async (ctx: RouterContext) => {
@@ -117,10 +87,6 @@ router.put("/renameModel", async (ctx: RouterContext) => {
     console.log(`RenameModel: ${oldName} => ${newName}`)
 
     await ModelRequests.renameModel(oldName, newName, ctx)
-
-    if (ctx.status === 404) {
-        ctx.status = 200
-    }
 })
 
 /**

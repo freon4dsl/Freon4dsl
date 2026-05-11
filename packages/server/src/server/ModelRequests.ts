@@ -5,6 +5,7 @@ import type { RouterContext } from "@koa/router"
 import * as path from "node:path"
 import { FileUtil } from "./FileUtil.js"
 import type { StoreCatalog } from "./StoreCatalog.js"
+import { HttpClientErrors, HttpServerErrors, HttpSuccessCodes } from "./httpcodes.js"
 
 const storeFolder = "./modelstore";
 
@@ -34,6 +35,7 @@ export class ModelRequests {
             } else {
                 console.log(`ModelRequest.putModel: model; ${modelname} already exists, ignoring`)
             }
+            ctx.status = HttpSuccessCodes.Ok
         } catch (e) {
             this.exposeError(ctx, e)
         }
@@ -44,7 +46,7 @@ export class ModelRequests {
 
         console.log(message)
 
-        ctx.status = 500
+        ctx.status = HttpServerErrors.InternalServerError
         ctx.body = message
     }
 
@@ -62,7 +64,7 @@ export class ModelRequests {
             let model = catalog.models.find((m) => m.name === modelname)
             if (model === undefined) {
                 // Error, save unit requires pre-existing model
-                ctx.status = 412
+                ctx.status = HttpClientErrors.PreconditionFailed
                 ctx.body = `saveModelUnit failed because model '${modelname}' does not exist`
                 return
             }
@@ -81,6 +83,7 @@ export class ModelRequests {
                 fs.mkdirSync(path.join(`${storeFolder}`, model.folder))
             }
             fs.writeFileSync(path.join(`${storeFolder}`, model.folder, `${unit.file}`), JSON.stringify(body, null, 3))
+            ctx.status = HttpSuccessCodes.Ok
         } catch (e) {
             this.exposeError(ctx, e)
         }
@@ -103,13 +106,13 @@ export class ModelRequests {
             const catalog = ModelRequests.readStoreCatalog()
             const model = catalog.models.find((m) => m.name === modelname)
             if (model === undefined) {
-                ctx.status = 404
+                ctx.status = HttpClientErrors.NotFound
                 ctx.body = `Model '${modelname}' does not exist`
                 return
             }
             const unit = model.units.find((u) => u.name === unitname)
             if (unit === undefined) {
-                ctx.status = 404
+                ctx.status = HttpClientErrors.NotFound
                 ctx.body = `Unit '${unitname}' does not exist in model '${modelname}'`
                 return
             }
@@ -129,6 +132,7 @@ export class ModelRequests {
                 }
             }
             ctx.body = result
+            ctx.status = HttpSuccessCodes.Ok
         } catch (e) {
             this.exposeError(ctx, e)
         }
@@ -147,11 +151,12 @@ export class ModelRequests {
             const catalog = ModelRequests.readStoreCatalog()
             const model = catalog.models.find((m) => m.name === modelname)
             if (model === undefined) {
-                ctx.status = 404
+                ctx.status = HttpClientErrors.NotFound
                 ctx.body = `Model '${modelname}' does not exist`
                 return
             }
             ctx.body = model.units.map((u) => u.name)
+            ctx.status = HttpSuccessCodes.Ok
         } catch (e) {
             this.exposeError(ctx, e)
         }
@@ -181,6 +186,7 @@ export class ModelRequests {
                 return languageMatches && versionMatches
             })
             ctx.body = models.map((model) => model.name)
+            ctx.status = HttpSuccessCodes.Ok
         } catch (e) {
             this.exposeError(ctx, e)
         }
@@ -210,15 +216,16 @@ export class ModelRequests {
                         fs.unlinkSync(unitPath)
                     }
                 } else {
-                    ctx.status = 404
+                    ctx.status = HttpClientErrors.NotFound
                     ctx.body = `Unit '${unitname}' does not exist in model '${modelname}'`
                     return
                 }
             } else {
-                ctx.status = 404
+                ctx.status = HttpClientErrors.NotFound
                 ctx.body = `Model '${modelname}' does not exist`
                 return
             }
+            ctx.status = HttpSuccessCodes.Ok
         } catch (e) {
             this.exposeError(ctx, e)
         }
@@ -242,8 +249,10 @@ export class ModelRequests {
                 ModelRequests.writeStoreCatalog(catalog)
                 console.log("Unlink: " + path.join(`${storeFolder}`, storedModel.folder))
                 fs.rmSync(path.join(storeFolder, storedModel.folder), { recursive: true, force: true })
+                ctx.status = HttpSuccessCodes.Ok
+                return
             } else {
-                ctx.status = 404
+                ctx.status = HttpClientErrors.NotFound
                 ctx.body = `Nothing to delete, '${modelname}' does not exist`
                 return
             }
@@ -264,7 +273,7 @@ export class ModelRequests {
             const catalog = ModelRequests.readStoreCatalog()
             const storedModel = catalog.models.find((m) => m.name === oldName)
             if (storedModel === undefined) {
-                ctx.status = 404
+                ctx.status = HttpClientErrors.NotFound
                 ctx.body = `Cannot rename model, because '${oldName}' does not exist`
                 return
             }
@@ -272,12 +281,13 @@ export class ModelRequests {
             const conflictingModel = catalog.models.find((m) => m.name === newName)
             if (conflictingModel !== undefined) {
                 // Error, model with 'newName' should not exist.
-                ctx.status = 412
+                ctx.status = HttpClientErrors.PreconditionFailed
                 ctx.body = `Cannot rename model, because '${newName}' already exists`
                 return
             }
             storedModel.name = newName
             ModelRequests.writeStoreCatalog(catalog)
+            ctx.status = HttpSuccessCodes.Ok
         } catch (e) {
             this.exposeError(ctx, e)
         }
