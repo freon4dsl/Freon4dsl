@@ -74,7 +74,8 @@ export class CommandLineTemplate {
     // @ts-ignore
     generateCommandLineRunner(language: FreMetaLanguage, relativePath: string): string {
         const imports = new Imports(relativePath)
-        imports.root.add(Names.LanguageEnvironment);
+        imports.root.add(Names.LanguageEnvironment)
+        imports.core.add(Names.CoreConfig)
 
         return `// TEMPLATE: CommandLineTemplate.generateCommandLineRunner()
             // Run this as the main program.
@@ -86,7 +87,7 @@ export class CommandLineTemplate {
             const tmp = ${Names.LanguageEnvironment}.getInstance();
             
             // Ensure FREON variable is initialized
-            CoreConfig.initialize(tmp, null)       
+            CoreConfig.initializeWithoutServer(tmp)       
                  
             // Create the command line object
             const cli: FreonCommandLine = new FreonCommandLine();
