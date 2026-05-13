@@ -1,4 +1,4 @@
-import { HttpSuccessCodes } from "../server/httpcodes"
+import { HttpSuccessCodes } from "../server/httpcodes.js"
 
 const SERVER_URL = "http://127.0.0.1:8001/";
 
