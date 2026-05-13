@@ -43,7 +43,7 @@
     import ArrowUp from "./images/ArrowUp.svelte"
     import ErrorTooltip from './ErrorTooltip.svelte';
     import ErrorMarker from './ErrorMarker.svelte';
-    import { computeDropdownLayout } from "$lib/components/svelte-utils/DropdownUtils"
+    import { computeDropdownLayout } from "$lib/components/svelte-utils/DropdownUtils.js"
 
     const LOGGER = TEXTDROPDOWN_LOGGER;
 
