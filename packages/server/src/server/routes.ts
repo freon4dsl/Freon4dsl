@@ -1,4 +1,4 @@
-import Router from "@koa/router";
+import Router, { type RouterContext } from "@koa/router"
 import { ModelRequests } from "./ModelRequests.js";
 
 const router = new Router();
@@ -8,109 +8,117 @@ const router = new Router();
  * 
  */
 
-router.get("/", async (ctx: Router.IRouterContext) => {
+router.get("/", (ctx: RouterContext) => {
     ctx.body = "Freon Model Server";
 });
 
-router.get("/getModelUnit", async (ctx: Router.IRouterContext) => {
-    const modelname = ctx.query["model"];
-    const unitname = ctx.query["unit"];
-    console.log("GetModelUnit: " + modelname + "/" + unitname);
-    if ((!!unitname || modelname) && typeof unitname === "string" && typeof modelname === "string") {
-        ModelRequests.getModelUnit(modelname, unitname, ctx);
-        ctx.status = 201;
-    } else {
-        ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'unit' or 'model'";
-    }
+router.get("/getModelUnit", async (ctx: RouterContext) => {
+    const modelname = requireQueryParam(ctx, "model")
+    if (modelname === undefined) return
+
+    const unitname = requireQueryParam(ctx, "unit")
+    if (unitname === undefined) return
+
+    console.log(`GetModelUnit: ${modelname}/${unitname}`)
+    await ModelRequests.getModelUnit(modelname, unitname, ctx)
 });
 
-router.get("/getModelList", async (ctx: Router.IRouterContext) => {
-    const language = ctx.query["language"];
-    const version = ctx.query["version"];
+router.get("/getModelList", async (ctx: RouterContext) => {
+    const language = queryParam(ctx, "language")
+    const version = queryParam(ctx, "version")
     console.log(`getModelList for language '${language}'`);
-    ModelRequests.getModelList(ctx, language, version);
-    ctx.status = 201;
+    await ModelRequests.getModelList(ctx, language, version)
 });
 
-router.get("/getUnitList", async (ctx: Router.IRouterContext) => {
-    const folder = ctx.query["model"];
-    console.log("getUnitList: " + folder);
-    if (!!folder && typeof folder === "string") {
-        ModelRequests.getUnitList(folder, ctx);
-        ctx.status = 201;
-    } else {
-        ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'folder'";
-    }
+router.get("/getUnitList", async (ctx: RouterContext) => {
+    const model = requireQueryParam(ctx, "model")
+    if (model === undefined) return
+    console.log(`getUnitList: ${model}`)
+    await ModelRequests.getUnitList(model, ctx)
 });
-router.put("/saveModel", async (ctx: Router.IRouterContext) => {
-    const model = ctx.query["model"];
-    const language = ctx.query["language"];
-    const version = ctx.query["version"];
-    console.log("saveModel: " + model + ` language: ${language}`);
-    if ((!!model) && typeof model === "string") {
-        ModelRequests.saveModel(model, language, version, ctx);
-        ctx.status = 201;
-    } else {
-        ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'model' or 'language'";
-    }
-    ctx.body = { massage: (ctx.request as any).body };
+router.put("/saveModel", async (ctx: RouterContext) => {
+    const model = requireQueryParam(ctx, "model")
+    if (model === undefined) return
+
+    const language = queryParam(ctx, "language")
+    const version = queryParam(ctx, "version")
+    console.log(`saveModel: ${model} language: ${language}`)
+    await ModelRequests.saveModel(model, language, version, ctx)
 });
-router.put("/saveModelUnit", async (ctx: Router.IRouterContext) => {
-    const model = ctx.query["model"];
-    const unit = ctx.query["unit"];
-    console.log("saveModelUnit: " + model + "/" + unit);
-    if ((!!unit || !!model) && typeof unit === "string" && typeof model === "string") {
-        ModelRequests.saveModelUnit(model, unit, ctx);
-        ctx.status = 201;
-    } else {
-        ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'unitName' or 'folder'";
-    }
-    ctx.body = { message: (ctx.request as any).body };
+router.put("/saveModelUnit", async (ctx: RouterContext) => {
+    const model = requireQueryParam(ctx, "model")
+    if (model === undefined) return
+
+    const unit = requireQueryParam(ctx, "unit")
+    if (unit === undefined) return
+
+    console.log(`saveModelUnit: ${model}/${unit}`)
+    await ModelRequests.saveModelUnit(model, unit, ctx)
 });
 
-router.get("/deleteModelUnit", async (ctx: Router.IRouterContext) => {
-    const model = ctx.query["model"];
-    const name = ctx.query["unit"];
-    console.log("DeleteModelUnit: " + model + "/" + name);
-    if ((!!name || !!model) && typeof name === "string" && typeof model === "string") {
-        ModelRequests.deleteModelUnit(model, name, ctx);
-        ctx.status = 201;
-    } else {
-        ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'unitName' or 'folder'";
-    }
-    ctx.body = { massage: (ctx.request as any).body };
+// todo: should be 'router.delete("/deleteModelUnit", ...)', but this may require changing the client too
+router.get("/deleteModelUnit", async (ctx: RouterContext) => {
+    const model = requireQueryParam(ctx, "model")
+    if (model === undefined) return
+
+    const name = requireQueryParam(ctx, "unit")
+    if (name === undefined) return
+
+    console.log(`DeleteModelUnit: ${model}/${name}`)
+    await ModelRequests.deleteModelUnit(model, name, ctx)
 });
 
-router.get("/deleteModel", async (ctx: Router.IRouterContext) => {
-    const model = ctx.query["model"];
-    console.log("DeleteModel: " + model);
-    if (!!model && typeof model === "string") {
-        ModelRequests.deleteModel(model, ctx);
-        ctx.status = 201;
-    } else {
-        ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'model'";
-    }
-    ctx.body = { massage: (ctx.request as any).body };
-});
+// todo: should be 'router.delete("/deleteModel", ...)', but this may require changing the client too
+router.get("/deleteModel", async (ctx: RouterContext) => {
+    const model = requireQueryParam(ctx, "model")
+    if (model === undefined) return
 
-router.put("/renameModel", async (ctx: Router.IRouterContext) => {
-    const oldName = ctx.query["oldName"];
-    const newName = ctx.query["newName"];
-    console.log("RenameModel: " + oldName + ' => ' + newName);
-    if (!!oldName && typeof oldName === "string" && !!newName && typeof newName === "string") {
-        ModelRequests.renameModel(oldName, newName, ctx);
-        ctx.status = 201;
-    } else {
-        ctx.status = 412; // Precondition failed
-        ctx.message = "Missing query parameter 'newName' or 'oldName'";
+    console.log(`DeleteModel: ${model}`)
+    await ModelRequests.deleteModel(model, ctx)
+})
+
+router.put("/renameModel", async (ctx: RouterContext) => {
+    const oldName = requireQueryParam(ctx, "oldName")
+    if (oldName === undefined) return
+
+    const newName = requireQueryParam(ctx, "newName")
+    if (newName === undefined) return
+
+    console.log(`RenameModel: ${oldName} => ${newName}`)
+
+    await ModelRequests.renameModel(oldName, newName, ctx)
+})
+
+/**
+ * Makes sure that the parameter, when present, is of type string.
+ * @param ctx
+ * @param name
+ */
+function queryParam(ctx: RouterContext, name: string): string | undefined {
+    const value = ctx.query[name]
+
+    if (Array.isArray(value)) {
+        return value[0]
     }
-    ctx.body = { massage: (ctx.request as any).body };
-});
+
+    return value
+}
+
+/**
+ * Checks whether a required parameter is present and ensures that its result is of type string.
+ * @param ctx
+ * @param name
+ */
+function requireQueryParam(ctx: RouterContext, name: string): string | undefined {
+    const value = queryParam(ctx, name)
+
+    if (value === undefined || value.length === 0) {
+        ctx.status = 400
+        ctx.body = `Missing query parameter '${name}'`
+        return undefined
+    }
+
+    return value
+}
 
 export const routes = router.routes();

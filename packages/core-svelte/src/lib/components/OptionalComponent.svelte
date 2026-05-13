@@ -19,7 +19,7 @@
 	import AddIcon from "./images/AddIcon.svelte"
 	import { tick } from "svelte"
 	import { OPTIONAL_LOGGER } from "$lib/components/ComponentLoggers.js"
-	import { computeDropdownLayout } from "$lib/components/svelte-utils/DropdownUtils"
+	import { computeDropdownLayout } from "$lib/components/svelte-utils/DropdownUtils.js"
 
 	const LOGGER = OPTIONAL_LOGGER
 

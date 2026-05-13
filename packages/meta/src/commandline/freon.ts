@@ -74,7 +74,7 @@ export class Freon extends CommandLineParser {
         });
     }
 
-    protected onExecute(): Promise<void> {
+    protected onExecuteAsync(): Promise<void> {
         if (!this.verboseArg.value) {
             MetaLogger.muteAllLogs();
         }
@@ -85,7 +85,7 @@ export class Freon extends CommandLineParser {
             this.allAction.watch = true;
         }
         try {
-            return super.onExecute();
+            return super.onExecuteAsync();
         } catch (e: unknown) {
             if (e instanceof Error) {
                 LOGGER.error(e.message + "\n" + e.stack);

@@ -3,7 +3,7 @@ import type { AstWorker } from "../ast-utils/index.js";
 import { FreLanguage, type FreLanguageProperty } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
 import { type FrePrimDelta } from "./FreDelta.js"
-import { isNullOrUndefined } from "../util"
+import { isNullOrUndefined } from "../util/index.js"
 
 const LOGGER = new FreLogger("ReferenceUpdateWorker").mute();
 
