@@ -85,6 +85,9 @@ export class CommandLineTemplate {
             // ensure language is initialized
             const tmp = ${Names.LanguageEnvironment}.getInstance();
             
+            // Ensure FREON variable is initialized
+            CoreConfig.initialize(tmp, null)       
+                 
             // Create the command line object
             const cli: FreonCommandLine = new FreonCommandLine();
             
@@ -93,6 +96,6 @@ export class CommandLineTemplate {
             cli.addAction(new DummyAction());
             
             // Run it
-            cli.executeAsync();`;
+            cli.executeAsync();`
     }
 }
