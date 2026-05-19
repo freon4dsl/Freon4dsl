@@ -15,7 +15,7 @@
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
-    let { editor, box, readonly }: FreComponentProps<LimitedControlBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<LimitedControlBox> = $props();
 
     const LOGGER = LIMITEDCHECKBOX_LOGGER;
 

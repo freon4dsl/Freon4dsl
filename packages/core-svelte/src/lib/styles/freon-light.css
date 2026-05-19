@@ -41,6 +41,18 @@
     --color-freon-dropdown-component-item-hover-bg: var(--color-light-freon-accent-500);
     --color-freon-dropdown-component-selected-color: var(--color-light-freon-accent-700);
     --color-freon-dropdown-component-selected-bg: var(--color-light-freon-accent-200);
+    --dropdown-component-item-hover-bg: var(--color-light-freon-100);
+    --dropdown-component-item-selected-bg: var(--color-light-freon-accent-200);
+    --dropdown-component-item-selected-text: inherit;
+    --dropdown-component-item-selected-border: var(--color-light-freon-accent-400);
+
+    --dropdown-component-item-match-bg: var(--color-light-freon-accent-100);
+    --dropdown-component-item-match-text: inherit;
+    --dropdown-component-item-match-border: var(--color-light-freon-accent-200);
+
+    --dropdown-component-item-single-match-bg: var(--color-light-freon-accent-100);
+    --dropdown-component-item-single-match-text: inherit;
+    --dropdown-component-item-single-match-border: var(--color-light-freon-accent-400);
 
     --color-freon-optional-component-tooltip-border: var(--color-light-freon-accent-700);
     --color-freon-optional-component-tooltip-bg: var(--color-light-freon-accent-100);
@@ -265,18 +277,14 @@
 .text-component-input {
     color: var(--color-freon-text-component-text-color);
     background: var(--color-freon-text-component-input-bg);
-    cursor: text;
-    outline: none;
 }
 
 .text-component-input::placeholder {
     color: var(--color-light-freon-250);
-    opacity: 0.7;
 }
 
 .text-component-input:hover {
     background: var(--color-freon-text-component-input-hover-bg);
-    cursor: text;
 }
 
 .text-component-input:focus,
@@ -310,14 +318,40 @@
     opacity: 0.5;
 }
 
-.multiline-text-component {
+/*******************************************************
+ *  MultiLineTextComponent
+ *******************************************************/
+
+.multiline-text-component-input {
     color: var(--color-light-freon-900);
 }
 
-.multiline-text-component:focus {
+.multiline-text-component-input:focus {
     color: var(--color-light-freon-900);
     background-color: var(--color-freon-multiline-text-component-focus-bg);
     box-shadow: 0 0 0 3px var(--freon-focus-ring);
+}
+
+/*******************************************************
+ *  TextDropdownComponent
+ *******************************************************/
+
+.text-dropdown-component .text-component-text {
+    color: var(--color-freon-text-dropdown-text);
+}
+
+.text-dropdown-component .text-component-input {
+    color: var(--color-light-freon-50);
+    background: var(--color-freon-text-dropdown-input-bg);
+}
+
+.reference-button {
+    background-color: transparent;
+    color: var(--color-light-freon-50);
+}
+
+.reference-arrow {
+    fill: var(--color-freon-reference-arrow);
 }
 
 /*******************************************************
@@ -487,28 +521,10 @@
 /*******************************************************
  *  Other ...
  *******************************************************/
-.reference-button {
-    background-color: transparent;
-    color: var(--color-light-freon-50);
-}
-
-.text-dropdown-component .text-component-text {
-    color: var(--color-freon-text-dropdown-text);
-}
-
-.text-dropdown-component .text-component-input {
-    color: var(--color-light-freon-50);
-    background: var(--color-freon-text-dropdown-input-bg);
-}
-
 .brackets {
     color: var(--color-light-freon-400);
 }
 
 .drag-handle-icon {
     fill: var(--color-light-freon-400);
-}
-
-.reference-arrow {
-    fill: var(--color-freon-reference-arrow);
 }

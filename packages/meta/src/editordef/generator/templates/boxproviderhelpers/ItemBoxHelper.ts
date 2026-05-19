@@ -124,13 +124,14 @@ export class ItemBoxHelper {
             let result: string = this._myTemplate.generateLines(optional.lines, elementVarName, myLabel, language, 2);
 
             // surround with optional box, and add "BoxFactory" to imports
-            this._myTemplate.imports.core.add("BoxFactory");
+            this._myTemplate.imports.core.add("BoxFactory")
             if (optionalLiteral === "") {
                 return result;
             }
+            const conceptOfPropertyName: string = Names.startWithUpperCase(property.type.name)
             const initializer: string = property.isPrimitive
                 ? `{ propertyName: "${optionalPropertyName}" }`
-                : `{ propertyName: "${optionalPropertyName}", conceptOfProperty: "${property.type.name}" }`;
+                : `{ propertyName: "${optionalPropertyName}", conceptOfProperty: "${conceptOfPropertyName}" }`
             result = `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", "${optionalPropertyName}",
                 ${result},
                 ${initializer}
@@ -183,13 +184,19 @@ export class ItemBoxHelper {
     ): string {
         let result: string = "";
         if (property.type instanceof FreMetaLimitedConcept) {
-            result += this._myLimitedHelper.generateLimited(
-                property,
-                elementVarName,
-                language,
-                item.listInfo,
-                item.displayType,
-            );
+            if (!!item.externalInfo && !!item.externalInfo.replaceBy && item.externalInfo.replaceBy.length > 0) {
+                // Use external component to replace the limited concept box
+                result += this._myExternalHelper.replaceSingleByExternal(item, property, elementVarName);
+            } else {
+                // Use standard limited concept box
+                result += this._myLimitedHelper.generateLimited(
+                    property,
+                    elementVarName,
+                    language,
+                    item.listInfo,
+                    item.displayType,
+                );
+            }
         } else if (property.isList) {
             let innerResult: string = "";
             if (!!item.listInfo && item.listInfo.isTable) {

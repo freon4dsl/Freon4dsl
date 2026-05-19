@@ -4,6 +4,7 @@ import { ScoperChecker } from "../metalanguage/index.js";
 import { setCurrentFileName } from "./ScoperCreators.js";
 import { setCurrentFileName as expressionFileName } from "../../langexpressions/parser/ExpressionCreators.js";
 
+// eslint-disable-next-line n/no-missing-import
 import { parse } from "./ScoperGrammar.js";
 import { FreGenericParser } from '../../utils/basic-dependencies/FreGenericParser.js';
 

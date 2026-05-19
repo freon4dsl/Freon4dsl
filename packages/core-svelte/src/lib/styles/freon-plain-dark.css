@@ -5,140 +5,119 @@
  *********************************************/
 
 /* Accent-role variables for dark mode */
-.dark {
+:root {
     --freon-focus-ring: color-mix(
             in srgb,
             var(--color-dark-freon-accent-400) 28%,
             transparent
-    )
-;
+    );
 
     --color-freon-list-component-border: color-mix(
             in srgb,
             var(--color-dark-freon-accent-500) 55%,
             var(--color-dark-freon-600)
-    )
-;
+    );
 
-    --color-freon-button-component-bg: var(--color-dark-freon-accent-500)
-;
-    --color-freon-button-component-hover-bg: var(--color-dark-freon-accent-400)
-;
-    --color-freon-button-component-border: var(--color-dark-freon-accent-700)
-;
+    --color-freon-button-component-bg: var(--color-dark-freon-accent-500);
+    --color-freon-button-component-hover-bg: var(--color-dark-freon-accent-400);
+    --color-freon-button-component-border: var(--color-dark-freon-accent-700);
 
-    --color-freon-text-component-text-color: var(--color-dark-freon-accent-100)
-;
+    --color-freon-text-component-text-color: var(--color-dark-freon-accent-100);
     --color-freon-text-component-input-bg: color-mix(
             in srgb,
             var(--color-dark-freon-accent-500) 14%,
             var(--color-dark-freon-900)
-    )
-;
+    );
     --color-freon-text-component-input-hover-bg: color-mix(
             in srgb,
             var(--color-dark-freon-accent-500) 22%,
             var(--color-dark-freon-900)
-    )
-;
+    );
     --color-freon-text-component-text-bg: color-mix(
             in srgb,
             var(--color-dark-freon-accent-500) 8%,
             var(--color-dark-freon-900)
-    )
-;
+    );
     --color-freon-text-component-text-hover-bg: color-mix(
             in srgb,
             var(--color-dark-freon-accent-500) 16%,
             var(--color-dark-freon-900)
-    )
-;
-    --color-freon-text-component-action-placeholder: var(--color-dark-freon-accent-400)
-;
+    );
+    --color-freon-text-component-action-placeholder: var(--color-dark-freon-accent-400);
 
     --color-freon-multiline-text-component-focus-bg: color-mix(
             in srgb,
             var(--color-dark-freon-accent-500) 18%,
             var(--color-dark-freon-900)
-    )
-;
+    );
 
     --color-freon-numeric-slider-low: color-mix(
             in srgb,
             var(--color-dark-freon-accent-700) 70%,
             var(--color-dark-freon-800)
-    )
-;
-    --color-freon-numeric-slider-high: var(--color-dark-freon-accent-400)
-;
-    --color-freon-numeric-slider-thumb-bg: var(--color-dark-freon-accent-500)
-;
-    --color-freon-numeric-slider-thumb-border: var(--color-dark-freon-accent-400)
-;
+    );
+    --color-freon-numeric-slider-high: var(--color-dark-freon-accent-400);
+    --color-freon-numeric-slider-thumb-bg: var(--color-dark-freon-accent-500);
+    --color-freon-numeric-slider-thumb-border: var(--color-dark-freon-accent-400);
 
-    --color-freon-dropdown-component-border: var(--color-dark-freon-700, var(--color-dark-freon-700))
-;
-    --color-freon-dropdown-component-bg: var(--color-dark-freon-800)
-;
-    --color-freon-dropdown-component-item-hover-bg: var(--color-dark-freon-accent-500)
-;
-    --color-freon-dropdown-component-selected-color: var(--color-dark-freon-accent-400)
-;
+    --color-freon-dropdown-component-border: var(--color-dark-freon-700, var(--color-dark-freon-700));
+    --color-freon-dropdown-component-bg: var(--color-dark-freon-800);
+    --color-freon-dropdown-component-item-hover-bg: var(--color-dark-freon-accent-500);
+    --color-freon-dropdown-component-selected-color: var(--color-dark-freon-accent-400);
     --color-freon-dropdown-component-selected-bg: color-mix(
             in srgb,
             var(--color-dark-freon-accent-500) 18%,
             var(--color-dark-freon-900)
-    )
-;
+    );
 
     --color-freon-optional-component-tooltip-border: color-mix(
             in srgb,
             var(--color-dark-freon-accent-500) 45%,
             var(--color-dark-freon-700)
-    )
-;
-    --color-freon-optional-component-tooltip-bg: var(--color-dark-freon-800)
-;
-    --color-freon-optional-component-button-text: var(--color-dark-freon-accent-400)
-;
+    );
+    --color-freon-optional-component-tooltip-bg: var(--color-dark-freon-800);
+    --color-freon-optional-component-button-text: var(--color-dark-freon-accent-400);
 
-    --color-freon-add-icon: var(--color-dark-freon-accent-400)
-;
-    --color-freon-delete-icon: var(--color-dark-freon-accent-400)
-;
+    --color-freon-add-icon: var(--color-dark-freon-accent-400);
+    --color-freon-delete-icon: var(--color-dark-freon-accent-400);
 
-    --color-freon-switch-component-bg-on: var(--color-dark-freon-accent-500)
-;
+    --color-freon-switch-component-bg-on: var(--color-dark-freon-accent-500);
 
     --color-freon-table-component-border: color-mix(
             in srgb,
             var(--color-dark-freon-accent-500) 55%,
             var(--color-dark-freon-600)
-    )
-;
-    --color-freon-table-cell-selected-ring: var(--color-dark-freon-accent-400)
-;
+    );
+    --color-freon-table-cell-selected-ring: var(--color-dark-freon-accent-400);
     --color-freon-table-cell-selected-bg: color-mix(
             in srgb,
             var(--color-dark-freon-accent-500) 14%,
             var(--color-dark-freon-900)
-    )
-;
+    );
 
     --color-freon-grid-component-border: color-mix(
             in srgb,
             var(--color-dark-freon-accent-500) 55%,
             var(--color-dark-freon-600)
-    )
-;
+    );
 
-    --color-freon-text-dropdown-text: var(--color-dark-freon-accent-400)
-;
-    --color-freon-text-dropdown-input-bg: var(--color-dark-freon-accent-700)
-;
+    --color-freon-text-dropdown-text: var(--color-dark-freon-accent-400);
+    --color-freon-text-dropdown-input-bg: var(--color-dark-freon-accent-700);
 
-    --color-freon-reference-arrow: var(--color-dark-freon-accent-400)
-;
+    --color-freon-reference-arrow: var(--color-dark-freon-accent-400);
+
+    --dropdown-component-item-hover-bg: var(--color-dark-freon-100);
+    --dropdown-component-item-selected-bg: var(--color-dark-freon-accent-200);
+    --dropdown-component-item-selected-text: inherit;
+    --dropdown-component-item-selected-border: var(--color-dark-freon-accent-400);
+
+    --dropdown-component-item-match-bg: var(--color-dark-freon-accent-100);
+    --dropdown-component-item-match-text: inherit;
+    --dropdown-component-item-match-border: var(--color-dark-freon-accent-200);
+
+    --dropdown-component-item-single-match-bg: var(--color-dark-freon-accent-100);
+    --dropdown-component-item-single-match-text: inherit;
+    --dropdown-component-item-single-match-border: var(--color-dark-freon-accent-400);
 }
 
 .freon-component {
@@ -253,11 +232,14 @@
 }
 
 .contextmenu-button {
+    color: var(--color-dark-freon-900);
     background: none;
     border: none;
 }
 
 .contextmenu-button:hover {
+    color: var(--color-dark-freon-900);
+    background-color: var(--color-dark-freon-50);
     background: var(--color-dark-freon-800);
 }
 
@@ -268,7 +250,9 @@
 .contextmenu-hr {
     border-top: solid 1px var(--color-dark-freon-700);
 }
-
+/*******************************************************
+ *  ErrorTooltipComponent
+ *******************************************************/
 .error-tooltip {
     border: 1px solid var(--color-dark-freon-error);
     box-shadow: 1px 1px 1px var(--color-dark-freon-error);

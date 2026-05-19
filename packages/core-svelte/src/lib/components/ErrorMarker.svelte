@@ -4,7 +4,7 @@
     import type { FreComponentProps } from "../index.js";
     import { type Box} from "@freon4dsl/core";
 
-    let { editor, box, readonly }: FreComponentProps<Box> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<Box> = $props();
 
     let top = $state(0);
     let height = $state(0);

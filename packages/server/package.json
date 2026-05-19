@@ -1,45 +1,46 @@
 {
-  "name": "@freon4dsl/server",
-  "version": "2.1.0",
-  "publishConfig": {
-    "access": "public"
-  },
-  "license": "MIT",
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/freon4dsl/Freon4dsl.git"
-  },
-  "bin": {
-    "model-server": "./dist/bin/start-server.js"
-  },
-  "scripts": {
-    "clean": "rm -rf node_modules/ && rm -rf dist/",
-    "cleanup": "bash ../../scripts/cleanup.sh",
-    "start": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec node ./dist/server/server-starter.js",
-    "start9090": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec node ./dist/server/server-starter.js --port 9090",
-    "build": "tsc --build",
-    "build-dev": "tsc --build",
-    "build-verbose": "tsc --build --verbose --listFiles --listEmittedFiles",
-    "build-release": "npm run build",
-    "release-beta": "npm publish --tag beta",
-    "publish-local": "npm publish --registry http://localhost:4873 --tag local",
-    "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
-    "republish-local": "npm run unpublish-local && npm run publish-local",
-    "test": "vitest run",
-    "check-imports": "bash ../../scripts/check-import-extensions.sh"
-  },
-  "devDependencies": {
-    "vitest": "3.2.4"
-  },
-  "dependencies": {
-    "@types/koa": "3.0.1",
-    "@lionweb/validation": "0.8.0-beta.8",
-    "koa": "3.1.2",
-    "koa-bodyparser": "4.4.1",
-    "@koa/router": "14.0.0",
-    "@koa/cors": "5.0.0",
-    "supertest": "^7.0.0",
-    "tslib": "^2.8.1"
-  }
+    "name": "@freon4dsl/server",
+    "version": "2.1.0",
+    "publishConfig": {
+        "access": "public"
+    },
+    "license": "MIT",
+    "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/freon4dsl/Freon4dsl.git"
+    },
+    "bin": {
+        "model-server": "./dist/bin/start-server.js"
+    },
+    "scripts": {
+        "clean": "rm -rf node_modules/ && rm -rf dist/",
+        "cleanup": "bash ../../scripts/cleanup.sh",
+        "start": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec node ./dist/server/server-starter.js",
+        "start9090": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec node ./dist/server/server-starter.js --port 9090",
+        "build": "tsc --build",
+        "build-dev": "tsc --build",
+        "build-verbose": "tsc --build --verbose --listFiles --listEmittedFiles",
+        "build-release": "npm run build",
+        "release-beta": "npm publish --tag beta",
+        "publish-local": "npm publish --registry http://localhost:4873 --tag local",
+        "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+        "republish-local": "npm run unpublish-local && npm run publish-local",
+        "test": "vitest run",
+        "check-imports": "bash ../../scripts/check-import-extensions.sh"
+    },
+    "devDependencies": {
+        "vitest": "4.1.4"
+    },
+    "dependencies": {
+        "@types/koa": "3.0.2",
+        "@lionweb/json": "0.9.0-beta.3",
+        "@lionweb/validation": "0.9.0-beta.3",
+        "koa": "3.2.0",
+        "koa-bodyparser": "4.4.1",
+        "@koa/router": "15.5.0",
+        "@koa/cors": "5.0.0",
+        "supertest": "^7.0.0",
+        "tslib": "2.8.1"
+    }
 }

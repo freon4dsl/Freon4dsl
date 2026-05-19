@@ -1,4 +1,4 @@
-import { FREON, FreNodeReference, FREON, CoreConfig } from "@freon4dsl/core"
+import { FREON, FreNodeReference, CoreConfig } from "@freon4dsl/core"
 import { OctopusModelEnvironment } from "../../octopus-small/freon/config/OctopusModelEnvironment.js"
 import {
     DemoMultiplyExpression,

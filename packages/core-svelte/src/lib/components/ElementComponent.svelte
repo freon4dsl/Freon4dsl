@@ -5,12 +5,13 @@
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    let { editor, box, readonly }: FreComponentProps<ElementBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<ElementBox> = $props();
 
     const LOGGER = ELEMENT_LOGGER;
     let id: string = $state('');
 
     let childBox: Box | undefined = $state(undefined);
+    let tabbable: number = 0; // todo get the value from the box, depending on the editor configuration
 
     const refresh = (why?: string): void => {
         LOGGER.log('REFRESH ElementComponent (' + why + ')' + box?.node?.freLanguageConcept());
@@ -39,5 +40,7 @@
 </script>
 
 {#if notNullOrUndefined(childBox)}
-    <RenderComponent box={childBox} {editor} {readonly} />
+    <span class="element-component element-component-{box.node.freLanguageConcept()}" tabindex={tabbable}>
+        <RenderComponent box={childBox} {editor} {readonly} />
+    </span>
 {/if}

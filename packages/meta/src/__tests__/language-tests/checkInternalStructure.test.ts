@@ -1,13 +1,10 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import {
-    FreMetaClassifier,
+import type {
     FreMetaConcept,
-    FreMetaExpressionConcept,
     FreMetaLanguage,
-    FreMetaLimitedConcept,
-    FreMetaPrimitiveProperty,
-    LangUtil
-} from '../../languagedef/metalanguage/index.js';
+    
+} from "../../languagedef/metalanguage/index.js"
+import { LangUtil, FreMetaClassifier, FreMetaLimitedConcept, FreMetaPrimitiveProperty, FreMetaExpressionConcept } from "../../languagedef/metalanguage/index.js"
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { describe, test, expect } from "vitest";
 import { resolveTestDir } from '../TestPathHelpers.js';

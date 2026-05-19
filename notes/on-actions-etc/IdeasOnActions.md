@@ -1,4 +1,5 @@
 # Streamlining Actions in Freon
+
 # Current situation
 Right now we have MenuItem class for context menu items,
 and a SelectOption interface for the item in a regular dropdown menu.

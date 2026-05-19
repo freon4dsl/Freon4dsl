@@ -8,7 +8,7 @@
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
-    let { box, readonly }: FreComponentProps<LabelBox> = $props();
+    let { box, readonly = false }: FreComponentProps<LabelBox> = $props();
 
     const LOGGER = LABEL_LOGGER;
 

@@ -22,12 +22,12 @@ export class CommandLineTemplate {
                     });
                 }
             
-                protected async onExecute(): Promise<void> {
+                protected async onExecuteAsync(): Promise<void> {
                     try {
-                        await super.onExecute();
+                        await super.onExecuteAsync();
                     } catch (e: unknown) {
                         const err = e instanceof Error ? e : new Error(String(e));
-                        console.error(\`Exception in onExecute: \${err.message}\\n\${err.stack ?? ""}\`);
+                        console.error(\`Exception in onExecuteAsync: \${err.message}\\n\${err.stack ?? ""}\`);
                         throw err;
                     }
                 }
@@ -57,7 +57,7 @@ export class CommandLineTemplate {
                     });
                 }
             
-                protected onExecute(): Promise<void> {
+                protected onExecuteAsync(): Promise<void> {
                     const self = this;
                     return new Promise(function (resolve, rejest) {
                         const result = self.dummyAction();
@@ -74,7 +74,8 @@ export class CommandLineTemplate {
     // @ts-ignore
     generateCommandLineRunner(language: FreMetaLanguage, relativePath: string): string {
         const imports = new Imports(relativePath)
-        imports.root.add(Names.LanguageEnvironment);
+        imports.root.add(Names.LanguageEnvironment)
+        imports.core.add(Names.CoreConfig)
 
         return `// TEMPLATE: CommandLineTemplate.generateCommandLineRunner()
             // Run this as the main program.
@@ -85,6 +86,9 @@ export class CommandLineTemplate {
             // ensure language is initialized
             const tmp = ${Names.LanguageEnvironment}.getInstance();
             
+            // Ensure FREON variable is initialized
+            CoreConfig.initializeWithoutServer(tmp)       
+                 
             // Create the command line object
             const cli: FreonCommandLine = new FreonCommandLine();
             
@@ -93,6 +97,6 @@ export class CommandLineTemplate {
             cli.addAction(new DummyAction());
             
             // Run it
-            cli.executeAsync();`;
+            cli.executeAsync();`
     }
 }

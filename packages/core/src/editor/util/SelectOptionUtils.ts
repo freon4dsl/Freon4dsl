@@ -57,45 +57,52 @@ export function executeSingleBehavior(
     return BehaviorExecutionResult.EXECUTED;
 }
 
-export function createOptions(editor: FreEditor, node: FreNode, box: ActionBox | OptionalBox, conceptOfContent: string): SelectOption[] {
-    const result: SelectOption[] = [];
+export function createOptions(editor: FreEditor, node: FreNode, box: ActionBox, conceptOfContent: string): SelectOption[] {
+    const result: SelectOption[] = []
     if (notNullOrUndefined(box.propertyName) && notNullOrUndefined(conceptOfContent)) {
         LOGGER.log(`  has property ${box.propertyName} and concept ${conceptOfContent}`)
         // If the box has a property and concept name, then this can be used to create element of the
-        // concept type and its subtypes.
-        const clsOtIntf: FreLanguageClassifier = FreLanguage.getInstance().classifier(conceptOfContent)
-        const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(
-            conceptOfContent,
-            box.propertyName
-        )
-        LOGGER.log(`clsIntf: ${clsOtIntf?.typeName} prop kind: ${propDef?.propertyKind}`)
-        clsOtIntf.subConceptNames.concat(conceptOfContent).forEach((creatableConceptname: string) => {
-            const creatableConcept: FreLanguageConcept = FreLanguage.getInstance().concept(creatableConceptname)
-            LOGGER.log(`creatableConcept: ${creatableConcept?.typeName}`)
-            if (notNullOrUndefined(creatableConcept) && !creatableConcept.isAbstract) {
-                if (notNullOrUndefined(creatableConcept.referenceShortcut)) {
-                    addReferenceShortcuts(creatableConcept as FreLanguageConcept, result, editor, node, box)
-                } else {
-                    result.push(
-                        getCreateElementOption(
-                            box.propertyName,
-                            creatableConceptname,
-                            creatableConcept as FreLanguageConcept
-                        )
-                    )
-                }
-            }
-        })
+        // concept type and its subtypes or implementors.
+        return optionsForSubsOrImplementors(node, box, editor, conceptOfContent)
     } else if (notNullOrUndefined(box.propertyName)) {
-        // Only has a property name, so it is a reference property
-        const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(
-            node.freLanguageConcept(),
-            box.propertyName
-        )
+        // Only has a property name, so it is a reference property. NB. check this
+        const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), box.propertyName)
         LOGGER.log(`parent: ${node.freLanguageConcept()} prop ${propDef.name} kind: ${propDef?.propertyKind}`)
-        addReferences(node, propDef, result, editor);
+        addReferences(node, propDef, result, editor)
     }
-    return result;
+    return result
+}
+
+function optionsForSubsOrImplementors(node: FreNode, box: OptionalBox | ActionBox, editor: FreEditor, conceptOfContent: string): SelectOption[] {
+    LOGGER.log(`addSubsOrImplementors ${node.freLanguageConcept()}`)
+    const result: SelectOption[] = []
+    const clsOtIntf: FreLanguageClassifier = FreLanguage.getInstance().classifier(conceptOfContent)
+    clsOtIntf.subConceptNames.concat(conceptOfContent).forEach((creatableConceptname: string) => {
+        const creatableConcept: FreLanguageConcept = FreLanguage.getInstance().concept(creatableConceptname)
+        LOGGER.log(` creatableConcept: ${creatableConcept?.typeName}`)
+        if (notNullOrUndefined(creatableConcept) && !creatableConcept.isAbstract) {
+            if (notNullOrUndefined(creatableConcept.referenceShortcut)) {
+                addReferenceShortcuts(creatableConcept as FreLanguageConcept, result, editor, node, box)
+            } else {
+                result.push(getCreateElementOption(box.propertyName, creatableConceptname, creatableConcept as FreLanguageConcept))
+            }
+        }
+    })
+    return result
+}
+
+export function createOptionsForOptional(editor: FreEditor, node: FreNode, box: OptionalBox, propDef: FreLanguageProperty): SelectOption[] {
+    LOGGER.log(`createOptionsForOptional: ${node.freLanguageConcept()} ${propDef.type}`)
+    const result: SelectOption[] = []
+    // NB propDef === 'primitive' is handled in the OptionalBox
+    if (propDef.propertyKind === 'part') {
+        // find all possible subclasses/implementors of the type of the property
+        return optionsForSubsOrImplementors(node, box, editor, propDef.type)
+    } else if (propDef.propertyKind === 'reference') {
+        // find all possible referable nodes
+        addReferences(node, propDef, result, editor)
+    }
+    return result
 }
 
 /**
@@ -173,7 +180,11 @@ function addReferences(
                         activeInBoxRoles: [],
                         // @ts-ignore
                         action: (box: Box, trigger: FreTriggerType, ed: FreEditor): FreNode | null => {
-                            parentNode[property.name].push(FreNodeReference.create(node.name, null));
+                            if (property.isList){
+                                parentNode[property.name].push(FreNodeReference.create(node.name, propType))
+                            } else {
+                                parentNode[property.name] = FreNodeReference.create(node.name, propType)
+                            }
                             return null;
                         },
                         boxRoleToSelect: "REFERENCE"

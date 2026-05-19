@@ -166,7 +166,7 @@ export class DeltaUtil {
         if (node === null || node === undefined) {
             return "NullDefined"
         }
-        let ownerName: string = node["name"];
+        let ownerName: string = node["name"]
         if (ownerName === null || ownerName === undefined) {
             ownerName = node?.freLanguageConcept();
         }

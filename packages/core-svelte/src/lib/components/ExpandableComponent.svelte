@@ -3,7 +3,7 @@
     import { type FragmentBox} from "@freon4dsl/core";
     import ArrowForward from "./images/ArrowForward.svelte";
 
-    let { editor, box, readonly }: FreComponentProps<FragmentBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<FragmentBox> = $props();
 
     let isExpanded: boolean = $state(false);
     let contentStyle: string = $state("display: none");

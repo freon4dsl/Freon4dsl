@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Freon } from "../commandline/freon.js";
 
 // Run this as the main program.

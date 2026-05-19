@@ -75,7 +75,7 @@
     );
 </script>
 
-<LimitedCheckboxComponent {editor} box={limitedBox1} /> current value:
+<LimitedCheckboxComponent {editor} box={limitedBox1}/> current value:
 {#each limVar1 as v}
     <p>{v.name},</p>
 {/each}

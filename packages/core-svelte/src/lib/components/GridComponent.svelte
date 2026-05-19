@@ -6,7 +6,7 @@
 
     const LOGGER = GRID_LOGGER;
 
-    let { editor, box, readonly }: FreComponentProps<GridBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<GridBox> = $props();
 
     let id: string = $state('');
     let cells: GridCellBox[] = $state([]);

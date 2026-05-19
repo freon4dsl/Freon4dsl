@@ -19,20 +19,7 @@
     --freon-radio-font-size: 0.95rem;
     --freon-radio-gap-inline: 0.5rem;
     --freon-radio-gap-block: 1rem;
-}
-
-:root {
-
-}
-
-/* Defaults for shared color tokens used by all radio groups. Overwritten in 'freon-light.css' etc. */
-.freon-radio-group {
-    --freon-radio-label-color: #1f1f1f;
-    --freon-radio-border-color: #5f6368;
-    --freon-radio-dot-color: #1f1f1f;
-    --freon-radio-hover-background-color: transparent;
-    --freon-radio-focus-ring-color: rgba(26, 115, 232, 0.3);
-    --freon-radio-shadow-color: rgba(0, 0, 0, 0.2);
+    --dropdown-component-item-text-suffix: var(--color-light-freon-700);
 }
 
 /* freon-component is the top component and consists of a gutter and an editor-component */
@@ -72,6 +59,12 @@
     width: 100%;
     flex: 1;
 }
+.freon-overlay-root {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none; /* don't block the editor */
+}
 
 /***************************************
  * Alignment on same row
@@ -80,7 +73,6 @@
 .text-component,
 .text-component-text,
 .text-component-input,
-.text-component-input-wrapper,
 .optional-component,
 .optional-component-tooltip-anchor {
     vertical-align: top;
@@ -103,6 +95,7 @@
     min-height: var(--freon-inline-height);
 
     padding-inline: var(--freon-inline-padding-x);
+    cursor: pointer;
 }
 
 /***************************************
@@ -375,6 +368,12 @@
 /*******************************************************
  *  ContextMenuComponent
  *******************************************************/
+/* The panel lives in the fixed overlay. Let it receive pointer events. */
+/* And make sure menus position correctly within the overlay layer. */
+.context-menu-panel {
+    pointer-events: auto;
+    position: absolute;
+}
 .contextmenu {
     box-sizing: border-box;
     position: absolute;
@@ -633,83 +632,188 @@
     box-shadow: 0 0 0 3px var(--freon-radio-focus-ring-color);
 }
 
+/* #region TextComponent */
 /*******************************************************
  *  TextComponent
  *******************************************************/
-.text-component {
-    display: inline-block;
-    white-space: nowrap;
+ .text-component {
+     font-size: var(--freon-inline-font-size);
+     line-height: var(--freon-inline-line-height);
+     height: var(--freon-inline-height);
+ }
+/* === The magic: make input look like text === */
+.text-component-input {
+    border: none;
+    outline: none;
+    background: transparent;
+
+    margin: 0;
+    padding: 0;
+
+    font: inherit;
+    color: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+
+    min-width: 1ch;
+
+    cursor: text;
+    box-sizing: border-box;
+    /*border-bottom: 1px solid transparent;*/
+    /*transition: background-color 0.12s ease, border-color 0.12s ease;*/
 }
 
+/* optional: subtle editing affordance */
+.text-component-input:focus {
+    outline: none;
+    /*border-bottom: 1px solid var(--color-accent);*/
+    /*background-color: rgba(0, 0, 0, 0.05);*/
+}
+
+/* placeholder should look like text placeholder, not browser default */
+.text-component-input::placeholder {
+    color: inherit;
+    opacity: 0.5;
+}
+
+/* hidden span for measuring width */
 .text-component-width {
     position: absolute;
-    left: -9999px;
-    display: inline-block;
-    border: none;
+    visibility: hidden;
+    white-space: pre;
     box-sizing: border-box;
-    font-size: var(--freon-inline-font-size);
-    line-height: var(--freon-inline-line-height);
-    padding-inline: var(--freon-inline-padding-x);
+
+    line-height: inherit;
+    padding: 0;
+    margin: 0;
+    border: none;
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
 }
 
-.text-component-input {
-    outline: none;
-    box-sizing: border-box;
-    border: none;
-    font-size: var(--freon-inline-font-size);
-    line-height: var(--freon-inline-line-height);
-    height: var(--freon-inline-height);
-    padding-inline: var(--freon-inline-padding-x);
-}
-
-.text-component-text {
+.text-component-input.readonly {
     display: inline-block;
-    box-sizing: border-box;
-    font-size: var(--freon-inline-font-size);
-    line-height: var(--freon-inline-line-height);
-    min-height: var(--freon-inline-height);
-    padding-inline: var(--freon-inline-padding-x);
+    min-width: 1ch;
+    white-space: pre;
+    cursor: default;
+    /*transition: none;*/
 }
 
 .text-component-placeholder {
+    opacity: 0.5;
     display: inline-block;
+}
+/* #endregion TextComponent */
+
+/* #region TextDropdownComponent */
+/*******************************************************
+ *  TextDropdownComponent
+ *******************************************************/
+.text-dropdown-component {
+     font-size: var(--freon-inline-font-size);
+     line-height: var(--freon-inline-line-height);
+     height: var(--freon-inline-height);
+     padding-inline: var(--freon-inline-padding-x);
+}
+/* === The magic: make input look like text === */
+.text-dropdown-component-input {
+    border: none;
+    outline: none;
+    background: transparent;
+
+    margin: 0;
+    padding: 0;
+
+    font: inherit;
+    color: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+
+    min-width: 1ch;
+
+    cursor: text;
     box-sizing: border-box;
-    font-size: var(--freon-inline-font-size);
-    line-height: var(--freon-inline-line-height);
-    min-height: var(--freon-inline-height);
-    padding-inline: var(--freon-inline-padding-x);
+    /*border-bottom: 1px solid transparent;*/
+    /*transition: background-color 0.12s ease, border-color 0.12s ease;*/
 }
 
-.text-component-action-placeholder {
-    display: inline-block;
-    box-sizing: border-box;
-    font-size: var(--freon-inline-font-size);
-    line-height: var(--freon-inline-line-height);
-    min-height: var(--freon-inline-height);
-    padding-inline: var(--freon-inline-padding-x);
+/* optional: subtle editing affordance */
+.text-dropdown-component-input:focus {
+    outline: none;
+    /*border-bottom: 1px solid var(--color-accent);*/
+    /*background-color: rgba(0, 0, 0, 0.05);*/
 }
+
+/* placeholder should look like text placeholder, not browser default */
+.text-dropdown-component-input::placeholder {
+    color: inherit;
+    opacity: 0.5;
+}
+
+/* hidden span for measuring width */
+.text-dropdown-component-width {
+    position: absolute;
+    visibility: hidden;
+    white-space: pre;
+    box-sizing: border-box;
+
+    line-height: inherit;
+    padding: 0;
+    margin: 0;
+    border: none;
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+}
+
+.text-dropdown-component-input.readonly {
+    display: inline-block;
+    min-width: 1ch;
+    white-space: pre;
+    cursor: default;
+    /*transition: none;*/
+}
+
+.text-dropdown-component-placeholder {
+    opacity: 0.5;
+    display: inline-block;
+}
+
+.text-dropdown-component {
+    display: inline-block;
+}
+
+.text-dropdown-panel {
+    position: absolute;
+    pointer-events: auto;
+}
+/* #endregion TextComponent */
 
 /*******************************************************
  *  Multiline TextComponent
  *******************************************************/
-.multiline-text-component {
+.multiline-text-component-input {
     box-sizing: border-box;
     display: block;
 
     font-size: var(--freon-inline-font-size);
     line-height: var(--freon-inline-line-height);
-
-    padding-inline: 0.125rem;
-    margin: 0;
-
     height: auto;
+    overflow: hidden; /* optional, prevents scrollbar flicker */
+    padding-inline: var(--freon-inline-padding-x);
+
+    margin: 0;
     min-height: calc(2 * var(--freon-inline-line-height));
 
     resize: both;
     field-sizing: content;
+    width: 100%;
 
     outline: none;
     vertical-align: top;
+    white-space: pre-wrap; /* makes sure '\n' is displayed correctly */
+    color: inherit;
 }
 
 /*******************************************************
@@ -850,25 +954,28 @@
     border-color: var(--numeric-slider-tooltip-background-color) transparent transparent transparent;
 }
 
+/* #region DropdownComponent */
 /*******************************************************
  *  DropdownComponent
  *******************************************************/
+.dropdown-component-container {
+    display: inline-block;
+    max-height: 300px;
+    overflow-y: auto;
+    position: relative;
+}
 .dropdown-component {
     border-width: 1px;
     border-style: solid;
     border-radius: 2px;
     opacity: 1;
-    z-index: 95;
     display: flex;
     flex-direction: column;
     gap: 2px;
     min-width: 120px;
     width: fit-content;
     margin-top: 3px;
-    position: absolute;
-    padding: 2px;
 }
-
 .dropdown-component-item {
     white-space: nowrap;
     border: none;
@@ -876,31 +983,79 @@
     cursor: pointer;
     text-align: left;
     gap: 2px;
-
     box-sizing: border-box;
     display: flex;
     align-items: center;
-
     font-size: var(--freon-inline-font-size);
     line-height: var(--freon-inline-line-height);
-
     min-height: var(--freon-inline-row-height);
     padding-inline: var(--freon-inline-padding-x);
 }
-
+.dropdown-component-item:hover {
+    filter: brightness(0.98);
+}
 .dropdown-component-error {
     display: block;
     white-space: nowrap;
     border: none;
 }
-
-.dropdown-component-item:hover {
+.dropdown-component-item-main {
+    flex: 1;
+    min-width: 0;
 }
-
-.dropdown-component-container {
-    position: relative;
+.dropdown-component-match-indicator {
+    margin-left: auto;
+    text-align: right;
+    min-width: 1.2em;
+    flex: 0 0 1.2em;
 }
-
+.dropdown-component-item-label {
+    white-space: nowrap;
+}
+.dropdown-component-item-additional {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-style: italic;
+    color: var(--dropdown-component-item-text-suffix);
+}
+.dropdown-component-selected {
+    background-color: transparent;
+    color: var(--dropdown-component-item-selected-text);
+    box-shadow: inset 0 0 0 1px var(--dropdown-component-item-selected-border);
+}
+.dropdown-component-selected::before {
+    content: "↵";
+    margin-right: 6px;
+    opacity: 0.6;
+    font-size: 0.9em;
+}
+.dropdown-component-item.matched-multiple {
+    background-color: var(--dropdown-component-item-match-bg);
+    color: var(--dropdown-component-item-match-text);
+}
+.dropdown-component-item.matched {
+    background-color: var(--dropdown-component-item-single-match-bg);
+    color: var(--dropdown-component-item-single-match-text);
+    box-shadow: inset 0 0 0 1px var(--dropdown-component-item-single-match-border);
+    font-weight: 500;
+}
+.dropdown-component-item.dropdown-component-selected.matched-multiple {
+    background-color: var(--dropdown-component-item-match-bg);
+    color: var(--dropdown-component-item-match-text);
+    box-shadow:
+            inset 0 0 0 1px var(--dropdown-component-item-selected-border),
+            inset 0 0 0 2px var(--dropdown-component-item-match-border);
+}
+.dropdown-component-item.dropdown-component-selected.matched {
+    background-color: var(--dropdown-component-item-single-match-bg);
+    color: var(--dropdown-component-item-single-match-text);
+    box-shadow:
+            inset 0 0 0 1px var(--dropdown-component-item-selected-border),
+            inset 0 0 0 2px var(--dropdown-component-item-single-match-border);
+    font-weight: 600;
+}
 .dropdown-entry-with-additional-label {
     display: flex;
     flex-direction: row;
@@ -909,25 +1064,22 @@
     width: 100%;
     align-items: center;
 }
-
 .column-for-dropdown-entry-with-additional-label {
     display: flex;
     flex-direction: column;
     white-space: nowrap;
 }
-
 .column-for-dropdown-entry-with-additional-label:last-child {
     width: 100%;
     text-align: right;
 }
-
 .gap-for-dropdown-entry-with-additional-label {
     margin: 0 0.7rem 0 0.7rem;
     flex: 1;
 }
-
+/* end region dropdown */
 /*******************************************************
- *  Inner Switch Component
+ *  BooleanInnerSwitchComponent
  *******************************************************/
 .inner-switch-component button {
     margin: 4px 6px 4px 6px;
@@ -1162,11 +1314,6 @@
     outline-width: 1px;
 }
 
-/* The container styling - needed to position the dropdown content */
-.text-dropdown-component {
-    display: inline-block;
-}
-
 .text-dropdown-component-text-wrapper {
     display: inline-flex;
     align-items: center;
@@ -1210,7 +1357,20 @@
 .reference-arrow {
     height: 12px;
 }
+textarea {
+    outline: none;
+    vertical-align: top;
+}
 
 .boolean-checkbox-component {
     vertical-align: top;
+}
+
+/* The following is added to show an outline around every node/element when it is hovered */
+.element-component:hover {
+    outline: 2px dashed #3F8CFF;
+}
+/* And, ... remove the outline on parent nodes */
+.element-component:has( .element-component:hover):hover {
+    outline: 0px none #3F8CFF;
 }

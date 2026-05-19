@@ -9,7 +9,7 @@
     import { CHECKBOX_LOGGER } from './ComponentLoggers.js';
 
     // Props
-    let { editor, box, readonly }: FreComponentProps<BooleanControlBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<BooleanControlBox> = $props();
 
     const LOGGER = CHECKBOX_LOGGER;
 
