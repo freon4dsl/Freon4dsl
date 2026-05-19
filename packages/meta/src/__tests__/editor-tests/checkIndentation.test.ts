@@ -1,14 +1,14 @@
-import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import type { FreMetaClassifier, FreMetaConcept, FreMetaLanguage } from "../../languagedef/metalanguage/index.js"
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { Checker } from "../../utils/basic-dependencies/index.js";
+import type { Checker } from "../../utils/basic-dependencies/index.js"
 import { FreEditParser } from "../../editordef/parser/FreEditParser.js";
-import {
+import type {
     FreEditNormalProjection,
     FreEditProjectionGroup,
     FreEditProjectionItem,
     FreEditUnit,
-    FreOptionalPropertyProjection,
-} from "../../editordef/metalanguage/index.js";
+} from "../../editordef/metalanguage/index.js"
+import { FreOptionalPropertyProjection } from "../../editordef/metalanguage/index.js"
 import { describe, test, expect, beforeEach } from "vitest";
 import { resolveAstFile, resolveTestDir } from '../TestPathHelpers.js';
 

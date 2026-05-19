@@ -68,7 +68,7 @@
     let column: number = $state(0);
     let orientation: BoxTypeName = 'gridcellNeutral';
     let childBox: Box = $state()!;
-    let htmlElement: HTMLElement;
+    let htmlElement: HTMLElement = $state()!;
     let isHeader = $state('');
     let cssStyle: string = '';
     let cssClass: string = $state('');
@@ -149,8 +149,7 @@
             FREON.astChanger.changeNamed("ListComponent.Enter", () => {
                 execresult = action.execute(tableBox, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, selectedIndex)
             })
-            // @ts-ignore
-            if (!!execresult) {
+            if (notNullOrUndefined(execresult)) {
                 execresult();
             }
         }
@@ -186,7 +185,7 @@
 
     const dragenter = (event: DragEvent): boolean => {
         let data: ListElementInfo | null = draggedElem.value;
-        if (!!data) {
+        if (notNullOrUndefined(data)) {
             if (isFreNodeReference(data.element)) {
                 LOGGER.log(`dragEnter item [${data.element.name}] from [${data.componentId}] in table [${id}] on position [${row},${column}]`);
             } else if (isFreNode(data.element)) {
@@ -234,7 +233,7 @@
             let index: number;
             // determine the contents of the menu based on box
             // if the selected box is the placeholder or a title/header => show different menu items
-            let items: MenuItem[] = [];
+            let items: MenuItem[];
             if (isActionBox(box.content)) {
                 items = box.options(MenuOptionsType.placeholder);
                 index = Number.MAX_VALUE;

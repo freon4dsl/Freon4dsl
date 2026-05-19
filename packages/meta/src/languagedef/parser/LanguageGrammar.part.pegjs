@@ -3,6 +3,7 @@
  */
 
 {{
+// eslint-disable-next-line n/no-missing-import
 import * as create from "./LanguageCreators.js"
 }}
 

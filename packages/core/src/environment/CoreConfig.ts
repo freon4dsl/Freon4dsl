@@ -33,7 +33,12 @@ export class CoreConfig implements ICoreConfig {
         FREON = new CoreConfig(env, server, undefined)
     }
 
-    static initializeWithDeltaServer(env: FreEnvironment, deltaClient: FreonDeltaClient) {
+    static initializeWithoutServer(env: FreEnvironment) {
+        FREON = new CoreConfig(env, undefined, undefined)
+    }
+
+    static async initializeWithDeltaServer(env: FreEnvironment, deltaClient: FreonDeltaClient) {
+        await deltaClient.connect()
         FREON = new CoreConfig(env, undefined, deltaClient)
     }
 
@@ -43,7 +48,7 @@ export class CoreConfig implements ICoreConfig {
         FREON.server = server
     }
 
-    private constructor(env: FreEnvironment, server: IServerCommunication, deltaClient: FreonDeltaClient) {
+    private constructor(env: FreEnvironment, server: IServerCommunication | null | undefined, deltaClient: FreonDeltaClient | null | undefined) {
         FREON = this
         this.astObserver = AstObserver.getInstance()
         this.referenceUpdater = ReferenceUpdateManager.getInstance()

@@ -4,15 +4,11 @@
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf node_modules/",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "generateTypes": "tsc -p tsconfig.build.json",
-    "build": "npm run generate && npm run typecheck && npm run generateTypes && rollup -c",
+    "build": "npm run generate && tsc",
     "build-samples": "npm run build",
-    "compile": "tsc && rollup --config",
+    "compile": "tsc",
     "install-local": "npm install --registry http://localhost:4873",
     "generate": "bash ../../../scripts/freon-samples-dev.sh -v all",
     "check-imports": "bash ../../../scripts/check-import-extensions.sh",
@@ -23,11 +19,11 @@
   },
   "dependencies": {
     "@freon4dsl/core": "~2.1.0",
-    "@types/node": "^20.14.1",
+    "@types/node": "^25.6.2",
     "kotlin": "^1.5.21",
-    "mobx": "^6.12.3",
+    "mobx": "6.15.0",
     "mobx-utils": "^6.0.8",
     "net.akehurst.language-agl-processor": "4.2.1-20-RC2",
-    "tslib": "^2.6.2"
+    "tslib": "2.8.1"
   }
 }

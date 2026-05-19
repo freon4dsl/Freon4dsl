@@ -16,7 +16,7 @@
     const LOGGER = SWITCH_LOGGER;
 
     // Props
-    let { editor, box, readonly }: FreComponentProps<BooleanControlBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<BooleanControlBox> = $props();
 
     let id: string = $derived(notNullOrUndefined(box) ? componentId(box) : 'switch-for-unknown-box');
     let value = $derived(box.getBoolean());

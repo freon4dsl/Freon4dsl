@@ -8,7 +8,7 @@
     const LOGGER = NUMERICSLIDER_LOGGER;
 
     // Props
-    let { editor, box, readonly }: FreComponentProps<NumberControlBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<NumberControlBox> = $props();
 
     // Variables set from the box.
     // box.displayInfo is completely set, it is done in NumberControlBox constructor
@@ -18,9 +18,9 @@
     let max: number = $derived(box.displayInfo!.max)!;
     let step: number = $derived(box.displayInfo!.step)!;
 
-    let inputElement: HTMLInputElement;
-    let tooltip: HTMLSpanElement;
-    let trackWrapper: HTMLSpanElement;
+    let inputElement: HTMLInputElement = $state()!;
+    let tooltip: HTMLSpanElement = $state()!;
+    let trackWrapper: HTMLSpanElement = $state()!;
 
     const onChange = (event: Event) => {
         LOGGER.log(

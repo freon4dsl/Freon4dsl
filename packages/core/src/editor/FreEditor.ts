@@ -1,5 +1,4 @@
-import pkg from 'lodash';
-const { isEqual } = pkg;
+import { isEqual } from "es-toolkit"
 
 import { autorun, makeObservable, observable } from "mobx";
 import { type FreEnvironment, FREON } from "../environment/index.js"
@@ -49,6 +48,12 @@ export class FreEditor {
     // todo are the scroll values needed? Do not the boundingRectable values for each HTML element depend on the page, not on the viewport?
     scrollX: number = 0 // The amount of scrolling horizontally, to find the element above and under.
     scrollY: number = 0 // The amount of scrolling vertically, to find the element above and under.
+
+    /**
+     * When true, the editor does not allow mutations (delete, paste, undo/redo, text edits, etc.).
+     * Selection and navigation (expand/collapse, arrows) remain enabled for view-only use.
+     */
+    readOnly: boolean = false
 
     private _rootElement: FreNode = null // The model element to be shown in this editor.
     private _rootBox: Box | null = null // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
@@ -408,6 +413,7 @@ export class FreEditor {
      * @param box
      */
     deleteBox(box: Box): void {
+        if (this.readOnly) return
         console.log(`deleteBox  ${box.id} for property ${box.propertyName}, box.kind: ${box.kind}`)
         const node: FreNode = box.node
         if (node.freIsUnit()) {
@@ -451,6 +457,7 @@ export class FreEditor {
      * @param deleteParent If true, delete the parent node as well, assuming it has only one property
      */
     deleteTextBox(box: Box, deleteParent: boolean): void {
+        if (this.readOnly) return
         this.DELETE_PARENT = deleteParent
         LOGGER.log(`deleteTextBox  ${box.id} for property ${box.propertyName}`)
         const propertyName = box.propertyName
@@ -699,7 +706,7 @@ export class FreEditor {
             box = this._selectedBox
         }
         const previous: Box = box?.nextLeafLeft
-        LOGGER.log("Select previous leaf is box " + previous?.role)
+        LOGGER.log("Select previous leaf is box " + previous?.role + ", " + previous.id + ", box: " + box.id)
         if (!!previous) {
             this.selectElementForBox(previous, FreCaret.RIGHT_MOST)
         }
@@ -712,7 +719,7 @@ export class FreEditor {
         const next: Box = box?.nextLeafRight
         LOGGER.log("Select next leaf is box " + next?.role)
         if (!!next) {
-            this.selectElementForBox(next, FreCaret.UNSPECIFIED)
+            this.selectElementForBox(next, FreCaret.LEFT_MOST)
         }
     }
 

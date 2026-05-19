@@ -15,7 +15,7 @@
     const LOGGER = INNERSWITCH_LOGGER;
 
     // Props
-    let { editor, box, readonly }: FreComponentProps<BooleanControlBox> = $props();
+    let { editor, box, readonly = false }: FreComponentProps<BooleanControlBox> = $props();
 
     let value = $derived(box.getBoolean());
     let id: string = $derived(box.id);

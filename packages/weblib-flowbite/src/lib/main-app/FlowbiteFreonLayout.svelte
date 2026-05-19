@@ -1,4 +1,11 @@
 <script lang="ts">
+	import { FREON, isNullOrUndefined } from "@freon4dsl/core"
+	import {
+		type DeltaAdminResponse,
+		type DeltaEvent,
+		type DeltaResponse,
+		type ListRepositoriesAdminRequest, type ListRepositoriesAdminResponse
+	} from "@lionweb/server-delta-shared"
 	import {
 		FooterLink,
 		FooterLinkGroup,
@@ -11,7 +18,7 @@
 	import { WebappConfigurator } from '$lib/language';
 	import NavBar from '$lib/main-app/NavBar.svelte';
 	import ModelPanel from '$lib/main-app/ModelPanel.svelte';
-	import { drawerOpen, inDevelopment, initializing } from '$lib/stores/WebappStores.svelte';
+	import { dialogs, drawerOpen, inDevelopment, initializing } from "$lib/stores/WebappStores.svelte"
 	import ViewDialog from '$lib/dialogs/ViewDialog.svelte';
 	import { openStartDialog } from '$lib/language/DialogHelpers';
 	import StartDialog from '$lib/dialogs/StartDialog.svelte';
@@ -29,7 +36,7 @@
 	import StatusBar from '$lib/main-app/StatusBar.svelte';
 	import ToolBar from '$lib/main-app/ToolBar.svelte';
 	import TabContent from '$lib/main-app/TabContent.svelte';
-	import { editorInfo, infoPanelShown } from '$lib/stores';
+	import { editorInfo, infoPanelShown, serverInfo } from "$lib/stores"
 	import ErrorMessage from '$lib/dialogs/ErrorMessage.svelte';
 
 	let transitionParams = {
@@ -63,12 +70,27 @@
 		if (model !== null) {
 			await WebappConfigurator.getInstance().openModel(model);
 			initializing.value = false;
-		} else {
+		} else if (isNullOrUndefined(FREON.deltaClient)){
 			// No model given as parameter, open the open/new model dialog
 			await openStartDialog();
 			initializing.value = false;
+		} else {
+			// use delta server
+			FREON.deltaClient.deltaApiClient.deltaProcessor.processingFunctions.set("ListRepositoriesAdminResponse", myfunc)
+			FREON.deltaClient.deltaApiClient.sendAdminRequest({
+				messageKind: "ListRepositoriesAdminRequest",
+				queryId: "dummy",
+				additionalInfos: []
+			} as ListRepositoriesAdminRequest)
+			
 		}
 	});
+	
+	const myfunc = (msg: DeltaEvent | DeltaResponse | DeltaAdminResponse):void => {
+		console.log(`Received repositories ${(msg as ListRepositoriesAdminResponse).repositories.map(r => JSON.stringify(r))}` )
+		serverInfo.allModelNames = (msg as ListRepositoriesAdminResponse).repositories.map(r =>r.name)
+		dialogs.startDialogVisible = true
+	}
 
 	/**
 	 * This function saves the model before the browser or browser tab closes.

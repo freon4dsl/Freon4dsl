@@ -548,18 +548,8 @@ export class FreLionwebSerializer implements FreSerializer {
                     const limitedRefValue = parentNode[p.name]
                     if (p.isList) {
                         LOGGER.error(`Limited list is not supported by LionWeb, stored JSON will be incompatible with LionWeb.`)
-                        // const limitedValue = (limitedRefValue as FreNodeReference<any>[])?.map(l => l.name)
-                        // console.log(`   LIST limitedref   is ${(limitedRefValue as FreNodeReference<any>)?.name}`)
-                        // console.log(`   limitedValue is ${limitedValue}`)
-                        // console.log(`   metapointer ${p.key}, ${p.language}`)
-                        // result.properties.push({
-                        //     property: this.createMetaPointer(p.key, p.language),
-                        //     value: propertyValueToString(limitedValue),
-                        // })
                     } else {
                         const name = (limitedRefValue as FreNodeReference<never>)?.name
-                        // console.log(`   limitedref for property ${p.name}  is ${name}`)
-                        // console.log(`   metapointer ${p.key}, ${p.language}`)
                         result.properties.push({
                             property: this.createMetaPointer(p.key, p.language),
                             value: propertyValueToString(name),

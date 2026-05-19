@@ -124,13 +124,14 @@ export class ItemBoxHelper {
             let result: string = this._myTemplate.generateLines(optional.lines, elementVarName, myLabel, language, 2);
 
             // surround with optional box, and add "BoxFactory" to imports
-            this._myTemplate.imports.core.add("BoxFactory");
+            this._myTemplate.imports.core.add("BoxFactory")
             if (optionalLiteral === "") {
                 return result;
             }
+            const conceptOfPropertyName: string = Names.startWithUpperCase(property.type.name)
             const initializer: string = property.isPrimitive
                 ? `{ propertyName: "${optionalPropertyName}" }`
-                : `{ propertyName: "${optionalPropertyName}", conceptOfProperty: "${property.type.name}" }`;
+                : `{ propertyName: "${optionalPropertyName}", conceptOfProperty: "${conceptOfPropertyName}" }`
             result = `BoxFactory.optional(${elementVarName}, "optional-${optionalPropertyName}", "${optionalPropertyName}",
                 ${result},
                 ${initializer}

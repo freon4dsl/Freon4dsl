@@ -40,4 +40,3 @@ export * from "./externalBoxes/index.js";
 
 // the following files contain export that do not depend on any other file
 export * from "./SelectOption.js";
-export * from "./ChoiceTextHelper.js";

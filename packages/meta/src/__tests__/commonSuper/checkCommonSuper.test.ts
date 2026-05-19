@@ -1,9 +1,4 @@
-import {
-    FreMetaClassifier,
-    FreMetaConcept,
-    MetaElementReference,
-    FreMetaInterface,
-} from '../../languagedef/metalanguage/index.js';
+import { type FreMetaClassifier, FreMetaConcept, MetaElementReference, FreMetaInterface } from "../../languagedef/metalanguage/index.js"
 import { CommonSuperTypeUtil } from '../../languagedef/checking/common-super/CommonSuperTypeUtil.js';
 import { describe, test, expect } from "vitest";
 

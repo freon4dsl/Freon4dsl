@@ -21,10 +21,10 @@ const getCircularReplacer = () => {
             return undefined;
         }
         if (typeof value === "object" && value !== null) {
-            if (seen.has(value)) {
+            if (seen.has(value as object)) {
                 return "SELF";
             }
-            seen.add(value);
+            seen.add(value as object);
         }
         return runtimeReplacer(key, value);
     };

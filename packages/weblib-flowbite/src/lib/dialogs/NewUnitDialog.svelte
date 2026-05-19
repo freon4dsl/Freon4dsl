@@ -59,7 +59,7 @@
                 class="freon-dialog-input"
                 type="text"
                 bind:value={newName}
-                id="new-input"
+                id="new-input2"
                 name="unit-name"
                 oninput={onInput}
             />
