@@ -85,15 +85,19 @@ export class FreCreatePartAction extends FreAction {
         return function () {
             // editor.selectElement(newElement);
             // tslint:disable-next-line:max-line-length
+            // NB: editor.selectedBox may be null here. It is only set once a box has been
+            // selected (e.g. via keyboard/click). When executeOption is invoked without a prior
+            // selection, this post-action runs with selectedBox === null, so guard the log to
+            // avoid throwing "Cannot read properties of null (reading 'node')".
             ACTION_LOGGER.log(
                 "CreatePartCommand: newElement:" +
                 newNode.freId() +
                 " " +
                 newNode.freLanguageConcept() +
                 ", selected element: " +
-                editor.selectedBox.node.freId() +
+                (editor.selectedBox?.node?.freId() ?? "<none>") +
                 " of kind " +
-                editor.selectedBox.kind,
+                (editor.selectedBox?.kind ?? "<none>"),
             );
             editor.selectFirstEditableChildBox(newNode, true);
         };
