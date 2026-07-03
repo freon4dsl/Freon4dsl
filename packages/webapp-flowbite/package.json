@@ -32,7 +32,6 @@
         "@freon4dsl/core-svelte": "~2.1.0",
         "@freon4dsl/weblib-flowbite": "~2.1.0",
         "@freon4dsl/samples-scoping-example": "~2.1.0",
-        "@freon4dsl/crchub": "~2.1.0",
         "@freon4dsl/samples-course-schedule": "~2.1.0",
         "@freon4dsl/samples-insurance": "~2.1.0",
         "@freon4dsl/samples-example": "~2.1.0",
