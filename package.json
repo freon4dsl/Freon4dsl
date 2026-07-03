@@ -29,9 +29,10 @@
         "list-dependencies": "npx  syncpack list --source 'package.json' --source 'packages/*/package.json'"
     },
     "dependencies": {
-        "svelte": "5.55.4",
+        "svelte": "5.56.4",
         "svelte-check": "3.6.0",
-        "svelte2tsx": "0.7.55"
+        "svelte2tsx": "0.7.55",
+        "patch-package": "8.0.1"
     },
     "devDependencies": {
         "@prettier/sync": "^0.5.2",
@@ -60,15 +61,6 @@
         "@typescript-eslint/utils": "8.56.1",
         "@vitest/eslint-plugin": "1.6.9 "
     },
-    "overrides": {
-        "svelte-check": "3.6.0",
-        "svelte2tsx": "0.7.55",
-        "svelte": "5.55.4",
-        "@tailwindcss/cli": "4.2.4",
-        "@tailwindcss/node": "4.2.4",
-        "@tailwindcss/oxide": "4.2.4",
-        "tailwind-merge": "3.5.0"
-    },
     "engines": {
         "node": ">=22.0.0"
     },
@@ -83,8 +75,5 @@
         "packages/server",
         "packages/test"
     ],
-    "version": "2.1.0",
-    "dependencies": {
-        "patch-package": "8.0.1"
-    }
+    "version": "2.1.0"
 }
