@@ -1,11 +1,11 @@
 import { setCustomComponents } from "@freon4dsl/core-svelte"
 
 // For InsuranceModel:
-import ShowAnimatedGif from "./customComponents/forInsurance/ShowAnimatedGif.svelte";
-import FB_Card_Component from "./customComponents/forInsurance/FB_Card_Component.svelte";
-import FB_Accordion from "./customComponents/forInsurance/FB_Accordion.svelte";
-import FB_Dialog from "./customComponents/forInsurance/FB_Dialog.svelte";
-import DatePicker from "./customComponents/forInsurance/DatePicker.svelte";
+// import ShowAnimatedGif from "./customComponents/forInsurance/ShowAnimatedGif.svelte";
+// import FB_Card_Component from "./customComponents/forInsurance/FB_Card_Component.svelte";
+// import FB_Accordion from "./customComponents/forInsurance/FB_Accordion.svelte";
+// import FB_Dialog from "./customComponents/forInsurance/FB_Dialog.svelte";
+// import DatePicker from "./customComponents/forInsurance/DatePicker.svelte";
 
 // For ExternalTester:
 // import BooleanWrapperComponent from "./customComponents/forExternalTester/BooleanWrapperComponent.svelte";
@@ -52,13 +52,13 @@ export function configureExternals() {
     //     { component: Schedule, knownAs: "Schedule" },
     // ])
     // For InsuranceModel:
-    setCustomComponents([
-    	{component: ShowAnimatedGif, knownAs: "AnimatedGif"},
-    	{component: FB_Card_Component, knownAs: "ExternalCard"},
-    	{component: FB_Accordion, knownAs: "ExternalAccordion"},
-    	{component: FB_Dialog, knownAs: "ExternalDialog"},
-    	{component: DatePicker, knownAs: "DatePicker"}
-    ]);
+    // setCustomComponents([
+    // 	{component: ShowAnimatedGif, knownAs: "AnimatedGif"},
+    // 	{component: FB_Card_Component, knownAs: "ExternalCard"},
+    // 	{component: FB_Accordion, knownAs: "ExternalAccordion"},
+    // 	{component: FB_Dialog, knownAs: "ExternalDialog"},
+    // 	{component: DatePicker, knownAs: "DatePicker"}
+    // ]);
     // For ExternalTester:
     // setCustomComponents([
     //     { component: BooleanWrapperComponent, knownAs: "booleanWrapper" },

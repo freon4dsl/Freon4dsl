@@ -3,7 +3,7 @@ export * from "./infopanel/index.js";
 export * from "./EditorPart.svelte"
 export * from "./FlowbiteFreonLayout.svelte";
 export * from "./ModelPanel.svelte";
-export * from "./NavBar.svelte"
+export * from "./NavBar1.svelte"
 export * from "./StatusBar.svelte"
 export * from "./TabContent.svelte"
 export * from "./ToolBar.svelte"

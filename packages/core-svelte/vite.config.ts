@@ -5,7 +5,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 export default defineConfig({
     plugins: [sveltekit()],
     build: {
-        rollupOptions: {
+        rolldownOptions: {
             external: [
                 // Keep Svelte runtime external.
                 // If Rollup bundles parts of the Svelte runtime it may split them

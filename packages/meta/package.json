@@ -45,15 +45,15 @@
         "lint": "eslint"
     },
     "devDependencies": {
-        "vite": "8.0.3",
+        "vite": "8.0.8",
         "vitest": "4.1.4",
-        "vite-tsconfig-paths": "^5.0.1",
+        "vite-tsconfig-paths": "5.0.1",
         "vitest-tsconfig-paths": "3.4.1"
     },
     "dependencies": {
         "@lionweb/json": "0.9.0-beta.3",
         "@lionweb/json-utils": "0.9.0-beta.3",
-        "@rushstack/ts-command-line": "^4.22.0",
+        "@rushstack/ts-command-line": "4.22.0",
         "@prettier/sync": "^0.5.2",
         "kotlin": "^1.5.21",
         "@lionweb/validation": "0.9.0-beta.3",

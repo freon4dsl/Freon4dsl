@@ -16,7 +16,7 @@
 	import { onMount } from 'svelte';
 	import { sineIn } from 'svelte/easing';
 	import { WebappConfigurator } from '$lib/language';
-	import NavBar from '$lib/main-app/NavBar.svelte';
+	import NavBar1 from '$lib/main-app/NavBar1.svelte';
 	import ModelPanel from '$lib/main-app/ModelPanel.svelte';
 	import { dialogs, drawerOpen, inDevelopment, initializing } from "$lib/stores/WebappStores.svelte"
 	import ViewDialog from '$lib/dialogs/ViewDialog.svelte';
@@ -119,7 +119,7 @@
 <svelte:window onbeforeunload={onBeforeUnload} />
 
 <div id="freon-layout" class="flex flex-col h-screen overflow-hidden dark:bg-dark-base-800 bg-light-base-100">
-	<NavBar />
+	<NavBar1 />
 	<ToolBar />
 	<!-- the tab panel with buttons -->
 	<div class="w-full h-[calc(100vh-118px)] pl-2 pr-2 dark:bg-dark-base-800 bg-light-base-100">

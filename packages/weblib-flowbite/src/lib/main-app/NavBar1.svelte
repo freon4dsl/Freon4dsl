@@ -4,7 +4,8 @@
 		ButtonGroup,
 		Navbar,
 		NavBrand,
-		Tooltip
+		Tooltip,
+		navbar
 	} from 'flowbite-svelte';
 	import {
 		AnnotationOutline,
@@ -15,6 +16,10 @@
 	import { langInfo } from '$lib/stores/LanguageInfo.svelte';
 	import { editorInfo } from '$lib/stores';
 	import DarkModeButton from "$lib/main-app/helpers/DarkModeButton.svelte"
+	
+	// Try to import undefined variable
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const nb = navbar
 </script>
 
 <div class="h-14 freon-navbar">
