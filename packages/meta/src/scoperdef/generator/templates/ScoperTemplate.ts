@@ -18,12 +18,6 @@ export class ScoperTemplate {
         `;
     }
 
-    generateIndex(): string {
-        return `
-        export * from "./index.js";
-        `;
-    }
-
     generateScoper(language: FreMetaLanguage, scopedef: ScopeDef, relativePath: string): string {
         this.alternativeNamespaceText = "";
         this.importedNamespaceText = "";

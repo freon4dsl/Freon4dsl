@@ -128,10 +128,6 @@ export class FreonTyperGenerator {
             "Custom TyperPart",
         );
 
-        LOGGER.log(`Generating typer index: ${this.typerFolder}/index.ts`);
-        const typerIndexFile = FileUtil.pretty(typer.generateIndex(this.language), "Typer Index", generationStatus);
-        FileUtil.generateManualFile(`${this.typerFolder}/index.ts`, typerIndexFile, "Typer Index");
-
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.error(`Generated typer with ${generationStatus.numberOfErrors} errors.`);
         } else {

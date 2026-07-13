@@ -243,11 +243,11 @@ export class LanguageGenerator {
         {
             LOGGER.log(`Generating stdlib index: ${this.stdlibFolder}/index.ts`);
             const indexFile = FileUtil.pretty(
-                stdlibTemplate.generateIndex(),
+                stdlibTemplate.generateIndex(language),
                 "Stdlib Index Class",
                 generationStatus,
             );
-            FileUtil.generateManualFile(`${this.stdlibFolder}/index.ts`, indexFile, "Stdlib Index Class");
+            fs.writeFileSync(`${this.stdlibFolder}/index.ts`, indexFile);
         }
 
         LOGGER.log(`Generating command line: ${this.commandlineFolder}/FreonCommandLine.ts`);
