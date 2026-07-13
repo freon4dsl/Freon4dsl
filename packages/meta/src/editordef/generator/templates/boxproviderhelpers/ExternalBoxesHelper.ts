@@ -130,7 +130,7 @@ export class ExternalBoxesHelper {
                         "${property.name}",
                         "${item.externalInfo!.replaceBy}"
                         ${initializer}
-                    ),`;
+                    )`;
     }
 
     private replaceListByExternal(
