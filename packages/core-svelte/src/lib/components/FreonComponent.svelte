@@ -370,7 +370,7 @@
 >
     <div class="gutter"></div>
     <div class="editor-component">
-        <RenderComponent {editor} readonly={false} box={rootBox} />
+        <RenderComponent {editor} readonly={editor.readOnly} box={rootBox} />
     </div>
 
     <!-- shared overlay host for this Freon root instance -->

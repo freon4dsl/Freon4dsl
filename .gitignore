@@ -16,6 +16,7 @@ node_modules
 coverage
 
 # production
+tsconfig.tsbuildinfo
 build
 dist
 target

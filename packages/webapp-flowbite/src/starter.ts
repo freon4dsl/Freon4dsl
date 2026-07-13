@@ -10,7 +10,7 @@ import { LanguageEnvironment } from "@freon4dsl/samples-example"
 import { CoreConfig, FreLanguage, FREON, FreonDeltaClient, LionWebRepositoryCommunication, ServerCommunication } from "@freon4dsl/core"
 
 /**
- * Initialize everything fpor use with LionWeb Delta Protocol
+ * Initialize everything for use with LionWeb Delta Protocol
  */
 // await CoreConfig.initializeWithServers(
 //     LanguageEnvironment.getInstance(),
@@ -27,7 +27,6 @@ CoreConfig.initialize(
     LanguageEnvironment.getInstance(),
     ServerCommunication.getInstance(),
 )
-console.log(`Manager is of type ${FREON.modelManager.constructor.name}`)
 WebappConfigurator.getInstance()
 
 ServerCommunication.getInstance().SERVER_URL = "http://localhost:8001/"

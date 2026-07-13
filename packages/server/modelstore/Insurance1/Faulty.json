@@ -119,6 +119,14 @@
                   "key": "-key-BaseProduct-date"
                },
                "value": "2024-02-06"
+            },
+            {
+               "property": {
+                  "language": "-key-InsuranceModel",
+                  "version": "2023.1",
+                  "key": "-key-BaseProduct-theme"
+               },
+               "value": "LegalTheme"
             }
          ],
          "containments": [
@@ -136,21 +144,7 @@
                ]
             }
          ],
-         "references": [
-            {
-               "reference": {
-                  "language": "-key-InsuranceModel",
-                  "version": "2023.1",
-                  "key": "-key-BaseProduct-theme"
-               },
-               "targets": [
-                  {
-                     "resolveInfo": "LegalTheme",
-                     "reference": "ID-22"
-                  }
-               ]
-            }
-         ],
+         "references": [],
          "annotations": [],
          "parent": "ID-18"
       },

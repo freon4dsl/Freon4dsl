@@ -49,7 +49,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
         });
     }
 
-    protected onExecute(): Promise<void> {
+    protected onExecuteAsync(): Promise<void> {
         const self = this;
         self.outputFolder = this.outputFolderArg.value ? this.outputFolderArg.value : "";
         self.customsFolder = this.customsFolderArg.value ? this.customsFolderArg.value : "";

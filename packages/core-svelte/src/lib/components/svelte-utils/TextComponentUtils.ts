@@ -1,4 +1,4 @@
-import { BACKSPACE, DELETE, FreCaret, FreCaretPosition, FreLanguage } from '@freon4dsl/core';
+import { BACKSPACE, DELETE, FreCaret, FreCaretPosition } from '@freon4dsl/core';
 
 /**
  * Converts camelCase text to readable text by adding spaces before capital letters

@@ -3,7 +3,7 @@ import { FREON } from "../../environment/index.js"
 import { FreUtils } from "../../util/index.js";
 import { Box } from "./Box.js";
 import { FreLogger } from "../../logging/index.js";
-import { FreCaret, FreCaretPosition } from "../util"
+import { FreCaret, FreCaretPosition } from "../util/index.js"
 
 const LOGGER: FreLogger = new FreLogger("MultiLineTextBox").mute();
 
