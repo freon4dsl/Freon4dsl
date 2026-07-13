@@ -135,10 +135,4 @@ export class ValidatorTemplate {
             errorList: ${Names.FreError}[] = [];
         }`;
     }
-
-    generateIndex() {
-        return `
-        export * from "./index.js";
-        `;
-    }
 }

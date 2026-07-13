@@ -126,9 +126,9 @@ export class StdlibTemplate {
             });
     }
 
-    generateIndex() {
+    generateIndex(language: FreMetaLanguage) {
         return `
-        export * from "./index.js";
+        export * from "./${Names.stdlib(language)}.js";
         `;
     }
 }
