@@ -11,7 +11,7 @@ const LOGGER = new FreLogger("FreonPropertyEvents")
 const PartitionAddedFunction = (msg: PartitionAddedEvent): void => {
     LOGGER.log("Called PartitionAddedFunction " + msg.messageKind)
     // TODO Put a check on the `as FreModelUnit`
-    FREON.modelManager.model.addUnit(FreLionwebSerializer.getInstance().toTypeScriptInstance(ChunkUtil.deltaChunkToChunk(msg.newPartition)) as FreModelUnit)
+    FREON.modelManager.model.addUnit(FreLionwebSerializer.getInstance().deserializeChunk(ChunkUtil.deltaChunkToChunk(msg.newPartition)) as FreModelUnit)
 }
 
 const PartitionDeletedFunction = (msg: PartitionDeletedEvent): void => {

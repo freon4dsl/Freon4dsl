@@ -125,10 +125,6 @@
                },
                "children": [
                   "ID-22",
-                  "ID-12",
-                  "ID-11",
-                  "ID-10",
-                  "ID-9",
                   "ID-8",
                   "ID-20",
                   "ID-21",
@@ -188,14 +184,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "qwerty"
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": "DGJHSGg hjlg;eRJG"
             }
          ],
          "containments": [],
@@ -218,126 +206,6 @@
          "parent": "ID-19"
       },
       {
-         "id": "ID-12",
-         "classifier": {
-            "language": "-key-Example",
-            "version": "2023.1",
-            "key": "-key-Attribute"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-name"
-               },
-               "value": ""
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-19"
-      },
-      {
-         "id": "ID-11",
-         "classifier": {
-            "language": "-key-Example",
-            "version": "2023.1",
-            "key": "-key-Attribute"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-name"
-               },
-               "value": ""
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-19"
-      },
-      {
-         "id": "ID-10",
-         "classifier": {
-            "language": "-key-Example",
-            "version": "2023.1",
-            "key": "-key-Attribute"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-name"
-               },
-               "value": ""
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-19"
-      },
-      {
-         "id": "ID-9",
-         "classifier": {
-            "language": "-key-Example",
-            "version": "2023.1",
-            "key": "-key-Attribute"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-name"
-               },
-               "value": ""
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-19"
-      },
-      {
          "id": "ID-8",
          "classifier": {
             "language": "-key-Example",
@@ -350,14 +218,6 @@
                   "language": "-key-Example",
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
-               },
-               "value": ""
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
                },
                "value": ""
             }
@@ -382,14 +242,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "myTextAttribute"
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -426,14 +278,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "otherAtrr"
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -468,14 +312,6 @@
                   "language": "-key-Example",
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
-               },
-               "value": ""
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
                },
                "value": ""
             }
@@ -1045,14 +881,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "name"
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1089,14 +917,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "xxx"
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1133,14 +953,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "Boolean"
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1177,14 +989,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "Common may still run afterward "
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1221,14 +1025,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "denied"
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1265,14 +1061,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "browser undo works"
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1309,14 +1097,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "insertAtSelection"
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1353,14 +1133,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "may still AAAAP afterward"
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
             }
          ],
          "containments": [],
@@ -1383,14 +1155,6 @@
                   "key": "-key-Attribute-name"
                },
                "value": "werass## Edge cases\n\n- [ ] empty string vs undefined  \n=> stored correctly (optional string logic)\n\n- [ ] very fast typing  \n=> no glitches\n\n- [ ] rapid focus switching  \n=> no crashes or lost state\n\n- [ ] selection + paste  \n=> replaces selection correctly\n\n- [ ] caret at boundaries + typing  \n=> correct navigation / insertionrtqqqq"
-            },
-            {
-               "property": {
-                  "language": "-key-Example",
-                  "version": "2023.1",
-                  "key": "-key-Attribute-extra"
-               },
-               "value": ""
             }
          ],
          "containments": [],

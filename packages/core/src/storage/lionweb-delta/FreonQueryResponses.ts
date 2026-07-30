@@ -11,6 +11,7 @@ import type { FreModelUnit } from "../../ast/index.js"
 import { FREON } from "../../environment/index.js"
 import { FreLogger } from "../../logging/index.js"
 import { FreLionwebSerializer } from "../serializer/index.js"
+import { SerializationFormatVersion } from "../utils/index.js"
 
 const LOGGER = new FreLogger("FreonResponseEvents")
 
@@ -21,8 +22,8 @@ const SubscribeToChangingPartitionsResponseFunction = (msg: SubscribeToChangingP
 const SubscribeToPartitionContentsResponseFunction = (msg: SubscribeToPartitionContentsResponse): void => {
     LOGGER.log("Running SubscribeToPartitionContentsResponseFunction " + JSON.stringify(msg))
     const serializer = new FreLionwebSerializer()
-    const unit = serializer.toTypeScriptInstance({
-        serializationFormatVersion: "2023.1",
+    const unit = serializer.deserializeChunk({
+        serializationFormatVersion: SerializationFormatVersion,
         languages: [],
         nodes: msg.contents.nodes,
     })

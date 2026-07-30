@@ -4,12 +4,12 @@ import type { ListPartitionsResponse } from "@lionweb/server-shared";
 import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { isNullOrUndefined, notNullOrUndefined } from "../../util/index.js"
-import { createLionWebJsonNode, FreLionwebSerializer, type ServerResponse, type VoidServerResponse } from "../index.js"
+import { FreLionwebSerializer, type ServerResponse, type VoidServerResponse } from "../index.js"
 import type { FreSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
 import type { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
-import { collectUsedLanguages } from "./UsedLanguages.js";
-import { FreLanguage } from '../../language/index.js';
+import { FreLanguage } from "../../language/index.js"
+import { createLionWebJsonNode, LionWebVersion, SerializationFormatVersion, collectUsedLanguages } from "../utils/index.js"
 
 const LOGGER = new FreLogger("LionWebRepositoryCommunication");
 
@@ -79,17 +79,17 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         rootNode.classifier = jsonUnit[0].classifier;
         rootNode.id = jsonUnit[0].id;
         const partition = {
-            serializationFormatVersion: "2023.1",
+            serializationFormatVersion: SerializationFormatVersion,
             languages: collectUsedLanguages([rootNode]),
             nodes: [rootNode],
-        };
+        }
         const partitionResult = await this.client.bulk.createPartitions(partition);
         LOGGER.log("createpartition result is " + JSON.stringify(partitionResult));
         const output = {
-            serializationFormatVersion: "2023.1",
+            serializationFormatVersion: SerializationFormatVersion,
             languages: collectUsedLanguages(jsonUnit),
             nodes: jsonUnit,
-        };
+        }
         this.client.repository = modelName;
         const requestResult = await this.client.bulk.store(output);
         LOGGER.log("CREATE MODEL UNIT " + JSON.stringify(requestResult));
@@ -113,10 +113,10 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
             const model = this.lionweb_serial.convertToJSON(unit);
             const usedLanguages = collectUsedLanguages(model);
             const output = {
-                serializationFormatVersion: "2023.1",
+                serializationFormatVersion: SerializationFormatVersion,
                 languages: usedLanguages,
                 nodes: model,
-            };
+            }
             this.client.repository = modelName;
             /* const requestResult = */ await this.client.bulk.store(output);
         } else {
@@ -136,7 +136,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     }
 
     async createModel(modelName: string): Promise<VoidServerResponse> {
-        await this.client.dbAdmin.createRepository(modelName, false, "2023.1");
+        await this.client.dbAdmin.createRepository(modelName, false, LionWebVersion);
         this.client.repository = modelName;
         return { errors: [] }
     }
@@ -219,7 +219,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
             if (notNullOrUndefined(res)) {
                 try {
                     LOGGER.log(JSON.stringify(res, null, 2));
-                    const unit = this.lionweb_serial.toTypeScriptInstance(res.body.chunk);
+                    const unit = this.lionweb_serial.deserializeChunk(res.body.chunk);
                     return {
                         result: unit as FreNode,
                         errors: []

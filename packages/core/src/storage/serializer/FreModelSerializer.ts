@@ -27,7 +27,7 @@ export class FreModelSerializer implements FreSerializer {
      *
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    public toTypeScriptInstance(jsonObject: object): FreNode {
+    public deserializeChunk(jsonObject: object): FreNode {
         // Not using FREON.astChanger.change(...) here, because we don't need an undo for this code
         return runInAction( () => {
             return this.toTypeScriptInstanceInternal(jsonObject);
@@ -90,12 +90,12 @@ export class FreModelSerializer implements FreSerializer {
                     // result[property.name] = [];
                     for (const item in value) {
                         if (notNullOrUndefined(value[item])) {
-                            result[property.name].push(this.toTypeScriptInstance(value[item]));
+                            result[property.name].push(this.deserializeChunk(value[item]));
                         }
                     }
                 } else {
                     if (notNullOrUndefined(value)) {
-                        result[property.name] = this.toTypeScriptInstance(value);
+                        result[property.name] = this.deserializeChunk(value);
                     }
                 }
                 break;

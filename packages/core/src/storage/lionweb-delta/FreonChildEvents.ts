@@ -36,7 +36,7 @@ const ChildAddedFunction = (msg: ChildAddedEvent): void => {
         LOGGER.error(`Property '${langProperty.name}' is not a part/containment`)
         return
     }
-    const childNode: FreNode = FreLionwebSerializer.getInstance().toTypeScriptInstance(ChunkUtil.deltaChunkToChunk(msg.newChild), msg.parent)
+    const childNode: FreNode = FreLionwebSerializer.getInstance().deserializeChunk(ChunkUtil.deltaChunkToChunk(msg.newChild), msg.parent)
     LOGGER.log("NEW CHILD IS " + childNode?.freLanguageConcept())
 
     let originalNode: FreNode

@@ -3,7 +3,6 @@ import { FreLanguage } from "../../language/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { isIdentifier, isNullOrUndefined } from "../../util/index.js"
 import {
-    collectUsedLanguages,
     FreLionwebSerializer,
     FreModelSerializer,
     type ServerResponse,
@@ -11,6 +10,7 @@ import {
 } from "../index.js"
 import { FreErrorSeverity } from "../../validator/index.js";
 import type { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
+import { SerializationFormatVersion, collectUsedLanguages } from "../utils/index.js"
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 
@@ -153,7 +153,7 @@ export class ServerCommunication implements IServerCommunication {
         if (isIdentifier(unitId.name)) {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit)
             let output = {
-                serializationFormatVersion: "2023.1",
+                serializationFormatVersion: SerializationFormatVersion,
                 languages: collectUsedLanguages(model),
                 nodes: model,
             }
@@ -264,10 +264,10 @@ export class ServerCommunication implements IServerCommunication {
                 try {
                     let unit: FreNode
                     if (response["$typename"] === undefined) {
-                        unit = ServerCommunication.lionweb_serial.toTypeScriptInstance(response.result)
+                        unit = ServerCommunication.lionweb_serial.deserializeChunk(response.result)
                     } else {
                         // Old internal Freon formast
-                        unit = ServerCommunication.serial.toTypeScriptInstance(response.result)
+                        unit = ServerCommunication.serial.deserializeChunk(response.result)
                     }
                     return {
                         result: unit,

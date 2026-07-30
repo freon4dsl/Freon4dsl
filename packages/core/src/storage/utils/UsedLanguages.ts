@@ -1,7 +1,7 @@
 import type { LionWebJsonMetaPointer, LionWebJsonNode, LionWebJsonUsedLanguage } from "@lionweb/json";
 
 /**
- * Collect all langusges that are nbeing used in the _nodes_ collection.
+ * Collect all languages that are being used in the _nodes_ collection.
  * @param nodes The nodes to search for languages
  * @returns The list of languages used in _nodes_, can be an empty array.
  */

@@ -1,4 +1,4 @@
-import { LionWebJsonChunk, LionWebJsonNode } from "@lionweb/validation";
+import { LionWebJsonChunk, LionWebJsonNode } from "@lionweb/json";
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { DemoEntity, DemoFunction, DemoModel } from "../freon/language/index.js";
 import { FREON, FreLionwebSerializer, FreModelSerializer, CoreConfig } from "@freon4dsl/core"

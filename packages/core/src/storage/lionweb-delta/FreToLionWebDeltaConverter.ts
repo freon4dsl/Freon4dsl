@@ -19,6 +19,7 @@ import { FreLogger } from "../../logging/index.js"
 import { FreLionwebSerializer } from "../../storage/index.js"
 import { isNullOrUndefined, notNullOrUndefined } from "../../util/index.js"
 import { type FreDelta, FrePartDelta, FrePartListDelta, FrePrimDelta, FreTransactionDelta } from "../../change-manager/FreDelta.js"
+import { LanguageVersion } from "../utils/index.js"
 
 const LOGGER = new FreLogger("LionWebDelta")
 
@@ -93,7 +94,7 @@ class FreToLionWebDeltaConverter {
                         containment: {
                             key: propertyDef.key,
                             language: propertyDef.language,
-                            version: "2023.1",
+                            version: LanguageVersion,
                         },
                         deletedChild: removedNode.freId(),
                         index: delta.index,
@@ -121,7 +122,7 @@ class FreToLionWebDeltaConverter {
                         containment: {
                             key: propertyDef.key,
                             language: propertyDef.language,
-                            version: "2023.1",
+                            version: LanguageVersion,
                         },
                         newChild: { nodes: FreLionwebSerializer.getInstance().convertToJSON(addedNode) },
                         index: delta.index,
@@ -155,7 +156,7 @@ class FreToLionWebDeltaConverter {
                     reference: {
                         key: propertyDef.key,
                         language: propertyDef.language,
-                        version: "2023.1",
+                        version: LanguageVersion,
                     },
                     deletedTarget: (removedNode as unknown as FreNodeReference<FreNamedNode>).lionWeb?.reference ?? null,
                     deletedResolveInfo: (removedNode as unknown as FreNodeReference<FreNamedNode>).lionWeb?.resolveInfo ?? null,
@@ -175,7 +176,7 @@ class FreToLionWebDeltaConverter {
                     reference: {
                         key: propertyDef.key,
                         language: propertyDef.language,
-                        version: "2023.1",
+                        version: LanguageVersion,
                     },
                     newTarget: (addedNode as unknown as FreNodeReference<FreNamedNode>).referred?.freId() ?? null,
                     newResolveInfo: (addedNode as unknown as FreNodeReference<FreNamedNode>).name,
@@ -225,7 +226,7 @@ class FreToLionWebDeltaConverter {
                     reference: {
                         key: propertyDef.key,
                         language: propertyDef.language,
-                        version: "2023.1",
+                        version: LanguageVersion,
                     },
                     newResolveInfo: newRef.referred.name,
                     newTarget: newRef.referred?.freId() ?? null,
@@ -246,7 +247,7 @@ class FreToLionWebDeltaConverter {
                     reference: {
                         key: propertyDef.key,
                         language: propertyDef.language,
-                        version: "2023.1",
+                        version: LanguageVersion,
                     },
                     newResolveInfo: newRef.name,
                     newTarget: newRef.referred?.freId() ?? null,
@@ -263,7 +264,7 @@ class FreToLionWebDeltaConverter {
                     reference: {
                         key: propertyDef.key,
                         language: propertyDef.language,
-                        version: "2023.1",
+                        version: LanguageVersion,
                     },
                     deletedResolveInfo: oldRef.lionWeb?.resolveInfo ?? null,
                     deletedTarget: oldRef.lionWeb?.reference ?? null,
@@ -297,7 +298,7 @@ class FreToLionWebDeltaConverter {
                     containment: {
                         key: propertyDef.key,
                         language: propertyDef.language,
-                        version: "2023.1",
+                        version: LanguageVersion,
                     },
                     index: 0,
                     newChild: { nodes: this.lionwebSerializer.convertToJSON(delta.newValue) },
@@ -313,7 +314,7 @@ class FreToLionWebDeltaConverter {
                 containment: {
                     key: propertyDef.key,
                     language: propertyDef.language,
-                    version: "2023.1",
+                    version: LanguageVersion,
                 },
                 index: delta.index,
                 replacedChild: null,
@@ -331,7 +332,7 @@ class FreToLionWebDeltaConverter {
                 containment: {
                     key: propertyDef.key,
                     language: propertyDef.language,
-                    version: "2023.1",
+                    version: LanguageVersion,
                 },
                 index: delta.index ?? 0,
                 deletedChild: delta.oldValue.freId(),
@@ -351,7 +352,7 @@ class FreToLionWebDeltaConverter {
                 property: {
                     key: propertyDef.key,
                     language: propertyDef.language,
-                    version: "2023.1",
+                    version: LanguageVersion,
                 },
                 additionalInfos: [],
             } as ChangePropertyCommand
@@ -364,7 +365,7 @@ class FreToLionWebDeltaConverter {
                 property: {
                     key: propertyDef.key,
                     language: propertyDef.language,
-                    version: "2023.1",
+                    version: LanguageVersion,
                 },
                 additionalInfos: [],
             } as AddPropertyCommand
@@ -377,7 +378,7 @@ class FreToLionWebDeltaConverter {
                 property: {
                     key: propertyDef.key,
                     language: propertyDef.language,
-                    version: "2023.1",
+                    version: LanguageVersion,
                 },
                 additionalInfos: [],
             } as DeletePropertyCommand
@@ -404,7 +405,7 @@ class FreToLionWebDeltaConverter {
                     property: {
                         key: propertyDef.key,
                         language: propertyDef.language,
-                        version: "2023.1",
+                        version: LanguageVersion,
                     },
                     newValue: limitedNewName,
                     additionalInfos: [],
@@ -417,7 +418,7 @@ class FreToLionWebDeltaConverter {
                     property: {
                         key: propertyDef.key,
                         language: propertyDef.language,
-                        version: "2023.1",
+                        version: LanguageVersion,
                     },
                     newValue: limitedNewName,
                     additionalInfos: [],
@@ -430,7 +431,7 @@ class FreToLionWebDeltaConverter {
                     property: {
                         key: propertyDef.key,
                         language: propertyDef.language,
-                        version: "2023.1",
+                        version: LanguageVersion,
                     },
                     additionalInfos: [],
                 } as DeletePropertyCommand
