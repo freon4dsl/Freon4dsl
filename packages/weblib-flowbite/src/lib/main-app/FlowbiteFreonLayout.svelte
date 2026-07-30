@@ -4,11 +4,9 @@
 		type DeltaAdminResponse,
 		type DeltaEvent,
 		type DeltaResponse,
-		type ListRepositoriesAdminRequest, type ListRepositoriesAdminResponse
+		type Custom_ListRepositoriesAdminRequest, type Custom_ListRepositoriesAdminResponse
 	} from "@lionweb/server-delta-shared"
 	import {
-		FooterLink,
-		FooterLinkGroup,
 		Drawer,
 		Footer,
 		CloseButton
@@ -76,19 +74,19 @@
 			initializing.value = false;
 		} else {
 			// use delta server
-			FREON.deltaClient.deltaApiClient.deltaProcessor.processingFunctions.set("ListRepositoriesAdminResponse", myfunc)
+			FREON.deltaClient.deltaApiClient.deltaProcessor.processingFunctions.set("Custom_ListRepositoriesAdminResponse", myfunc)
 			FREON.deltaClient.deltaApiClient.sendAdminRequest({
-				messageKind: "ListRepositoriesAdminRequest",
+				messageKind: "Custom_ListRepositoriesAdminRequest",
 				queryId: "dummy",
 				additionalInfos: []
-			} as ListRepositoriesAdminRequest)
+			} as Custom_ListRepositoriesAdminRequest)
 			
 		}
 	});
 	
 	const myfunc = (msg: DeltaEvent | DeltaResponse | DeltaAdminResponse):void => {
-		console.log(`Received repositories ${(msg as ListRepositoriesAdminResponse).repositories.map(r => JSON.stringify(r))}` )
-		serverInfo.allModelNames = (msg as ListRepositoriesAdminResponse).repositories.map(r =>r.name)
+		console.log(`Received repositories ${(msg as Custom_ListRepositoriesAdminResponse).repositories.map(r => JSON.stringify(r))}` )
+		serverInfo.allModelNames = (msg as Custom_ListRepositoriesAdminResponse).repositories.map(r =>r.name)
 		dialogs.startDialogVisible = true
 	}
 

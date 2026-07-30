@@ -140,7 +140,7 @@ function eventSpecificChildren(ev: DeltaEvent): TreeNodeData[] {
                 nodeWithAbout("parent", e.parent),
                 valueNode("containment", e.containment),
                 leaf("oldIndex", e.oldIndex),
-                leaf("newIndex", e.newIndex),
+                leaf("indexOffset", e.indexOffset),
                 leaf("movedChild", e.movedChild),
             ]
         }
@@ -180,7 +180,7 @@ function eventSpecificChildren(ev: DeltaEvent): TreeNodeData[] {
                 nodeWithAbout("parent", e.parent),
                 valueNode("containment", e.containment),
                 leaf("oldIndex", e.oldIndex),
-                leaf("newIndex", e.newIndex),
+                leaf("indexOffset", e.indexOffset),
                 leaf("movedChild", e.movedChild),
                 leaf("replacedChild", e.replacedChild),
                 valueNode("replacedDescendants", e.replacedDescendants),
@@ -226,7 +226,12 @@ function eventSpecificChildren(ev: DeltaEvent): TreeNodeData[] {
 
         case "AnnotationMovedInSameParent": {
             const e = ev as AnnotationMovedInSameParentEvent
-            return [nodeWithAbout("parent", e.parent), leaf("oldIndex", e.oldIndex), leaf("newIndex", e.newIndex), leaf("movedAnnotation", e.movedAnnotation)]
+            return [
+                nodeWithAbout("parent", e.parent),
+                leaf("oldIndex", e.oldIndex),
+                leaf("indexOffset", e.indexOffset),
+                leaf("movedAnnotation", e.movedAnnotation),
+            ]
         }
 
         case "AnnotationMovedAndReplacedFromOtherParent": {
@@ -247,7 +252,7 @@ function eventSpecificChildren(ev: DeltaEvent): TreeNodeData[] {
             return [
                 nodeWithAbout("parent", e.parent),
                 leaf("oldIndex", e.oldIndex),
-                leaf("newIndex", e.newIndex),
+                leaf("indexOffset", e.indexOffset),
                 leaf("movedAnnotation", e.movedAnnotation),
                 leaf("replacedAnnotation", e.replacedAnnotation),
                 valueNode("replacedDescendants", e.replacedDescendants),
@@ -260,7 +265,7 @@ function eventSpecificChildren(ev: DeltaEvent): TreeNodeData[] {
                 nodeWithAbout("parent", e.parent),
                 leaf("index", e.index),
                 valueNode("reference", e.reference),
-                leaf("newTarget", e.newTarget),
+                leaf("newReference", e.newReference),
                 leaf("newResolveInfo", e.newResolveInfo),
             ]
         }
@@ -271,7 +276,7 @@ function eventSpecificChildren(ev: DeltaEvent): TreeNodeData[] {
                 nodeWithAbout("parent", e.parent),
                 leaf("index", e.index),
                 valueNode("reference", e.reference),
-                leaf("deletedTarget", e.deletedTarget),
+                leaf("deletedReference", e.deletedReference),
                 leaf("deletedResolveInfo", e.deletedResolveInfo),
             ]
         }
@@ -282,9 +287,9 @@ function eventSpecificChildren(ev: DeltaEvent): TreeNodeData[] {
                 nodeWithAbout("parent", e.parent),
                 leaf("index", e.index),
                 valueNode("reference", e.reference),
-                leaf("oldTarget", e.oldTarget),
+                leaf("oldReference", e.oldReference),
                 leaf("oldResolveInfo", e.oldResolveInfo),
-                leaf("newTarget", e.newTarget),
+                leaf("newReference", e.newReference),
                 leaf("newResolveInfo", e.newResolveInfo),
             ]
         }
@@ -299,7 +304,7 @@ function eventSpecificChildren(ev: DeltaEvent): TreeNodeData[] {
             ]
         }
 
-        case "NoOp": {
+        case "NoOpEvent": {
             return [leaf("info", "No operation")]
         }
 

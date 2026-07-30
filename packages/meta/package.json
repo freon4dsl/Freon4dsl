@@ -53,10 +53,10 @@
     "dependencies": {
         "@lionweb/json": "0.10.0-alpha.10",
         "@lionweb/json-utils": "0.10.0-alpha.10",
+        "@lionweb/validation": "0.10.0-alpha.10",
         "@rushstack/ts-command-line": "5.3.12",
         "@prettier/sync": "^0.5.2",
         "kotlin": "^1.5.21",
-        "@lionweb/validation": "0.10.0-alpha.10",
         "net.akehurst.language-agl-processor": "4.2.1-20-RC2",
         "peggy": "^4.0.3",
         "prettier": "3.8.3",
