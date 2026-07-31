@@ -26,8 +26,8 @@ function compareReadAndWrittenUmlParts(filepath: string) {
         // simply comparing the units does not work because the id properties of the two units
         // are not the same, therefore we use the hack of checking whether both units in JSON
         // format are the same
-        const unit1_json = serial.convertToJSON(unit1);
-        const unit2_json = serial.convertToJSON(unit2);
+        const unit1_json = serial.serializeFreNode(unit1);
+        const unit2_json = serial.serializeFreNode(unit2);
         expect(unit1_json).toEqual(unit2_json);
     } catch (e) {
         console.log(e.message + e.stack);
