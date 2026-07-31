@@ -9,7 +9,7 @@ CoreConfig.initialize(OctopusModelEnvironment.getInstance(), null)
 const writer = FREON.environment.writer;
 const reader = FREON.environment.reader;
 
-// const serial: FreLionwebSerializer = new FreLionwebSerializer();
+// const serial: FreLionWebSerializer = new FreLionWebSerializer();
 const serial: FreModelSerializer = new FreModelSerializer();
 const handler: FileHandler = new FileHandler();
 

@@ -30,8 +30,8 @@ export function compareReadAndWrittenUnits(
     FREON.astChanger.change( () => {
         ;(unit1 as FreModelUnit).name = (unit2 as FreModelUnit).name
     })
-    const unit1_json = serial.convertToJSON(unit1);
-    const unit2_json = serial.convertToJSON(unit2);
+    const unit1_json = serial.serializeFreNode(unit1);
+    const unit2_json = serial.serializeFreNode(unit2);
     expect(unit1_json).toEqual(unit2_json);
 }
 

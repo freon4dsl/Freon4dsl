@@ -7,7 +7,7 @@ import { notNullOrUndefined } from "../util/index.js"
 import { newSignOnRequest } from "./lionweb-delta/commands.js"
 import { ModelManagementError } from "./IModelManager.js"
 import { ModelManager } from "./ModelManager.js"
-import { FreLionwebSerializer } from "./serializer/index.js"
+import { FreLionWebSerializer } from "./serializer/index.js"
 import { type FreUnitIdentifier, type LionwebDeltaIdProvider } from "./server/index.js"
 
 const LOGGER: FreLogger = new FreLogger("DeltaModelManager")
@@ -125,11 +125,11 @@ export class DeltaModelManager extends ModelManager {
             FREON.astChanger.changeNamed("create unit with name", () => {
                 newUnit.name = name
             })
-            console.log("NEW UNIT: " + JSON.stringify(FreLionwebSerializer.getInstance().convertToJSON(newUnit)))
+            console.log("NEW UNIT: " + JSON.stringify(FreLionWebSerializer.getInstance().serializeFreNode(newUnit)))
             // const command: AddPartitionCommand = {
             //     messageKind: "AddPartition",
             //     commandId: "any",
-            //     newPartition: { nodes: FreLionwebSerializer.getInstance().convertToJSON(newUnit) },
+            //     newPartition: { nodes: FreLionWebSerializer.getInstance().serializeFreNode(newUnit) },
             //     additionalInfos: []
             // }
             // FREON.deltaClient.deltaApiClient.sendCommand(command)
@@ -190,7 +190,7 @@ export class DeltaModelManager extends ModelManager {
         const addPartition: AddPartitionCommand = {
             messageKind: "AddPartition",
             commandId: "111",
-            newPartition: { nodes: FreLionwebSerializer.getInstance().convertToJSON(unit) },
+            newPartition: { nodes: FreLionWebSerializer.getInstance().serializeFreNode(unit) },
             additionalInfos: [],
         }
         FREON.deltaClient.deltaApiClient.sendCommand(addPartition)

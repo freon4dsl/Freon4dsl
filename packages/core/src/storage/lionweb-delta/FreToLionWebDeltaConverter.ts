@@ -16,7 +16,7 @@ import type {
 import { type FreNamedNode, FreNodeReference } from "../../ast/index.js"
 import { FreLanguage } from "../../language/index.js"
 import { FreLogger } from "../../logging/index.js"
-import { FreLionwebSerializer } from "../../storage/index.js"
+import { FreLionWebSerializer } from "../../storage/index.js"
 import { isNullOrUndefined, notNullOrUndefined } from "../../util/index.js"
 import { type FreDelta, FrePartDelta, FrePartListDelta, FrePrimDelta, FreTransactionDelta } from "../../change-manager/FreDelta.js"
 import { LanguageVersion } from "../utils/index.js"
@@ -26,13 +26,13 @@ const LOGGER = new FreLogger("LionWebDelta")
 class FreToLionWebDeltaConverter {
     private _lionwebSerializer
 
-    get lionwebSerializer(): FreLionwebSerializer {
+    get lionwebSerializer(): FreLionWebSerializer {
         if (this._lionwebSerializer === undefined) {
-            this._lionwebSerializer = new FreLionwebSerializer()
+            this._lionwebSerializer = new FreLionWebSerializer()
         }
         return this._lionwebSerializer
     }
-    set lionwebSerializer(value: FreLionwebSerializer) {
+    set lionwebSerializer(value: FreLionWebSerializer) {
         this._lionwebSerializer = value
     }
 
@@ -110,7 +110,7 @@ class FreToLionWebDeltaConverter {
                     const lionwebCommand = {
                         messageKind: "AddPartition",
                         commandId: "comm-id",
-                        newPartition: { nodes: FreLionwebSerializer.getInstance().convertToJSON(addedNode) },
+                        newPartition: { nodes: FreLionWebSerializer.getInstance().serializeFreNode(addedNode) },
                         additionalInfos: [],
                     } as AddPartitionCommand
                     result.push(lionwebCommand)
@@ -124,7 +124,7 @@ class FreToLionWebDeltaConverter {
                             language: propertyDef.language,
                             version: LanguageVersion,
                         },
-                        newChild: { nodes: FreLionwebSerializer.getInstance().convertToJSON(addedNode) },
+                        newChild: { nodes: FreLionWebSerializer.getInstance().serializeFreNode(addedNode) },
                         index: delta.index,
                         additionalInfos: [],
                     } as AddChildCommand
@@ -288,7 +288,7 @@ class FreToLionWebDeltaConverter {
                 return {
                     messageKind: "AddPartition",
                     commandId: "command",
-                    newPartition: { nodes: this.lionwebSerializer.convertToJSON(delta.newValue) },
+                    newPartition: { nodes: this.lionwebSerializer.serializeFreNode(delta.newValue) },
                     additionalInfos: [],
                 } as AddPartitionCommand
             } else {
@@ -301,7 +301,7 @@ class FreToLionWebDeltaConverter {
                         version: LanguageVersion,
                     },
                     index: 0,
-                    newChild: { nodes: this.lionwebSerializer.convertToJSON(delta.newValue) },
+                    newChild: { nodes: this.lionwebSerializer.serializeFreNode(delta.newValue) },
                     parent: delta.owner.freId(),
                     additionalInfos: [],
                 } as AddChildCommand
@@ -318,7 +318,7 @@ class FreToLionWebDeltaConverter {
                 },
                 index: delta.index,
                 replacedChild: null,
-                newChild: { nodes: this.lionwebSerializer.convertToJSON(delta.newValue) },
+                newChild: { nodes: this.lionwebSerializer.serializeFreNode(delta.newValue) },
                 parent: delta.owner.freId(),
                 additionalInfos: [],
             } as ReplaceChildCommand

@@ -8,9 +8,10 @@ import { FreLogger } from "../logging/index.js"
 import { runInAction } from "mobx"
 import { notNullOrUndefined } from "../util/index.js"
 import type { LionWebJsonChunk } from "@lionweb/json"
-import { FreLionwebSerializer } from "../storage/index.js"
+import { FreLionWebSerializer } from "../storage/index.js"
 import { FreLanguageEnvironment } from "../environment/index.js"
 import { isLionWebJsonChunk } from "../storage/utils/index.js"
+import { FreLionWebDeserializer } from "../storage/index.js"
 
 const LOGGER = new FreLogger("AstActions") // .mute();
 
@@ -64,7 +65,7 @@ export class AstActions {
             const copiedElement = this.editor.copiedElement
 
             if (notNullOrUndefined(copiedElement)) {
-                const jsonObject: LionWebJsonChunk = FreLionwebSerializer.getInstance().convertToLionWebChunk(copiedElement, false)
+                const jsonObject: LionWebJsonChunk = FreLionWebSerializer.getInstance().serializeFreNodeToChunk(copiedElement)
                 const plainText = FreLanguageEnvironment.getInstance().writer.writeToString(copiedElement)
                 await this.copyLionWebChunkToClipboard(jsonObject, plainText)
             }
@@ -83,7 +84,7 @@ export class AstActions {
             const copiedElement = this.editor.copiedElement
 
             if (notNullOrUndefined(copiedElement)) {
-                const jsonObject: LionWebJsonChunk = FreLionwebSerializer.getInstance().convertToLionWebChunk(copiedElement, false)
+                const jsonObject: LionWebJsonChunk = FreLionWebSerializer.getInstance().serializeFreNodeToChunk(copiedElement)
                 console.log(`copied copied: '${JSON.stringify(jsonObject)}'`)
                 const plainText = FreLanguageEnvironment.getInstance().writer.writeToString(copiedElement)
                 await this.copyLionWebChunkToClipboard(jsonObject, plainText)
@@ -95,15 +96,18 @@ export class AstActions {
 
     async paste() {
         LOGGER.log("paste called")
-        let toBePasted: FreNode = this.editor.copiedElement
+        let toBePasted: FreNode = this.editor.copiedElement.copy()
         const jsonObject = await this.readLionWebChunkFromClipboard()
-        console.log(`copied copied: '${JSON.stringify(jsonObject)}'`)
+        console.log("toBePasted from editor: ", toBePasted.freId())
 
         if (notNullOrUndefined(jsonObject)) {
-            const nodeFound: FreNode = FreLionwebSerializer.getInstance().deserializeChunk(jsonObject)
-            console.log("Found nodes in structured clipboard data:", FreLanguageEnvironment.getInstance().writer.writeToString(nodeFound))
-            // To avoid possible clashes of ids, we create a copy of the node that is to be pasted
-            toBePasted = nodeFound ?? nodeFound.copy()
+            const nodeFound: FreNode | null = FreLionWebDeserializer.getInstance().deserializeFreNode(jsonObject)
+            if (notNullOrUndefined(nodeFound)) {
+                console.log("Found nodes in structured clipboard data:", FreLanguageEnvironment.getInstance().writer.writeToString(nodeFound))
+                // Avoid possible ID clashes by pasting a copy.
+                toBePasted = nodeFound.copy()
+                console.log("toBePasted JSON:", toBePasted.freId())
+            }
         }
 
         if (notNullOrUndefined(toBePasted)) {

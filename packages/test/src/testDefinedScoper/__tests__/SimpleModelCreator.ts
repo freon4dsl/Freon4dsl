@@ -74,8 +74,8 @@ export class SimpleModelCreator {
                 if (i === primary) {
                     modelUnits.push(completeUnit);
                 } else {
-                    const serialized = this.serial.convertToJSON(completeUnit, true);
-                    const unitInterface = this.serial.toTypeScriptInstance(serialized);
+                    const serialized = this.serial.serializeFreNodePublicOnly(completeUnit, true);
+                    const unitInterface = this.serial.deserializeFreNode(serialized);
                     modelUnits.push(unitInterface as DSunit);
                 }
             }
