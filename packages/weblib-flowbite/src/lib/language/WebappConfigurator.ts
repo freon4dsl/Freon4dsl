@@ -47,7 +47,6 @@ export class WebappConfigurator {
      * Sets the object that will perform the communication with the server, and
      * the language environment, so the webapp knows all information of the language.
      * @param editorEnvironment
-     * @param serverCommunication
      */
     setEnvironment(editorEnvironment: FreEnvironment): void {
         // LOGGER.log('setEnvironment')
