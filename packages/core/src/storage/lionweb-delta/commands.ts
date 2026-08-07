@@ -222,7 +222,7 @@ export const addReference = (addRef: AddReferenceType): AddReferenceCommand => {
         parent: addRef.id,
         reference: addRef.reference,
         index: addRef.index,
-        newTarget: addRef.target,
+        newReference: addRef.target,
         newResolveInfo: addRef.resolveInfo,
         additionalInfos: [],
     }
@@ -234,7 +234,7 @@ export const deleteReference = (ref: AddReferenceType): DeleteReferenceCommand =
         commandId: `command-id-${queryId++}`,
         parent: ref.id,
         reference: ref.reference,
-        deletedTarget: ref.target,
+        deletedReference: ref.target,
         deletedResolveInfo: ref.resolveInfo,
         index: ref.index,
         additionalInfos: [],

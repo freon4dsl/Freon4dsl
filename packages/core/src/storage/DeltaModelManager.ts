@@ -1,4 +1,4 @@
-import type { AddPartitionCommand, DeleteRepositoryAdminRequest, ListPartitionsRequest } from "@lionweb/server-delta-shared"
+import type { AddPartitionCommand, Custom_DeleteRepositoryAdminRequest, ListPartitionsRequest } from "@lionweb/server-delta-shared"
 import { runInAction } from "mobx"
 import type { FreModel, FreModelUnit } from "../ast/index.js"
 import { FREON } from "../environment/CoreConfig.js"
@@ -45,8 +45,8 @@ export class DeltaModelManager extends ModelManager {
      * After this call the current model is undefined.
      */
     async deleteModel(): Promise<void | ModelManagementError> {
-        const request: DeleteRepositoryAdminRequest = {
-            messageKind: "DeleteRepositoryAdminRequest",
+        const request: Custom_DeleteRepositoryAdminRequest = {
+            messageKind: "Custom_DeleteRepositoryAdminRequest",
             queryId: "DeleteModel-query",
             repositoryName: this.model.name,
             additionalInfos: [],

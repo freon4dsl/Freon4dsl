@@ -42,7 +42,8 @@ export class FreLionwebSerializer implements FreSerializer {
     }
     private nodesfromJson: Map<string, ParsedNode> = new Map<string, ParsedNode>();
 
-    private static theInstance
+    private static theInstance: FreLionwebSerializer
+    
     static getInstance(): FreLionwebSerializer {
         if (FreLionwebSerializer.theInstance === undefined) {
             FreLionwebSerializer.theInstance = new FreLionwebSerializer()
@@ -69,6 +70,7 @@ export class FreLionwebSerializer implements FreSerializer {
         );
         LOGGER.log("Starting ...");
         // TODO Does not work, as there never is an instance of class LwChuld being constructed.
+        
         if (!isLionWebJsonChunk(jsonObject)) {
             LOGGER.error(`Cannot read json: jsonObject is not a LionWeb chunk:`);
         }

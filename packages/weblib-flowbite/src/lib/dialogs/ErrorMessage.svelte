@@ -22,7 +22,7 @@
 
 			case "Warning":
 				return "yellow";
-			case "ToDo":
+			case "TODO":
 				// slightly debatable — yellow feels like “attention needed”
 				return "yellow";
 
@@ -52,7 +52,7 @@
 			case "Improvement":
 				return LightbulbSolid;
 
-			case "ToDo":
+			case "TODO":
 				return CogSolid;
 
 			case "Info":

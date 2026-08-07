@@ -3,7 +3,7 @@
         "access": "public"
     },
     "name": "@freon4dsl/weblib-flowbite",
-    "version": "2.1.0",
+    "version": "3.0.0-beta.1",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -58,9 +58,9 @@
         "eslint": "^9.31.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-svelte": "3.17.1",
-        "flowbite": "3.1.2",
+        "flowbite": "4.0.2",
         "globals": "^15.14.0",
-        "prettier": "^3.4.2",
+        "prettier": "3.8.3",
         "prettier-plugin-svelte": "3.5.1",
         "prettier-plugin-tailwindcss": "^0.6.5",
         "svelte-check": "4.4.4",
@@ -70,10 +70,10 @@
         "vitest": "4.1.4"
     },
     "dependencies": {
-        "@freon4dsl/core": "~2.1.0",
-        "@freon4dsl/core-svelte": "~2.1.0",
-        "@lionweb/server-delta-shared": "0.4.0-beta.4",
-        "flowbite-svelte": "1.32.0",
+        "@freon4dsl/core": "~3.0.0-beta.1",
+        "@freon4dsl/core-svelte": "~3.0.0-beta.1",
+        "@lionweb/server-delta-shared": "0.4.1",
+        "flowbite-svelte": "1.33.1",
         "flowbite-svelte-icons": "3.1.0",
         "mobx": "6.15.0",
         "svelte": "5.56.4",
