@@ -2,8 +2,8 @@ import { runInAction } from "mobx";
 import type { FreNode } from "../../ast/index.js";
 import { FreLanguage } from "../../language/index.js";
 import type { FreLanguageProperty } from "../../language/index.js";
-import { isNullOrUndefined, notNullOrUndefined } from "../../util/index.js";
-import type { FreSerializer } from "./FreSerializer.js";
+import { isNullOrUndefined, notNullOrUndefined } from "../../util/index.js"
+import type { FreDeserializer, FreSerializer } from "./FreSerialization.js"
 
 /**
  * Helper class to serialize a model using MobXModelElementImpl.
@@ -11,13 +11,9 @@ import type { FreSerializer } from "./FreSerializer.js";
  *
  * Depends on private keys etc. as defined in MobXModelElement decorators.
  */
-export class FreModelSerializer implements FreSerializer {
-    private get language(): FreLanguage {
-        return FreLanguage.getInstance()
-    }
-
+export class FreModelSerializer implements FreSerializer<object>, FreDeserializer {
     constructor() {
-        // this.language = FreLanguage.getInstance();
+        // FreLanguage.getInstance() = FreLanguage.getInstance();
     }
 
     /**
@@ -27,10 +23,10 @@ export class FreModelSerializer implements FreSerializer {
      *
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    public toTypeScriptInstance(jsonObject: object): FreNode {
+    public deserializeFreNode(jsonObject: object): FreNode {
         // Not using FREON.astChanger.change(...) here, because we don't need an undo for this code
-        return runInAction( () => {
-            return this.toTypeScriptInstanceInternal(jsonObject);
+        return runInAction(() => {
+            return this.toTypeScriptInstanceInternal(jsonObject)
         })
     }
 
@@ -41,27 +37,25 @@ export class FreModelSerializer implements FreSerializer {
      */
     private toTypeScriptInstanceInternal(jsonObject: object): FreNode {
         if (jsonObject === null) {
-            throw new Error("Cannot read json: jsonObject is null.");
+            throw new Error("Cannot read json: jsonObject is null.")
         }
-        const type: string = jsonObject["$typename"];
+        const type: string = jsonObject["$typename"]
         if (isNullOrUndefined(type)) {
-            throw new Error(
-                `Cannot read json: not a Freon structure, typename missing: ${JSON.stringify(jsonObject)}.`,
-            );
+            throw new Error(`Cannot read json: not a Freon structure, typename missing: ${JSON.stringify(jsonObject)}.`)
         }
-        const result: FreNode = this.language.createConceptOrUnit(type);
+        const result: FreNode = FreLanguage.getInstance().createConceptOrUnit(type)
         if (isNullOrUndefined(result)) {
-            throw new Error(`Cannot read json: ${type} unknown.`);
+            throw new Error(`Cannot read json: ${type} unknown.`)
         }
-        for (const property of this.language.allConceptProperties(type)) {
-            const value = jsonObject[property.name];
+        for (const property of FreLanguage.getInstance().allConceptProperties(type)) {
+            const value = jsonObject[property.name]
             if (isNullOrUndefined(value)) {
-                continue;
+                continue
                 // TODO how to report this to the user..?
             }
-            this.convertProperties(result, property, value);
+            this.convertProperties(result, property, value)
         }
-        return result;
+        return result
     }
 
     private convertProperties(result: FreNode, property: FreLanguageProperty, value: any) {
@@ -69,93 +63,102 @@ export class FreModelSerializer implements FreSerializer {
         switch (property.propertyKind) {
             case "primitive":
                 if (property.isList) {
-                    result[property.name] = [];
+                    result[property.name] = []
                     for (const item in value) {
-                        result[property.name].push(value[item]);
+                        result[property.name].push(value[item])
                     }
                 } else {
                     if (property.type === "string" || property.type === "identifier") {
-                        this.checkValueToType(value, "string", property);
+                        this.checkValueToType(value, "string", property)
                     } else if (property.type === "number") {
-                        this.checkValueToType(value, "number", property);
+                        this.checkValueToType(value, "number", property)
                     } else if (property.type === "boolean") {
-                        this.checkValueToType(value, "boolean", property);
+                        this.checkValueToType(value, "boolean", property)
                     }
-                    result[property.name] = value;
+                    result[property.name] = value
                 }
-                break;
+                break
             case "part":
                 if (property.isList) {
                     // console.log("    list property of size "+ value.length);
                     // result[property.name] = [];
                     for (const item in value) {
                         if (notNullOrUndefined(value[item])) {
-                            result[property.name].push(this.toTypeScriptInstance(value[item]));
+                            result[property.name].push(this.deserializeFreNode(value[item]))
                         }
                     }
                 } else {
                     if (notNullOrUndefined(value)) {
-                        result[property.name] = this.toTypeScriptInstance(value);
+                        result[property.name] = this.deserializeFreNode(value)
                     }
                 }
-                break;
+                break
             case "reference":
                 if (property.isList) {
                     for (const item in value) {
                         if (notNullOrUndefined(value[item])) {
-                            result[property.name].push(this.language.referenceCreator(value[item], property.type));
+                            result[property.name].push(FreLanguage.getInstance().referenceCreator(value[item], property.type))
                         }
                     }
                 } else {
                     if (notNullOrUndefined(value)) {
-                        result[property.name] = this.language.referenceCreator(value, property.type);
+                        result[property.name] = FreLanguage.getInstance().referenceCreator(value, property.type)
                     }
                 }
-                break;
+                break
             default:
         }
     }
 
     private checkValueToType(value: any, shouldBeType: string, property: FreLanguageProperty) {
         if (typeof value !== shouldBeType) {
-            throw new Error(`Value of property '${property.name}' is not of type '${shouldBeType}'.`);
+            throw new Error(`Value of property '${property.name}' is not of type '${shouldBeType}'.`)
         }
     }
 
     /**
      * Create JSON object, storing references as names.
      */
-    public convertToJSON(tsObject: FreNode, publicOnly?: boolean): object {
-        const typename = tsObject.freLanguageConcept();
+    public serializeFreNode(tsObject: FreNode): object {
+        const typename = tsObject.freLanguageConcept()
         // console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
-        let result: object;
-        if (publicOnly !== undefined && publicOnly) {
+        return  this.convertToJSONinternal(tsObject, false, typename)
+    }
+
+    /**
+     * Create JSON object, taking into account unit interfaces.
+     */
+    public serializeFreNodePublicOnly(tsObject: FreNode, publicOnly: boolean): object {
+        const typename = tsObject.freLanguageConcept()
+        // console.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
+        let result: object
+        if (publicOnly) {
             // convert all units and all public concepts
-            if (this.language.concept(typename)?.isPublic || !!this.language.unit(typename)) {
-                result = this.convertToJSONinternal(tsObject, true, typename);
+            if (FreLanguage.getInstance().concept(typename)?.isPublic || !!FreLanguage.getInstance().unit(typename)) {
+                result = this.convertToJSONinternal(tsObject, true, typename)
             }
         } else {
-            result = this.convertToJSONinternal(tsObject, false, typename);
+            result = this.convertToJSONinternal(tsObject, false, typename)
         }
         // console.log("end converting concept name " + tsObject.freLanguageConcept());
-        return result;
+        return result
     }
 
     private convertToJSONinternal(tsObject: FreNode, publicOnly: boolean, typename: string): object {
-        const result: object = { $typename: typename };
+        const result: object = { $typename: typename }
         // console.log("typename: " + typename);
-        for (const p of this.language.allConceptProperties(typename)) {
+        for (const p of FreLanguage.getInstance().allConceptProperties(typename)) {
             // console.log(">>>> start converting property " + p.name + " of type " + p.propertyKind);
             if (publicOnly) {
                 if (p.isPublic) {
-                    this.convertPropertyToJSON(p, tsObject, publicOnly, result);
+                    this.convertPropertyToJSON(p, tsObject, publicOnly, result)
                 }
             } else {
-                this.convertPropertyToJSON(p, tsObject, publicOnly, result);
+                this.convertPropertyToJSON(p, tsObject, publicOnly, result)
             }
             // console.log("<<<< end converting property  " + p.name);
         }
-        return result;
+        return result
     }
 
     private convertPropertyToJSON(p: FreLanguageProperty, tsObject: FreNode, publicOnly: boolean, result: object) {
@@ -166,11 +169,11 @@ export class FreModelSerializer implements FreSerializer {
                     const parts: object[] = tsObject[p.name]
                     result[p.name] = []
                     for (let i: number = 0; i < parts.length; i++) {
-                        result[p.name][i] = this.convertToJSON(parts[i] as FreNode, publicOnly)
+                        result[p.name][i] = this.serializeFreNodePublicOnly(parts[i] as FreNode, publicOnly)
                     }
                 } else {
                     // single value
-                    result[p.name] = notNullOrUndefined(value) ? this.convertToJSON(value as FreNode, publicOnly) : null
+                    result[p.name] = notNullOrUndefined(value) ? this.serializeFreNodePublicOnly(value as FreNode, publicOnly) : null
                 }
                 break
             }
@@ -194,7 +197,7 @@ export class FreModelSerializer implements FreSerializer {
                 break
             }
             default:
-                break;
+                break
         }
     }
 }

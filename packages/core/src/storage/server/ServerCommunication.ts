@@ -2,15 +2,10 @@ import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLanguage } from "../../language/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { isIdentifier, isNullOrUndefined } from "../../util/index.js"
-import {
-    collectUsedLanguages,
-    FreLionwebSerializer,
-    FreModelSerializer,
-    type ServerResponse,
-    type VoidServerResponse
-} from "../index.js"
+import { FreLionWebDeserializer, FreLionWebSerializer, FreModelSerializer, type ServerResponse, type VoidServerResponse } from "../index.js"
 import { FreErrorSeverity } from "../../validator/index.js";
 import type { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
+import { SerializationFormatVersion, collectUsedLanguages } from "../utils/index.js"
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 
@@ -25,12 +20,12 @@ export type ParameterType = {
 
 export class ServerCommunication implements IServerCommunication {
     get nodePort(): number {
-        return this._nodePort;
+        return this._nodePort
     }
 
     set nodePort(value: number) {
-        this._nodePort = value;
-        this.SERVER_URL = this.buildServerUrl();
+        this._nodePort = value
+        this.SERVER_URL = this.buildServerUrl()
     }
 
     get SERVER_URL(): string {
@@ -45,16 +40,17 @@ export class ServerCommunication implements IServerCommunication {
     }
 
     set SERVER_IP(value: string) {
-        this._SERVER_IP = value;
-        this.SERVER_URL = this.buildServerUrl();
+        this._SERVER_IP = value
+        this.SERVER_URL = this.buildServerUrl()
     }
     static serial: FreModelSerializer = new FreModelSerializer()
-    static lionweb_serial: FreLionwebSerializer = new FreLionwebSerializer()
+    static lionweb_serial: FreLionWebSerializer = new FreLionWebSerializer()
+    static lionweb_deserial: FreLionWebDeserializer = new FreLionWebDeserializer()
     static instance: ServerCommunication
 
     static getInstance(): ServerCommunication {
         if (isNullOrUndefined(ServerCommunication.instance)) {
-            ServerCommunication.instance = new ServerCommunication();
+            ServerCommunication.instance = new ServerCommunication()
         }
         return ServerCommunication.instance
     }
@@ -126,9 +122,9 @@ export class ServerCommunication implements IServerCommunication {
      */
     private buildServerUrl(): string {
         if (this._nodePort !== null && this._nodePort !== undefined && !isNaN(this._nodePort)) {
-            return `${this._SERVER_IP}:${this._nodePort}/`;
+            return `${this._SERVER_IP}:${this._nodePort}/`
         }
-        return `${this._SERVER_IP}/`;
+        return `${this._SERVER_IP}/`
     }
 
     onError(msg: string, severity: FreErrorSeverity): void {
@@ -138,7 +134,7 @@ export class ServerCommunication implements IServerCommunication {
 
     // parameters present to adhere to interface
     async generateIds(_quantity: number, _callback: (strings: string[]) => void): Promise<ServerResponse<string[]>> {
-        return null;
+        return null
     }
 
     /**
@@ -151,9 +147,9 @@ export class ServerCommunication implements IServerCommunication {
     async saveModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNamedNode): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.saveModelUnit ${modelName}/${unitId.name}`)
         if (isIdentifier(unitId.name)) {
-            const model = ServerCommunication.lionweb_serial.convertToJSON(unit)
+            const model = ServerCommunication.lionweb_serial.serializeFreNode(unit)
             let output = {
-                serializationFormatVersion: "2023.1",
+                serializationFormatVersion: SerializationFormatVersion,
                 languages: collectUsedLanguages(model),
                 nodes: model,
             }
@@ -180,7 +176,7 @@ export class ServerCommunication implements IServerCommunication {
     async deleteModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unit.name}`)
         if (!!unit.name && unit.name.length > 0) {
-            const response = await this.getWithTimeout<never>(`deleteModelUnit`, {model:modelName, unit: unit.name});
+            const response = await this.getWithTimeout<never>(`deleteModelUnit`, { model: modelName, unit: unit.name })
             if (response.errors.length > 0) {
                 response.errors[0] = `Server cannot delete model unit '${unit.name}' (${response.errors[0]})`
             }
@@ -196,7 +192,7 @@ export class ServerCommunication implements IServerCommunication {
     async deleteModel(modelName: string): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.deleteModel ${modelName}`)
         if (!!modelName && modelName.length > 0) {
-            const response = await this.getWithTimeout<never>(`deleteModel`, { model: modelName });
+            const response = await this.getWithTimeout<never>(`deleteModel`, { model: modelName })
             if (response.errors.length > 0) {
                 response.errors[0] = `Server cannot delete model '${modelName}' (${response.errors[0]})`
             }
@@ -224,8 +220,8 @@ export class ServerCommunication implements IServerCommunication {
      * @param modelName
      */
     async loadUnitList(modelName: string): Promise<ServerResponse<FreUnitIdentifier[]>> {
-        LOGGER.log(`ServerCommunication.loadUnitList`);
-        const response = await this.getWithTimeout<string[]>(`getUnitList`, {model: modelName });
+        LOGGER.log(`ServerCommunication.loadUnitList`)
+        const response = await this.getWithTimeout<string[]>(`getUnitList`, { model: modelName })
         if (response.errors.length > 0) {
             return {
                 result: null,
@@ -264,10 +260,10 @@ export class ServerCommunication implements IServerCommunication {
                 try {
                     let unit: FreNode
                     if (response["$typename"] === undefined) {
-                        unit = ServerCommunication.lionweb_serial.toTypeScriptInstance(response.result)
+                        unit = ServerCommunication.lionweb_deserial.deserializeFreNode(response.result)
                     } else {
                         // Old internal Freon formast
-                        unit = ServerCommunication.serial.toTypeScriptInstance(response.result)
+                        unit = ServerCommunication.serial.deserializeFreNode(response.result)
                     }
                     return {
                         result: unit,
@@ -329,7 +325,7 @@ export class ServerCommunication implements IServerCommunication {
     }
 
     private async saveWithTimeout(method: string, data: object, params: ParameterType): Promise<VoidServerResponse> {
-        const parameters = ServerCommunication.findParams(params);
+        const parameters = ServerCommunication.findParams(params)
         try {
             const controller = new AbortController()
             const timeoutId = setTimeout(() => controller.abort(), 2000)

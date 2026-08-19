@@ -1,16 +1,9 @@
 {
-    "currentPostfix": 62,
+    "currentPostfix": 65,
     "models": [
         {
-            "folder": "modelstore",
-            "language": "",
-            "name": "modelstore",
-            "units": [],
-            "version": "1"
-        },
-        {
             "folder": "AdultEducation1",
-            "language": "",
+            "language": "CourseSchedule",
             "name": "AdultEducation1",
             "units": [
                 {
@@ -28,38 +21,6 @@
                 {
                     "file": "TeachingStaff.json",
                     "name": "TeachingStaff"
-                },
-                {
-                    "name": "topInViewnptopInViewutElementbeforeUpdatee",
-                    "file": "topInViewnptopInViewutElementbeforeUpdatee.json"
-                }
-            ],
-            "version": "1"
-        },
-        {
-            "folder": "Agl-sentences",
-            "language": "",
-            "name": "Agl-sentences",
-            "units": [
-                {
-                    "file": "LargeUnit.json",
-                    "name": "LargeUnit"
-                }
-            ],
-            "version": "1"
-        },
-        {
-            "folder": "EMPTY-MODEL",
-            "language": "",
-            "name": "EMPTY-MODEL",
-            "units": [
-                {
-                    "file": "LargeUnit.json",
-                    "name": "LargeUnit"
-                },
-                {
-                    "file": "Simple2.json",
-                    "name": "Simple2"
                 }
             ],
             "version": "1"
@@ -102,7 +63,7 @@
         },
         {
             "folder": "EduOneFreonStorage",
-            "language": "",
+            "language": "Education",
             "name": "EduOneFreonStorage",
             "units": [
                 {
@@ -126,7 +87,7 @@
         },
         {
             "folder": "ExtTest1",
-            "language": "",
+            "language": "ExternalTester",
             "name": "ExtTest1",
             "units": [
                 {
@@ -150,7 +111,7 @@
         },
         {
             "folder": "ExtraModel",
-            "language": "",
+            "language": "Example",
             "name": "ExtraModel",
             "units": [
                 {
@@ -166,7 +127,7 @@
         },
         {
             "folder": "Insurance1",
-            "language": "",
+            "language": "Insurance",
             "name": "Insurance1",
             "units": [
                 {
@@ -214,7 +175,7 @@
         },
         {
             "folder": "Lesson1",
-            "language": "",
+            "language": "Education",
             "name": "Lesson1",
             "units": [
                 {
@@ -242,7 +203,7 @@
         },
         {
             "folder": "Lesson4",
-            "language": "",
+            "language": "Education",
             "name": "Lesson4",
             "units": [
                 {
@@ -274,7 +235,7 @@
         },
         {
             "folder": "Lesson6",
-            "language": "",
+            "language": "Education",
             "name": "Lesson6",
             "units": [
                 {
@@ -310,7 +271,7 @@
         },
         {
             "folder": "Meta",
-            "language": "",
+            "language": "LionCore-M3",
             "name": "Meta",
             "units": [
                 {
@@ -326,7 +287,7 @@
         },
         {
             "folder": "Model7",
-            "language": "",
+            "language": "Example",
             "name": "Model7",
             "units": [
                 {
@@ -342,7 +303,7 @@
         },
         {
             "folder": "Model8",
-            "language": "",
+            "language": "Example",
             "name": "Model8",
             "units": [
                 {
@@ -354,7 +315,7 @@
         },
         {
             "folder": "Model89",
-            "language": "",
+            "language": "Example",
             "name": "Model89",
             "units": [
                 {
@@ -366,7 +327,7 @@
         },
         {
             "folder": "Model9",
-            "language": "",
+            "language": "Example",
             "name": "Model9",
             "units": [
                 {
@@ -377,20 +338,8 @@
             "version": "1"
         },
         {
-            "folder": "NNNN",
-            "language": "",
-            "name": "NNNN",
-            "units": [
-                {
-                    "file": "t1.json",
-                    "name": "t1"
-                }
-            ],
-            "version": "1"
-        },
-        {
             "folder": "PPP",
-            "language": "",
+            "language": "RulesLanguage",
             "name": "PPP",
             "units": [
                 {
@@ -405,20 +354,8 @@
             "version": "1"
         },
         {
-            "folder": "QQ",
-            "language": "",
-            "name": "QQ",
-            "units": [
-                {
-                    "file": "QQt1.json",
-                    "name": "QQt1"
-                }
-            ],
-            "version": "1"
-        },
-        {
             "folder": "Rules1",
-            "language": "",
+            "language": "RulesLanguage",
             "name": "Rules1",
             "units": [
                 {
@@ -446,7 +383,7 @@
         },
         {
             "folder": "__TEST__",
-            "language": "",
+            "language": "__SERVERTEST__",
             "name": "__TEST__",
             "units": [
                 {
@@ -462,7 +399,7 @@
         },
         {
             "folder": "meta1",
-            "language": "",
+            "language": "LionCore-M3",
             "name": "meta1",
             "units": [
                 {
@@ -474,7 +411,7 @@
         },
         {
             "folder": "myFirstModel",
-            "language": "",
+            "language": "Example",
             "name": "myFirstModel",
             "units": [
                 {
@@ -489,32 +426,8 @@
             "version": "1"
         },
         {
-            "folder": "mySecondModel",
-            "language": "",
-            "name": "mySecondModel",
-            "units": [
-                {
-                    "file": "modelUnit2.json",
-                    "name": "modelUnit2"
-                }
-            ],
-            "version": "1"
-        },
-        {
-            "folder": "new",
-            "language": "",
-            "name": "new",
-            "units": [
-                {
-                    "file": "unit.json",
-                    "name": "unit"
-                }
-            ],
-            "version": "1"
-        },
-        {
             "folder": "ScoperTestStandalone",
-            "language": "",
+            "language": "ScoperTest",
             "name": "ScoperTestStandalone",
             "units": [
                 {
@@ -536,54 +449,6 @@
                 {
                     "file": "test5.json",
                     "name": "test5"
-                }
-            ],
-            "version": "1"
-        },
-        {
-            "folder": "sysmlv2",
-            "language": "",
-            "name": "sysmlv2",
-            "units": [
-                {
-                    "file": "Namespace1.json",
-                    "name": "Namespace1"
-                }
-            ],
-            "version": "1"
-        },
-        {
-            "folder": "test1",
-            "language": "",
-            "name": "test1",
-            "units": [
-                {
-                    "file": "unit-4.json",
-                    "name": "unit-4"
-                }
-            ],
-            "version": "1"
-        },
-        {
-            "folder": "tutorial1",
-            "language": "",
-            "name": "tutorial1",
-            "units": [
-                {
-                    "file": "qw.json",
-                    "name": "qw"
-                }
-            ],
-            "version": "1"
-        },
-        {
-            "folder": "xxx",
-            "language": "",
-            "name": "xxx",
-            "units": [
-                {
-                    "file": "LargeUnit.json",
-                    "name": "LargeUnit"
                 }
             ],
             "version": "1"

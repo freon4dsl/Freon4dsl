@@ -1,7 +1,7 @@
-import { LionWebJsonChunk, LionWebJsonNode } from "@lionweb/validation";
+import { LionWebJsonChunk, LionWebJsonNode } from "@lionweb/json";
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { DemoEntity, DemoFunction, DemoModel } from "../freon/language/index.js";
-import { FREON, FreLionwebSerializer, FreModelSerializer, CoreConfig } from "@freon4dsl/core"
+import { FREON, FreLionWebSerializer, FreModelSerializer, CoreConfig, FreLionWebDeserializer } from "@freon4dsl/core"
 import { JsonModelCreator } from "./JsonModelCreator.js";
 import { describe, it, test, expect, beforeEach } from "vitest";
 
@@ -20,8 +20,9 @@ serializers.forEach(serializer => {
 
         test("model-to-json, followed by json-to-model should result in same model for " + serializer, () => {
             expect(initialModel.name).not.toBeNull();
-            const serial = (serializer === "freon" ? new FreModelSerializer() : new FreLionwebSerializer());
-            const jsonOut = serial.convertToJSON(initialModel);
+            const serial = (serializer === "freon" ? new FreModelSerializer() : new FreLionWebSerializer());
+            const deserial = serializer === "freon" ? new FreModelSerializer() : new FreLionWebDeserializer()
+            const jsonOut = serial.serializeFreNode(initialModel);
             const chunk: LionWebJsonChunk = {
                 languages: [],
                 serializationFormatVersion: "2023.1",
@@ -30,7 +31,7 @@ serializers.forEach(serializer => {
             // console.log(JSON.stringify(jsonOut));
 
             FREON.astChanger.change(() => {
-                const typescript = (serializer === "freon" ? serial.toTypeScriptInstance(jsonOut) : serial.toTypeScriptInstance(chunk))
+                const typescript = serializer === "freon" ? deserial.deserializeFreNode(jsonOut) : deserial.deserializeFreNode(chunk)
                 // console.log("typescript  type: " + typescript["$typename"]);
 
                 const inModel = typescript as DemoModel;
@@ -56,13 +57,19 @@ serializers.forEach(serializer => {
                 // We don't store public json anymore in the LionWeb serializer, so no need to test
                 return
             }
-            const serial = (serializer === "freon" ? new FreModelSerializer() : new FreLionwebSerializer());
-            const jsonOut = serial.convertToJSON(initialModel, true);
+
+            let jsonOut: any = undefined
+            if (serializer === "freon") {
+                jsonOut = new FreModelSerializer().serializeFreNodePublicOnly(initialModel, true)
+            } else {
+                jsonOut = new FreLionWebSerializer().serializeFreNode(initialModel)
+            }
             // console.log(JSON.stringify(jsonOut));
 
             if (!!jsonOut) {
                 FREON.astChanger.change(() => {
-                    const typescript = serial.toTypeScriptInstance(jsonOut);
+                    const deserial = serializer === "freon" ? new FreModelSerializer() : new FreLionWebDeserializer()
+                    const typescript = deserial.deserializeFreNode(jsonOut)
                     // console.log("typescript  type: " + typescript["$typename"]);
 
                     const inModel = typescript as DemoModel;

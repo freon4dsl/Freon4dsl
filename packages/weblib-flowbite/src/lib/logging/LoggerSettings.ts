@@ -51,7 +51,7 @@ export function muteLogs() {
     FreLogger.mute("ListBox");
     FreLogger.mute("LayoutBox");
     FreLogger.mute("FreProjectionHandler");
-    FreLogger.mute("FreLionwebSerializer");
+    FreLogger.mute("FreLionWebSerializer");
 
     // from ~/webapp:
     FreLogger.mute("EditorCommunication");

@@ -17,7 +17,7 @@ import { FREON } from "../../environment/index.js"
 import { FreLanguage } from "../../language/index.js"
 import { FreLogger } from "../../logging/index.js"
 import { isNullOrUndefined } from "../../util/index.js"
-import { FreLionwebSerializer } from "../serializer/index.js"
+import { FreLionWebDeserializer } from "../serializer/index.js"
 import { ChunkUtil } from "./ChunkUtil.js"
 import { deltaList } from "./ProcessedDeltaList.js"
 
@@ -36,7 +36,7 @@ const ChildAddedFunction = (msg: ChildAddedEvent): void => {
         LOGGER.error(`Property '${langProperty.name}' is not a part/containment`)
         return
     }
-    const childNode: FreNode = FreLionwebSerializer.getInstance().toTypeScriptInstance(ChunkUtil.deltaChunkToChunk(msg.newChild), msg.parent)
+    const childNode: FreNode = FreLionWebDeserializer.getInstance().deserializeFreNode(ChunkUtil.deltaChunkToChunk(msg.newChild), msg.parent)
     LOGGER.log("NEW CHILD IS " + childNode?.freLanguageConcept())
 
     let originalNode: FreNode

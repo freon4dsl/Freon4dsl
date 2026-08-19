@@ -19,7 +19,7 @@ function addPartToModel(model: InsuranceModel, filepath: string) {
             unit1.name = filepath.split("/").pop().split(".").shift();
         })
     } catch (e) {
-        console.log(e.message + e.stack);
+        // console.log(e.message + e.stack);
         expect(e).toBeNull();
     }
 }
@@ -33,7 +33,7 @@ function addProductToModel(model: InsuranceModel, filepath: string) {
             unit1.name = filepath.split("/").pop().split(".").shift();
         })
     } catch (e) {
-        console.log(e.message + e.stack);
+        // console.log(e.message + e.stack);
         expect(e).toBeNull();
     }
 }
@@ -107,9 +107,10 @@ describe("Testing InsuranceModel", () => {
         // expect (names).not.toContain('hospitalization');
 
         const errors = validator.validate(model);
-        console.log("Errors found (" + errors.length + ")\n" + errors.map(e => e.message + ' in ['
-            + e.locationDescription + ']').join("\n"));
+        // console.log("Errors found (" + errors.length + ")\n" + errors.map(e => e.message + ' in ['
+        //     + e.locationDescription + ']').join("\n"));
             // + writer.writeToString((e.reportedOn as PiElement).piOwner()) + ']').join("\n"));
+        expect(errors.length).toBe(43)
     });
 
 });

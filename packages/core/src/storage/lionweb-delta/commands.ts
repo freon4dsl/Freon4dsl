@@ -14,6 +14,7 @@ import type {
     LionWebId,
     LionWebJsonProperty,
 } from "@lionweb/server-delta-shared"
+import { DeltaProtocolVersion, LanguageVersion } from "../utils"
 
 let queryId = 1
 // let commandId = 1
@@ -22,7 +23,7 @@ export const newSignOnRequest = (repo: string, clientId: string): SignOnRequest 
     return {
         messageKind: "SignOnRequest",
         repositoryId: repo,
-        deltaProtocolVersion: "2023.1",
+        deltaProtocolVersion: DeltaProtocolVersion,
         clientId: clientId,
         queryId: `query-id-${queryId++}`,
         additionalInfos: [],
@@ -56,7 +57,7 @@ export const newAddPropertyCommand = (nodeid: string, newValue: string, property
         property: {
             language: "LionCore-builtins",
             key: propertyKey,
-            version: "2023.1",
+            version: LanguageVersion,
         },
         additionalInfos: [],
     }
@@ -71,7 +72,7 @@ export const newChangePropertyCommand = (nodeid: string, newValue: string, prope
         property: {
             language: propertyLanguage,
             key: propertyKey,
-            version: "2023.1",
+            version: LanguageVersion,
         },
         additionalInfos: [],
     }
@@ -85,7 +86,7 @@ export const newDeletePropertyCommand = (nodeid: string, propertyKey: string): D
         property: {
             language: "LionCore-builtins",
             key: propertyKey,
-            version: "2023.1",
+            version: LanguageVersion,
         },
         additionalInfos: [],
     }
