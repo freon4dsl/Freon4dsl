@@ -57,9 +57,6 @@ type ParsedNode = {
 }
 
 export class FreLionWebDeserializer implements FreDeserializer {
-    private get language(): FreLanguage {
-        return FreLanguage.getInstance()
-    }
     private nodesFromJson: Map<string, ParsedNode> = new Map<string, ParsedNode>()
 
     private static theInstance: FreLionWebDeserializer | undefined
@@ -209,14 +206,14 @@ export class FreLionWebDeserializer implements FreDeserializer {
         }
 
         const conceptPointer: LionWebJsonMetaPointer = this.validateMetaPointer(classifierPointer, node)
-        const classifier: FreLanguageClassifier | undefined = this.language.classifierByKey(conceptPointer.key)
+        const classifier: FreLanguageClassifier | undefined = FreLanguage.getInstance().classifierByKey(conceptPointer.key)
 
         if (isNullOrUndefined(classifier)) {
             LOGGER.error(`Cannot deserialize LionWeb node ${node.id}: ` + `classifier key '${conceptPointer.key}' is unknown.`)
             return null
         }
 
-        const freNode: FreNode = this.language.createConceptOrUnit(classifier.typeName, node.id)
+        const freNode: FreNode = FreLanguage.getInstance().createConceptOrUnit(classifier.typeName, node.id)
 
         if (isNullOrUndefined(freNode)) {
             LOGGER.error(`Cannot create FreNode for classifier '${classifier.typeName}' ` + `and LionWeb node ${node.id}.`)
@@ -255,7 +252,7 @@ export class FreLionWebDeserializer implements FreDeserializer {
         for (const jsonProperty of jsonProperties) {
             const propertyMetaPointer: LionWebJsonMetaPointer = this.validateMetaPointer(jsonProperty.property, jsonObject)
 
-            const property: FreLanguageProperty | undefined = this.language.classifierPropertyByKey(classifierKey, propertyMetaPointer.key)
+            const property: FreLanguageProperty | undefined = FreLanguage.getInstance().classifierPropertyByKey(classifierKey, propertyMetaPointer.key)
 
             if (isNullOrUndefined(property)) {
                 if (propertyMetaPointer.key !== "qualifiedName") {
@@ -266,7 +263,7 @@ export class FreLionWebDeserializer implements FreDeserializer {
 
             FreUtils.CHECK(!property.isList, `LionWeb does not support list properties: ${property.name}`)
 
-            const propertyConcept: FreLanguageConcept | undefined = this.language.concept(property.type)
+            const propertyConcept: FreLanguageConcept | undefined = FreLanguage.getInstance().concept(property.type)
 
             // Limited concepts are represented as LionWeb enumeration properties.
             // Resolve the stored value later as a FreNodeReference.
@@ -309,7 +306,7 @@ export class FreLionWebDeserializer implements FreDeserializer {
             if (property.type === "string" || property.type === "identifier") {
                 freNode[property.name] = value
             } else if (property.type === "number") {
-                const numberValue = Number(value)
+                const numberValue = Number.parseInt(value)
 
                 if (Number.isNaN(numberValue)) {
                     LOGGER.error(`Number value for '${property.name}' has incorrect format ` + `'${value}'; initializing to 0.`)
@@ -380,7 +377,7 @@ export class FreLionWebDeserializer implements FreDeserializer {
         const parsedChildren: ParsedChild[] = []
         for (const jsonContainment of jsonContainments) {
             const containmentPointer: LionWebJsonMetaPointer = this.validateMetaPointer(jsonContainment.containment, jsonNode)
-            const property: FreLanguageProperty | undefined = this.language.classifierPropertyByKey(classifierKey, containmentPointer.key)
+            const property: FreLanguageProperty | undefined = FreLanguage.getInstance().classifierPropertyByKey(classifierKey, containmentPointer.key)
 
             if (isNullOrUndefined(property)) {
                 LOGGER.error(`Unknown containment '${containmentPointer.key}' ` + `for classifier '${classifierKey}'; containment ignored.`)
@@ -427,7 +424,7 @@ export class FreLionWebDeserializer implements FreDeserializer {
         for (const jsonReference of jsonReferences) {
             const referencePointer: LionWebJsonMetaPointer = this.validateMetaPointer(jsonReference.reference, jsonNode)
 
-            const property: FreLanguageProperty | undefined = this.language.classifierPropertyByKey(classifierKey, referencePointer.key)
+            const property: FreLanguageProperty | undefined = FreLanguage.getInstance().classifierPropertyByKey(classifierKey, referencePointer.key)
 
             if (isNullOrUndefined(property)) {
                 LOGGER.error(`Unknown reference '${referencePointer.key}' ` + `for classifier '${classifierKey}'; reference ignored.`)

@@ -12,12 +12,8 @@ import type { FreDeserializer, FreSerializer } from "./FreSerialization.js"
  * Depends on private keys etc. as defined in MobXModelElement decorators.
  */
 export class FreModelSerializer implements FreSerializer<object>, FreDeserializer {
-    private get language(): FreLanguage {
-        return FreLanguage.getInstance()
-    }
-
     constructor() {
-        // this.language = FreLanguage.getInstance();
+        // FreLanguage.getInstance() = FreLanguage.getInstance();
     }
 
     /**
@@ -47,11 +43,11 @@ export class FreModelSerializer implements FreSerializer<object>, FreDeserialize
         if (isNullOrUndefined(type)) {
             throw new Error(`Cannot read json: not a Freon structure, typename missing: ${JSON.stringify(jsonObject)}.`)
         }
-        const result: FreNode = this.language.createConceptOrUnit(type)
+        const result: FreNode = FreLanguage.getInstance().createConceptOrUnit(type)
         if (isNullOrUndefined(result)) {
             throw new Error(`Cannot read json: ${type} unknown.`)
         }
-        for (const property of this.language.allConceptProperties(type)) {
+        for (const property of FreLanguage.getInstance().allConceptProperties(type)) {
             const value = jsonObject[property.name]
             if (isNullOrUndefined(value)) {
                 continue
@@ -101,12 +97,12 @@ export class FreModelSerializer implements FreSerializer<object>, FreDeserialize
                 if (property.isList) {
                     for (const item in value) {
                         if (notNullOrUndefined(value[item])) {
-                            result[property.name].push(this.language.referenceCreator(value[item], property.type))
+                            result[property.name].push(FreLanguage.getInstance().referenceCreator(value[item], property.type))
                         }
                     }
                 } else {
                     if (notNullOrUndefined(value)) {
-                        result[property.name] = this.language.referenceCreator(value, property.type)
+                        result[property.name] = FreLanguage.getInstance().referenceCreator(value, property.type)
                     }
                 }
                 break
@@ -138,7 +134,7 @@ export class FreModelSerializer implements FreSerializer<object>, FreDeserialize
         let result: object
         if (publicOnly) {
             // convert all units and all public concepts
-            if (this.language.concept(typename)?.isPublic || !!this.language.unit(typename)) {
+            if (FreLanguage.getInstance().concept(typename)?.isPublic || !!FreLanguage.getInstance().unit(typename)) {
                 result = this.convertToJSONinternal(tsObject, true, typename)
             }
         } else {
@@ -151,7 +147,7 @@ export class FreModelSerializer implements FreSerializer<object>, FreDeserialize
     private convertToJSONinternal(tsObject: FreNode, publicOnly: boolean, typename: string): object {
         const result: object = { $typename: typename }
         // console.log("typename: " + typename);
-        for (const p of this.language.allConceptProperties(typename)) {
+        for (const p of FreLanguage.getInstance().allConceptProperties(typename)) {
             // console.log(">>>> start converting property " + p.name + " of type " + p.propertyKind);
             if (publicOnly) {
                 if (p.isPublic) {

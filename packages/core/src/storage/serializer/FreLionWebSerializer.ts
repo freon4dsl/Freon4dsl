@@ -8,7 +8,7 @@ import type {
 
 import type { FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreNodeReference } from "../../ast/index.js";
-import { FreLanguage, type FreLanguageClassifier, type FreLanguageConcept, type FreLanguageModelUnit } from "../../language/index.js"
+import { FreLanguage, type FreLanguageClassifier, type FreLanguageConcept } from "../../language/index.js"
 import type { FreLanguageProperty } from "../../language/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { FreUtils, isNullOrUndefined, notNullOrUndefined } from '../../util/index.js';
@@ -36,9 +36,6 @@ The serialization flow is:
 const LOGGER = new FreLogger("FreLionWebSerializer");
 
 export class FreLionWebSerializer implements FreSerializer<LionWebJsonNode[]> {
-    private get language(): FreLanguage {
-        return FreLanguage.getInstance()
-    }
 
     private static theInstance: FreLionWebSerializer | undefined
     static getInstance(): FreLionWebSerializer {
@@ -104,10 +101,9 @@ export class FreLionWebSerializer implements FreSerializer<LionWebJsonNode[]> {
 
         // Find metadata about the FreNode
         const classifierName: string = freNode.freLanguageConcept()
-        const concept: FreLanguageConcept | undefined = this.language.concept(classifierName)
-        const unit: FreLanguageModelUnit | undefined = this.language.unit(classifierName)
-        const classifier: FreLanguageClassifier | undefined = concept ?? unit
-
+        const concept: FreLanguageConcept | undefined = FreLanguage.getInstance().concept(classifierName)
+        const classifier: FreLanguageClassifier | undefined = concept ?? FreLanguage.getInstance().unit(classifierName) 
+        
         if (isNullOrUndefined(classifier)) {
             throw new Error(`Cannot serialize FreNode '${nodeId}': ` + `classifier '${classifierName}' is unknown.`)
         }
@@ -122,7 +118,7 @@ export class FreLionWebSerializer implements FreSerializer<LionWebJsonNode[]> {
         // recursively call this method.
         nodesById.set(nodeId, jsonNode)
 
-        for (const property of this.language.allConceptProperties(classifierName)) {
+        for (const property of FreLanguage.getInstance().allConceptProperties(classifierName)) {
             this.serializeProperty(property, freNode, jsonNode, nodesById)
         }
 
@@ -231,7 +227,7 @@ export class FreLionWebSerializer implements FreSerializer<LionWebJsonNode[]> {
      * @param jsonNode the LionWeb JSON node receiving the serialized value
      */
     private serializeReference(property: FreLanguageProperty, freNode: FreNode, jsonNode: LionWebJsonNode): void {
-        const propertyConcept: FreLanguageConcept | undefined = this.language.concept(property.type)
+        const propertyConcept: FreLanguageConcept | undefined = FreLanguage.getInstance().concept(property.type)
         const value = freNode[property.name]
 
         // LionWeb represents limited concepts as enumeration properties.
@@ -281,7 +277,7 @@ export class FreLionWebSerializer implements FreSerializer<LionWebJsonNode[]> {
         }
 
         jsonReference.targets.push({
-            resolveInfo: reference.name ?? "",
+            resolveInfo: reference.name ?? null,
             reference: referredId ?? null,
         })
     }
