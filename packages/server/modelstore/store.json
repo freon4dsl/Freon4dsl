@@ -87,7 +87,7 @@
         },
         {
             "folder": "ExtTest1",
-            "language": "ExternalTester",
+            "language": "ExternalModel",
             "name": "ExtTest1",
             "units": [
                 {
@@ -127,7 +127,7 @@
         },
         {
             "folder": "Insurance1",
-            "language": "Insurance",
+            "language": "InsuranceModel",
             "name": "Insurance1",
             "units": [
                 {
@@ -171,7 +171,7 @@
                     "name": "LegalAll"
                 }
             ],
-            "version": "1"
+            "version": "20"
         },
         {
             "folder": "Lesson1",
@@ -339,7 +339,7 @@
         },
         {
             "folder": "PPP",
-            "language": "RulesLanguage",
+            "language": "RulesModel",
             "name": "PPP",
             "units": [
                 {
@@ -355,7 +355,7 @@
         },
         {
             "folder": "Rules1",
-            "language": "RulesLanguage",
+            "language": "RulesModel",
             "name": "Rules1",
             "units": [
                 {
@@ -427,7 +427,7 @@
         },
         {
             "folder": "ScoperTestStandalone",
-            "language": "ScoperTest",
+            "language": "StarterModel",
             "name": "ScoperTestStandalone",
             "units": [
                 {
