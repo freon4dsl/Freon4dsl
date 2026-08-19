@@ -4,17 +4,14 @@
 		type DeltaAdminResponse,
 		type DeltaEvent,
 		type DeltaResponse,
-		type ListRepositoriesAdminRequest, type ListRepositoriesAdminResponse
+		type Custom_ListRepositoriesAdminRequest, type Custom_ListRepositoriesAdminResponse
 	} from "@lionweb/server-delta-shared"
 	import {
-		FooterLink,
-		FooterLinkGroup,
 		Drawer,
 		Footer,
 		CloseButton
 	} from "flowbite-svelte"
 	import { onMount } from 'svelte';
-	import { sineIn } from 'svelte/easing';
 	import { WebappConfigurator } from '$lib/language';
 	import NavBar from '$lib/main-app/NavBar.svelte';
 	import ModelPanel from '$lib/main-app/ModelPanel.svelte';
@@ -38,11 +35,6 @@
 	import TabContent from '$lib/main-app/TabContent.svelte';
 	import { editorInfo, infoPanelShown, serverInfo } from "$lib/stores"
 	import ErrorMessage from '$lib/dialogs/ErrorMessage.svelte';
-
-	let transitionParams = {
-		duration: 200,
-		easing: sineIn
-	};
 
 	function openTab(index: number) {
 		// console.log('opening tab: ', index);
@@ -76,19 +68,19 @@
 			initializing.value = false;
 		} else {
 			// use delta server
-			FREON.deltaClient.deltaApiClient.deltaProcessor.processingFunctions.set("ListRepositoriesAdminResponse", myfunc)
+			FREON.deltaClient.deltaApiClient.deltaProcessor.processingFunctions.set("Custom_ListRepositoriesAdminResponse", myfunc)
 			FREON.deltaClient.deltaApiClient.sendAdminRequest({
-				messageKind: "ListRepositoriesAdminRequest",
+				messageKind: "Custom_ListRepositoriesAdminRequest",
 				queryId: "dummy",
 				additionalInfos: []
-			} as ListRepositoriesAdminRequest)
+			} as Custom_ListRepositoriesAdminRequest)
 			
 		}
 	});
 	
 	const myfunc = (msg: DeltaEvent | DeltaResponse | DeltaAdminResponse):void => {
-		console.log(`Received repositories ${(msg as ListRepositoriesAdminResponse).repositories.map(r => JSON.stringify(r))}` )
-		serverInfo.allModelNames = (msg as ListRepositoriesAdminResponse).repositories.map(r =>r.name)
+		console.log(`Received repositories ${(msg as Custom_ListRepositoriesAdminResponse).repositories.map(r => JSON.stringify(r))}` )
+		serverInfo.allModelNames = (msg as Custom_ListRepositoriesAdminResponse).repositories.map(r =>r.name)
 		dialogs.startDialogVisible = true
 	}
 
@@ -194,14 +186,16 @@
 
 
 <!-- Normally hidden elements-->
-
+<!--
+    Workaround: "translate-x-0!", because Flowbite-Svelte 1.32.0 does not remove its
+    -translate-x-full class when this Drawer opens.
+-->
 <Drawer
 	tabindex={-1}
 	placement="left"
-	{transitionParams}
 	bind:open={drawerOpen.value}
 	id="sidebar1"
-	class="bg-light-base-50 dark:bg-dark-base-900"
+	class="translate-x-0! bg-light-base-50 dark:bg-dark-base-900"
 >
 	<ModelPanel />
 </Drawer>

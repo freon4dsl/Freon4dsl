@@ -1,17 +1,11 @@
-import type {
-    LionWebJsonChunk,
-    LionWebJsonContainment,
-    LionWebJsonMetaPointer,
-    LionWebJsonNode,
-    LionWebJsonReference,
-} from "@lionweb/json"
+import type { LionWebJsonChunk, LionWebJsonContainment, LionWebJsonMetaPointer, LionWebJsonNode, LionWebJsonReference } from "@lionweb/json"
 
-import type { FreNamedNode, FreNode } from "../../ast/index.js";
-import { FreNodeReference } from "../../ast/index.js";
+import type { FreNamedNode, FreNode } from "../../ast/index.js"
+import { FreNodeReference } from "../../ast/index.js"
 import { FreLanguage, type FreLanguageClassifier, type FreLanguageConcept } from "../../language/index.js"
-import type { FreLanguageProperty } from "../../language/index.js";
-import { FreLogger } from "../../logging/index.js";
-import { FreUtils, isNullOrUndefined, notNullOrUndefined } from '../../util/index.js';
+import type { FreLanguageProperty } from "../../language/index.js"
+import { FreLogger } from "../../logging/index.js"
+import { FreUtils, isNullOrUndefined, notNullOrUndefined } from "../../util/index.js"
 import type { FreSerializer } from "./FreSerialization.js"
 import { createLionWebJsonNode, LanguageVersion, SerializationFormatVersion, collectUsedLanguages } from "../utils/index.js"
 
@@ -33,10 +27,9 @@ The serialization flow is:
         serializePrimitive()
  */
 
-const LOGGER = new FreLogger("FreLionWebSerializer");
+const LOGGER = new FreLogger("FreLionWebSerializer")
 
 export class FreLionWebSerializer implements FreSerializer<LionWebJsonNode[]> {
-
     private static theInstance: FreLionWebSerializer | undefined
     static getInstance(): FreLionWebSerializer {
         if (FreLionWebSerializer.theInstance === undefined) {
@@ -102,8 +95,8 @@ export class FreLionWebSerializer implements FreSerializer<LionWebJsonNode[]> {
         // Find metadata about the FreNode
         const classifierName: string = freNode.freLanguageConcept()
         const concept: FreLanguageConcept | undefined = FreLanguage.getInstance().concept(classifierName)
-        const classifier: FreLanguageClassifier | undefined = concept ?? FreLanguage.getInstance().unit(classifierName) 
-        
+        const classifier: FreLanguageClassifier | undefined = concept ?? FreLanguage.getInstance().unit(classifierName)
+
         if (isNullOrUndefined(classifier)) {
             throw new Error(`Cannot serialize FreNode '${nodeId}': ` + `classifier '${classifierName}' is unknown.`)
         }
@@ -338,4 +331,3 @@ export class FreLionWebSerializer implements FreSerializer<LionWebJsonNode[]> {
         }
     }
 }
-

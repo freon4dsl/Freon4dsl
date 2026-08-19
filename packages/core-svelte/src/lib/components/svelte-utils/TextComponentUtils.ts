@@ -1,4 +1,5 @@
 import { BACKSPACE, DELETE, FreCaret, FreCaretPosition } from '@freon4dsl/core';
+import { flushSync } from 'svelte';
 
 /**
  * Converts camelCase text to readable text by adding spaces before capital letters
@@ -176,7 +177,6 @@ export function resetCaretPosition(freCaret: FreCaret, currentValue: string): Te
     }
     return caretPos;
 }
-import { flushSync } from 'svelte';
 
 export type TextInputClipboardContext = {
     inputElement: HTMLInputElement | HTMLTextAreaElement | undefined;

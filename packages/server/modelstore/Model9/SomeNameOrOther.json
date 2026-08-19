@@ -196,7 +196,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "reference": "LIMITED-PrimitiveType-ID-0"
                   }
                ]
             }
@@ -232,7 +232,7 @@
                "targets": [
                   {
                      "resolveInfo": "Boolean",
-                     "reference": "ID-3"
+                     "reference": "LIMITED-PrimitiveType-ID-2"
                   }
                ]
             }
@@ -267,8 +267,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "resolveInfo": "Boolean",
+                     "reference": "LIMITED-PrimitiveType-ID-2"
                   }
                ]
             }
@@ -323,7 +323,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "LIMITED-PrimitiveType-ID-1"
                   }
                ]
             }
@@ -640,7 +640,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "LIMITED-PrimitiveType-ID-1"
                   }
                ]
             }
@@ -888,7 +888,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "LIMITED-PrimitiveType-ID-1"
                   }
                ]
             }
@@ -1083,7 +1083,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "reference": "LIMITED-PrimitiveType-ID-0"
                   }
                ]
             }
@@ -1216,7 +1216,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "reference": "LIMITED-PrimitiveType-ID-0"
                   }
                ]
             }
@@ -1252,7 +1252,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "LIMITED-PrimitiveType-ID-1"
                   }
                ]
             }
@@ -1307,7 +1307,7 @@
                "targets": [
                   {
                      "resolveInfo": "Boolean",
-                     "reference": "ID-3"
+                     "reference": "LIMITED-PrimitiveType-ID-2"
                   }
                ]
             }
@@ -1464,7 +1464,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "LIMITED-PrimitiveType-ID-1"
                   }
                ]
             }
