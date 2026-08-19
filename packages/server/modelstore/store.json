@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 63,
+    "currentPostfix": 65,
     "models": [
         {
             "folder": "AdultEducation1",
@@ -377,6 +377,22 @@
                 {
                     "file": "r2.json",
                     "name": "r2"
+                }
+            ],
+            "version": "1"
+        },
+        {
+            "folder": "__TEST__",
+            "language": "__SERVERTEST__",
+            "name": "__TEST__",
+            "units": [
+                {
+                    "file": "hg.json",
+                    "name": "hg"
+                },
+                {
+                    "file": "xng.json",
+                    "name": "xng"
                 }
             ],
             "version": "1"
