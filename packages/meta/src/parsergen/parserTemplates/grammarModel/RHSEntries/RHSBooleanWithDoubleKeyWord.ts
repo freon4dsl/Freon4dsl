@@ -1,6 +1,6 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import type { FreMetaPrimitiveProperty } from "../../../../languagedef/metalanguage/index.js";
-import { makeIndent } from "../GrammarUtils.js";
+import { getAssignmentName, makeIndent } from "../GrammarUtils.js"
 import { ParserGenUtil } from "../../ParserGenUtil.js";
 
 export class RHSBooleanWithDoubleKeyWord extends RHSPropEntry {
@@ -15,7 +15,11 @@ export class RHSBooleanWithDoubleKeyWord extends RHSPropEntry {
     }
 
     toGrammar(): string {
-        return `( '${this.trueKeyword}' | '${this.falseKeyword}' )` + this.doNewline();
+        return `( '${this.trueKeyword}' | '${this.falseKeyword}' )` + this.doNewline()
+    }
+
+    toLangiumGrammar(): string {
+        return `( ${getAssignmentName(this.property)}?='${this.trueKeyword}' | '${this.falseKeyword}' )` + this.doNewline()
     }
 
     toMethod(index: number, nodeName: string): string {

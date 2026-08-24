@@ -1,35 +1,38 @@
 import { GrammarRule } from "./GrammarRule.js";
-import type { FreMetaClassifier, FreMetaExpressionConcept } from "../../../languagedef/metalanguage/index.js";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept } from "../../../languagedef/metalanguage/index.js"
 import { Names } from "../../../utils/on-lang/index.js";
 import { getTypeCall } from "./GrammarUtils.js";
 
-export class BinaryExpressionRule extends GrammarRule {
-    expressionBase: FreMetaExpressionConcept;
-    private readonly symbolToConcept: Map<FreMetaClassifier, string> = new Map<FreMetaClassifier, string>();
+export const primaryExpressionName: string = "PrimaryExpression"
+export const binaryExpressionName: string = "BinaryExpression"
 
-    constructor(
-        ruleName: string,
-        expressionBase: FreMetaExpressionConcept,
-        symbolToConcept: Map<FreMetaClassifier, string>,
-    ) {
-        super();
-        this.ruleName = ruleName;
-        this.expressionBase = expressionBase;
-        this.symbolToConcept = symbolToConcept;
+export class BinaryExpressionRule extends GrammarRule {
+    expressionBase: FreMetaExpressionConcept
+    private readonly symbolToConcept: Map<FreMetaClassifier, string> = new Map<FreMetaClassifier, string>()
+
+    constructor(ruleName: string, expressionBase: FreMetaExpressionConcept, symbolToConcept: Map<FreMetaClassifier, string>) {
+        super()
+        this.ruleName = ruleName
+        this.expressionBase = expressionBase
+        this.symbolToConcept = symbolToConcept
     }
 
     toGrammar(): string {
-        return `${this.rule1()}\n${this.rule2()}`;
+        return `${this.rule1()}\n${this.rule2()}`
+    }
+
+    toLangiumGrammar(): string {
+        return `${this.expressionBase.name} : ${binaryExpressionName} ;\n\n${this.langiumInfixRule()}`
     }
 
     toMethod(mainAnalyserName: string): string {
-        const cases: string[] = [];
+        const cases: string[] = []
         for (const [key, value] of this.symbolToConcept) {
             cases.push(`
                 case '${value}': {
                     combined = ${Names.classifier(key)}.create({left: first, right: second, parseLocation: this.${mainAnalyserName}.location(sentence, nodeInfo.node)});
                     break;
-                }`);
+                }`)
         }
         return `
         /**
@@ -61,30 +64,57 @@ export class BinaryExpressionRule extends GrammarRule {
                 first = combined;
             }
             return first;
-        }`;
+        }`
     }
 
     private rule1(): string {
-        return `${this.ruleName} = [${getTypeCall(this.expressionBase)} / __fre_binary_operator]2+ ;`;
+        return `${this.ruleName} = [${getTypeCall(this.expressionBase)} / __fre_binary_operator]2+ ;`
     }
 
     private rule2(): string {
-        let cases: string[] = [];
+        let cases: string[] = []
         for (const value of this.symbolToConcept.values()) {
-            cases.push(`'${value}'`);
+            cases.push(`'${value}'`)
         }
         // We need to sort the operands, because longer operands may start with a shorter one.
         // The longer ones must be given precedence by putting them first in the parse rule.
         // E.g. "==>" needs to come before "==".
-        cases = this.sortOnLength(cases);
-        return `leaf __fre_binary_operator = ${cases.map((c) => `${c}`).join(" | ")} ;`;
+        cases = this.sortOnLength(cases)
+        return `leaf __fre_binary_operator = ${cases.map((c) => `${c}`).join(" | ")} ;`
+    }
+
+    private langiumInfixRule(): string {
+        const operands = [...this.symbolToConcept.entries()]
+            .filter((entry): entry is [FreMetaBinaryExpressionConcept, string] => entry[0] instanceof FreMetaBinaryExpressionConcept)
+            .sort(([conceptA, symbolA], [conceptB, symbolB]) => {
+                const priorityDifference = conceptB.priority - conceptA.priority
+                if (priorityDifference !== 0) {
+                    return priorityDifference
+                }
+
+                return symbolB.length - symbolA.length
+            })
+
+        const priorityGroups = new Map<number, string[]>()
+
+        for (const [concept, symbol] of operands) {
+            const group = priorityGroups.get(concept.priority) ?? []
+            group.push(`'${symbol}'`)
+            priorityGroups.set(concept.priority, group)
+        }
+
+        const cases = [...priorityGroups.values()].map((group) => group.join(" | ")).join("\n    > ")
+
+        return `infix ${binaryExpressionName} on ${primaryExpressionName}:
+    ${cases}
+;`
     }
 
     private sortOnLength(cases: string[]) {
-        let result: string[];
+        let result: string[]
         result = cases.sort((a, b): number => {
-            return a.length > b.length ? -1 : a.length === b.length ? 0 : 1;
-        });
-        return result;
+            return a.length > b.length ? -1 : a.length === b.length ? 0 : 1
+        })
+        return result
     }
 }

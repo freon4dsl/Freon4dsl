@@ -11,7 +11,7 @@ import { BinaryExpressionRule } from "./grammarModel/index.js";
 export class BinaryExpMaker {
     private static specialBinaryRuleName = `__fre_binary_`;
     public static getBinaryRuleName(expBase: FreMetaExpressionConcept) {
-        return BinaryExpMaker.specialBinaryRuleName + expBase.name;
+        return BinaryExpMaker.specialBinaryRuleName + expBase.name + "Rule";
     }
 
     imports: FreMetaClassifier[] = [];

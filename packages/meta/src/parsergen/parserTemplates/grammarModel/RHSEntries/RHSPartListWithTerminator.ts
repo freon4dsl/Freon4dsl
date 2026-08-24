@@ -2,7 +2,7 @@ import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import type { RHSPropEntry } from "./RHSPropEntry.js";
 import type { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { ParserGenUtil } from "../../ParserGenUtil.js";
-import { makeIndent } from "../GrammarUtils.js";
+import { getAssignmentName, makeIndent } from "../GrammarUtils.js"
 
 export class RHSPartListWithTerminator extends RHSPropPartWithSeparator {
     // (propTypeName 'joinText' )*
@@ -18,6 +18,10 @@ export class RHSPartListWithTerminator extends RHSPropPartWithSeparator {
 
     toGrammar(): string {
         return `( ${this.entry.toGrammar()} '${this.separatorText}' )*` + this.doNewline();
+    }
+
+    toLangiumGrammar(): string {
+        return `( ${getAssignmentName(this.property)}=${this.entry.toLangiumGrammar()} '${this.separatorText}' )*` + this.doNewline()
     }
 
     toMethod(index: number, nodeName: string): string {

@@ -1,8 +1,9 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import type { RightHandSideEntry } from "./RightHandSideEntry.js";
 import type { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
-import { makeIndent } from "../GrammarUtils.js";
+import { getAssignmentName, makeIndent } from "../GrammarUtils.js";
 import { RHSBooleanWithSingleKeyWord } from "./RHSBooleanWithSingleKeyWord.js";
+import { RHSBooleanWithDoubleKeyWord } from "./RHSBooleanWithDoubleKeyWord.js"
 
 export class RHSOptionalGroup extends RHSPropEntry {
     private readonly subs: RightHandSideEntry[] = [];
@@ -27,6 +28,26 @@ export class RHSOptionalGroup extends RHSPropEntry {
                 return `${first.toGrammar()}` + this.doNewline(); // no need for the extra '?'
             } else {
                 return `${first.toGrammar()}?` + this.doNewline();
+            }
+        }
+        return "";
+    }
+
+    toLangiumGrammar(): string {
+        if (this.subs.length > 1) {
+            // no need for newline between subs and closing ')?'
+            return `( ${this.subs
+                .map((sub) => `${sub.toLangiumGrammar()}`)
+                .join(" ")
+                .trimEnd()} )?\n\t`
+        } else if (this.subs.length === 1) {
+            const first = this.subs[0];
+            if (first.isList || first instanceof RHSBooleanWithSingleKeyWord) {
+                return `${getAssignmentName(this.property)}=${first.toLangiumGrammar()}` + this.doNewline() // no need for the extra '?'
+            } else if (first instanceof RHSBooleanWithDoubleKeyWord) {
+                return `${first.toLangiumGrammar()}` + this.doNewline();
+            } else {
+                return `${getAssignmentName(this.property)}=${first.toLangiumGrammar()}?` + this.doNewline()
             }
         }
         return "";

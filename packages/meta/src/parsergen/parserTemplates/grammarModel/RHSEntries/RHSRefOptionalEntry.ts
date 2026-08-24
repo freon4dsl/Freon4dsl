@@ -1,6 +1,6 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import type { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
-import { makeIndent, refRuleName } from "../GrammarUtils.js";
+import { getAssignmentName, langiumRefRuleName, makeIndent, refRuleName } from "../GrammarUtils.js"
 import { internalTransformTempRef, ParserGenUtil } from '../../ParserGenUtil.js';
 import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
 
@@ -12,6 +12,10 @@ export class RHSRefOptionalEntry extends RHSPropEntry {
 
     toGrammar(): string {
         return `${refRuleName}?` + this.doNewline();
+    }
+
+    toLangiumGrammar(): string {
+        return `${getAssignmentName(this.property)}=[${this.property.type.name}:${langiumRefRuleName}]?` + this.doNewline()
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

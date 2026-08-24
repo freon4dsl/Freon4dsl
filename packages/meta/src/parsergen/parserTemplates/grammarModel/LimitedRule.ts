@@ -11,7 +11,7 @@ export class LimitedRule extends GrammarRule {
 
     constructor(limitedConcept: FreMetaLimitedConcept, myMap: Map<string, string>) {
         super();
-        this.ruleName = Names.classifier(limitedConcept);
+        this.ruleName = Names.classifier(limitedConcept) + "Rule";
         this.concept = limitedConcept;
         this.myMap = myMap;
     }
@@ -36,6 +36,29 @@ export class LimitedRule extends GrammarRule {
         } else {
             // make a 'normal' reference rule
             result = `${this.ruleName} = identifier`;
+        }
+        return result + " ;";
+    }
+
+    toLangiumGrammar(): string {
+        let result: string;
+        if (!!this.myMap && this.myMap.size > 0) {
+            // found a limited concept with a special projection
+            result = `${this.ruleName} : `;
+            let first = true;
+            const mapKeys: IterableIterator<string> = this.myMap.values();
+            for (const value of mapKeys) {
+                // prefix the second and all other choices with the '|' symbol
+                if (first) {
+                    first = false;
+                } else {
+                    result += "\n\t| ";
+                }
+                result += `'${value}'`;
+            }
+        } else {
+            // make a 'normal' reference rule
+            result = `${this.ruleName} : identifier`;
         }
         return result + " ;";
     }

@@ -11,6 +11,7 @@ import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser.js";
 import type { GrammarModel } from './parserTemplates/grammarModel/index.js';
 import { MetaLogger } from '../utils/no-dependencies/index.js';
 import { FileUtil, GenerationStatus } from '../utils/file-utils/index.js';
+import { LangiumGrammarGenerator } from "./parserTemplates/LangiumGrammarGenerator.js"
 
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
@@ -42,7 +43,8 @@ export class ReaderWriterGenerator {
 
         const unparserTemplate = new WriterTemplate();
         const readerTemplate = new ReaderTemplate();
-        const grammarGenerator = new GrammarGenerator();
+        const grammarGenerator = new GrammarGenerator()
+        const langiumGenerator = new LangiumGrammarGenerator();
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.outputfolder + "/" + this.customsfolder); // will not be overwritten
@@ -71,6 +73,7 @@ export class ReaderWriterGenerator {
 
         // Create in memory all grammar rules and syntax analysis methods
         const grammarModel: GrammarModel | undefined = grammarGenerator.createGrammar(this.language, analyser, editDef);
+        const langiumModel: GrammarModel | undefined = langiumGenerator.createGrammar(this.language, analyser, editDef)
         if (!grammarModel) {
             return;
         }
@@ -84,6 +87,13 @@ export class ReaderWriterGenerator {
         generatedFilePath = `${this.readerFolder}/${Names.grammar(this.language)}.ts`;
         indexContent += `export * from "./${Names.grammar(this.language)}.js";\n`;
         this.makeFile(`AGL grammar`, generatedFilePath, generatedContent, generationStatus);
+
+        // Write the langium grammar to file
+        generatedContent = langiumModel? langiumModel.toLangiumGrammar() : "No langium Model generated"
+        generatedFilePath = `${this.readerFolder}/${Names.grammar(this.language)}.langium`;
+        // indexContent += `export * from "./${Names.grammar(this.language)}.js";\n`;
+        // this.makeFile(`Langium grammar`, generatedFilePath, generatedContent, generationStatus);
+        fs.writeFileSync(`${generatedFilePath}`, generatedContent)
 
         // Write the main syntax analyser to file
         generatedFilePath = `${this.readerFolder}/${Names.syntaxAnalyser(this.language)}.ts`;

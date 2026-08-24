@@ -1,6 +1,14 @@
-import type { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import {
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaInterface,
+    FreMetaLanguage,
+    FreMetaLimitedConcept,
+    FreMetaProperty,
+    FreMetaUnitDescription,
+} from "../../../languagedef/metalanguage/index.js"
 import { Imports, Names } from "../../../utils/on-lang/index.js"
-import { refRuleName } from "./GrammarUtils.js";
+import { langiumRefRuleName, refRuleName } from "./GrammarUtils.js"
 import type { GrammarPart } from "./GrammarPart.js";
 import {
     internalTransformLimitedList,
@@ -9,22 +17,22 @@ import {
     internalTransformPrimValue,
     internalTransformRefList, internalTransformTempRef
 } from '../ParserGenUtil.js';
+import { notNullOrUndefined } from "../../../utils/file-utils/index.js"
 
 const tempReferenceClassName: string = "ParsedNodeReference";
 
 export class GrammarModel {
-
-    
     constructor(language: FreMetaLanguage) {
-        this.language = language;
+        this.language = language
     }
 
     // these four properties are set by the GrammarGenerator
-    public language: FreMetaLanguage;
-    public parts: GrammarPart[] = [];
-    public trueValue: string = "true";
-    public falseValue: string = "false";
-    public refSeparator: string = "."; // default reference separator
+    public language: FreMetaLanguage
+    public parts: GrammarPart[] = []
+    public trueValue: string = "true"
+    public falseValue: string = "false"
+    public langiumDeclarations: FreMetaClassifier[] = []
+    public refSeparator: string = "." // default reference separator
 
     toGrammar(): string {
         // there is no prettier for the grammar string, therefore we take indentation and
@@ -38,7 +46,7 @@ export const ${Names.grammarStr(this.language)} = \`
 namespace ${Names.language(this.language)}
 grammar ${Names.grammar(this.language)} {
 
-${this.grammarContent()}
+${this.grammarContent(false)}
 
 ${refRuleName} = [ identifier / '${this.refSeparator}' ]+ ;
 
@@ -57,33 +65,80 @@ leaf numberLiteral     = "[0-9]+";
 leaf optBooleanLiteral = "<no-value>" | booleanLiteral;
 leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
 
-}\`; // end of grammar`;
+}\`; // end of grammar`
     }
 
-    private grammarContent(): string {
-        let result: string = "";
+    toLangiumGrammar(): string {
+        console.log(`MODEL 111 list of referred classifiers: ${this.langiumDeclarations.map((clas) => clas.name)}`)
+
+        // there is no prettier for the grammar string, therefore we take indentation and
+        // other layout matters into account in this template
+        // unfortunately, this makes things a little less legible :-(
+        return `// This file contains the input to the LANGIUM LSP generator
+// (see https://langium.org/docs/introduction/).
+
+grammar ${Names.grammar(this.language)} 
+
+${this.grammarContent(true)}
+
+${langiumRefRuleName} returns string:
+    IDENTIFIER ('${this.refSeparator}' IDENTIFIER)* ;
+
+// white space and comments
+hidden terminal WS: /\\s+/;
+hidden terminal SL_COMMENT: /\\/\\/[^\\n\\r]*/;
+hidden terminal ML_COMMENT: /\\/\\*[\\s\\S]*?\\*\\//;
+
+// the predefined basic types
+terminal IDENTIFIER returns string:
+    /\\\`[a-zA-Z0-9\\-_~!@#$%^&*()+={\\[}\\]|\\\:;\\"'<>,.?/][a-zA-Z0-9-_~!@#$%^&*()\\\\+={\\[}\\]|\\\:;\\"'<>,.?/ ]*\\\`/ ;
+terminal STRING_LITERAL returns string:
+    /"[^\\"\\\\]*(\\\\.[^\\"\\\\]*)*"/ ;
+terminal NUMBER_LITERAL returns number:
+    /[0-9]+/ ;
+BooleanLiteral returns boolean:
+    '${this.falseValue}' | '${this.trueValue}' ;
+OptStringLiteral returns string:
+    '<no-value>' | STRING_LITERAL ;
+OptNumberLiteral returns number:
+    '<no-value>' | NUMBER_LITERAL ;
+OptBooleanLiteral returns boolean:
+    '<no-value>' | BooleanLiteral ;
+// end of grammar
+
+// the langium declared interfaces    
+${this.makeLangiumDeclarations()}    
+`
+    }
+
+    private grammarContent(langium: boolean): string {
+        let result: string = ""
         this.parts.forEach((part) => {
             if (!!part.unit) {
-                result += `// rules for "${part.unit.name}"\n`;
+                result += `// rules for "${part.unit.name}"\n${langium ? "entry " : ""}`
             } else {
-                result += `// common rules\n`;
+                result += `// common rules\n`
             }
             part.rules.map((rule) => {
-                result += rule.toGrammar() + "\n\n";
-            });
-        });
-        return result.trimEnd();
+                if (langium) {
+                    result += rule.toLangiumGrammar() + "\n\n"
+                } else {
+                    result += rule.toGrammar() + "\n\n"
+                }
+            })
+        })
+        return result.trimEnd()
     }
 
     toMethod(language: FreMetaLanguage, relativePath: string): string {
-        const className: string = Names.syntaxAnalyser(this.language);
-        let handlerRegistration: string = "";
+        const className: string = Names.syntaxAnalyser(this.language)
+        let handlerRegistration: string = ""
         this.parts.forEach((part) =>
             part.rules.map((rule) => {
-                const name: string = rule.ruleName;
-                handlerRegistration += `super.registerFor('${name}', (n: SpptDataNodeInfo, c: KtList<object>, s: Sentence) => this.${this.getPartAnalyserName(part)}.transform${name}(n, c, s));`;
+                const name: string = rule.ruleName
+                handlerRegistration += `super.registerFor('${name}', (n: SpptDataNodeInfo, c: KtList<object>, s: Sentence) => this.${this.getPartAnalyserName(part)}.transform${name}(n, c, s));`
             }),
-        );
+        )
 
         handlerRegistration += `super.registerFor('${refRuleName}', (n: SpptDataNodeInfo, c: KtList<object>, s: Sentence) => this.transform${refRuleName}(n, c, s));`
 
@@ -309,15 +364,79 @@ leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
                     column: location.column,
                 });
             }
-        }`;
+        }`
         // end Template
     }
 
     private getPartAnalyserName(part: GrammarPart) {
         if (!!part.unit) {
-            return `_unit_${part.unit.name}_analyser`;
+            return `_unit_${part.unit.name}_analyser`
         } else {
-            return `_unit_common_analyser`;
+            return `_unit_common_analyser`
         }
+    }
+    private makeLangiumDeclarations(): string {
+        let result: string = ""
+        let done: FreMetaClassifier[] = [];
+        for (const xx of this.language.classifiers()) {
+            if (!done.includes(xx)) {
+                console.log(`Creating langium decl for ${xx.name}`)
+                if (xx instanceof FreMetaInterface) {
+                    let extendsClause: string = '';
+                    if (xx.base.length > 0) {
+                        extendsClause = "extends " + xx.base.map(base => base.name).join(", ")
+                    }
+                    result += `interface ${xx.name} ${extendsClause} {   
+    ${this.makeLangiumProperties(xx)}
+}\n`
+                    done.push(xx)
+                } else if (xx instanceof FreMetaConcept) {
+                    let extendsClause: string = ""
+                    if (notNullOrUndefined(xx.base)) {
+                        extendsClause = "extends " + xx.base.name + " "
+                    }
+                    if (xx.interfaces.length > 0) {
+                        if (extendsClause.length === 0) {
+                            extendsClause += "extends " + xx.interfaces.map((base) => base.name).join(", ") + " "
+                        } else {
+                            extendsClause += ", " + xx.interfaces.map((base) => base.name).join(", ") + " "
+                        }
+                    }
+                    result += `interface ${xx.name} ${extendsClause}{
+    ${this.makeLangiumProperties(xx)}
+}\n`
+                } else if (xx instanceof FreMetaUnitDescription) {
+                    let extendsClause: string = ""
+                    if (xx.interfaces.length > 0) {
+                        extendsClause = "extends " + xx.interfaces.map((base) => base.name).join(", ")
+                    }
+                    result += `interface ${xx.name} ${extendsClause} {
+    ${this.makeLangiumProperties(xx)}
+}\n`
+                } else { // classifier is a model
+                    result += `interface ${xx.name} {
+    ${this.makeLangiumProperties(xx)}
+}\n`
+                }
+            }
+        }
+        return result
+    }
+
+    private makeLangiumProperties(clas: FreMetaClassifier): string {
+        const ownProps: FreMetaProperty[] = clas.primProperties;
+        ownProps.push(...clas.properties);
+        return ownProps.map(
+                (prop) => this.makeLangiumPropDecl(prop))
+            .join("\n\t")
+    }
+
+    private makeLangiumPropDecl(prop: FreMetaProperty) : string {
+        if (prop.type instanceof FreMetaLimitedConcept) {
+            return `${prop.name}${prop.isOptional ? `?` : ``} : ${prop.type.name === "identifier" ? `string` : prop.type.name}${prop.isList ? `[]` : ``}`
+        } else {
+            return `${prop.name}${prop.isOptional ? `?` : ``} : ${!prop.isPart ? `@` : ``}${prop.type.name === "identifier" ? `string` : prop.type.name}${prop.isList ? `[]` : ``}`
+        }
+
     }
 }

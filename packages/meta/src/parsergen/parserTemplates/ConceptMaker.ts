@@ -303,13 +303,13 @@ export class ConceptMaker {
             splitted = trimmed.split(" ");
             splitted.forEach((str) => {
                 if (str.length > 0) {
-                    result.push(new RHSText(`\'${this.addExtraEscape(str)}\'`));
+                    result.push(new RHSText(this.addExtraEscape(str)));
                 }
             });
             return result;
         } else {
             if (trimmed.length > 0) {
-                result.push(new RHSText(`\'${this.addExtraEscape(trimmed)}\'`));
+                result.push(new RHSText(this.addExtraEscape(trimmed)));
             }
         }
         return result;

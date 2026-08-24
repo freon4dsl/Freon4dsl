@@ -1,7 +1,7 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import type {FreMetaPrimitiveProperty} from "../../../../languagedef/metalanguage/index.js";
-import { FreMetaPrimitiveType} from "../../../../languagedef/metalanguage/index.js";
-import { getPrimCall, makeIndent } from "../GrammarUtils.js";
+import { FreMetaPrimitiveType } from "../../../../languagedef/metalanguage/index.js"
+import { getAssignmentName, getLangiumPrimCall, getPrimCall, makeIndent } from "../GrammarUtils.js"
 import {internalTransformPrimValue, ParserGenUtil} from "../../ParserGenUtil.js";
 
 export class RHSPrimEntry extends RHSPropEntry {
@@ -12,6 +12,10 @@ export class RHSPrimEntry extends RHSPropEntry {
 
     toGrammar(): string {
         return `${getPrimCall(this.property.type)}` + this.doNewline();
+    }
+
+    toLangiumGrammar(): string {
+        return `${getAssignmentName(this.property)}=${getLangiumPrimCall(this.property.type)}` + this.doNewline()
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

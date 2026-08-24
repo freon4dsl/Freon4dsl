@@ -1,9 +1,10 @@
 {
-    "name": "@freon4dsl/samples-example",
+    "name": "@freon4dsl/samples-lioncore",
     "version": "3.0.0-beta.1",
     "license": "MIT",
     "type": "module",
     "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "scripts": {
         "clean": "rm -rf node_modules/",
         "build": "npm run generate && tsc",
@@ -12,14 +13,13 @@
         "install-local": "npm install --registry http://localhost:4873",
         "generate": "bash ../../../scripts/freon-samples-dev.sh -v all",
         "check-imports": "bash ../../../scripts/check-import-extensions.sh",
-        "copy": "cp src/lionweb/Example.json ../LionCore/src/__inputs__/Example.json && cp src/lionweb/Example.json ../../server/modelstore/lionweb_example",
-        "langium:generate": "langium generate"
+        "test": "vitest run"
     },
     "devDependencies": {
-        "@freon4dsl/meta": "~3.0.0-beta.1"
+        "@freon4dsl/meta": "~3.0.0-beta.1",
+        "vitest": "4.1.4"
     },
     "dependencies": {
-        "langium": "^4.3.1",
         "@freon4dsl/core": "~3.0.0-beta.1",
         "@types/node": "^25.6.2",
         "kotlin": "^1.5.21",

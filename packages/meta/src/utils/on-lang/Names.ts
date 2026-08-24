@@ -276,6 +276,10 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Grammar"
     }
 
+    static langiumGrammar(language: FreMetaLanguage): string {
+        return this.startWithUpperCase(language?.name) + "LangiumGrammar"
+    }
+
     static grammarStr(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "GrammarStr"
     }

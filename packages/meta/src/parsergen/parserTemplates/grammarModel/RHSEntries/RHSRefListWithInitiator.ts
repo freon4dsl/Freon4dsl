@@ -2,7 +2,7 @@ import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import type { RHSPropEntry } from "./RHSPropEntry.js";
 import type { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import {internalTransformRefList, ParserGenUtil} from "../../ParserGenUtil.js";
-import { makeIndent } from "../GrammarUtils.js";
+import { getAssignmentName, makeIndent } from "../GrammarUtils.js"
 import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
 
 
@@ -18,6 +18,10 @@ export class RHSRefListWithInitiator extends RHSPropPartWithSeparator {
 
     toGrammar(): string {
         return `( '${this.separatorText}' ${this.entry.toGrammar()} )*` + this.doNewline();
+    }
+
+    toLangiumGrammar(): string {
+        return `( '${this.separatorText}' ${getAssignmentName(this.property)}=${this.entry.toLangiumGrammar()} )*` + this.doNewline()
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

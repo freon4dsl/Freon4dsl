@@ -7,28 +7,29 @@ import { RHSPropEntry } from "./RHSEntries/index.js";
 import { GenerationUtil } from '../../../utils/on-lang/GenerationUtil.js';
 
 export class ConceptRule extends GrammarRule {
-    concept: FreMetaClassifier | undefined = undefined;
-    ruleParts: RightHandSideEntry[] = [];
+    concept: FreMetaClassifier | undefined = undefined
+    ruleParts: RightHandSideEntry[] = []
 
     constructor(concept: FreMetaClassifier, projectionName?: string) {
-        super();
-        this.concept = concept;
-        this.ruleName = Names.classifier(this.concept);
+        super()
+        this.concept = concept
+        this.ruleName = Names.classifier(this.concept)
         if (!!projectionName && projectionName.length > 0) {
-            this.ruleName += "_" + projectionName;
+            this.ruleName += "_" + projectionName
         }
+        this.ruleName += "Rule";
     }
 
     private propsToSet(): FreMetaProperty[] {
-        const xx: FreMetaProperty[] = [];
+        const xx: FreMetaProperty[] = []
         for (const part of this.ruleParts) {
             if (part instanceof RHSPropEntry) {
                 if (!xx.includes(part.property)) {
-                    xx.push(part.property);
+                    xx.push(part.property)
                 }
             }
         }
-        return xx;
+        return xx
     }
 
     toGrammar(): string {
@@ -39,42 +40,39 @@ export class ConceptRule extends GrammarRule {
         //     }
         // });
         // end check
-        const rule = `${this.ruleName} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(" ")}`;
-        return rule.trimEnd() + " ;";
+        const rule = `${this.ruleName} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(" ")}`
+        return rule.trimEnd() + " ;"
+    }
+
+    toLangiumGrammar(): string {
+        const rule = `${this.ruleName} returns ${this.concept!.name}: ${this.ruleParts.map((part) => `${part.toLangiumGrammar()}`).join(" ")}`
+        return rule.trimEnd() + " ;"
     }
 
     toMethod(mainAnalyserName: string): string {
         if (!this.concept) {
-            return "";
+            return ""
         }
-        const myProperties = this.propsToSet();
+        const myProperties = this.propsToSet()
         return (
             `${ParserGenUtil.makeComment(this.toGrammar())}
                 public transform${this.ruleName} (nodeInfo: SpptDataNodeInfo, children: KtList<any>, sentence: Sentence) : ${Names.classifier(this.concept)} {
                     // console.log('4 transform${this.ruleName} called: ' + children.toString());
-                    ${myProperties.map((prop) => 
-                        `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)};\n`).join("")}` + // to avoid an extra newline in the result
-                    `${this.ruleParts.map((part, index) =>
-                        `${part.toMethod(index, "children", mainAnalyserName)}`).join("")}
+                    ${myProperties.map((prop) => `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)};\n`).join("")}` + // to avoid an extra newline in the result
+            `${this.ruleParts.map((part, index) => `${part.toMethod(index, "children", mainAnalyserName)}`).join("")}
                     return ${Names.classifier(this.concept)}.create({
                         ${myProperties.map((prop) => `${prop.name}:${ParserGenUtil.internalName(prop.name)}!`).join(", ")}
                         ${myProperties.length > 0 ? "," : ""} parseLocation: this.${mainAnalyserName}.location(sentence, nodeInfo.node)
                     });
                 }`
-        );
+        )
     }
 
     toString(): string {
         if (!this.concept) {
-            return "";
+            return ""
         }
-        const indent: string = "\n\t";
-        return (
-            indent +
-            "ConceptRule: " +
-            this.concept.name +
-            indent +
-            this.ruleParts.map((sub) => sub.toString(2)).join(indent)
-        );
+        const indent: string = "\n\t"
+        return indent + "ConceptRule: " + this.concept.name + indent + this.ruleParts.map((sub) => sub.toString(2)).join(indent)
     }
 }

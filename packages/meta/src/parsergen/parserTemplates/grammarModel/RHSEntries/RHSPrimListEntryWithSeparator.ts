@@ -15,6 +15,10 @@ export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
         return `[ ${getPrimCall(this.property.type)} / '${this.separatorText}' ]*` + this.doNewline();
     }
 
+    toLangiumGrammar(): string {
+        return `(xxx+=${getPrimCall(this.property.type)} ('${this.separatorText}' xxx+=${getPrimCall(this.property.type)})*)?` + this.doNewline()
+    }
+
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const tsBaseType: string = GenerationUtil.getBaseTypeAsString(this.property);
         const freonBaseType: string = GenerationUtil.getFreonBaseTypeAsString(this.property);

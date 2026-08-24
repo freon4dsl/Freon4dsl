@@ -84,4 +84,10 @@ export class GenerationUtil {
 			...language.units?.map(intf => Names.classifier(intf))
 		])
 	}
+
+    public static removeClassifiersFromList(allClassifiers: FreMetaClassifier[], toRemove: FreMetaClassifier[]): FreMetaClassifier[] {
+        const namesToRemove = new Set(toRemove.map((classifier) => classifier.name))
+
+        return allClassifiers.filter((classifier) => !namesToRemove.has(classifier.name))
+    }
 }

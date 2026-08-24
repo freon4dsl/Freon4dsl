@@ -2,7 +2,7 @@ import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import type { RHSPropEntry } from "./RHSPropEntry.js";
 import type { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import {internalTransformPrimValue, ParserGenUtil} from "../../ParserGenUtil.js";
-import { makeIndent } from "../GrammarUtils.js";
+import { getAssignmentName, makeIndent } from "../GrammarUtils.js"
 import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
 
 export class RHSPrimListGroup extends RHSPropPartWithSeparator {
@@ -16,6 +16,10 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
 
     toGrammar(): string {
         return `( ${this.entry.toGrammar()} '${this.separatorText}' )*\n\t`;
+    }
+
+    toLangiumGrammar(): string {
+        return `( ${getAssignmentName(this.property)}=${this.entry.toLangiumGrammar()} '${this.separatorText}' )*\n\t`
     }
 
     toMethod(index: number, nodeName: string): string {

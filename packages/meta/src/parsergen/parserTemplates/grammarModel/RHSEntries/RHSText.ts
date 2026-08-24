@@ -32,23 +32,27 @@ import { RightHandSideEntry } from "./RightHandSideEntry.js";
 import { makeIndent } from "../GrammarUtils.js";
 
 export class RHSText extends RightHandSideEntry {
-    text: string = "";
+    text: string = ""
 
     constructor(str: string) {
-        super();
-        this.text = str;
+        super()
+        this.text = str
     }
 
     toGrammar(): string {
-        return this.text + this.doNewline();
+        return `\'${this.text}\'` + this.doNewline()
+    }
+
+    toLangiumGrammar(): string {
+        return `'${this.text}'` + this.doNewline()
     }
 
     toMethod(): string {
-        return ``;
+        return ``
     }
 
     toString(depth: number): string {
-        const indent = makeIndent(depth);
-        return indent + "RHSText: " + this.text;
+        const indent = makeIndent(depth)
+        return indent + "RHSText: " + this.text
     }
 }
