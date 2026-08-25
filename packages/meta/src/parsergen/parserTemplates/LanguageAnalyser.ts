@@ -1,12 +1,12 @@
-import type {
+import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
     FreMetaConcept,
     FreMetaLanguage,
     FreMetaLimitedConcept,
-} from "../../languagedef/metalanguage/index.js";
+    FreMetaUnitDescription,
+} from "../../languagedef/metalanguage/index.js"
 import { UnitAnalyser } from "./UnitAnalyser.js";
-import type { FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage.js";
 import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate.js";
 
 export interface FreAnalyser {

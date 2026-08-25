@@ -1,7 +1,7 @@
 import { ConceptUtils } from "./ConceptUtils.js"
 import { Imports, Names } from "../../../utils/on-lang/index.js"
-import type { FreMetaModelDescription } from "../../metalanguage/FreMetaLanguage.js";
 import { ClassifierUtil } from "./ClassifierUtil.js";
+import { FreMetaModelDescription } from "../../metalanguage/index.js"
 
 export class ModelTemplate {
     // Note: a model may not have other properties than units

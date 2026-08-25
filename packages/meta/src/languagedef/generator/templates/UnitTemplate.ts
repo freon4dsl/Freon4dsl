@@ -1,7 +1,7 @@
 import { ConceptUtils } from "./ConceptUtils.js"
 import { Imports, Names } from "../../../utils/on-lang/index.js"
-import { type FreMetaUnitDescription } from "../../metalanguage/FreMetaLanguage.js";
 import { ClassifierUtil } from "./ClassifierUtil.js";
+import { FreMetaUnitDescription } from "../../metalanguage/index.js"
 
 export class UnitTemplate {
     // the following template is based on assumptions about a 'unit'

@@ -1,16 +1,8 @@
 import type {
     FreMetaPrimitiveProperty,
     FreMetaProperty} from './internal.js';
-import {
-    FreMetaClassifier,
-    FreMetaConcept,
-    FreMetaExpressionConcept,
-    FreMetaLangElement,
-    FreMetaPrimitiveType,
-    FreMetaInterface,
-    FreMetaUnitDescription,
-    MetaElementReference
-} from './internal.js';
+import { FreMetaClassifier, FreMetaConcept, FreMetaExpressionConcept, FreMetaInterface, FreMetaUnitDescription, MetaElementReference } from "./internal.js"
+import { FreMetaLangElement, FreMetaPrimitiveType } from "./internal.js"
 
 export class LangUtil {
     /**
