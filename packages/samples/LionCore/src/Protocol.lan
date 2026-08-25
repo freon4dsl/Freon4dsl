@@ -1,0 +1,41 @@
+language `Protocol` key "-key-Protocol"
+version "version?"
+depends on languages:
+
+concrete concept `MessageGroup` implements `Type` {
+    key: "-key-MessageGroup"
+    partition: true
+    mandatory containment `sharedProperties` ( "-key-MessageGroup-sharedProperties" ): `PropertyDef` *
+    mandatory property `taggedUnionProperty` ( "-key-MessageGroup-taggedUnionProperty" ): `String`
+    mandatory containment `messages` ( "-key-MessageGroup-messages" ): `ObjectType` *
+}
+concrete concept `PropertyDef` implements {
+    key: "-key-PropertyDef"
+    partition: false
+    mandatory reference `type` ( "-key-PropertyDef-type" ): `Type` 1
+    mandatory property `name` ( "-key-PropertyDef-name" ): `String`
+    mandatory property `mayBeNull` ( "-key-PropertyDef-mayBeNull" ): `Boolean`
+    mandatory property `isList` ( "-key-PropertyDef-isList" ): `Boolean`
+    mandatory property `isOptional` ( "-key-PropertyDef-isOptional" ): `Boolean`
+}
+concrete concept `PrimitiveType` implements `Type` {
+    key: "-key-PrimitiveType"
+    partition: false
+    mandatory property `primitiveType` ( "-key-PrimitiveType-primitiveType" ): `String`
+    mandatory property `validator` ( "-key-PrimitiveType-validator" ): `String`
+}
+concrete concept `ObjectType` implements `Type` {
+    key: "-key-ObjectType"
+    partition: false
+    mandatory containment `properties` ( "-key-ObjectType-properties" ): `PropertyDef` *
+}
+interface `Type` extends {
+    key: "-key-Type"
+    mandatory property `name` ( "-key-Type-name" ): `String`
+concrete concept `Types` implements {
+    key: "-key-Types"
+    partition: true
+    mandatory containment `primitiveTypes` ( "-key-Types-primitiveTypes" ): `PrimitiveType` *
+    mandatory containment `objectTypes` ( "-key-Types-objectTypes" ): `ObjectType` *
+    mandatory property `name` ( "-key-Types-name" ): `String`
+}

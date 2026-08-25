@@ -1,0 +1,61 @@
+editor clean
+
+// TODO boolean [YES | NO] // are the strings used to display a boolean value
+
+// TODO referenceSeparator [.] // is the string that separates the names in a path name, e.g. pack1.cls3.part
+
+
+LCM3_Language {
+    [
+    language ${name} key ${key}
+    version ${version}
+    depends on languages: ${dependsOn}
+
+    ${entities vertical}
+    ]
+}
+
+LCM3_Concept {
+[
+    [?${abstract [abstract | concrete]}] concept ${name} [?extends ${extends}] [?implements ${implements}] {
+        partition: ${partition}
+        ${features vertical }
+    }
+]}
+
+LCM3_Interface {[
+    interface ${name} [?extends ${extends}] {
+        ${features vertical }
+]}
+
+LCM3_Feature {[
+    name: ${name}
+    optional: ${optional}
+]}
+
+LCM3_Property {[
+    ${self.optional [optional | mandatory]} property ${name} : ${type}
+]}
+
+LCM3_Reference {[
+    ${self.optional [optional | mandatory]} reference ${name}: ${type} ${self.multiple [* | 1]}
+]}
+
+LCM3_Containment {[
+    ${self.optional [optional | mandatory]} containment ${name}: ${type} ${self.multiple [* | 1]}
+]}
+
+LCM3_Annotation {[
+    annotation ${name} annotates ${annotates} [?extends ${extends}] [?implements ${implements}] {
+        ${features vertical }
+]}
+
+LCM3_Enumeration {[
+    enumeration ${name}
+        ${literals}
+]}
+LCM3_EnumerationLiteral {[
+    ${name}
+]}
+
+

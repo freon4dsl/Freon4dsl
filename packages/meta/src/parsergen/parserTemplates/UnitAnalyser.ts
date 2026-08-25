@@ -1,12 +1,10 @@
-import type {
-    FreMetaClassifier} from '../../languagedef/metalanguage/index.js';
+import { FreMetaClassifier, FreMetaPrimitiveType, FreMetaUnitDescription } from "../../languagedef/metalanguage/index.js"
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaConcept,
     FreMetaInterface,
     FreMetaLimitedConcept, LangUtil
 } from '../../languagedef/metalanguage/index.js';
-import { FreMetaPrimitiveType, FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage.js";
 import type { FreAnalyser } from "./LanguageAnalyser.js";
 import { ListUtil } from "../../utils/no-dependencies/index.js"
 import { GenerationUtil } from "../../utils/on-lang/index.js"

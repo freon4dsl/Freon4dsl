@@ -1,0 +1,58 @@
+    language LionCore_M3 
+
+model LionCore_M3 {
+    name: identifier;
+    units: LCM3_Language[];
+}
+
+
+ concept LCM3_Annotation base LCM3_Classifier {
+    reference annotates?: LCM3_Classifier;
+    reference extends?: LCM3_Annotation;
+    reference implements: LCM3_Interface[];
+}
+ concept LCM3_Concept base LCM3_Classifier {
+    abstract: boolean;
+    partition: boolean;
+    reference extends?: LCM3_Concept;
+    reference implements: LCM3_Interface[];
+}
+ concept LCM3_Interface base LCM3_Classifier {
+    reference extends: LCM3_Interface[];
+}
+ concept LCM3_Containment base LCM3_Link {
+}
+abstract  concept LCM3_DataType base LCM3_LanguageEntity {
+}
+ concept LCM3_Enumeration base LCM3_DataType {
+    literals: LCM3_EnumerationLiteral[];
+}
+ concept LCM3_EnumerationLiteral implements LCM3_IKeyed  {
+}
+abstract  concept LCM3_Feature implements LCM3_IKeyed  {
+    optional: boolean;
+}
+abstract  concept LCM3_Classifier base LCM3_LanguageEntity {
+    features: LCM3_Feature[];
+}
+abstract  concept LCM3_Link base LCM3_Feature {
+    multiple: boolean;
+    reference type: LCM3_Classifier;
+}
+ modelunit LCM3_Language implements LCM3_IKeyed  {
+    version: string;
+    reference dependsOn: LCM3_Language[];
+    entities: LCM3_LanguageEntity[];
+}
+abstract  concept LCM3_LanguageEntity implements LCM3_IKeyed  {
+}
+interface LCM3_IKeyed  base INamed {
+    key: string;
+}
+ concept LCM3_PrimitiveType base LCM3_DataType {
+}
+ concept LCM3_Property base LCM3_Feature {
+    reference type: LCM3_DataType;
+}
+ concept LCM3_Reference base LCM3_Link {
+}
