@@ -12,8 +12,7 @@
         "compile": "tsc",
         "install-local": "npm install --registry http://localhost:4873",
         "generate": "bash ../../../scripts/freon-samples-dev.sh -v all",
-        "check-imports": "bash ../../../scripts/check-import-extensions.sh",
-        "test": "vitest run"
+        "check-imports": "bash ../../../scripts/check-import-extensions.sh"
     },
     "devDependencies": {
         "@freon4dsl/meta": "~3.0.0-beta.1",
