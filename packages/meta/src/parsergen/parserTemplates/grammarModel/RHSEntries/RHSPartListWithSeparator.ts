@@ -1,6 +1,6 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import type { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
-import { getAssignmentName, getTypeCall, makeIndent } from "../GrammarUtils.js";
+import { getAssignmentName, getLangiumRuleName, getTypeCall, makeIndent } from "../GrammarUtils.js"
 import { internalTransformPartList, ParserGenUtil } from "../../ParserGenUtil.js";
 import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
 
@@ -16,7 +16,7 @@ export class RHSPartListWithSeparator extends RHSPropPartWithSeparator {
 
     toLangiumGrammar(): string {
         return (
-            `(${getAssignmentName(this.property)}+= ${getTypeCall(this.property.type)} ( '${this.separatorText}' ${getAssignmentName(this.property)}+= ${getTypeCall(this.property.type)})*)?` +
+            `(${getAssignmentName(this.property)}+= ${getLangiumRuleName(this.property.type)} ( '${this.separatorText}' ${getAssignmentName(this.property)}+= ${getTypeCall(this.property.type)})*)?` +
             this.doNewline()
         )
     }

@@ -5,6 +5,8 @@ import { ParserGenUtil } from "../ParserGenUtil.js";
 import type { RightHandSideEntry} from "./RHSEntries/index.js";
 import { RHSPropEntry } from "./RHSEntries/index.js";
 import { GenerationUtil } from '../../../utils/on-lang/GenerationUtil.js';
+import { langiumPrefix } from "../LangiumGrammarGenerator.js"
+import { getLangiumTypeName } from "./GrammarUtils.js"
 
 export class ConceptRule extends GrammarRule {
     concept: FreMetaClassifier | undefined = undefined
@@ -45,7 +47,8 @@ export class ConceptRule extends GrammarRule {
     }
 
     toLangiumGrammar(): string {
-        const rule = `${this.ruleName} returns ${this.concept!.name}: ${this.ruleParts.map((part) => `${part.toLangiumGrammar()}`).join(" ")}`
+        const rule = `${langiumPrefix}${this.ruleName} returns ${getLangiumTypeName(this.concept)}: 
+    ${this.ruleParts.map((part) => `${part.toLangiumGrammar()}`).join(" ")}`
         return rule.trimEnd() + " ;"
     }
 

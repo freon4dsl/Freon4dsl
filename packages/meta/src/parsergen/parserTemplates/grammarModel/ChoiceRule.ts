@@ -1,11 +1,12 @@
 import { GrammarRule } from "./GrammarRule.js";
 import type { FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
-import { FreMetaBinaryExpressionConcept } from "../../../languagedef/metalanguage/index.js";
-import { getTypeCall } from "./GrammarUtils.js";
+import { FreMetaBinaryExpressionConcept } from "../../../languagedef/metalanguage/index.js"
+import { getLangiumRuleName, getLangiumTypeName, getTypeCall } from "./GrammarUtils.js"
 import { BinaryExpMaker } from "../BinaryExpMaker.js";
 import { ParserGenUtil } from "../ParserGenUtil.js";
 import { Names } from '../../../utils/on-lang/index.js';
 import { primaryExpressionName } from "./BinaryExpressionRule.js"
+import { langiumPrefix } from "../LangiumGrammarGenerator.js"
 
 export class ChoiceRule extends GrammarRule {
     implementors: FreMetaClassifier[];
@@ -68,7 +69,9 @@ export class ChoiceRule extends GrammarRule {
             if (this.implementors.length !== implementorsNoBinaries.length) {
                 // there are binaries
                 // exclude binary expression concepts
-                rule = `${primaryExpressionName} : ${implementorsNoBinaries.map((implementor) => `${getTypeCall(implementor)} `).join("\n    | ")} ;`
+                rule = `${langiumPrefix}${primaryExpressionName} : 
+                ${implementorsNoBinaries.map((implementor) => `${getLangiumRuleName
+                (implementor)} `).join("\n    | ")} ;`
                 // add the special binary concept rule(s) as choice
                 // const expBases = ParserGenUtil.findAllExpressionBases(
                 //     this.implementors.filter((sub) => sub instanceof FreMetaBinaryExpressionConcept) as FreMetaBinaryExpressionConcept[],
@@ -82,12 +85,13 @@ export class ChoiceRule extends GrammarRule {
                 // });
             } else {
                 // normal choice rule
-                rule = `${this.ruleName} returns ${this.myConcept.name} : ${this.implementors
-                    .map((implementor) => `${getTypeCall(implementor)} `)
+                rule = `${langiumPrefix}${this.ruleName} returns ${getLangiumTypeName(this.myConcept)} : 
+    ${this.implementors
+                    .map((implementor) => `${getLangiumRuleName(implementor)} `)
                     .join("\n    | ")} ;`
             }
         } else {
-            rule = `${this.ruleName} = 'ERROR' ; // there are no concepts that implement this interface or extend this abstract concept`;
+            rule = `${langiumPrefix}${this.ruleName} = 'ERROR' ; // there are no concepts that implement this interface or extend this abstract concept`;
         }
         return rule;
     }

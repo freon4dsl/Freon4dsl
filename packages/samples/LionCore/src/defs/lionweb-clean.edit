@@ -5,7 +5,7 @@ editor clean
 // TODO referenceSeparator [.] // is the string that separates the names in a path name, e.g. pack1.cls3.part
 
 
-LCM3_Language {
+Language {
     [
     language ${name} key ${key}
     version ${version}
@@ -15,7 +15,7 @@ LCM3_Language {
     ]
 }
 
-LCM3_Concept {
+Concept {
 [
     [?${abstract [abstract | concrete]}] concept ${name} [?extends ${extends}] [?implements ${implements}] {
         partition: ${partition}
@@ -23,38 +23,38 @@ LCM3_Concept {
     }
 ]}
 
-LCM3_Interface {[
+Interface {[
     interface ${name} [?extends ${extends}] {
         ${features vertical }
 ]}
 
-LCM3_Feature {[
+Feature {[
     name: ${name}
     optional: ${optional}
 ]}
 
-LCM3_Property {[
+Property {[
     ${self.optional [optional | mandatory]} property ${name} : ${type}
 ]}
 
-LCM3_Reference {[
+Reference {[
     ${self.optional [optional | mandatory]} reference ${name}: ${type} ${self.multiple [* | 1]}
 ]}
 
-LCM3_Containment {[
+Containment {[
     ${self.optional [optional | mandatory]} containment ${name}: ${type} ${self.multiple [* | 1]}
 ]}
 
-LCM3_Annotation {[
+Annotation {[
     annotation ${name} annotates ${annotates} [?extends ${extends}] [?implements ${implements}] {
         ${features vertical }
 ]}
 
-LCM3_Enumeration {[
+Enumeration {[
     enumeration ${name}
         ${literals}
 ]}
-LCM3_EnumerationLiteral {[
+EnumerationLiteral {[
     ${name}
 ]}
 

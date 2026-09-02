@@ -1,20 +1,17 @@
-import * as fs from "fs";
-import type { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
-import {
-    Names,
-    READER_FOLDER,
-    WRITER_FOLDER,
-} from "../utils/on-lang/index.js";
-import type { FreEditUnit } from "../editordef/metalanguage/index.js";
-import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates/index.js";
-import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser.js";
-import type { GrammarModel } from './parserTemplates/grammarModel/index.js';
-import { MetaLogger } from '../utils/no-dependencies/index.js';
-import { FileUtil, GenerationStatus } from '../utils/file-utils/index.js';
+import * as fs from "fs"
+import { FreMetaLanguage } from "../languagedef/metalanguage/index.js"
+import { Names, READER_FOLDER, WRITER_FOLDER } from "../utils/on-lang/index.js"
+import type { FreEditUnit } from "../editordef/metalanguage/index.js"
+import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates/index.js"
+import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser.js"
+import type { GrammarModel } from "./parserTemplates/grammarModel/index.js"
+import { MetaLogger } from "../utils/no-dependencies/index.js"
+import { FileUtil, GenerationStatus } from "../utils/file-utils/index.js"
 import { LangiumGrammarGenerator } from "./parserTemplates/LangiumGrammarGenerator.js"
+import { LangiumConverterMaker } from "./parserTemplates/LangiumConverterMaker.js"
 
 
-const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
+const LOGGER = new MetaLogger("ReaderWriterGenerator").mute()
 
 /**
  * Generates the grammar for all units into one file, because the parser is able to learn how to process
@@ -24,127 +21,132 @@ const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
  * This is done to avoid overly large files.
  */
 export class ReaderWriterGenerator {
-    public outputfolder: string = ".";
-    public customsfolder: string = ".";
-    public language: FreMetaLanguage | undefined;
-    private writerFolder: string = "";
-    private readerFolder: string = "";
+    public outputfolder: string = "."
+    public customsfolder: string = "."
+    public language: FreMetaLanguage | undefined
+    private writerFolder: string = ""
+    private readerFolder: string = ""
 
     generate(editDef: FreEditUnit): void {
         if (this.language === null || this.language === undefined) {
-            LOGGER.error("Cannot generate parser and unparser because language is not set.");
-            return;
+            LOGGER.error("Cannot generate parser and unparser because language is not set.")
+            return
         }
-        const generationStatus = new GenerationStatus();
-        this.getFolderNames();
-        LOGGER.log(
-            "Generating parser and unparser in folder " + this.writerFolder + " for language " + this.language?.name,
-        );
+        const generationStatus = new GenerationStatus()
+        this.getFolderNames()
+        LOGGER.log("Generating parser and unparser in folder " + this.writerFolder + " for language " + this.language?.name)
 
-        const unparserTemplate = new WriterTemplate();
-        const readerTemplate = new ReaderTemplate();
+        const unparserTemplate = new WriterTemplate()
+        const readerTemplate = new ReaderTemplate()
         const grammarGenerator = new GrammarGenerator()
-        const langiumGenerator = new LangiumGrammarGenerator();
+        const langiumGenerator = new LangiumGrammarGenerator()
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.outputfolder + "/" + this.customsfolder); // will not be overwritten
-        FileUtil.createDirIfNotExisting(this.writerFolder);
-        FileUtil.deleteFilesInDir(this.writerFolder, generationStatus);
-        FileUtil.createDirIfNotExisting(this.readerFolder);
-        FileUtil.deleteFilesInDir(this.readerFolder, generationStatus);
+        FileUtil.createDirIfNotExisting(this.outputfolder + "/" + this.customsfolder) // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.writerFolder)
+        FileUtil.deleteFilesInDir(this.writerFolder, generationStatus)
+        FileUtil.createDirIfNotExisting(this.readerFolder)
+        FileUtil.deleteFilesInDir(this.readerFolder, generationStatus)
 
         // set relative path to get the imports right
-        const relativePath = "..";
+        const relativePath = ".."
 
         // remember all file names etc. for the index
-        let indexContent: string = "";
+        let indexContent: string = ""
 
         //  Generate the writer
-        let generatedFilePath = `${this.writerFolder}/${Names.writer(this.language)}.ts`;
-        let generatedContent = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
-        this.makeFile(`language writer`, generatedFilePath, generatedContent, generationStatus);
+        let generatedFilePath = `${this.writerFolder}/${Names.writer(this.language)}.ts`
+        let generatedContent = unparserTemplate.generateUnparser(this.language, editDef, relativePath)
+        this.makeFile(`language writer`, generatedFilePath, generatedContent, generationStatus)
 
         // Generate the reader
         // The complete structure model of the language is analysed. All concepts are split into groups.
         // Concepts used in just one unit are put into a group per unit.
         // Concepts used in more than one unit are put in a 'common' group.
-        const analyser = new LanguageAnalyser();
-        analyser.analyseModel(this.language);
+        const analyser = new LanguageAnalyser()
+        analyser.analyseModel(this.language)
 
         // Create in memory all grammar rules and syntax analysis methods
-        const grammarModel: GrammarModel | undefined = grammarGenerator.createGrammar(this.language, analyser, editDef);
+        const grammarModel: GrammarModel | undefined = grammarGenerator.createGrammar(this.language, analyser, editDef)
         const langiumModel: GrammarModel | undefined = langiumGenerator.createGrammar(this.language, analyser, editDef)
+        const langiumConverterMaker = new LangiumConverterMaker()
         if (!grammarModel) {
-            return;
+            return
         }
 
         // Write the grammar to file
-        generatedContent = grammarModel.toGrammar();
+        generatedContent = grammarModel.toGrammar()
         // test the generated grammar, if not ok error will be thrown
         // TODO Turn this on again after examining the reason why this is slow.
         // this.testGrammar(generatedContent, generationStatus);
         // write the grammar to file
-        generatedFilePath = `${this.readerFolder}/${Names.grammar(this.language)}.ts`;
-        indexContent += `export * from "./${Names.grammar(this.language)}.js";\n`;
-        this.makeFile(`AGL grammar`, generatedFilePath, generatedContent, generationStatus);
+        generatedFilePath = `${this.readerFolder}/${Names.grammar(this.language)}.ts`
+        indexContent += `export * from "./${Names.grammar(this.language)}.js";\n`
+        this.makeFile(`AGL grammar`, generatedFilePath, generatedContent, generationStatus)
 
         // Write the langium grammar to file
-        generatedContent = langiumModel? langiumModel.toLangiumGrammar() : "No langium Model generated"
-        generatedFilePath = `${this.readerFolder}/${Names.grammar(this.language)}.langium`;
+        generatedContent = langiumModel ? langiumModel.toLangiumGrammar() : "No langium Model generated"
+        generatedFilePath = `${this.readerFolder}/${Names.grammar(this.language)}.langium`
         // indexContent += `export * from "./${Names.grammar(this.language)}.js";\n`;
         // this.makeFile(`Langium grammar`, generatedFilePath, generatedContent, generationStatus);
         fs.writeFileSync(`${generatedFilePath}`, generatedContent)
 
+        // Write the langium converter to file
+        generatedContent = langiumConverterMaker ? langiumConverterMaker.makeLangiumConverter(this.language, relativePath) : "No langium Converter generated"
+        generatedFilePath = `${this.readerFolder}/${Names.langiumConverter(this.language)}.ts`
+        // indexContent += `export * from "./${Names.grammar(this.language)}.js";\n`;
+        this.makeFile(`Langium converter`, generatedFilePath, generatedContent, generationStatus)
+        // fs.writeFileSync(`${generatedFilePath}`, generatedContent)
+
         // Write the main syntax analyser to file
-        generatedFilePath = `${this.readerFolder}/${Names.syntaxAnalyser(this.language)}.ts`;
-        indexContent += `export * from "./${Names.syntaxAnalyser(this.language)}.js";\n`;
-        const mainContent = grammarModel.toMethod(this.language!, relativePath);
-        this.makeFile(`main syntax analyser`, generatedFilePath, mainContent, generationStatus);
+        generatedFilePath = `${this.readerFolder}/${Names.syntaxAnalyser(this.language)}.ts`
+        indexContent += `export * from "./${Names.syntaxAnalyser(this.language)}.js";\n`
+        const mainContent = grammarModel.toMethod(this.language!, relativePath)
+        this.makeFile(`main syntax analyser`, generatedFilePath, mainContent, generationStatus)
 
         // Write the syntax analysers for each unit to file
         grammarModel.parts.forEach((grammarPart) => {
-            generatedFilePath = `${this.readerFolder}/${Names.unitAnalyser(this.language!, grammarPart.unit)}.ts`;
-            indexContent += `export * from "./${Names.unitAnalyser(this.language!, grammarPart.unit)}.js";\n`;
-            const analyserContent: string = grammarPart.toMethod(this.language!, relativePath);
-            let message: string;
+            generatedFilePath = `${this.readerFolder}/${Names.unitAnalyser(this.language!, grammarPart.unit)}.ts`
+            indexContent += `export * from "./${Names.unitAnalyser(this.language!, grammarPart.unit)}.js";\n`
+            const analyserContent: string = grammarPart.toMethod(this.language!, relativePath)
+            let message: string
             if (!!grammarPart.unit) {
-                message = `syntax analyser for unit ${grammarPart.unit?.name}`;
+                message = `syntax analyser for unit ${grammarPart.unit?.name}`
             } else {
-                message = "common syntax analyser";
+                message = "common syntax analyser"
             }
-            this.makeFile(message, generatedFilePath, analyserContent, generationStatus);
-        });
+            this.makeFile(message, generatedFilePath, analyserContent, generationStatus)
+        })
 
         // Get the semantic analyser and write it to file
-        generatedFilePath = `${this.readerFolder}/${Names.semanticAnalyser(this.language)}.ts`;
-        indexContent += `export * from "./${Names.semanticAnalyser(this.language)}.js";\n`;
-        generatedContent = analyser.getRefCorrectorContent(this.language, relativePath);
-        this.makeFile(`semantic analyser`, generatedFilePath, generatedContent, generationStatus);
+        generatedFilePath = `${this.readerFolder}/${Names.semanticAnalyser(this.language)}.ts`
+        indexContent += `export * from "./${Names.semanticAnalyser(this.language)}.js";\n`
+        generatedContent = analyser.getRefCorrectorContent(this.language, relativePath)
+        this.makeFile(`semantic analyser`, generatedFilePath, generatedContent, generationStatus)
 
         // get the semantic analysis walker and write it to file
-        generatedFilePath = `${this.readerFolder}/${Names.semanticWalker(this.language)}.ts`;
-        indexContent += `export * from "./${Names.semanticWalker(this.language)}.js";\n`;
-        generatedContent = analyser.getRefCorrectorWalkerContent(this.language, relativePath);
-        this.makeFile(`semantic analysis walker`, generatedFilePath, generatedContent, generationStatus);
+        generatedFilePath = `${this.readerFolder}/${Names.semanticWalker(this.language)}.ts`
+        indexContent += `export * from "./${Names.semanticWalker(this.language)}.js";\n`
+        generatedContent = analyser.getRefCorrectorWalkerContent(this.language, relativePath)
+        this.makeFile(`semantic analysis walker`, generatedFilePath, generatedContent, generationStatus)
 
         // get the reader and write it to file
-        generatedFilePath = `${this.readerFolder}/${Names.reader(this.language)}.ts`;
-        indexContent += `export * from "./${Names.reader(this.language)}.js";\n`;
-        generatedContent = readerTemplate.generateReader(this.language, relativePath);
-        this.makeFile(`language reader`, generatedFilePath, generatedContent, generationStatus);
+        generatedFilePath = `${this.readerFolder}/${Names.reader(this.language)}.ts`
+        indexContent += `export * from "./${Names.reader(this.language)}.js";\n`
+        generatedContent = readerTemplate.generateReader(this.language, relativePath)
+        this.makeFile(`language reader`, generatedFilePath, generatedContent, generationStatus)
 
         // write the index file for the reader gen folder
-        generatedFilePath = `${this.readerFolder}/index.ts`;
-        this.makeFile(`reader index`, generatedFilePath, indexContent, generationStatus);
+        generatedFilePath = `${this.readerFolder}/index.ts`
+        this.makeFile(`reader index`, generatedFilePath, indexContent, generationStatus)
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(
-                `Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`,
-            );
+            LOGGER.error(`Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`)
         } else {
-            LOGGER.info(`Successfully generated reader and writer.`);
+            LOGGER.info(`Successfully generated reader and writer.`)
         }
     }
+
 
     // TODO Turn this on again after examining the reason why this is slow.
     // private testGrammar(generatedContent: string, generationStatus: GenerationStatus) {
@@ -163,18 +165,15 @@ export class ReaderWriterGenerator {
     // }
 
     private getFolderNames() {
-        this.writerFolder = this.outputfolder + "/" + WRITER_FOLDER;
-        this.readerFolder = this.outputfolder + "/" + READER_FOLDER;
+        this.writerFolder = this.outputfolder + "/" + WRITER_FOLDER
+        this.readerFolder = this.outputfolder + "/" + READER_FOLDER
     }
 
-    private makeFile(
-        generationMessage: string,
-        generatedFilePath: string,
-        generatedContent: string,
-        generationStatus: GenerationStatus,
-    ) {
-        LOGGER.log(`Generating ${generationMessage}: ${generatedFilePath}`);
-        generatedContent = FileUtil.pretty(generatedContent, `${generatedFilePath}`, generationStatus);
-        fs.writeFileSync(`${generatedFilePath}`, generatedContent);
+    private makeFile(generationMessage: string, generatedFilePath: string, generatedContent: string, generationStatus: GenerationStatus) {
+        LOGGER.log(`Generating ${generationMessage}: ${generatedFilePath}`)
+        generatedContent = FileUtil.pretty(generatedContent, `${generatedFilePath}`, generationStatus)
+        fs.writeFileSync(`${generatedFilePath}`, generatedContent)
     }
 }
+
+

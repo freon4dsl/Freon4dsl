@@ -58,7 +58,6 @@ export class LanguageAnalyser {
         // });
         // extra for langium
         this.classifiersReferred = GenerationUtil.removeClassifiersFromList(this.classifiersReferred, this.classifiersUsed)
-        console.log(`MAIN list of refered classifiers: ${this.classifiersReferred.map((clas) => clas.name)}`)
     }
 
     getRefCorrectorContent(language: FreMetaLanguage, relativePath: string): string {

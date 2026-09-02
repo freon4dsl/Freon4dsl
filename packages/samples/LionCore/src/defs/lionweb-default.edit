@@ -11,7 +11,7 @@ global {
     }
 }
 
-LCM3_Language {
+Language {
     [
     language ${name} key ${key}
     version ${version}
@@ -22,7 +22,7 @@ LCM3_Language {
     trigger = "language"
 }
 
-LCM3_Concept {
+Concept {
 [
     [?${abstract [abstract | concrete]}] concept ${name} [?extends ${extends}] [?implements ${implements}] {
         key: ${key}
@@ -31,40 +31,40 @@ LCM3_Concept {
     }
 ]}
 
-LCM3_Interface {[
+Interface {[
     interface ${name} [?extends ${extends}] {
         key: ${key}
         ${features vertical }
 ]}
 
-LCM3_Feature {[
+Feature {[
     name: ${name}
     key: ${key}
     optional: ${optional}
 ]}
 
-LCM3_Property {[
+Property {[
     ${self.optional [optional | mandatory]} property ${name} (${key}): ${type}
 ]}
 
-LCM3_Reference {[
+Reference {[
     ${self.optional [optional | mandatory]} reference ${name} (${key}): ${type} ${self.multiple [* | 1]}
 ]}
 
-LCM3_Containment {[
+Containment {[
     ${self.optional [optional | mandatory]} containment ${name} (${key}): ${type} ${self.multiple [* | 1]}
 ]}
 
-LCM3_Annotation {[
+Annotation {[
     annotation ${name} (${key}) annotates ${annotates} [?extends ${extends}] [?implements ${implements}] {
         ${features vertical }
 ]}
 
-LCM3_Enumeration {[
+Enumeration {[
     enumeration ${name} (${key})
         ${literals}
 ]}
-LCM3_EnumerationLiteral {[
+EnumerationLiteral {[
     ${name} (${key})
 ]}
 

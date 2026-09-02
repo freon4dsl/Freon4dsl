@@ -2,6 +2,8 @@ import { FreMetaClassifier, FreMetaProperty } from "../../../languagedef/metalan
 import { FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
 import { Names } from "../../../utils/on-lang/index.js";
 import { ChoiceRuleMaker } from "../ChoiceRuleMaker.js";
+import { langiumPrefix } from "../LangiumGrammarGenerator.js"
+import { isNullOrUndefined } from "../../../utils/file-utils/index.js"
 
 export function getPrimCall(propType: FreMetaClassifier, optional: boolean = false): string {
     switch (propType) {
@@ -42,19 +44,31 @@ export function getLangiumPrimCall(propType: FreMetaClassifier, optional: boolea
 }
 
 export function getTypeCall(propType: FreMetaClassifier, projectionName?: string): string {
-    const result = ChoiceRuleMaker.superNames.get(propType);
+    const result = ChoiceRuleMaker.superNames.get(propType)
     if (!!result && result.length > 0) {
-        return result;
+        return result
     } else {
         if (!!projectionName && projectionName.length > 0) {
-            return Names.classifier(propType) + "_" + projectionName + "Rule";
+            return Names.classifier(propType) + "_" + projectionName + "Rule"
         }
-        return Names.classifier(propType) + "Rule";
+        return Names.classifier(propType) + "Rule"
     }
+}
+
+export function getLangiumRuleName(propType: FreMetaClassifier, projectionName?: string): string {
+    return langiumPrefix + getTypeCall(propType, projectionName);
 }
 
 export function getAssignmentName(prop: FreMetaProperty): string {
     return prop.name;
+}
+
+export function getLangiumTypeName(cls: FreMetaClassifier | undefined) {
+    if (isNullOrUndefined(cls)) {
+        return "noName"
+    } else {
+        return langiumPrefix + cls.name
+    }
 }
 
 export const refRuleName: string = "__fre_reference";

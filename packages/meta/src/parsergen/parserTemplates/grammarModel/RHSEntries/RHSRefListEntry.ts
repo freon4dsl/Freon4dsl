@@ -2,7 +2,7 @@ import { RHSPropEntry } from "./RHSPropEntry.js";
 import type { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { Names } from "../../../../utils/on-lang/index.js";
 import { internalTransformRefList, ParserGenUtil } from "../../ParserGenUtil.js"
-import { getAssignmentName, langiumRefRuleName, makeIndent, refRuleName } from "../GrammarUtils.js"
+import { getAssignmentName, getLangiumTypeName, langiumRefRuleName, makeIndent, refRuleName } from "../GrammarUtils.js"
 import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
 
 export class RHSRefListEntry extends RHSPropEntry {
@@ -16,7 +16,7 @@ export class RHSRefListEntry extends RHSPropEntry {
     }
 
     toLangiumGrammar(): string {
-        return `${getAssignmentName(this.property)}+=[${this.property.type.name}:${langiumRefRuleName}]*` + this.doNewline()
+        return `${getAssignmentName(this.property)}+=[${getLangiumTypeName(this.property.type)}:${langiumRefRuleName}]*` + this.doNewline()
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

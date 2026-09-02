@@ -16,7 +16,8 @@ import { GrammarPart } from "./grammarModel/GrammarPart.js";
 import { Names } from "../../utils/on-lang/index.js";
 import { ParserGenUtil } from "./ParserGenUtil.js";
 import { LOG2USER } from '../../utils/basic-dependencies/index.js';
-import { ListUtil } from "../../utils/no-dependencies/index.js"
+
+export const langiumPrefix = "LG_"
 
 export class LangiumGrammarGenerator {
     createGrammar(
@@ -54,11 +55,6 @@ export class LangiumGrammarGenerator {
 
         // create the grammar rules and add them to the model
         this.createGrammarRules(grammar, projectionGroup, analyser)
-        // extra for langium
-        console.log(`GENERATOR list of refered classifiers: ${analyser.classifiersReferred.map((clas) => clas.name)}`)
-
-        ListUtil.addListIfNotPresent(grammar.langiumDeclarations, analyser.classifiersReferred)
-        ListUtil.addListIfNotPresent(grammar.langiumDeclarations, analyser.classifiersUsed)
 
         return grammar;
     }
@@ -92,7 +88,6 @@ export class LangiumGrammarGenerator {
         // create parse rules and syntax analysis methods for the interfaces and abstracts
         const choiceRuleMaker: ChoiceRuleMaker = new ChoiceRuleMaker();
         grammarPart.rules.push(...choiceRuleMaker.generateChoiceRules(analyser.interfacesAndAbstractsUsed));
-        ListUtil.addListIfNotPresent(grammar.langiumDeclarations, Array.from(analyser.interfacesAndAbstractsUsed.keys()))
 
         // create parse rules and syntax analysis methods for the concepts that have sub-concepts
         grammarPart.rules.push(...choiceRuleMaker.generateSuperRules(analyser.conceptsWithSub));
