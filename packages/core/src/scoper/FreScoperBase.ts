@@ -1,14 +1,11 @@
 import { FreLanguage } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
-import type { FreCompositeScoper } from "./FreCompositeScoper.js";
-import type { FreNamespace} from './FreNamespace.js';
-import { PUBLIC_AND_PRIVATE } from './FreNamespace.js';
-import type { FreNamespaceInfo } from "./FreNamespaceInfo.js"
-import type { FreScoper } from "./FreScoper.js";
 import { notNullOrUndefined } from '../util/index.js';
-import { findEnclosingNamespace, hasCorrectType, transformFreNodes } from "./ScoperUtil.js"
-import  { type FreScoperNamedNode, type FreScoperNode } from "./internal.js"
-import { type FreNamedNode, FreNodeReference } from "../ast/index.js"
+import type {
+    FreCompositeScoper, FreNamespace, FreNamespaceInfo, FreScoper,
+    FreScoperNamedNode, FreScoperNode
+} from "./internal.js"
+import { findEnclosingNamespace, hasCorrectType, transformFreNodes, PUBLIC_AND_PRIVATE } from "./internal.js"
 
 const LOGGER = new FreLogger("FreScoperBase");
 
@@ -25,7 +22,7 @@ export abstract class FreScoperBase<T extends FreScoperNode<T>> implements FreSc
      * @param node
      * @param metaType
      */
-    public getVisibleNodes(node: T | FreNodeReference<FreNamedNode>, metaType?: string): FreScoperNamedNode<T>[] {
+    public getVisibleNodes(node: T, metaType?: string): FreScoperNamedNode<T>[] {
         // console.log('BASE getVisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", metaType: " + metaType);
         console.log("BASE getVisibleNodes for " + node["name"] + " owned by " + node.freOwner(), ", metaType: " + metaType)
         if (!this.mainScoper) {
@@ -41,7 +38,7 @@ export abstract class FreScoperBase<T extends FreScoperNode<T>> implements FreSc
             const nearestNamespace: FreNamespace<T> | undefined = findEnclosingNamespace(node, this.mainScoper.registry, this.mainScoper.scoperLanguage)
             // Add the visible nodes from the namespace
             if (notNullOrUndefined(nearestNamespace)) {
-                // console.log("nearestNamespace is: " + isScoperNamedNode(nearestNamespace._myNode) ? nearestNamespace._myNode.name : "unnamed")
+                // console.log("nearestNamespace is: " + isScoperNamedNode(nearestNamespace.target) ? nearestNamespace.target.name : "unnamed")
                 result.push(...nearestNamespace.getVisibleNodes(this.mainScoper, visitedNamespaces, PUBLIC_AND_PRIVATE))
             }
             console.log("before filtering: [" + result.map(r => r.name).join(", ") + "]")

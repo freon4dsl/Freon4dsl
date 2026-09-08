@@ -6,7 +6,7 @@ import { CollectDeclaredNodesWorker } from "../internal.js"
 
 export class FreonDeclaredNodeProvider implements FreDeclaredNodeProvider<FreNode> {
     public getDeclaredNodes(namespace: FreNamespace<FreNode>, publicOnly: boolean): Set<FreScoperNamedNode<FreNode>> {
-        // console.log('FreonDeclaredNodeProvider getDeclaredNodes for ', namespace._myNode.name, ' publicOnly', publicOnly);
+        // console.log('FreonDeclaredNodeProvider getDeclaredNodes for ', namespace.target.name, ' publicOnly', publicOnly);
         let result: FreNamedNode[] = []
         // Set up the 'worker' of the visitor pattern.
         const myNamesCollector = new CollectDeclaredNodesWorker()

@@ -1,4 +1,3 @@
-import type { FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { FreLogger } from "../logging/index.js";
 import { type FreScoper } from "./FreScoper.js";
 import { notNullOrUndefined } from '../util/index.js';
@@ -36,17 +35,17 @@ export class FreCompositeScoper<T extends FreScoperNode<T>> implements FreScoper
      * Returns the node the 'refToResolve' refers to.
      * @param refToResolve
      */
-    resolvePathName(refToResolve: FreNodeReference<FreNamedNode>): FreScoperNamedNode<T> | undefined {
+    resolvePathName(node: T, pathname: string[], typeName: string): FreScoperNamedNode<T> | undefined {
         // console.log('resolving: ', refToResolve.pathname)
-        const baseNamespace: FreNamespace<T> | undefined = findEnclosingNamespace<T>(refToResolve, this.registry, this.scoperLanguage)
+        const baseNamespace: FreNamespace<T> | undefined = findEnclosingNamespace<T>(node, this.registry, this.scoperLanguage)
         const currentNamespace: FreNamespace<T> = baseNamespace
         if (notNullOrUndefined(baseNamespace)) {
             return resolvePathStartingInNamespace<T>(
                 baseNamespace,
                 currentNamespace,
-                refToResolve.pathname,
+                pathname,
                 this,
-                refToResolve.typeName,
+                typeName,
                 this.registry,
                 this.scoperLanguage,
             )
@@ -62,7 +61,7 @@ export class FreCompositeScoper<T extends FreScoperNode<T>> implements FreScoper
      * @param node
      * @param metatype
      */
-    getVisibleNodes(node: T | FreNodeReference<FreNamedNode>, metatype?: string): FreScoperNamedNode<T>[] {
+    getVisibleNodes(node: T, metatype?: string): FreScoperNamedNode<T>[] {
         // console.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         console.log("COMPOSITE getVisibleNodes for node owned by " + node.freOwner())
         if (notNullOrUndefined(node)) {

@@ -122,6 +122,8 @@ export class ScoperTemplate {
             const namespaceExpressionStr: string = ExpressionGenerationUtil.langExpToTypeScript(namespaceInfo.expression, "node", imports, true);
             // see whether the expression results in a list, because we need to distinguish between lists and non-lists
             const previousIsList = ExpressionGenerationUtil.previousIsList;
+            const lastExp = namespaceInfo.expression.getLastExpression()
+            const isPart: boolean = lastExp.getIsPart()
             if (previousIsList) {
                 const loopVar: string = "loopVariable";
                 imports.core.add('isNullOrUndefined');
@@ -132,18 +134,24 @@ export class ScoperTemplate {
                     if (notNullOrUndefined(list${index}) ){
                         for (let ${loopVar} of list${index++}) {
                             if (!isNullOrUndefined(${loopVar})) {
-                                result.push(new ${Names.FreNamespaceInfo}<${Names.FreNode}>(${loopVar}, ${namespaceInfo.recursive}));
+                                result.push(new ${Names.FreNamespaceInfo}<${Names.FreNode}>(${
+                                    isPart
+                                        ? `${loopVar}`
+                                        : `{                        
+                                    kind: "reference",
+                                    pathname: ${loopVar}.pathname,
+                                    typeName: ${loopVar}.typeName
+                                }`
+                                }, ${namespaceInfo.recursive}));
                             }
                         }
                     }`)
             } else {
                 // try to determine the type of the node from the last of the chain of expressions
-                const lastExp = namespaceInfo.expression.getLastExpression();
                 let xxType = lastExp.getResultingClassifier()?.name;
                 if (!isNullOrUndefined(xxType)) {
                     imports.language.add(xxType);
                 }
-                const isPart: boolean = lastExp.getIsPart();
                 if (!isPart) {
                     xxType = `${Names.FreNodeReference}<${xxType}>`;
                     imports.core.add(Names.FreNodeReference);
@@ -154,7 +162,15 @@ export class ScoperTemplate {
                     // generated from '${namespaceInfo.toFreString()}'
                     const xx${index} ${xxType ? `: ${xxType} | undefined` : ``} = ${namespaceExpressionStr};
                     if (!isNullOrUndefined(xx${index})) { 
-                        result.push(new ${Names.FreNamespaceInfo}<${Names.FreNode}>(xx${index}, ${namespaceInfo.recursive}));
+                        result.push(new ${Names.FreNamespaceInfo}<${Names.FreNode}>(${
+                            isPart
+                                ? `xx${index}`
+                                : `{                        
+                                    kind: "reference",
+                                    pathname: xx${index}.pathname,
+                                    typeName: xx${index}.typeName
+                                }`
+                        }, ${namespaceInfo.recursive}));
                     }`)
             }
         }

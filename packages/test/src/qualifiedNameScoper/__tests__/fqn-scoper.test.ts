@@ -119,7 +119,7 @@ describe("Testing Custom Scoper", () => {
 		// add a part to the first QualifiedName
 		const nodeToAdd = (model.findUnit('unit1_1') as UnitType1).content.find(xx => xx.name === "Z")
 		addPart(firstQ, nodeToAdd);
-		expect(getVisibleNames(scoper.getVisibleNodes(firstQ.part))).toStrictEqual([   "TestRefs1",
+		expect(getVisibleNames(scoper.getVisibleNodes(firstQ.part.freOwner()))).toStrictEqual([   "TestRefs1",
 			"unit1_1",
 			"unit1_2",
 			"A",

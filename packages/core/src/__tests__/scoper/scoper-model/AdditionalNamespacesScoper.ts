@@ -26,7 +26,16 @@ export class AdditionalNamespacesScoper extends FreScoperBase<FreNode> {
         if (node instanceof UnitA) {
             // generated based on 'imports'
             for (let loopVariable of node.myRef) {
-                result.push(new FreNamespaceInfo<FreNode>(loopVariable, false));
+                result.push(
+                    new FreNamespaceInfo<FreNode>(
+                        {
+                            kind: "reference",
+                            pathname: loopVariable.pathname,
+                            typeName: loopVariable.typeName,
+                        },
+                        false,
+                    ),
+                )
             }
         }
         return result;

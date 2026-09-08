@@ -51,11 +51,16 @@ describe("FreNamespace visibleNames with replacements, but without additions, ",
 	let concept_B_4: NodeX;
 	let concept_B_4_3: NodeX;
 
-    CoreConfig.initialize(null, null)
-	initializeLanguage();
-	const scoper: ReplacementNamespaceScoper = new ReplacementNamespaceScoper()
-    const mainScoper: FreCompositeScoper<FreNode> = new FreCompositeScoper<FreNode>(new FreonScoperLanguage(), new FreonDeclaredNodeProvider())
-	mainScoper.appendScoper(scoper);
+    initializeLanguage()
+
+    const env = FreLanguageEnvironment.getInstance()
+    const mainScoper = new FreCompositeScoper<FreNode>(new FreonScoperLanguage(), new FreonDeclaredNodeProvider())
+    const scoper: ReplacementNamespaceScoper = new ReplacementNamespaceScoper()
+
+    mainScoper.appendScoper(scoper)
+    env.scoper = mainScoper
+
+    CoreConfig.initialize(env, null)
 
 	beforeEach(() => {
 		// create a simple model where some nodes are namespaces and some are not

@@ -4,7 +4,7 @@
  */
 
 /* TODO This code is not adapted to resolving a FreNodeReference that has as pathname a fully qualified name which contains
-    '<anonymous>'. This situation might occur when there is a namespace whose '_myNode' does not have a name, i.e. it is not a FreNamedNode.
+    '<anonymous>'. This situation might occur when there is a namespace whose 'target' does not have a name, i.e. it is not a FreNamedNode.
 */
 
 /*
@@ -44,14 +44,20 @@ FreNamespace {
 
 */
 
-import { type FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { FreLanguage } from "../language/index.js";
 import { isNullOrUndefined, notNullOrUndefined } from '../util/index.js';
 import type { FreCompositeScoper } from './FreCompositeScoper.js';
 import { FreLogger } from "../logging/index.js";
 import { resolvePathStartingInNamespace } from './ScoperUtil.js';
 import type { FreNamespaceInfo } from './FreNamespaceInfo.js';
-import { type FreDeclaredNodeProvider, type FreScoperNamedNode, type FreScoperNode, isScoperNamedNode } from "./internal.js"
+import {
+    type FreDeclaredNodeProvider,
+    type FreScoperNamedNode,
+    type FreScoperNode,
+    type FreScoperReference,
+    isScoperNamedNode,
+    isScoperReference,
+} from "./internal.js"
 import type { FreNamespaceRegistry } from "./internal.js"
 
 const LOGGER = new FreLogger("FreonNamespace").mute();
@@ -123,8 +129,8 @@ export class FreNamespace<T extends FreScoperNode<T>> {
 
         // First add all imports that are not defined by FreNodeReferences
         additionals.forEach((namespaceInfo) => {
-            const nsNode = namespaceInfo._myNode
-            if (notNullOrUndefined(nsNode) && !(nsNode instanceof FreNodeReference)) {
+            const nsNode = namespaceInfo.target
+            if (notNullOrUndefined(nsNode) && !isScoperReference(nsNode)) {
                 this.internalAddSingleImport(mainScoper, nsNode, visitedNamespaces, resultSoFar, namespaceInfo.recursive).forEach((n) => {
                     resultSoFar.add(n)
                 })
@@ -136,24 +142,30 @@ export class FreNamespace<T extends FreScoperNode<T>> {
         // an error is logged.
         let remainingNS: FreNamespaceInfo<T>[] = []
         additionals.forEach((namespaceInfo) => {
-            if (namespaceInfo._myNode instanceof FreNodeReference) remainingNS.push(namespaceInfo)
+            if (isScoperReference(namespaceInfo.target)) {
+                remainingNS.push(namespaceInfo)
+            }
         })
         while (remainingNS.length > 0) {
             const toBeRemoved: FreNamespaceInfo<T>[] = []
             remainingNS.forEach((addon) => {
-                const node: FreScoperNamedNode<T> = this.findInResultSoFar(mainScoper, addon._myNode as FreNodeReference<FreNamedNode>, resultSoFar)
-                if (notNullOrUndefined(node)) {
-                    this.internalAddSingleImport(mainScoper, node, visitedNamespaces, resultSoFar, addon.recursive).forEach((n) => {
-                        resultSoFar.add(n)
-                    })
-                    toBeRemoved.push(addon)
+                if (isScoperReference(addon.target)) {
+                    const node = this.findInResultSoFar(mainScoper, addon.target, resultSoFar)
+                    if (notNullOrUndefined(node)) {
+                        this.internalAddSingleImport(mainScoper, node, visitedNamespaces, resultSoFar, addon.recursive).forEach((n) => {
+                            resultSoFar.add(n)
+                        })
+                        toBeRemoved.push(addon)
+                    }
                 }
             })
             if (toBeRemoved.length === 0) {
                 // Nothing found, while still having remaining NS-es to resolve
                 const referenceSeparator: string = "##" // todo get value from .edit file
                 LOGGER.error(
-                    `getImportedNodes: cannot resolve imported namespaces for ${this._myNode["name"]} => ${remainingNS.map((remain) => (remain._myNode instanceof FreNodeReference ? remain._myNode.pathnameToString(referenceSeparator) : remain._myNode["name"]))}`,
+                    `getImportedNodes: cannot resolve imported namespaces for ${this._myNode["name"]} => ${remainingNS.map((remain) =>
+                        isScoperReference(remain.target) ? remain.target.pathname.join(referenceSeparator) : remain.target["name"],
+                    )}`,
                 )
                 break
             }
@@ -176,11 +188,11 @@ export class FreNamespace<T extends FreScoperNode<T>> {
         const alternatives: FreNamespaceInfo<T>[] = mainScoper.alternativeNamespaces(this._myNode)
         const resultSoFar: Set<FreScoperNamedNode<T>> = this.getDeclaredNodes(PUBLIC_AND_PRIVATE)
         alternatives.forEach((namespaceInfo) => {
-            const nsNode = namespaceInfo._myNode
+            const nsNode = namespaceInfo.target
             if (notNullOrUndefined(nsNode)) {
                 const parentNs = this.findParentNamespace(this, mainScoper)
                 const visibleInParent = new Set<FreScoperNamedNode<T>>(parentNs.getVisibleNodes(mainScoper, [], false))
-                if (nsNode instanceof FreNodeReference) {
+                if (isScoperReference(nsNode)) {
                     // NB the reference should be resolvable in the parent of this namespace. This should also be checked in meta!
                     // NB this restricts nsNode: it may not be a 'child' namespace of 'this'!
                     if (notNullOrUndefined(parentNs)) {
@@ -273,6 +285,9 @@ export class FreNamespace<T extends FreScoperNode<T>> {
         resultSoFar: Set<FreScoperNamedNode<T>>,
         recursive: boolean,
     ): Set<FreScoperNamedNode<T>> {
+        if (isScoperReference(nsNode)) {
+            throw new Error(`FreScoperReference reached internalAddSingleImport: ${nsNode.pathname}`)
+        }
         const myResult: Set<FreScoperNamedNode<T>> = new Set<FreScoperNamedNode<T>>()
         const addedNs = this.registry.getOrCreate(nsNode)
         if (!visitedNamespaces.includes(addedNs)) {
@@ -318,7 +333,7 @@ export class FreNamespace<T extends FreScoperNode<T>> {
      */
     private findInResultSoFar(
         mainScoper: FreCompositeScoper<T>,
-        toBeResolved: FreNodeReference<FreNamedNode>,
+        toBeResolved: FreScoperReference,
         foundSoFar: Set<FreScoperNamedNode<T>>,
     ): FreScoperNamedNode<T> | undefined {
         // We have to take all names in the path into account.

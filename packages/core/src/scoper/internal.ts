@@ -8,4 +8,5 @@ export * from "./FreScoperBase.js";
 export * from "./FreCompositeScoper.js"
 export * from "./ScoperInterfaces.js"
 export * from "./FreNamespaceRegistry.js"
+export * from "./ScoperUtil.js"
 

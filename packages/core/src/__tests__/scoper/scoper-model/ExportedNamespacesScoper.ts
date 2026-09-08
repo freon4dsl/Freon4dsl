@@ -9,35 +9,53 @@ import { UnitB } from './UnitB.js';
  * otherwise this class implements the default scoper.
  */
 export class ExportedNamespacesScoper extends FreScoperBase<FreNode> {
-    recursiveImportsA: boolean = false;
-    recursiveImportsB: boolean = false;
+    recursiveImportsA: boolean = false
+    recursiveImportsB: boolean = false
 
     /**
      * Returns the replacement namespace if it can be found for 'node'.
      * @param _node
      */
     public replacementNamespace(node: FreNode): FreNamedNode | FreNodeReference<FreNamedNode> | undefined {
-        return undefined;
+        return undefined
     }
 
     /**
-     * Returns all FreNodes that are defined as additional namespaces for 'node'.
+     * Returns all namespace targets defined as additional namespaces for 'node'.
      * @param node
      */
     public importedNamespaces(node: FreNode): FreNamespaceInfo<FreNode>[] {
-        const result: FreNamespaceInfo<FreNode>[] = [];
+        const result: FreNamespaceInfo<FreNode>[] = []
         // namespace addition for UnitA
         if (node instanceof UnitA) {
             // generated based on 'imports'
             for (let loopVariable of node.myRef) {
-                result.push(new FreNamespaceInfo<FreNode>(loopVariable, this.recursiveImportsB));
+                result.push(
+                    new FreNamespaceInfo<FreNode>(
+                        {
+                            kind: "reference",
+                            pathname: loopVariable.pathname,
+                            typeName: loopVariable.typeName,
+                        },
+                        this.recursiveImportsB,
+                    ),
+                )
             }
         } else if (node instanceof UnitB) {
             // generated based on 'imports'
             for (let loopVariable of node.myRef) {
-                result.push(new FreNamespaceInfo<FreNode>(loopVariable, this.recursiveImportsA));
+                result.push(
+                    new FreNamespaceInfo<FreNode>(
+                        {
+                            kind: "reference",
+                            pathname: loopVariable.pathname,
+                            typeName: loopVariable.typeName,
+                        },
+                        this.recursiveImportsA,
+                    ),
+                )
             }
         }
-        return result;
+        return result
     }
 }

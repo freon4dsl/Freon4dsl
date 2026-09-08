@@ -58,7 +58,16 @@ export class ReplacementNamespaceScoper extends FreScoperBase<FreNode> {
                     const newRef = FreNodeReference.create<NodeX>('B_2', 'NodeX');
                     (node.freOwner() as IWithName).myRef.push(newRef);
                     (node.freOwner() as IWithName).myRef.forEach( ref => {
-                        result.push(new FreNamespaceInfo<FreNode>(ref, false));
+                        result.push(
+                            new FreNamespaceInfo<FreNode>(
+                                {
+                                    kind: "reference",
+                                    pathname: ref.pathname,
+                                    typeName: ref.typeName,
+                                },
+                                false,
+                            ),
+                        )
                     })
                 })
             }

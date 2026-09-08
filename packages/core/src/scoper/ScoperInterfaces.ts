@@ -22,3 +22,19 @@ export interface FreScoperLanguage<T extends FreScoperNode<T>> {
 export interface FreDeclaredNodeProvider<T extends FreScoperNode<T>> {
     getDeclaredNodes(namespace: FreNamespace<T>, publicOnly: boolean): Set<FreScoperNamedNode<T>>
 }
+
+/**
+ * Represents an unresolved reference used by the scoper while calculating namespace visibility.
+ * It contains only the information needed for scoping and intentionally does not hold or resolve
+ * a model reference object. This prevents the scoper from depending on a particular AST/reference
+ * implementation and avoids recursive resolution while scopes are still being constructed.
+ */
+export interface FreScoperReference {
+    kind: "reference"
+    pathname: string[]
+    typeName: string
+}
+
+export function isScoperReference(value: unknown): value is FreScoperReference {
+    return typeof value === "object" && value !== null && "kind" in value && value.kind === "reference"
+}

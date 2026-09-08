@@ -1,4 +1,4 @@
-import { type FreNamedNode, FreNodeReference } from '../ast/index.js';
+import { type FreNamedNode } from '../ast/index.js';
 import { isNullOrUndefined } from '../util/index.js';
 import { FreLanguage } from '../language/index.js';
 import {
@@ -21,7 +21,7 @@ import {
  * @param scoperLanguage    holds info about the language, like 'is this type a namespace'
  */
 export function findEnclosingNamespace<T extends FreScoperNode<T>>(
-    node: FreNodeReference<FreNamedNode> | T | undefined,
+    node: T | undefined,
     registry: FreNamespaceRegistry<T>,
     scoperLanguage: FreScoperLanguage<T>
 ): FreNamespace<T> | undefined {
@@ -29,23 +29,18 @@ export function findEnclosingNamespace<T extends FreScoperNode<T>>(
         return undefined
     }
     console.log(`findEnclosingNamespace for ${node.freOwner()}`)
-    if (node instanceof FreNodeReference) {
-        console.log('\t is reference')
-        return findEnclosingNamespace<T>(node.freOwner() as unknown as T | undefined, registry, scoperLanguage)
+    if (scoperLanguage.isNamespace(node)) {
+        console.log("\t is part and namespace")
+        // if (isScoperNamedNode(node)) {
+        console.log("\t isScoperNamedNode")
+        return registry.getOrCreate(node)
+        // } else {
+        //     console.log("\t is NOT isScoperNamedNode: " + node.constructor.name)
+        //     return undefined
+        // }
     } else {
-        if (scoperLanguage.isNamespace(node)) {
-            console.log("\t is part and namespace")
-            // if (isScoperNamedNode(node)) {
-                console.log("\t isScoperNamedNode")
-                return registry.getOrCreate(node)
-            // } else {
-            //     console.log("\t is NOT isScoperNamedNode: " + node.constructor.name)
-            //     return undefined
-            // }
-        } else {
-            console.log("\t is part and NOT namespace")
-            return findEnclosingNamespace<T>(node.freOwner(), registry, scoperLanguage)
-        }
+        console.log("\t is part and NOT namespace")
+        return findEnclosingNamespace<T>(node.freOwner(), registry, scoperLanguage)
     }
 }
 

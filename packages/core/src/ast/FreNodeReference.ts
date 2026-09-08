@@ -120,7 +120,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         if (notNullOrUndefined(this._FRE_referred)) {
             return this._FRE_referred
         } else {
-            return FREON.environment.scoper.resolvePathName(this) as T
+            return FREON.environment.scoper.resolvePathName(this.freOwner(), this.pathname, this.typeName) as T
         }
     }
 

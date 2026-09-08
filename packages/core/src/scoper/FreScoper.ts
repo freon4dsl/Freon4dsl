@@ -1,7 +1,4 @@
-import type { FreNamedNode, FreNodeReference } from '../ast/index.js';
-import type { FreCompositeScoper } from "./FreCompositeScoper.js";
-import type { FreNamespaceInfo } from './FreNamespaceInfo.js';
-import type { FreScoperNamedNode, FreScoperNode } from "./internal.js"
+import type { FreCompositeScoper, FreNamespaceInfo, FreScoperNamedNode, FreScoperNode } from "./internal.js"
 
 // Part of the Freon Framework
 
@@ -18,7 +15,7 @@ export interface FreScoper<T extends FreScoperNode<T>> {
      * @param node
      * @param metaType
      */
-    getVisibleNodes(node: T | FreNodeReference<FreNamedNode>, metaType?: string): FreScoperNamedNode<T>[]
+    getVisibleNodes(node: T, metaType?: string): FreScoperNamedNode<T>[]
 
     /**
      * Returns all nodes and/or node references that represent namespaces which should be added to the namespace

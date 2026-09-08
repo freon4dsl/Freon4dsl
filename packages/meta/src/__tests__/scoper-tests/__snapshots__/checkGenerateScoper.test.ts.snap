@@ -36,7 +36,16 @@ export class ROOTScoper extends FreScoperBase<FreNode> {
             // generated from 'self.ee.dd.cc.bb.aa;'
             const xx1: FreNodeReference<AA> | undefined = node.ee?.dd?.cc?.bb?.aa;
             if (!isNullOrUndefined(xx1)) {
-                result.push(new FreNamespaceInfo<FreNode>(xx1, false));
+                result.push(
+                    new FreNamespaceInfo<FreNode>(
+                        {
+                            kind: "reference",
+                            pathname: xx1.pathname,
+                            typeName: xx1.typeName,
+                        },
+                        false,
+                    ),
+                );
             }
         }
         // namespace replacement for FF
@@ -44,7 +53,16 @@ export class ROOTScoper extends FreScoperBase<FreNode> {
             // generated from 'self.ee.dd.cc.bb.aa;'
             const xx0: FreNodeReference<AA> | undefined = node.ee?.dd?.cc?.bb?.aa;
             if (!isNullOrUndefined(xx0)) {
-                result.push(new FreNamespaceInfo<FreNode>(xx0, false));
+                result.push(
+                    new FreNamespaceInfo<FreNode>(
+                        {
+                            kind: "reference",
+                            pathname: xx0.pathname,
+                            typeName: xx0.typeName,
+                        },
+                        false,
+                    ),
+                );
             }
         }
 
@@ -90,14 +108,32 @@ export class ROOTScoper extends FreScoperBase<FreNode> {
             // generated from 'self.AAprop13;'
             const xx4: FreNodeReference<FF> | undefined = node.AAprop13;
             if (!isNullOrUndefined(xx4)) {
-                result.push(new FreNamespaceInfo<FreNode>(xx4, false));
+                result.push(
+                    new FreNamespaceInfo<FreNode>(
+                        {
+                            kind: "reference",
+                            pathname: xx4.pathname,
+                            typeName: xx4.typeName,
+                        },
+                        false,
+                    ),
+                );
             }
             // generated from 'self.AAprop14;'
             const list5 = node.AAprop14;
             if (notNullOrUndefined(list5)) {
                 for (let loopVariable of list5) {
                     if (!isNullOrUndefined(loopVariable)) {
-                        result.push(new FreNamespaceInfo<FreNode>(loopVariable, false));
+                        result.push(
+                            new FreNamespaceInfo<FreNode>(
+                                {
+                                    kind: "reference",
+                                    pathname: loopVariable.pathname,
+                                    typeName: loopVariable.typeName,
+                                },
+                                false,
+                            ),
+                        );
                     }
                 }
             }
