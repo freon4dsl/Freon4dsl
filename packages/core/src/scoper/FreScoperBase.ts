@@ -1,15 +1,14 @@
-import type { FreNode, FreNamedNode } from '../ast/index.js';
 import { FreLanguage } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
-// import type { FreCompositeTyper } from "../typer/index.js";
 import type { FreCompositeScoper } from "./FreCompositeScoper.js";
 import type { FreNamespace} from './FreNamespace.js';
 import { PUBLIC_AND_PRIVATE } from './FreNamespace.js';
 import type { FreNamespaceInfo } from "./FreNamespaceInfo.js"
 import type { FreScoper } from "./FreScoper.js";
 import { notNullOrUndefined } from '../util/index.js';
-import { findEnclosingNamespace, hasCorrectType } from './ScoperUtil.js';
-// import { FreLanguageEnvironment } from "../environment/index.js"
+import { findEnclosingNamespace, hasCorrectType, transformFreNodes } from "./ScoperUtil.js"
+import  { type FreScoperNamedNode, type FreScoperNode } from "./internal.js"
+import { type FreNamedNode, FreNodeReference } from "../ast/index.js"
 
 const LOGGER = new FreLogger("FreScoperBase");
 
@@ -18,34 +17,40 @@ const LOGGER = new FreLogger("FreScoperBase");
  * its methods are used by every generated scoper.
  */
 
-export abstract class FreScoperBase implements FreScoper {
-    mainScoper: FreCompositeScoper;
-    // myTyper: FreCompositeTyper; // todo see whether this can be replaced by FREON.environment.typer
+export abstract class FreScoperBase<T extends FreScoperNode<T>> implements FreScoper<T> {
+    mainScoper: FreCompositeScoper<T>
 
     /**
      * @see FreScoper
      * @param node
      * @param metaType
      */
-    public getVisibleNodes(node: FreNode, metaType?: string): FreNamedNode[] {
+    public getVisibleNodes(node: T | FreNodeReference<FreNamedNode>, metaType?: string): FreScoperNamedNode<T>[] {
         // console.log('BASE getVisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", metaType: " + metaType);
-        // this.myTyper = FreLanguageEnvironment.getInstance().typer // FREON.environment.typer;
+        console.log("BASE getVisibleNodes for " + node["name"] + " owned by " + node.freOwner(), ", metaType: " + metaType)
+        if (!this.mainScoper) {
+            LOGGER.error("getVisibleNodes: no mainScoper available")
+            return []
+        }
         if (notNullOrUndefined(node)) {
             // Initialize: remember all namespaces that we already included/visited, and add all nodes from the standard library.
-            const visitedNamespaces: FreNamespace[] = [];
-            let result: FreNamedNode[] = [].concat(FreLanguage.getInstance().stdLib.elements);
+            const visitedNamespaces: FreNamespace<T>[] = []
+            // TODO get rid of FreLanguage
+            let result: FreScoperNamedNode<T>[] = transformFreNodes(FreLanguage.getInstance().stdLib.elements)
             // Find the namespace that 'node' is in
-            const nearestNamespace: FreNamespace = findEnclosingNamespace(node);
+            const nearestNamespace: FreNamespace<T> | undefined = findEnclosingNamespace(node, this.mainScoper.registry, this.mainScoper.scoperLanguage)
             // Add the visible nodes from the namespace
             if (notNullOrUndefined(nearestNamespace)) {
-                result.push(...nearestNamespace.getVisibleNodes(this.mainScoper, visitedNamespaces, PUBLIC_AND_PRIVATE));
+                // console.log("nearestNamespace is: " + isScoperNamedNode(nearestNamespace._myNode) ? nearestNamespace._myNode.name : "unnamed")
+                result.push(...nearestNamespace.getVisibleNodes(this.mainScoper, visitedNamespaces, PUBLIC_AND_PRIVATE))
             }
+            console.log("before filtering: [" + result.map(r => r.name).join(", ") + "]")
             // If the 'metaType' parameter is present, filter on metaType
-            result = result.filter(elem => hasCorrectType(elem, metaType))
-            return result;
+            result = result.filter((elem) => hasCorrectType(elem, metaType))
+            return result
         } else {
-            LOGGER.error("getVisibleNodes: node is null");
-            return [];
+            LOGGER.error("getVisibleNodes: node is null")
+            return []
         }
     }
 
@@ -53,17 +58,17 @@ export abstract class FreScoperBase implements FreScoper {
      * @see FreScoper
      * @param node
      */
-    importedNamespaces(_node: FreNode): FreNamespaceInfo[] {
+    importedNamespaces(_node: T): FreNamespaceInfo<T>[] {
         // This method may be overridden by any subclass of this class.
-        return [];
+        return []
     }
 
     /**
      * @see FreScoper
      * @param node
      */
-    alternativeNamespaces(_node: FreNode): FreNamespaceInfo[] {
+    alternativeNamespaces(_node: T): FreNamespaceInfo<T>[] {
         // This method may be overridden by any subclass of this class.
-        return [];
+        return []
     }
 }

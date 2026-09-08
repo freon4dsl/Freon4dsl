@@ -3,13 +3,13 @@
  * All tests determine whether the declared nodes of a namespace are correct.
  */
 import { beforeEach, describe, test, expect } from 'vitest';
-import { CoreConfig } from "../../environment/index.js"
+import { CoreConfig, FREON } from "../../environment/index.js"
 import { type ScoperModel } from "./scoper-model/ScoperModel.js"
 import { ModelCreator } from './ModelCreator.js';
 import { initializeLanguage, type UnitB } from "./scoper-model/index.js"
-import { FreNamespace } from '../../scoper/index.js';
-import { type FreNamedNode } from "../../ast/index.js"
+import { type FreNamedNode, FreNode } from "../../ast/index.js"
 import { FreLanguage } from '../../language/index.js';
+import { FreCompositeScoper, FreNamespaceRegistry, FreonDeclaredNodeProvider, FreonScoperLanguage } from "../../scoper"
 
 
 function printNames(set: Set<FreNamedNode>) {
@@ -22,15 +22,18 @@ describe("FreNamespace declaredNames", () => {
 	let model: ScoperModel;
     CoreConfig.initialize(null, null)
 	initializeLanguage();
+    let mainScoper: FreCompositeScoper<FreNode>
 	
 	beforeEach(() => {
 		// create a simple model where some nodes are namespaces and some are not
 		model = ModelCreator.createSimpleModel();
+        mainScoper = new FreCompositeScoper<FreNode>(new FreonScoperLanguage(), new FreonDeclaredNodeProvider())
 	});
 
 	test(" model has all names as declared names", () => {
 		// test namespace for 'model'
-		const namespace = FreNamespace.create(model);
+		// const namespace = FreNamespace.create(model)
+        const namespace = mainScoper.registry.getOrCreate(model)
 		const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 		// printNames(set);
 		// size = 50 grandchildren plus 10 children plus 2 units
@@ -39,7 +42,7 @@ describe("FreNamespace declaredNames", () => {
 
 	test(" unit has contained names as declared names", () => {
 		// test namespace for 'unit'
-		const namespace = FreNamespace.create(model.findUnit('UnitA1'));
+		const namespace = mainScoper.registry.getOrCreate(model.findUnit('UnitA1'));
 		const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 		// printNames(set);
 		// size = 25 grandchildren plus 5 children
@@ -51,7 +54,7 @@ describe("FreNamespace declaredNames", () => {
 		const unit: UnitB = model.findUnit('UnitB1') as UnitB;
 		const concept = unit.childrenWithName.find(child => child.name === 'B_2');
 		if (!!concept) {
-			const namespace = FreNamespace.create(concept);
+			const namespace = mainScoper.registry.getOrCreate(concept);
 			const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 			// printNames(set);
 			// size = 5 (grand)children
@@ -63,7 +66,7 @@ describe("FreNamespace declaredNames", () => {
 		// set the type 'UnitA' to be a namespace, this hides all names of the form 'A_*_*'
 		FreLanguage.getInstance().classifier('UnitA').isNamespace = true;
 		// test namespace for 'model'
-		const namespace = FreNamespace.create(model);
+		const namespace = mainScoper.registry.getOrCreate(model);
 		const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 		// printNames(set);
 		// size = 25 grandchildren plus 5 children plus 2 units
@@ -78,7 +81,7 @@ describe("FreNamespace declaredNames", () => {
 		// set the type 'NodeY' to be a namespace, this hides all names of the form 'A_*_*'.
 		FreLanguage.getInstance().classifier('NodeY').isNamespace = true;
 		// test namespace for 'model'
-		const namespace = FreNamespace.create(model);
+		const namespace = mainScoper.registry.getOrCreate(model);
 		const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 		// printNames(set);
 		// size = no grandchildren plus 5 children plus 2 units
@@ -94,7 +97,7 @@ describe("FreNamespace declaredNames", () => {
 		// set the type 'NodeY' to be a namespace
 		FreLanguage.getInstance().classifier('NodeY').isNamespace = true;
 		// test namespace for 'unit'
-		const namespace = FreNamespace.create(model.findUnit('UnitA1'));
+		const namespace = mainScoper.registry.getOrCreate(model.findUnit('UnitA1'));
 		const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 		// printNames(set);
 		// size = no grandchildren, only 5 children

@@ -13,7 +13,7 @@ import { NodeY } from './NodeY.js';
  * Class ReplacementNamespaceScoper implements the scoper generated from, if present, the scoper definition,
  * otherwise this class implements the default scoper.
  */
-export class ReplacementNamespaceScoper extends FreScoperBase {
+export class ReplacementNamespaceScoper extends FreScoperBase<FreNode> {
     useUnitA: boolean = false;
     useUnitB: boolean = false;
     useNodeX: boolean = false;
@@ -24,31 +24,31 @@ export class ReplacementNamespaceScoper extends FreScoperBase {
      * Returns the replacement namespace if it can be found for 'node'.
      * @param node
      */
-    public alternativeNamespaces(node: FreNode): FreNamespaceInfo[] {
-        let result: FreNamespaceInfo[] = [];
+    public alternativeNamespaces(node: FreNode): FreNamespaceInfo<FreNode>[] {
+        let result: FreNamespaceInfo<FreNode>[] = [];
         // namespace addition for UnitA
         if (node instanceof UnitA) {
             if (this.useUnitB) {
                 // owner().if(ScoperModel).B_units
                 for (let u of (node.freOwner() as ScoperModel)?.B_units) {
-                    result.push(new FreNamespaceInfo(u, false));
+                    result.push(new FreNamespaceInfo<FreNode>(u, false));
                 }
             } else if (this.useNodeX) {
                 // owner().if(ScoperModel).B_units.childrenWithName
                 for (let u of (node.freOwner() as ScoperModel)?.B_units.map(u => u.childrenWithName).flat(1)) {
-                    result.push(new FreNamespaceInfo(u, false));
+                    result.push(new FreNamespaceInfo<FreNode>(u, false));
                 }
             }
         } else if (node instanceof UnitB) {
             if (this.useUnitA) {
                 // owner().if(ScoperModel).A_units
                 for (let u of (node.freOwner() as ScoperModel)?.A_units) {
-                    result.push(new FreNamespaceInfo(u, false));
+                    result.push(new FreNamespaceInfo<FreNode>(u, false));
                 }
             } else if (this.useNodeY) {
                 // owner().if(ScoperModel).A_units.childrenWithName
                 for (let u of (node.freOwner() as ScoperModel)?.A_units.map(u => u.childrenWithName).flat(1)) {
-                    result.push(new FreNamespaceInfo(u, false));
+                    result.push(new FreNamespaceInfo<FreNode>(u, false));
                 }
             }
         } else if (node instanceof NodeY) {
@@ -58,7 +58,7 @@ export class ReplacementNamespaceScoper extends FreScoperBase {
                     const newRef = FreNodeReference.create<NodeX>('B_2', 'NodeX');
                     (node.freOwner() as IWithName).myRef.push(newRef);
                     (node.freOwner() as IWithName).myRef.forEach( ref => {
-                        result.push(new FreNamespaceInfo(ref, false));
+                        result.push(new FreNamespaceInfo<FreNode>(ref, false));
                     })
                 })
             }
@@ -70,7 +70,7 @@ export class ReplacementNamespaceScoper extends FreScoperBase {
      * Returns all FreNodes that are defined as additional namespaces for 'node'.
      * @param node
      */
-    public importedNamespaces(node: FreNode): FreNamespaceInfo[] {
+    public importedNamespaces(node: FreNode): FreNamespaceInfo<FreNode>[] {
         return [];
     }
 }

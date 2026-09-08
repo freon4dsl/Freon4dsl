@@ -6,7 +6,7 @@ import type { FreNamedNode, FreNode, FreNodeReference } from '../../../ast/index
  * Class ScoperModelScoper implements the scoper generated from, if present, the scoper definition,
  * otherwise this class implements the default scoper.
  */
-export class ScoperModelScoper extends FreScoperBase {
+export class ScoperModelScoper extends FreScoperBase<FreNode> {
     /**
      * Returns the replacement namespace if it can be found for 'node'.
      * @param node
@@ -19,7 +19,7 @@ export class ScoperModelScoper extends FreScoperBase {
      * Returns all FreNodes that are defined as additional namespaces for 'node'.
      * @param node
      */
-    public importedNamespaces(node: FreNode): FreNamespaceInfo[] {
+    public importedNamespaces(node: FreNode): FreNamespaceInfo<FreNode>[] {
         return [];
     }
 }

@@ -14,8 +14,8 @@ export class CustomScoperTemplate {
          * Class '${Names.customScoper(language)}' is meant to be a convenient place to add any
          * custom code for scoping.
          */
-        export class ${Names.customScoper(language)} implements ${Names.FreScoperPart} {
-            mainScoper!: ${Names.FreCompositeScoper};
+        export class ${Names.customScoper(language)} implements ${Names.FreScoperPart}<${Names.FreNode}> {
+            mainScoper!: ${Names.FreCompositeScoper}<${Names.FreNode}>;
 
             /**
              *   Returns all elements that are visible in the namespace containing '_node'. Note that '_node' can 
@@ -37,7 +37,7 @@ export class CustomScoperTemplate {
              *
              * @param _node
              */
-            importedNamespaces(_node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[] {
+            importedNamespaces(_node: ${Names.FreNode}): ${Names.FreNamespaceInfo}<${Names.FreNode}>[] {
                 return [];
             }
 
@@ -47,9 +47,9 @@ export class CustomScoperTemplate {
              * 
              * @param _node
              */
-            alternativeNamespaces(_node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[]  {
+            alternativeNamespaces(_node: ${Names.FreNode}): ${Names.FreNamespaceInfo}<${Names.FreNode}>[]  {
                 return [];
             }
-        }`;
+        }`
     }
 }

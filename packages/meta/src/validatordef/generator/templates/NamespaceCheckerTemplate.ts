@@ -21,6 +21,7 @@ export class NamespaceCheckerTemplate {
         const checkerClassName: string = Names.namespaceChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
         const writerInterfaceName: string = Names.FreWriter;
+        const scoperInterfaceName: string = Names.FreCompositeScoper + "<" + Names.FreNode + ">"
         const classifiersToDo: FreMetaClassifier[] = [];
         classifiersToDo.push(language.modelConcept);
         classifiersToDo.push(...language.units);
@@ -39,13 +40,15 @@ export class NamespaceCheckerTemplate {
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
             // 'myWriter' is used to provide error messages on the nodes in the model tree
             myWriter: ${writerInterfaceName} = ${Names.FreLanguageEnvironment}.getInstance().writer;
+            // 'myScoper' is used to find scopes on the nodes in the model tree
+            myScoper: ${scoperInterfaceName} = ${Names.FreLanguageEnvironment}.getInstance().scoper;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
         ${classifiersToDo.map((concept) => `${this.createChecksOnNamespaces(concept)}`).join("\n\n")}
         
         private checkDuplicateNamesInNamespace(node: FreNode) {
-            const declaredNodes: Set<FreNamedNode> = FreNamespace.create(node).getDeclaredNodes(false);
+            const declaredNodes: Set<FreNamedNode> = this.myScoper.registry.getOrCreate(node).getDeclaredNodes(false);
             const declaredNames: string[] = [];
             const doubleNames: string[] = [];
             declaredNodes.forEach(nn => {
@@ -60,12 +63,21 @@ export class NamespaceCheckerTemplate {
                 this.errorList.push(new FreError(\`Namespace \${namespaceName} has multiple nodes with the same name [\${doubleNames.map(n => n).join(', ')}].\`, node, 'name', FreErrorSeverity.Error));
             }
         }
-        }`;
+        }`
 
         const imports = new Imports(relativePath)
         imports.core = new Set<string>([
-            errorClassName, errorSeverityName, writerInterfaceName,
-            Names.FreLanguageEnvironment, Names.FreLanguage, Names.FreNamespace, Names.FreNode, Names.FreNamedNode, Names.notNullOrUndefined
+            errorClassName,
+            errorSeverityName,
+            writerInterfaceName,
+            Names.FreLanguageEnvironment,
+            Names.FreLanguage,
+            Names.FreNamespace,
+            Names.FreNode,
+            Names.FreNamedNode,
+            Names.notNullOrUndefined,
+            Names.FreCompositeScoper,
+            Names.isScoperNamedNode,
         ])
         imports.language = new Set<string>(this.done.map(cls => Names.classifier(cls)) )
         imports.utils.add(defaultWorkerName)
@@ -82,10 +94,10 @@ export class NamespaceCheckerTemplate {
         this.done.push(concept);
         return `${commentBefore}
                 public execBefore${Names.classifier(concept)}(${paramName}: ${Names.classifier(concept)}): boolean {
-                    if (notNullOrUndefined(node) && FreLanguage.getInstance().classifier("${Names.classifier(concept)}")?.isNamespace) {
+                    if (notNullOrUndefined(node) && this.myScoper.scoperLanguage.isNamespace(node)) {
                         this.checkDuplicateNamesInNamespace(node);
                     }
                     return false;
-                }`;
+                }`
     }
 }

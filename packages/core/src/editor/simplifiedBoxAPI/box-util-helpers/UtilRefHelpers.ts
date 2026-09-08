@@ -28,7 +28,7 @@ export class UtilRefHelpers {
         node: FreNode,
         propertyName: string,
         setFunc: (selected: string | FreNamedNode) => void,
-        scoper: FreScoper,
+        scoper: FreScoper<FreNode>,
         index?: number,
     ): ReferenceBox {
         const propType: string = FreLanguage.getInstance().classifierProperty(
@@ -67,7 +67,7 @@ export class UtilRefHelpers {
                 if (!!property) {
                     return { id: property.name, label: property.name, additional_label: this.makeAdditionalLabel(property) };
                 } else {
-                    return null;
+                    return null
                 }
             },
             // @ts-ignore
@@ -122,7 +122,7 @@ export class UtilRefHelpers {
     public static verticalReferenceListBox(
         node: FreNode,
         propertyName: string,
-        scoper: FreScoper,
+        scoper: FreScoper<FreNode>,
         listInfo?: FreListInfo,
         initializer?: Partial<VerticalListBox>,
     ): VerticalListBox {
@@ -158,7 +158,7 @@ export class UtilRefHelpers {
     public static horizontalReferenceListBox(
         node: FreNode,
         propertyName: string,
-        scoper: FreScoper,
+        scoper: FreScoper<FreNode>,
         listJoin?: FreListInfo,
         initializer?: Partial<HorizontalListBox>,
     ): HorizontalListBox {
@@ -201,7 +201,7 @@ export class UtilRefHelpers {
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        scoper: FreScoper,
+        scoper: FreScoper<FreNode>,
         initializer?: Partial<RefListReplacerBox>,
     ): RefListReplacerBox {
         // find the information on the property to be shown
@@ -255,7 +255,7 @@ export class UtilRefHelpers {
         node: FreNode,
         properties: FreNodeReference<FreNamedNode>[],
         propertyName: string,
-        scoper: FreScoper,
+        scoper: FreScoper<FreNode>,
         listJoin?: FreListInfo,
     ): Box[] {
         const result: Box[] = [];

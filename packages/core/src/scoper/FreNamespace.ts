@@ -44,48 +44,33 @@ FreNamespace {
 
 */
 
-import { type FreNode, type FreNamedNode, FreNodeReference } from '../ast/index.js';
-import { AstWalker } from "../ast-utils/index.js";
+import { type FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { FreLanguage } from "../language/index.js";
-import { CollectDeclaredNodesWorker } from "./CollectDeclaredNodesWorker.js";
 import { isNullOrUndefined, notNullOrUndefined } from '../util/index.js';
 import type { FreCompositeScoper } from './FreCompositeScoper.js';
 import { FreLogger } from "../logging/index.js";
 import { resolvePathStartingInNamespace } from './ScoperUtil.js';
 import type { FreNamespaceInfo } from './FreNamespaceInfo.js';
+import { type FreDeclaredNodeProvider, type FreScoperNamedNode, type FreScoperNode, isScoperNamedNode } from "./internal.js"
+import type { FreNamespaceRegistry } from "./internal.js"
 
 const LOGGER = new FreLogger("FreonNamespace").mute();
 
 export const PUBLIC_AND_PRIVATE: boolean = false;
 export const PUBLIC_ONLY: boolean = true;
 
-export class FreNamespace {
-    private static allNamespaces: Map<FreNode, FreNamespace> = new Map();
+export class FreNamespace<T extends FreScoperNode<T>> {
+    public readonly _myNode: T
+    private readonly registry: FreNamespaceRegistry<T>
+    private readonly declaredNodeProvider: FreDeclaredNodeProvider<T>
 
-    /**
-     * This method ensures that every node in the model has one and only one associated namespace object.
-     * The type of 'node' should be marked as namespace in the scoper definition.
-     * @param node
-     */
-    public static create(node: FreNode): FreNamespace {
-        const existingNS = this.allNamespaces.get(node);
-        if (notNullOrUndefined(existingNS)) {
-            return existingNS;
-        } else {
-            const result = new FreNamespace(node);
-            this.allNamespaces.set(node, result);
-            return result;
-        }
-    }
-
-    public _myNode: FreNode;
-
-    private constructor(node: FreNode) {
-        // todo should we check whether node 'is' a namespace?
+    constructor(node: T, registry: FreNamespaceRegistry<T>, nodeProvider: FreDeclaredNodeProvider<T>) {
         if (!node) {
-            LOGGER.log('FreNamespace constructed without node!');
+            LOGGER.log("FreNamespace constructed without node!")
         }
-        this._myNode = node;
+        this.registry = registry
+        this._myNode = node
+        this.declaredNodeProvider = nodeProvider
     }
 
     /**
@@ -96,44 +81,8 @@ export class FreNamespace {
      *
      * @param publicOnly
      */
-    public getDeclaredNodes(publicOnly: boolean): Set<FreNamedNode> {
-        // console.log('getDeclaredNodes for ', this._myNode.['name'], ' publicOnly', publicOnly);
-        let result: FreNamedNode[] = [];
-        // Set up the 'worker' of the visitor pattern.
-        const myNamesCollector = new CollectDeclaredNodesWorker();
-        myNamesCollector.namesList = result;
-
-        // Set up the 'walker' of the visitor pattern.
-        const myWalker = new AstWalker();
-        myWalker.myWorkers.push(myNamesCollector);
-
-        // Walk over the AST and collect the nodes from the namespace, but not from any child namespace.
-        // If 'publicOnly', do not gather the children from any nodes that are marked 'private',
-        // not even the 'public' ones.
-        myWalker.walk(this._myNode, (node: FreNode) => {
-            // To not go into nested private nodes, we also check whether the property is public.
-            return !FreLanguage.getInstance().classifier(node.freLanguageConcept()).isNamespace &&
-              (!publicOnly ||
-                (!!node.freOwner() &&
-                  FreLanguage.getInstance().classifierProperty(
-                    node.freOwner().freLanguageConcept(),
-                    node.freOwnerDescriptor().propertyName,
-                  ).isPublic))
-        });
-
-        // Filter the nodes on being 'public'.
-        if (publicOnly) {
-            result = result.filter((node) => {
-                return (!!node.freOwner() &&
-                  FreLanguage.getInstance().classifierProperty(
-                    node.freOwner().freLanguageConcept(),
-                    node.freOwnerDescriptor().propertyName
-                  ).isPublic);
-            })
-        }
-
-        // Transform the result to the required type.
-        return new Set<FreNamedNode>(result);
+    public getDeclaredNodes(publicOnly: boolean): Set<FreScoperNamedNode<T>> {
+        return this.declaredNodeProvider.getDeclaredNodes(this, publicOnly)
     }
 
     /**
@@ -141,18 +90,18 @@ export class FreNamespace {
      * @param mainScoper
      * @param visitedNamespaces
      */
-    public getParentNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[]): FreNamedNode[] {
-        const parentNamespace: FreNamespace = this.findParentNamespace(this);
-        const resultSoFar: Set<FreNamedNode> = new Set();
+    public getParentNodes(mainScoper: FreCompositeScoper<T>, visitedNamespaces: FreNamespace<T>[]): FreScoperNamedNode<T>[] {
+        const parentNamespace: FreNamespace<T> = this.findParentNamespace(this, mainScoper)
+        const resultSoFar: Set<FreScoperNamedNode<T>> = new Set()
         if (notNullOrUndefined(parentNamespace) && !visitedNamespaces.includes(parentNamespace)) {
             // We include all visible nodes from the parent, not only the declared nodes.
-            parentNamespace.getVisibleNodes(mainScoper, visitedNamespaces, PUBLIC_AND_PRIVATE).forEach(x => {
-                resultSoFar.add(x);
-            });
+            parentNamespace.getVisibleNodes(mainScoper, visitedNamespaces, PUBLIC_AND_PRIVATE).forEach((x) => {
+                resultSoFar.add(x)
+            })
             // No need to add 'parentNamespace' to 'visitedNamespaces', this is done by 'parentNamespace.getVisibleNodes'
         }
         // Transform the result to the required type.
-        return Array.from(resultSoFar);
+        return Array.from(resultSoFar)
     }
 
     /**
@@ -165,50 +114,54 @@ export class FreNamespace {
      * @param visitedNamespaces
      * @param resultSoFar
      */
-    public getImportedNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>): FreNamedNode[] {
-        const additionals: FreNamespaceInfo[] = mainScoper.importedNamespaces(this._myNode);
+    public getImportedNodes(
+        mainScoper: FreCompositeScoper<T>,
+        visitedNamespaces: FreNamespace<T>[],
+        resultSoFar: Set<FreScoperNamedNode<T>>,
+    ): FreScoperNamedNode<T>[] {
+        const additionals: FreNamespaceInfo<T>[] = mainScoper.importedNamespaces(this._myNode)
 
         // First add all imports that are not defined by FreNodeReferences
-        additionals.forEach(namespaceInfo => {
-            const nsNode = namespaceInfo._myNode;
+        additionals.forEach((namespaceInfo) => {
+            const nsNode = namespaceInfo._myNode
             if (notNullOrUndefined(nsNode) && !(nsNode instanceof FreNodeReference)) {
-                this.internalAddSingleImport(mainScoper, nsNode, visitedNamespaces, resultSoFar, namespaceInfo.recursive).forEach(n =>{
-                    resultSoFar.add(n);
+                this.internalAddSingleImport(mainScoper, nsNode, visitedNamespaces, resultSoFar, namespaceInfo.recursive).forEach((n) => {
+                    resultSoFar.add(n)
                 })
             }
-        });
+        })
         // Second, add imports that ARE defined by FreNodeReferences
         // This done after the 'normal' ones because the references may depend on the visible nodes of the other namespaces.
         // We loop over the references that are not resolved yet, until every one is done. If not every reference can be resolved,
         // an error is logged.
-        let remainingNS: FreNamespaceInfo[] = [];
-        additionals.forEach(namespaceInfo => {
-            if (namespaceInfo._myNode instanceof FreNodeReference) remainingNS.push(namespaceInfo);
-        });
+        let remainingNS: FreNamespaceInfo<T>[] = []
+        additionals.forEach((namespaceInfo) => {
+            if (namespaceInfo._myNode instanceof FreNodeReference) remainingNS.push(namespaceInfo)
+        })
         while (remainingNS.length > 0) {
-            const toBeRemoved: FreNamespaceInfo[] = [];
-            remainingNS.forEach(addon => {
-                const node: FreNamedNode = this.findInResultSoFar(mainScoper, addon._myNode as FreNodeReference<FreNamedNode>, resultSoFar);
+            const toBeRemoved: FreNamespaceInfo<T>[] = []
+            remainingNS.forEach((addon) => {
+                const node: FreScoperNamedNode<T> = this.findInResultSoFar(mainScoper, addon._myNode as FreNodeReference<FreNamedNode>, resultSoFar)
                 if (notNullOrUndefined(node)) {
-                    this.internalAddSingleImport(mainScoper, node, visitedNamespaces, resultSoFar, addon.recursive).forEach(n =>{
-                        resultSoFar.add(n);
+                    this.internalAddSingleImport(mainScoper, node, visitedNamespaces, resultSoFar, addon.recursive).forEach((n) => {
+                        resultSoFar.add(n)
                     })
-                    toBeRemoved.push(addon);
+                    toBeRemoved.push(addon)
                 }
-            });
+            })
             if (toBeRemoved.length === 0) {
                 // Nothing found, while still having remaining NS-es to resolve
-                const referenceSeparator: string = '##'; // todo get value from .edit file
+                const referenceSeparator: string = "##" // todo get value from .edit file
                 LOGGER.error(
-                  `getImportedNodes: cannot resolve imported namespaces for ${this._myNode["name"]} => ${remainingNS.map((remain) => (remain._myNode instanceof FreNodeReference ? remain._myNode.pathnameToString(referenceSeparator) : remain._myNode["name"]))}`,
+                    `getImportedNodes: cannot resolve imported namespaces for ${this._myNode["name"]} => ${remainingNS.map((remain) => (remain._myNode instanceof FreNodeReference ? remain._myNode.pathnameToString(referenceSeparator) : remain._myNode["name"]))}`,
                 )
-                break;
+                break
             }
-            remainingNS = remainingNS.filter(el => !toBeRemoved.includes(el));
+            remainingNS = remainingNS.filter((el) => !toBeRemoved.includes(el))
         }
 
         // Transform the result to the required type.
-        return Array.from(resultSoFar);
+        return Array.from(resultSoFar)
     }
 
     /**
@@ -219,38 +172,48 @@ export class FreNamespace {
      * @param mainScoper
      * @param visitedNamespaces
      */
-    public getAlternativeNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[]): FreNamedNode[] {
-        const alternatives: FreNamespaceInfo[] = mainScoper.alternativeNamespaces(this._myNode);
-        const resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes(PUBLIC_AND_PRIVATE)
-        alternatives.forEach(namespaceInfo => {
-            const nsNode = namespaceInfo._myNode;
+    public getAlternativeNodes(mainScoper: FreCompositeScoper<T>, visitedNamespaces: FreNamespace<T>[]): FreScoperNamedNode<T>[] {
+        const alternatives: FreNamespaceInfo<T>[] = mainScoper.alternativeNamespaces(this._myNode)
+        const resultSoFar: Set<FreScoperNamedNode<T>> = this.getDeclaredNodes(PUBLIC_AND_PRIVATE)
+        alternatives.forEach((namespaceInfo) => {
+            const nsNode = namespaceInfo._myNode
             if (notNullOrUndefined(nsNode)) {
-                const parentNs = this.findParentNamespace(this);
-                const visibleInParent = new Set<FreNamedNode>(parentNs.getVisibleNodes(mainScoper, [], false));
+                const parentNs = this.findParentNamespace(this, mainScoper)
+                const visibleInParent = new Set<FreScoperNamedNode<T>>(parentNs.getVisibleNodes(mainScoper, [], false))
                 if (nsNode instanceof FreNodeReference) {
                     // NB the reference should be resolvable in the parent of this namespace. This should also be checked in meta!
                     // NB this restricts nsNode: it may not be a 'child' namespace of 'this'!
                     if (notNullOrUndefined(parentNs)) {
-                        const resolvedNode = resolvePathStartingInNamespace(this, parentNs, nsNode.pathname, mainScoper, nsNode.typeName);
+                        const resolvedNode = resolvePathStartingInNamespace(
+                            this,
+                            parentNs,
+                            nsNode.pathname,
+                            mainScoper,
+                            nsNode.typeName,
+                            this.registry,
+                            mainScoper.scoperLanguage,
+                        )
                         if (isNullOrUndefined(resolvedNode)) {
-                            LOGGER.error(`Namespace that is defined via a reference ('${nsNode.pathname}') must be resolvable in the parent namespace of '${this._myNode['name']}' (i.e. in ${parentNs._myNode['name']}).`);
+                            LOGGER.error(
+                                `Namespace that is defined via a reference ('${nsNode.pathname}') must be resolvable in the parent namespace of '${this._myNode["name"]}' (i.e. in ${parentNs._myNode["name"]}).`,
+                            )
                         } else {
-                            this.internalAddSingleImport(mainScoper, resolvedNode, visitedNamespaces, visibleInParent, namespaceInfo.recursive).forEach(n =>{
-                                resultSoFar.add(n);
-                            });
+                            this.internalAddSingleImport(mainScoper, resolvedNode, visitedNamespaces, visibleInParent, namespaceInfo.recursive).forEach((n) => {
+                                resultSoFar.add(n)
+                            })
                         }
                     }
                 } else {
-                    const parentNs = this.findParentNamespace(this);
-                    const visibleInParent = new Set<FreNamedNode>(parentNs.getVisibleNodes(mainScoper, [], false));
-                    this.internalAddSingleImport(mainScoper, nsNode, visitedNamespaces, visibleInParent, namespaceInfo.recursive).forEach(n =>{
-                        resultSoFar.add(n);
-                    });
+                    const parentNs = this.findParentNamespace(this, mainScoper)
+                    const visibleInParent = new Set<FreScoperNamedNode<T>>(parentNs.getVisibleNodes(mainScoper, [], false))
+                    this.internalAddSingleImport(mainScoper, nsNode, visitedNamespaces, visibleInParent, namespaceInfo.recursive).forEach((n) => {
+                        resultSoFar.add(n)
+                    })
                 }
             }
-        });
+        })
         // Transform the result to the required type.
-        return Array.from(resultSoFar);
+        return Array.from(resultSoFar)
     }
 
     /**
@@ -269,23 +232,27 @@ export class FreNamespace {
      * @param visitedNamespaces
      * @param publicOnly
      */
-    public getVisibleNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[], publicOnly: boolean): FreNamedNode[] {
-        // console.log(`getVisibleNodes ${this._myNode.['name']}`)
-        visitedNamespaces.push(this);
-        const replacements: FreNamespaceInfo[] = mainScoper.alternativeNamespaces(this._myNode);
+    public getVisibleNodes(mainScoper: FreCompositeScoper<T>, visitedNamespaces: FreNamespace<T>[], publicOnly: boolean): FreScoperNamedNode<T>[] {
+        console.log(`FreNamespace getVisibleNodes ${isScoperNamedNode(this._myNode) ? this._myNode.name : "unnamed"}`)
+        visitedNamespaces.push(this)
+        const replacements: FreNamespaceInfo<T>[] = mainScoper.alternativeNamespaces(this._myNode)
         if (notNullOrUndefined(replacements) && replacements.length > 0) {
-            return this.getAlternativeNodes(mainScoper, visitedNamespaces);
+            return this.getAlternativeNodes(mainScoper, visitedNamespaces)
         } else {
             // First, add all the declared nodes.
-            const resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes(publicOnly)
-            this.getParentNodes(mainScoper, visitedNamespaces).forEach(x => {
-                resultSoFar.add(x);
-            });
-            this.getImportedNodes(mainScoper, visitedNamespaces, resultSoFar).forEach(x => {
-                resultSoFar.add(x);
+            const resultSoFar: Set<FreScoperNamedNode<T>> = this.getDeclaredNodes(publicOnly)
+            console.log(
+                "FreNamespace declaredNodes: ",
+                resultSoFar.forEach((r) => r.name),
+            )
+            this.getParentNodes(mainScoper, visitedNamespaces).forEach((x) => {
+                resultSoFar.add(x)
+            })
+            this.getImportedNodes(mainScoper, visitedNamespaces, resultSoFar).forEach((x) => {
+                resultSoFar.add(x)
             })
             // Transform the result to the required type.
-            return Array.from(resultSoFar);
+            return Array.from(resultSoFar)
         }
     }
 
@@ -299,21 +266,27 @@ export class FreNamespace {
      * @param recursive
      * @private
      */
-    private internalAddSingleImport(mainScoper: FreCompositeScoper, nsNode: FreNode, visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>, recursive: boolean): Set<FreNamedNode> {
-        const myResult: Set<FreNamedNode> = new Set<FreNamedNode>();
-        const addedNs = FreNamespace.create(nsNode);
+    private internalAddSingleImport(
+        mainScoper: FreCompositeScoper<T>,
+        nsNode: T,
+        visitedNamespaces: FreNamespace<T>[],
+        resultSoFar: Set<FreScoperNamedNode<T>>,
+        recursive: boolean,
+    ): Set<FreScoperNamedNode<T>> {
+        const myResult: Set<FreScoperNamedNode<T>> = new Set<FreScoperNamedNode<T>>()
+        const addedNs = this.registry.getOrCreate(nsNode)
         if (!visitedNamespaces.includes(addedNs)) {
-            addedNs.getDeclaredNodes(PUBLIC_ONLY).forEach(x => {
-                myResult.add(x);
-            });
+            addedNs.getDeclaredNodes(PUBLIC_ONLY).forEach((x) => {
+                myResult.add(x)
+            })
             if (recursive) {
-                addedNs.getImportedNodes(mainScoper, visitedNamespaces, resultSoFar).forEach(x => {
-                    myResult.add(x);
-                });
+                addedNs.getImportedNodes(mainScoper, visitedNamespaces, resultSoFar).forEach((x) => {
+                    myResult.add(x)
+                })
             }
-            visitedNamespaces.push(addedNs);
+            visitedNamespaces.push(addedNs)
         }
-        return myResult;
+        return myResult
     }
 
     /**
@@ -322,18 +295,17 @@ export class FreNamespace {
      * @param child
      * @private
      */
-    private findParentNamespace(child: FreNamespace): FreNamespace | undefined {
-        let owner: FreNode = child._myNode.freOwner();
-        while (notNullOrUndefined(owner) ) {
-            if (FreLanguage.getInstance().classifier(owner.freLanguageConcept()).isNamespace) {
-                return FreNamespace.create(owner as FreNamedNode);
+    private findParentNamespace(child: FreNamespace<T>, mainScoper: FreCompositeScoper<T>): FreNamespace<T> | undefined {
+        let owner: T = child._myNode.freOwner()
+        while (notNullOrUndefined(owner)) {
+            if (mainScoper.scoperLanguage.isNamespace(owner)) {
+                return this.registry.getOrCreate(owner)
             } else {
-                owner = owner.freOwner();
+                owner = owner.freOwner()
             }
         }
-        return undefined;
+        return undefined
     }
-
 
     /**
      * Try to resolve the first of the pathname of 'toBeResolved' in 'foundSoFar'.
@@ -344,22 +316,34 @@ export class FreNamespace {
      * @param foundSoFar
      * @private
      */
-    private findInResultSoFar(mainScoper: FreCompositeScoper, toBeResolved: FreNodeReference<FreNamedNode>, foundSoFar: Set<FreNamedNode>): FreNamedNode | undefined{
+    private findInResultSoFar(
+        mainScoper: FreCompositeScoper<T>,
+        toBeResolved: FreNodeReference<FreNamedNode>,
+        foundSoFar: Set<FreScoperNamedNode<T>>,
+    ): FreScoperNamedNode<T> | undefined {
         // We have to take all names in the path into account.
         // Search the first name within the nodes that are found so far, and continue from there.
-        let result: FreNamedNode = undefined;
+        let result: FreScoperNamedNode<T> | undefined = undefined
         const pathname = toBeResolved.pathname
-        foundSoFar.forEach(node => {
+        foundSoFar.forEach((node) => {
             if (node.name === pathname[0]) {
-                result = node;
+                result = node
             }
         })
         if (pathname.length > 1 && notNullOrUndefined(result) && FreLanguage.getInstance().classifier(result.freLanguageConcept()).isNamespace) {
-            const currentNamespace: FreNamespace = FreNamespace.create(result)
+            const currentNamespace: FreNamespace<T> = this.registry.getOrCreate(result)
             // Note that we need to pass the pathname without its first element,
             // and that the base namespace is different from the previous namespace!
-            result = resolvePathStartingInNamespace(this, currentNamespace, pathname.slice(1), mainScoper, toBeResolved.typeName);
+            result = resolvePathStartingInNamespace(
+                this,
+                currentNamespace,
+                pathname.slice(1),
+                mainScoper,
+                toBeResolved.typeName,
+                this.registry,
+                mainScoper.scoperLanguage,
+            )
         }
-        return result;
+        return result
     }
 }

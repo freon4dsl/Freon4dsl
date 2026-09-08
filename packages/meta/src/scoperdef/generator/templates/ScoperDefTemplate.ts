@@ -14,7 +14,7 @@ export class ScoperDefTemplate {
             })
         })
         const imports = new Imports(relativePath)
-        imports.core.add(Names.FreLanguage).add(Names.FreCompositeScoper)
+        imports.core.add(Names.FreLanguage).add(Names.FreCompositeScoper).add(Names.FreNode)
 
         return `// TEMPLATE: ScoperDefTemplate.generateScoperDef(...)
             ${imports.makeImports(language)}
@@ -25,7 +25,7 @@ export class ScoperDefTemplate {
              * Adds all known scopers to the main scoper.
              * @param rootScoper
              */
-            export function initializeScopers(rootScoper: ${Names.FreCompositeScoper}) {
+            export function initializeScopers(rootScoper: ${Names.FreCompositeScoper}<${Names.FreNode}>) {
                 for (const p of freonConfiguration.customScopers) {
                     rootScoper.appendScoper(p);
                 }
@@ -35,14 +35,11 @@ export class ScoperDefTemplate {
             /**
              * Adds namespace info to the in-memory representation of the language metamodel.
              */
-             export function initializeScoperDef(rootScoper: ${Names.FreCompositeScoper}) {
+             export function initializeScoperDef(rootScoper: ${Names.FreCompositeScoper}<${Names.FreNode}>) {
                  ${Array.from(concreteNamespaces)
-                     .map(
-                         (element) =>
-                             `${Names.FreLanguage}.getInstance().classifier("${Names.classifier(element)}")!.isNamespace = true;`,
-                     )
+                     .map((element) => `${Names.FreLanguage}.getInstance().classifier("${Names.classifier(element)}")!.isNamespace = true;`)
                      .join("\n")}
                 initializeScopers(rootScoper);
-            }`;
+            }`
     }
 }

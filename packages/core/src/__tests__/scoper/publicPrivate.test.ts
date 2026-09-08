@@ -13,8 +13,8 @@ import { beforeEach, describe, test, expect } from 'vitest';
 import { type ScoperModel } from "./scoper-model/ScoperModel.js"
 import { ModelCreator } from './ModelCreator.js';
 import { initializeLanguage, type NodeX, type NodeY, type UnitA, type UnitB } from "./scoper-model/index.js"
-import { FreCompositeScoper, } from '../../scoper/index.js';
-import { type FreNamedNode } from "../../ast/index.js"
+import { FreCompositeScoper, FreonDeclaredNodeProvider, FreonScoperLanguage, } from '../../scoper/index.js';
+import { type FreNamedNode, FreNode } from "../../ast/index.js"
 import { FreLanguage } from '../../language/index.js';
 import { CoreConfig, FreLanguageEnvironment } from "../../environment/index.js"
 import { ReplacementNamespaceScoper } from './scoper-model/ReplacementNamespaceScoper.js';
@@ -59,8 +59,8 @@ describe("FreNamespace visibleNames with replacements and private nodes, but wit
 
     CoreConfig.initialize(null, null)
 	initializeLanguage();
-	const scoper: ReplacementNamespaceScoper = new ReplacementNamespaceScoper();
-	const mainScoper: FreCompositeScoper = new FreCompositeScoper();
+	const scoper: ReplacementNamespaceScoper = new ReplacementNamespaceScoper()
+    const mainScoper: FreCompositeScoper<FreNode> = new FreCompositeScoper<FreNode>(new FreonScoperLanguage(), new FreonDeclaredNodeProvider())
 	mainScoper.appendScoper(scoper);
 
 	beforeEach(() => {

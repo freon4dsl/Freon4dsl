@@ -17,8 +17,8 @@ export class UtilLimitedHelpers {
         propertyName: string,
         setFunc: (selected: string) => void,
         display: LimitedDisplay,
-        scoper?: FreScoper,
-        index?: number
+        scoper?: FreScoper<FreNode>,
+        index?: number,
     ): LimitedControlBox | SelectBox {
         // find the information on the property to be shown
         const propInfo: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(
@@ -125,7 +125,7 @@ export class UtilLimitedHelpers {
         node: FreNode,
         propertyName: string,
         setFunc: (selected: string) => void,
-        scoper?: FreScoper,
+        scoper?: FreScoper<FreNode>,
         index?: number,
     ): SelectBox {
         const propType: string = FreLanguage.getInstance().classifierProperty(

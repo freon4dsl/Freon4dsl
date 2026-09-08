@@ -84,6 +84,9 @@ export class Names {
     static brackets: string = "Brackets"
     static isNullOrUndefined: string = "isNullOrUndefined"
     static notNullOrUndefined: string = "notNullOrUndefined"
+    static isScoperNamedNode: string = "isScoperNamedNode"
+    static FreonScoperLanguage: string = "FreonScoperLanguage"
+    static FreonDeclaredNodeProvider: string = "FreonDeclaredNodeProvider"
 
     static environment(language: FreMetaLanguage) {
         return this.startWithUpperCase(language?.name) + "Environment"

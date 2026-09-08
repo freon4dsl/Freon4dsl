@@ -1,14 +1,15 @@
-import type { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
+import type { FreNamedNode, FreNodeReference } from '../ast/index.js';
 import type { FreCompositeScoper } from "./FreCompositeScoper.js";
 import type { FreNamespaceInfo } from './FreNamespaceInfo.js';
+import type { FreScoperNamedNode, FreScoperNode } from "./internal.js"
 
 // Part of the Freon Framework
 
-export interface FreScoper {
-    mainScoper: FreCompositeScoper;
+export interface FreScoper<T extends FreScoperNode<T>> {
+    mainScoper: FreCompositeScoper<T> | undefined // may be undefined only in the CompositeScoper
 
     /**
-     *   Returns all elements that are visible in the namespace containing 'node'. Note that 'node' can 
+     *   Returns all elements that are visible in the namespace containing 'node'. Note that 'node' can
      *   be any node in the AST, not only namespaces!
      *
      *   When parameter 'metaType' is present, it returns all elements that are an instance of 'metaType'.
@@ -17,7 +18,7 @@ export interface FreScoper {
      * @param node
      * @param metaType
      */
-    getVisibleNodes(node: FreNode | FreNodeReference<FreNamedNode>, metaType?: string): FreNamedNode[];
+    getVisibleNodes(node: T | FreNodeReference<FreNamedNode>, metaType?: string): FreScoperNamedNode<T>[]
 
     /**
      * Returns all nodes and/or node references that represent namespaces which should be added to the namespace
@@ -26,7 +27,7 @@ export interface FreScoper {
      *
      * @param node
      */
-    importedNamespaces(node: FreNode): FreNamespaceInfo[];
+    importedNamespaces(node: T): FreNamespaceInfo<T>[]
 
     /**
      * Returns all nodes and/or node references that represent namespaces which should be used to replace
@@ -35,5 +36,5 @@ export interface FreScoper {
      *
      * @param node
      */
-    alternativeNamespaces(node: FreNode): FreNamespaceInfo[];
+    alternativeNamespaces(node: T): FreNamespaceInfo<T>[]
 }

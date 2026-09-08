@@ -7,7 +7,7 @@ import { UnitA } from './UnitA.js';
  * Class AdditionalNamespacesScoper implements the scoper generated from, if present, the scoper definition,
  * otherwise this class implements the default scoper.
  */
-export class AdditionalNamespacesScoper extends FreScoperBase {
+export class AdditionalNamespacesScoper extends FreScoperBase<FreNode> {
     /**
      * Returns the replacement namespace if it can be found for 'node'.
      * @param _node
@@ -20,13 +20,13 @@ export class AdditionalNamespacesScoper extends FreScoperBase {
      * Returns all FreNodes that are defined as additional namespaces for 'node'.
      * @param node
      */
-    public importedNamespaces(node: FreNode): FreNamespaceInfo[] {
-        const result: FreNamespaceInfo[] = [];
+    public importedNamespaces(node: FreNode): FreNamespaceInfo<FreNode>[] {
+        const result: FreNamespaceInfo<FreNode>[] = [];
         // namespace addition for UnitA
         if (node instanceof UnitA) {
             // generated based on 'imports'
             for (let loopVariable of node.myRef) {
-                result.push(new FreNamespaceInfo(loopVariable, false));
+                result.push(new FreNamespaceInfo<FreNode>(loopVariable, false));
             }
         }
         return result;

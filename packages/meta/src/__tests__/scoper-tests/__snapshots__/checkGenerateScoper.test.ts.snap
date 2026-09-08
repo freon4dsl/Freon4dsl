@@ -19,24 +19,24 @@ import { LanguageEnvironment } from "../index.js";
  * Class ROOTScoper implements the scoper generated from, if present, the scoper definition,
  * otherwise this class implements the default scoper.
  */
-export class ROOTScoper extends FreScoperBase {
+export class ROOTScoper extends FreScoperBase<FreNode> {
     /**
      * Returns all FreNodes or FreNodeReferences that are defined as alternative namespaces for 'node'.
      * @param node
      */
-    public alternativeNamespaces(node: FreNode): FreNamespaceInfo[] {
-        const result: FreNamespaceInfo[] = [];
+    public alternativeNamespaces(node: FreNode): FreNamespaceInfo<FreNode>[] {
+        const result: FreNamespaceInfo<FreNode>[] = [];
         // namespace replacement for EE
         if (node instanceof EE) {
             // generated from 'self.owner();'
             const xx0 = node.freOwner();
             if (!isNullOrUndefined(xx0)) {
-                result.push(new FreNamespaceInfo(xx0, false));
+                result.push(new FreNamespaceInfo<FreNode>(xx0, false));
             }
             // generated from 'self.ee.dd.cc.bb.aa;'
             const xx1: FreNodeReference<AA> | undefined = node.ee?.dd?.cc?.bb?.aa;
             if (!isNullOrUndefined(xx1)) {
-                result.push(new FreNamespaceInfo(xx1, false));
+                result.push(new FreNamespaceInfo<FreNode>(xx1, false));
             }
         }
         // namespace replacement for FF
@@ -44,7 +44,7 @@ export class ROOTScoper extends FreScoperBase {
             // generated from 'self.ee.dd.cc.bb.aa;'
             const xx0: FreNodeReference<AA> | undefined = node.ee?.dd?.cc?.bb?.aa;
             if (!isNullOrUndefined(xx0)) {
-                result.push(new FreNamespaceInfo(xx0, false));
+                result.push(new FreNamespaceInfo<FreNode>(xx0, false));
             }
         }
 
@@ -55,49 +55,49 @@ export class ROOTScoper extends FreScoperBase {
      * Returns all FreNodes or FreNodeReferences that are defined as imported namespaces for 'node'.
      * @param node
      */
-    public importedNamespaces(node: FreNode): FreNamespaceInfo[] {
-        const result: FreNamespaceInfo[] = [];
+    public importedNamespaces(node: FreNode): FreNamespaceInfo<FreNode>[] {
+        const result: FreNamespaceInfo<FreNode>[] = [];
         // namespace addition for AA
         if (node instanceof AA) {
             // generated from 'self.AAprop7;'
             const xx0: BB | undefined = node.AAprop7;
             if (!isNullOrUndefined(xx0)) {
-                result.push(new FreNamespaceInfo(xx0, false));
+                result.push(new FreNamespaceInfo<FreNode>(xx0, false));
             }
             // generated from 'self.AAprop8;'
             const list1 = node.AAprop8;
             if (notNullOrUndefined(list1)) {
                 for (let loopVariable of list1) {
                     if (!isNullOrUndefined(loopVariable)) {
-                        result.push(new FreNamespaceInfo(loopVariable, false));
+                        result.push(new FreNamespaceInfo<FreNode>(loopVariable, false));
                     }
                 }
             }
             // generated from 'self.AAprop11;'
             const xx2: DD | undefined = node.AAprop11;
             if (!isNullOrUndefined(xx2)) {
-                result.push(new FreNamespaceInfo(xx2, false));
+                result.push(new FreNamespaceInfo<FreNode>(xx2, false));
             }
             // generated from 'recursive self.AAprop12;'
             const list3 = node.AAprop12;
             if (notNullOrUndefined(list3)) {
                 for (let loopVariable of list3) {
                     if (!isNullOrUndefined(loopVariable)) {
-                        result.push(new FreNamespaceInfo(loopVariable, true));
+                        result.push(new FreNamespaceInfo<FreNode>(loopVariable, true));
                     }
                 }
             }
             // generated from 'self.AAprop13;'
             const xx4: FreNodeReference<FF> | undefined = node.AAprop13;
             if (!isNullOrUndefined(xx4)) {
-                result.push(new FreNamespaceInfo(xx4, false));
+                result.push(new FreNamespaceInfo<FreNode>(xx4, false));
             }
             // generated from 'self.AAprop14;'
             const list5 = node.AAprop14;
             if (notNullOrUndefined(list5)) {
                 for (let loopVariable of list5) {
                     if (!isNullOrUndefined(loopVariable)) {
-                        result.push(new FreNamespaceInfo(loopVariable, false));
+                        result.push(new FreNamespaceInfo<FreNode>(loopVariable, false));
                     }
                 }
             }
@@ -107,14 +107,14 @@ export class ROOTScoper extends FreScoperBase {
             // generated from 'self.BBprop11;'
             const xx0: DD | undefined = node.BBprop11;
             if (!isNullOrUndefined(xx0)) {
-                result.push(new FreNamespaceInfo(xx0, false));
+                result.push(new FreNamespaceInfo<FreNode>(xx0, false));
             }
             // generated from 'self.DDprop8.type();'
             const list1 = node.DDprop8.map((x: BB) => LanguageEnvironment.getInstance().typer.inferType(x).toAstElement());
             if (notNullOrUndefined(list1)) {
                 for (let loopVariable of list1) {
                     if (!isNullOrUndefined(loopVariable)) {
-                        result.push(new FreNamespaceInfo(loopVariable, false));
+                        result.push(new FreNamespaceInfo<FreNode>(loopVariable, false));
                     }
                 }
             }
@@ -123,7 +123,7 @@ export class ROOTScoper extends FreScoperBase {
                 .typer.inferType(FreLanguage.getInstance().metaConformsToType(node.freOwner(), "BB") ? (node.freOwner() as BB) : undefined)
                 ?.toAstElement();
             if (!isNullOrUndefined(xx2)) {
-                result.push(new FreNamespaceInfo(xx2, false));
+                result.push(new FreNamespaceInfo<FreNode>(xx2, false));
             }
         }
         // namespace addition for DD
@@ -133,7 +133,7 @@ export class ROOTScoper extends FreScoperBase {
             if (notNullOrUndefined(list0)) {
                 for (let loopVariable of list0) {
                     if (!isNullOrUndefined(loopVariable)) {
-                        result.push(new FreNamespaceInfo(loopVariable, false));
+                        result.push(new FreNamespaceInfo<FreNode>(loopVariable, false));
                     }
                 }
             }
@@ -142,7 +142,7 @@ export class ROOTScoper extends FreScoperBase {
                 .typer.inferType(FreLanguage.getInstance().metaConformsToType(node.freOwner(), "BB") ? (node.freOwner() as BB) : undefined)
                 ?.toAstElement();
             if (!isNullOrUndefined(xx1)) {
-                result.push(new FreNamespaceInfo(xx1, false));
+                result.push(new FreNamespaceInfo<FreNode>(xx1, false));
             }
         }
 

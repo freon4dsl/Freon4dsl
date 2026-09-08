@@ -1,8 +1,8 @@
 import { DemoEnvironment } from "../freon/config/DemoEnvironment.js";
 import { DemoModel, Demo } from '../freon/language/index.js';
 import { DemoModelCreator } from "./DemoModelCreator.js";
-import { describe, test, expect } from "vitest";
-import { FreCompositeScoper, FREON, CoreConfig } from "@freon4dsl/core"
+import { describe, test, expect } from "vitest"
+import { FreCompositeScoper, FREON, CoreConfig, FreNode } from "@freon4dsl/core"
 import { isInScope, getVisibleNames } from '../../utils/HelperFunctions.js';
 
 
@@ -332,7 +332,7 @@ describe("testing Scoper", () => {
     });
 });
 
-function testEntity(scoper: FreCompositeScoper, model: DemoModel, nameTotest: string) {
+function testEntity(scoper: FreCompositeScoper<FreNode>, model: DemoModel, nameTotest: string) {
     expect(isInScope(scoper.getVisibleNodes(model, "DemoEntity"), nameTotest)).toBe(true);
     // test if nameTotest is known in model functions
     model.functions.forEach((fun) => {

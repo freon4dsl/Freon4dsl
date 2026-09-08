@@ -14,9 +14,20 @@ export class EnvironmentTemplate {
     generateEnvironment(language: FreMetaLanguage, customsFolder: string, relativePath: string): string {
         const imports = new Imports(relativePath)
         imports.core = new Set<string>([
-            Names.FreEditor, Names.FreEnvironment, Names.FreReader,
-            Names.FreCompositeTyper, Names.FreValidator, Names.FreStdlib,
-            Names.FreWriter, Names.FreInterpreter, Names.FreCompositeScoper, Names.FreLanguageEnvironment, Names.FreProjectionHandler
+            Names.FreEditor,
+            Names.FreEnvironment,
+            Names.FreReader,
+            Names.FreNode,
+            Names.FreCompositeTyper,
+            Names.FreValidator,
+            Names.FreStdlib,
+            Names.FreWriter,
+            Names.FreInterpreter,
+            Names.FreCompositeScoper,
+            Names.FreLanguageEnvironment,
+            Names.FreProjectionHandler,
+            Names.FreonScoperLanguage,
+            Names.FreonDeclaredNodeProvider,
         ])
         imports.editor = new Set<string>([
             Names.actions(language), "initializeEditorDef", "initializeProjections"
@@ -84,7 +95,7 @@ export class EnvironmentTemplate {
 
             // the parts of the language environment
             editor: ${Names.FreEditor};
-            scoper: ${Names.FreCompositeScoper} = new ${Names.FreCompositeScoper}();
+            scoper: ${Names.FreCompositeScoper}<${Names.FreNode}> = new ${Names.FreCompositeScoper}<${Names.FreNode}>(new ${Names.FreonScoperLanguage}(), new ${Names.FreonDeclaredNodeProvider}());
             typer: ${Names.FreCompositeTyper} = new ${Names.FreCompositeTyper}("main");
             validator: ${Names.FreValidator} = new ${Names.validator(language)}();
             writer: ${Names.FreWriter} = new ${Names.writer(language)}();
@@ -96,7 +107,7 @@ export class EnvironmentTemplate {
             fileExtensions: Map<string, string> = new Map([
                 ${language.modelConcept.unitTypes().map((unit) => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
             ]);
-        }`;
+        }`
         // todo find out why we cannot use EDITOR_FOLDER to import "${Names.actions(language)}, initializeEditorDef, initializeProjections"
     }
 }

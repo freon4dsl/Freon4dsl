@@ -1,43 +1,59 @@
-import type { FreNamedNode, FreNode, FreNodeReference } from '../ast/index.js';
+import type { FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { FreLogger } from "../logging/index.js";
 import { type FreScoper } from "./FreScoper.js";
 import { notNullOrUndefined } from '../util/index.js';
 import { type FreNamespaceInfo } from './FreNamespaceInfo.js';
 import { type FreNamespace } from './FreNamespace.js';
 import { findEnclosingNamespace, resolvePathStartingInNamespace } from './ScoperUtil.js';
+import { type FreDeclaredNodeProvider, FreNamespaceRegistry, type FreScoperLanguage, type FreScoperNamedNode, type FreScoperNode } from "./internal.js"
 
 const LOGGER = new FreLogger("FreCompositeScoper").mute();
 
-export class FreCompositeScoper implements FreScoper {
-    mainScoper: FreCompositeScoper; // NB the value is always undefined, here to adhere to FreScoper interface
-    private scopers: FreScoper[] = [];
+export class FreCompositeScoper<T extends FreScoperNode<T>> implements FreScoper<T> {
+    readonly registry: FreNamespaceRegistry<T>
+    readonly scoperLanguage: FreScoperLanguage<T>
+    readonly declaredNodeProvider: FreDeclaredNodeProvider<T>
+    mainScoper: FreCompositeScoper<T> | undefined // NB the value is always undefined, here to adhere to FreScoper interface
+    private scopers: FreScoper<T>[] = []
 
-    appendScoper(t: FreScoper) {
-        this.scopers.push(t);
-        t.mainScoper = this;
+    constructor(scoperLanguage: FreScoperLanguage<T>, declaredNodeProvider: FreDeclaredNodeProvider<T>) {
+        this.scoperLanguage = scoperLanguage
+        this.declaredNodeProvider = declaredNodeProvider
+        this.registry = new FreNamespaceRegistry<T>(declaredNodeProvider)
     }
 
-    insertScoper(t: FreScoper) {
-        this.scopers.splice(0, 0, t);
-        t.mainScoper = this;
+    appendScoper(t: FreScoper<T>) {
+        this.scopers.push(t)
+        t.mainScoper = this
+    }
+
+    insertScoper(t: FreScoper<T>) {
+        this.scopers.splice(0, 0, t)
+        t.mainScoper = this
     }
 
     /**
      * Returns the node the 'refToResolve' refers to.
      * @param refToResolve
      */
-    resolvePathName(refToResolve: FreNodeReference<FreNamedNode>): FreNamedNode | undefined {
+    resolvePathName(refToResolve: FreNodeReference<FreNamedNode>): FreScoperNamedNode<T> | undefined {
         // console.log('resolving: ', refToResolve.pathname)
-        const baseNamespace: FreNamespace = findEnclosingNamespace(refToResolve);
-        const currentNamespace: FreNamespace = baseNamespace
-        let found: FreNamedNode = undefined;
+        const baseNamespace: FreNamespace<T> | undefined = findEnclosingNamespace<T>(refToResolve, this.registry, this.scoperLanguage)
+        const currentNamespace: FreNamespace<T> = baseNamespace
         if (notNullOrUndefined(baseNamespace)) {
-            found = resolvePathStartingInNamespace(baseNamespace, currentNamespace, refToResolve.pathname, this, refToResolve.typeName);
+            return resolvePathStartingInNamespace<T>(
+                baseNamespace,
+                currentNamespace,
+                refToResolve.pathname,
+                this,
+                refToResolve.typeName,
+                this.registry,
+                this.scoperLanguage,
+            )
         } else {
-            LOGGER.error('Cannot find enclosing namespace for ' + refToResolve.pathname);
+            // LOGGER.error("Cannot find enclosing namespace for " + refToResolve.pathname)
+            return undefined
         }
-        // console.log('resolved: ', found?.name);
-        return found;
     }
 
     /**
@@ -46,18 +62,19 @@ export class FreCompositeScoper implements FreScoper {
      * @param node
      * @param metatype
      */
-    getVisibleNodes(node: FreNode | FreNodeReference<FreNamedNode>, metatype?: string): FreNamedNode[] {
+    getVisibleNodes(node: T | FreNodeReference<FreNamedNode>, metatype?: string): FreScoperNamedNode<T>[] {
         // console.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+        console.log("COMPOSITE getVisibleNodes for node owned by " + node.freOwner())
         if (notNullOrUndefined(node)) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
-                const result = scoper.getVisibleNodes(node, metatype);
+                const result = scoper.getVisibleNodes(node, metatype)
                 if (result.length > 0) {
-                    return result;
+                    return result
                 }
             }
         }
-        return [];
+        return []
     }
 
     /**
@@ -66,18 +83,18 @@ export class FreCompositeScoper implements FreScoper {
      * queried.
      * @param node
      */
-    importedNamespaces(node: FreNode): FreNamespaceInfo[] {
+    importedNamespaces(node: T): FreNamespaceInfo<T>[] {
         // todo should we check whether node 'is' a namespace?
         if (notNullOrUndefined(node)) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
-                const result = scoper.importedNamespaces(node);
+                const result = scoper.importedNamespaces(node)
                 if (result.length > 0) {
-                    return result;
+                    return result
                 }
             }
         }
-        return [];
+        return []
     }
 
     /**
@@ -86,18 +103,18 @@ export class FreCompositeScoper implements FreScoper {
      * queried.
      * @param node
      */
-    alternativeNamespaces(node: FreNode): FreNamespaceInfo[] {
+    alternativeNamespaces(node: T): FreNamespaceInfo<T>[] {
         // todo should we check whether node 'is' a namespace?
-        LOGGER.log('COMPOSITE alternativeNamespaces for ' + node.freId() + " of type " + node.freLanguageConcept());
+        LOGGER.log("COMPOSITE alternativeNamespaces of type " + node.freLanguageConcept())
         if (notNullOrUndefined(node)) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
-                const result: FreNamespaceInfo[] = scoper.alternativeNamespaces(node);
+                const result: FreNamespaceInfo<T>[] = scoper.alternativeNamespaces(node)
                 if (result.length > 0) {
-                    return result;
+                    return result
                 }
             }
         }
-        return undefined;
+        return []
     }
 }

@@ -1,15 +1,17 @@
-import type { FreNamedNode, FreNode, FreNodeReference } from '../ast/index.js';
+import type { FreNamedNode,  FreNodeReference } from '../ast/index.js';
+import type { FreScoperNode } from "./internal.js"
 
 /**
  * This class holds the information on namespace imports and namespace alternatives.
  */
 
-export class FreNamespaceInfo {
-	public _myNode: FreNode | FreNodeReference<FreNamedNode>;
-	public recursive: boolean;
+export class FreNamespaceInfo<T extends FreScoperNode<T>> {
+    public readonly _myNode: T | FreNodeReference<FreNamedNode>
 
-	constructor(node: FreNode | FreNodeReference<FreNamedNode>, exported: boolean) {
-		this._myNode = node;
-		this.recursive = exported;
-	}
+    public readonly recursive: boolean
+
+    constructor(node: T | FreNodeReference<FreNamedNode>, recursive: boolean) {
+        this._myNode = node
+        this.recursive = recursive
+    }
 }

@@ -9,8 +9,8 @@ import { CoreConfig } from "../../environment/index.js"
 import { type ScoperModel } from './scoper-model/ScoperModel.js';
 import { ModelCreator } from './ModelCreator.js';
 import { initializeLanguage, type NodeX, type NodeY, type UnitA, type UnitB } from "./scoper-model/index.js"
-import { FreCompositeScoper, type FreScoper } from "../../scoper/index.js"
-import { type FreNamedNode } from "../../ast/index.js"
+import { FreCompositeScoper, FreonDeclaredNodeProvider, FreonScoperLanguage, type FreScoper } from "../../scoper/index.js"
+import { type FreNamedNode, FreNode } from "../../ast/index.js"
 import { FreLanguage } from '../../language/index.js';
 import { ScoperModelScoper } from './scoper-model/ScoperModelScoper.js';
 
@@ -46,8 +46,8 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 
     CoreConfig.initialize(null, null)
 	initializeLanguage();
-	const scoper: FreScoper = new ScoperModelScoper();
-	const mainScoper: FreCompositeScoper = new FreCompositeScoper();
+	const scoper: FreScoper<FreNode> = new ScoperModelScoper()
+    const mainScoper: FreCompositeScoper<FreNode> = new FreCompositeScoper<FreNode>(new FreonScoperLanguage(), new FreonDeclaredNodeProvider())
 	mainScoper.appendScoper(scoper);
 
 	beforeEach(() => {

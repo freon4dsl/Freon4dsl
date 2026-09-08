@@ -40,32 +40,36 @@ export class ScoperTemplate {
          * Class ${Names.scoper(language)} implements the scoper generated from, if present, the scoper definition,
          * otherwise this class implements the default scoper.
          */
-        export class ${Names.scoper(language)} extends ${Names.FreScoperBase} {
+        export class ${Names.scoper(language)} extends ${Names.FreScoperBase}<${Names.FreNode}> {
 
              /**
              * Returns all FreNodes or FreNodeReferences that are defined as alternative namespaces for 'node'.
              * @param node
              */${this.alternativeNamespaceText.length === 0 ? `\n// @ts-ignore` : ``}
-            public alternativeNamespaces(node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[] {
-                ${this.alternativeNamespaceText.length > 0 ? 
-                    `const result: ${Names.FreNamespaceInfo}[] = [];
+            public alternativeNamespaces(node: ${Names.FreNode}): ${Names.FreNamespaceInfo}<${Names.FreNode}>[] {
+                ${
+                    this.alternativeNamespaceText.length > 0
+                        ? `const result: ${Names.FreNamespaceInfo}<${Names.FreNode}>[] = [];
                     ${this.alternativeNamespaceText}
                     return result;`
-                : `return [];`}
+                        : `return [];`
+                }
             }
 
             /**
              * Returns all FreNodes or FreNodeReferences that are defined as imported namespaces for 'node'.
              * @param node
              */${this.importedNamespaceText.length === 0 ? `\n// @ts-ignore` : ``}
-            public importedNamespaces(node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[] {
-                ${this.importedNamespaceText.length > 0 ?
-                    `const result: ${Names.FreNamespaceInfo}[] = [];
+            public importedNamespaces(node: ${Names.FreNode}): ${Names.FreNamespaceInfo}<${Names.FreNode}>[] {
+                ${
+                    this.importedNamespaceText.length > 0
+                        ? `const result: ${Names.FreNamespaceInfo}<${Names.FreNode}>[] = [];
                     ${this.importedNamespaceText}
                     return result;`
-                : `return [];`}
+                        : `return [];`
+                }
             }
-        }`;
+        }`
     }
 
     private makeImportedNamespaceTexts(scopedef: ScopeDef, imports: Imports) {
@@ -128,10 +132,10 @@ export class ScoperTemplate {
                     if (notNullOrUndefined(list${index}) ){
                         for (let ${loopVar} of list${index++}) {
                             if (!isNullOrUndefined(${loopVar})) {
-                                result.push(new ${Names.FreNamespaceInfo}(${loopVar}, ${namespaceInfo.recursive}));
+                                result.push(new ${Names.FreNamespaceInfo}<${Names.FreNode}>(${loopVar}, ${namespaceInfo.recursive}));
                             }
                         }
-                    }`);
+                    }`)
             } else {
                 // try to determine the type of the node from the last of the chain of expressions
                 const lastExp = namespaceInfo.expression.getLastExpression();
@@ -148,10 +152,10 @@ export class ScoperTemplate {
                 imports.core.add('isNullOrUndefined');
                 result = result.concat(`
                     // generated from '${namespaceInfo.toFreString()}'
-                    const xx${index} ${xxType ? `: ${xxType} | undefined` : `` } = ${namespaceExpressionStr};
+                    const xx${index} ${xxType ? `: ${xxType} | undefined` : ``} = ${namespaceExpressionStr};
                     if (!isNullOrUndefined(xx${index})) { 
-                        result.push(new ${Names.FreNamespaceInfo}(xx${index}, ${namespaceInfo.recursive}));
-                    }`);
+                        result.push(new ${Names.FreNamespaceInfo}<${Names.FreNode}>(xx${index}, ${namespaceInfo.recursive}));
+                    }`)
             }
         }
         return result;

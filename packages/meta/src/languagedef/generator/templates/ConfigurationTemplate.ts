@@ -10,7 +10,7 @@ export class ConfigurationTemplate {
         const configurationName = Names.configuration;
         const workerName = Names.checkerInterface(language);
         const imports = new Imports(relativePath)
-        imports.core = new Set<string>([Names.FreProjection, Names.FreActions, Names.FreTyper, Names.FreStdlib, Names.FreScoperPart])
+        imports.core = new Set<string>([Names.FreProjection, Names.FreActions, Names.FreTyper, Names.FreStdlib, Names.FreScoperPart, Names.FreNode])
         return `
             // TEMPLATE: ConfigurationTemplate.generate(...)
             ${imports.makeImports(language)}
@@ -35,7 +35,7 @@ export class ConfigurationTemplate {
                 // add your custom validations here
                 customValidations: ${workerName}[] = [new ${Names.customValidator(language)}()];
                 // add your custom scopers here
-                customScopers: ${Names.FreScoperPart}[] = [new ${Names.customScoper(language)}()];
+                customScopers: ${Names.FreScoperPart}<${Names.FreNode}>[] = [new ${Names.customScoper(language)}()];
                 // add your custom type-providers here
                 customTypers: ${Names.FreTyper}[] = [new ${Names.customTyper(language)}()];
                 // add extra predefined instances here
@@ -43,7 +43,7 @@ export class ConfigurationTemplate {
             }
 
             export const freonConfiguration = new ${configurationName}();
-        `;
+        `
     }
 
     generateCustomIndex(language: FreMetaLanguage): string {

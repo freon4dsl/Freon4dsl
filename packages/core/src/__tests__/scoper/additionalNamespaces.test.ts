@@ -9,8 +9,8 @@ import { beforeEach, describe, test, expect } from 'vitest';
 import { type ScoperModel } from "./scoper-model/ScoperModel.js"
 import { ModelCreator } from './ModelCreator.js';
 import { initializeLanguage, type NodeX, type NodeY, type UnitA, type UnitB } from "./scoper-model/index.js"
-import { FreCompositeScoper, type FreScoper } from "../../scoper/index.js"
-import { type FreNamedNode, FreNodeReference } from "../../ast/index.js"
+import { FreCompositeScoper, FreonDeclaredNodeProvider, FreonScoperLanguage, type FreScoper } from "../../scoper/index.js"
+import { type FreNamedNode, FreNode, FreNodeReference } from "../../ast/index.js"
 import { FreLanguage } from '../../language/index.js';
 import { AdditionalNamespacesScoper } from './scoper-model/AdditionalNamespacesScoper.js';
 import { CoreConfig, FreLanguageEnvironment, FREON } from "../../environment/index.js"
@@ -49,8 +49,8 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 
     CoreConfig.initialize(null, null)
 	initializeLanguage();
-	const scoper: FreScoper = new AdditionalNamespacesScoper();
-	const mainScoper: FreCompositeScoper = new FreCompositeScoper();
+	const scoper: FreScoper<FreNode> = new AdditionalNamespacesScoper()
+    const mainScoper: FreCompositeScoper<FreNode> = new FreCompositeScoper<FreNode>(new FreonScoperLanguage(), new FreonDeclaredNodeProvider())
 	mainScoper.appendScoper(scoper);
 
 	beforeEach(() => {
