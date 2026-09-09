@@ -1,11 +1,11 @@
 import { AstWalker } from "../ast-utils/index.js"
 import { FreLanguage } from "../language/index.js"
 import type { FreNamedNode, FreNode } from "../ast/index.js"
-import type { FreScoperNamedNode, FreDeclaredNodeProvider, FreNamespace } from "@freon4dsl/generic-scoper"
+import type { ScoperNamedNode, DeclaredNodeProvider, Namespace } from "@freon4dsl/generic-scoper"
 import { CollectDeclaredNodesWorker } from "./CollectDeclaredNodesWorker.js"
 
-export class FreonDeclaredNodeProvider implements FreDeclaredNodeProvider<FreNode> {
-    public getDeclaredNodes(namespace: FreNamespace<FreNode>, publicOnly: boolean): Set<FreScoperNamedNode<FreNode>> {
+export class FreonDeclaredNodeProvider implements DeclaredNodeProvider<FreNode> {
+    public getDeclaredNodes(namespace: Namespace<FreNode>, publicOnly: boolean): Set<ScoperNamedNode<FreNode>> {
         // console.log('FreonDeclaredNodeProvider getDeclaredNodes for ', namespace.target.name, ' publicOnly', publicOnly);
         let result: FreNamedNode[] = []
         // Set up the 'worker' of the visitor pattern.
@@ -19,7 +19,7 @@ export class FreonDeclaredNodeProvider implements FreDeclaredNodeProvider<FreNod
         // Walk over the AST and collect the nodes from the namespace, but not from any child namespace.
         // If 'publicOnly', do not gather the children from any nodes that are marked 'private',
         // not even the 'public' ones.
-        myWalker.walk(namespace._myNode, (node: FreNode) => {
+        myWalker.walk(namespace.target, (node: FreNode) => {
             // To not go into nested private nodes, we also check whether the property is public.
             return (
                 !FreLanguage.getInstance().classifier(node.freLanguageConcept()).isNamespace &&

@@ -42,7 +42,7 @@ function unsetNamespaces() {
 	}
 }
 
-describe("FreNamespace visibleNames with replacements, but without additions, ", () => {
+describe("Namespace visibleNames with replacements, but without additions, ", () => {
 	let model: ScoperModel;
 	let unitA1: UnitA;
 	let concept_A_2: NodeY;

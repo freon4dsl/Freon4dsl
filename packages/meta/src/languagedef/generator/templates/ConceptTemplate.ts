@@ -31,7 +31,7 @@ export class ConceptTemplate {
         const myName: string = Names.concept(concept);
         const hasSuper: boolean = !!concept.base;
         const hasReferences: boolean = concept.implementedReferences().length > 0;
-        const extendsClass: string = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
+        const extendsClass: string = hasSuper ? Names.concept(concept.base.referred) : "FreNodeBaseImpl";
         const isAbstract: boolean = concept.isAbstract;
         const isExpression: boolean =
             concept instanceof FreMetaBinaryExpressionConcept || concept instanceof FreMetaExpressionConcept;
@@ -99,7 +99,7 @@ export class ConceptTemplate {
     private generateBinaryExpression(concept: FreMetaBinaryExpressionConcept) {
         const myName = Names.concept(concept);
         const hasSuper = !!concept.base;
-        const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
+        const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "FreNodeBaseImpl";
         const isAbstract = concept.isAbstract;
         const baseExpressionName = Names.concept(LangUtil.findExpressionBase(concept));
         const abstract = concept.isAbstract ? "abstract" : "";
@@ -193,7 +193,7 @@ export class ConceptTemplate {
     private generateLimited(concept: FreMetaLimitedConcept): string {
         const myName: string = Names.concept(concept);
         const hasSuper: boolean = !!concept.base;
-        const extendsClass: string = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
+        const extendsClass: string = hasSuper ? Names.concept(concept.base.referred) : "FreNodeBaseImpl";
         const abstract: string = concept.isAbstract ? "abstract" : "";
         const imports = new Imports()
         imports.core = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)

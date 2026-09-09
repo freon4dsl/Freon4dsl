@@ -1,9 +1,9 @@
-export * from "./FreNamespace.js";
-export * from "./FreNamespaceInfo.js";
-export * from "./FreScoper.js";
-export * from "./FreScoperBase.js";
-export * from "./FreCompositeScoper.js"
+export * from "./Namespace.js"
+export * from "./NamespaceInfo.js"
+export * from "./Scoper.js"
+export * from "./ScoperBase.js"
+export * from "./CompositeScoper.js"
 export * from "./ScoperInterfaces.js"
-export * from "./FreNamespaceRegistry.js"
+export * from "./NamespaceRegistry.js"
 export * from "./ScoperUtil.js"
 

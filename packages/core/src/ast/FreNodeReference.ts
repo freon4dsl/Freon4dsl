@@ -1,6 +1,6 @@
 import type { LionWebJsonReferenceTarget } from "@lionweb/json"
 import { computed, observable, makeObservable } from "mobx";
-import { findEnclosingNamespace, type FreNamespace, resolvePathStartingInNamespace } from "@freon4dsl/generic-scoper"
+import { findEnclosingNamespace, type Namespace, resolvePathStartingInNamespace } from "@freon4dsl/generic-scoper"
 import { notNullOrUndefined } from "../util/index.js"
 import { qualifiedName, type  FreNamedNode } from './FreNamedNode.js';
 import { FREON } from "../environment/index.js"
@@ -145,7 +145,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
 
     private resolvePathName(): T | undefined {
         const scoper = FREON.environment.scoper
-        const baseNamespace: FreNamespace<FreNode> | undefined = findEnclosingNamespace<FreNode>(this.freOwner(), scoper.registry, freonScoperLanguage)
+        const baseNamespace: Namespace<FreNode> | undefined = findEnclosingNamespace<FreNode>(this.freOwner(), scoper.registry, freonScoperLanguage)
 
         if (!notNullOrUndefined(baseNamespace)) {
             return undefined

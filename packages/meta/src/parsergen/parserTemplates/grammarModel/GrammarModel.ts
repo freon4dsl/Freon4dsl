@@ -143,6 +143,12 @@ leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
             freIsBinaryExpression(): boolean {
                 throw new Error("Method not implemented.");
             }
+            scoperTypeName(): string {
+                return this.freLanguageConcept()
+            }
+            scoperOwner(): FreNode | undefined {
+                return this.freOwner()
+            }
             copy(): ${Names.FreNode} {
                 throw new Error("Method not implemented.");
             }
@@ -309,7 +315,7 @@ leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
                     column: location.column,
                 });
             }
-        }`;
+        }`
         // end Template
     }
 

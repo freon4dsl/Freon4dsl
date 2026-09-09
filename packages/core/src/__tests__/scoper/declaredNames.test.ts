@@ -9,7 +9,7 @@ import { initializeLanguage, type UnitB } from "./scoper-model/index.js"
 import { type FreNamedNode, FreNode } from "../../ast/index.js"
 import { FreLanguage } from '../../language/index.js';
 import { createTestScoper } from "./createScoperHelper"
-import { FreCompositeScoper } from "@freon4dsl/generic-scoper"
+import { CompositeScoper } from "@freon4dsl/generic-scoper"
 
 
 function printNames(set: Set<FreNamedNode>) {
@@ -18,11 +18,11 @@ function printNames(set: Set<FreNamedNode>) {
 	console.log(names);
 }
 
-describe("FreNamespace declaredNames", () => {
+describe("NamespaceInfo declaredNames", () => {
 	let model: ScoperModel;
     initializeLanguage()
 
-    let mainScoper: FreCompositeScoper<FreNode>
+    let mainScoper: CompositeScoper<FreNode>
 
     beforeEach(() => {
         mainScoper = createTestScoper()
@@ -31,7 +31,7 @@ describe("FreNamespace declaredNames", () => {
 
 	test(" model has all names as declared names", () => {
 		// test namespace for 'model'
-		// const namespace = FreNamespace.create(model)
+		// const namespace = NamespaceInfo.create(model)
         const namespace = mainScoper.registry.getOrCreate(model)
 		const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 		// printNames(set);

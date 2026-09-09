@@ -3,8 +3,8 @@
 
 import { type IWithName, type IWithoutName } from "./internal.js";
 
-import { makeObservable, action } from "mobx";
-import { type FreNamedNode, type FreNodeReference, MobxModelElementImpl, observablepartlist, observableprim } from "../../../ast/index.js"
+import { makeObservable, action } from "mobx"
+import { type FreNamedNode, FreNodeBaseImpl, type FreNodeReference, MobxModelElementImpl, observablepartlist, observableprim } from "../../../ast/index.js"
 import { type FreParseLocation } from "../../../reader/index.js"
 import { FreUtils } from '../../../util/index.js';
 import { matchElementList, matchReferenceList } from '../../../ast-utils/index.js';
@@ -14,7 +14,7 @@ import { matchElementList, matchReferenceList } from '../../../ast-utils/index.j
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
  * to the changes in the state of its properties.
  */
-export class NodeX extends MobxModelElementImpl implements FreNamedNode, IWithName {
+export class NodeX extends FreNodeBaseImpl implements FreNamedNode, IWithName {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.

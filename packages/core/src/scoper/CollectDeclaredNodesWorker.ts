@@ -1,7 +1,7 @@
 /**
  * This worker class collects all visible names in a subtree of the model.
  * The subtree is bounded by (1) its root, and (2) by any children that are namespaces.
- * The exact bounds for the children are set in FreNamespace.getDeclaredNodes().
+ * The exact bounds for the children are set in Namespace.getDeclaredNodes().
  *
  */
 import type { FreNode, FreNamedNode } from "../ast/index.js";

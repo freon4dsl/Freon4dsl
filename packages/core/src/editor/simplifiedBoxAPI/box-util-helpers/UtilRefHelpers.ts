@@ -13,7 +13,7 @@ import {
 import type { FreNamedNode, FreNode, FreNodeReference } from '../../../ast/index.js';
 import { qualifiedName } from '../../../ast/index.js';
 import { RoleProvider } from "../RoleProvider.js";
-import type { FreScoper } from "@freon4dsl/generic-scoper";
+import type { Scoper } from "@freon4dsl/generic-scoper";
 import { BehaviorExecutionResult } from "../../util/index.js";
 import { BoxUtil, type FreListInfo } from "../BoxUtil.js";
 import { UtilCommon } from "./UtilCommon.js";
@@ -28,7 +28,7 @@ export class UtilRefHelpers {
         node: FreNode,
         propertyName: string,
         setFunc: (selected: string | FreNamedNode) => void,
-        scoper: FreScoper<FreNode>,
+        scoper: Scoper<FreNode>,
         index?: number,
     ): ReferenceBox {
         const propType: string = FreLanguage.getInstance().classifierProperty(
@@ -122,7 +122,7 @@ export class UtilRefHelpers {
     public static verticalReferenceListBox(
         node: FreNode,
         propertyName: string,
-        scoper: FreScoper<FreNode>,
+        scoper: Scoper<FreNode>,
         listInfo?: FreListInfo,
         initializer?: Partial<VerticalListBox>,
     ): VerticalListBox {
@@ -158,7 +158,7 @@ export class UtilRefHelpers {
     public static horizontalReferenceListBox(
         node: FreNode,
         propertyName: string,
-        scoper: FreScoper<FreNode>,
+        scoper: Scoper<FreNode>,
         listJoin?: FreListInfo,
         initializer?: Partial<HorizontalListBox>,
     ): HorizontalListBox {
@@ -201,7 +201,7 @@ export class UtilRefHelpers {
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        scoper: FreScoper<FreNode>,
+        scoper: Scoper<FreNode>,
         initializer?: Partial<RefListReplacerBox>,
     ): RefListReplacerBox {
         // find the information on the property to be shown
@@ -255,7 +255,7 @@ export class UtilRefHelpers {
         node: FreNode,
         properties: FreNodeReference<FreNamedNode>[],
         propertyName: string,
-        scoper: FreScoper<FreNode>,
+        scoper: Scoper<FreNode>,
         listJoin?: FreListInfo,
     ): Box[] {
         const result: Box[] = [];

@@ -12,8 +12,8 @@ import { FREON } from "../../../environment/index.js"
 //     FreUtils,
 //     matchElementList,
 // } from "@freon4dsl/core";
-import { UnitA, UnitB } from "./internal.js";
-import { type FreModel, type FreModelUnit, MobxModelElementImpl, observablepartlist } from "../../../ast/index.js"
+import { UnitA, UnitB } from "./internal.js"
+import { type FreModel, type FreModelUnit, FreNodeBaseImpl, MobxModelElementImpl, observablepartlist } from "../../../ast/index.js"
 import { type FreParseLocation } from "../../../reader/index.js"
 import { FreUtils } from '../../../util/index.js';
 import { matchElementList } from '../../../ast-utils/index.js';
@@ -26,7 +26,7 @@ import { FreLanguage } from '../../../language/index.js';
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
  * to any changes in the state of its properties.
  */
-export class ScoperModel extends MobxModelElementImpl implements FreModel {
+export class ScoperModel extends FreNodeBaseImpl implements FreModel {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.

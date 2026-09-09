@@ -8,7 +8,7 @@ export class ModelTemplate {
     public generateModel(modelDescription: FreMetaModelDescription): string {
         const language = modelDescription.language;
         const myName = Names.classifier(modelDescription);
-        const extendsClass = "MobxModelElementImpl";
+        const extendsClass = "FreNodeBaseImpl";
         const imports = new Imports()
         imports.core = ClassifierUtil.findMobxImports(modelDescription)
             .add(Names.FreModel)

@@ -48,7 +48,7 @@ function unsetNamespaces() {
 	}
 }
 
-describe("FreNamespace visibleNames with replacements and private nodes, but without additions", () => {
+describe("Namespace visibleNames with replacements and private nodes, but without additions", () => {
 	let model: ScoperModel;
 	let unitA1: UnitA;
 	let concept_A_2: NodeY;

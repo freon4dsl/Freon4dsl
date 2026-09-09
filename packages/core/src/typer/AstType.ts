@@ -5,18 +5,18 @@ import type { FreType } from "./FreType.js";
 import type { FreParseLocation } from "../reader/index.js";
 
 class NamedNode implements FreNamedNode {
-    static environment: NamedNode;
+    static environment: NamedNode
 
     /**
      * This method implements the singleton pattern
      */
     public static getInstance(): FreNamedNode {
         if (this.environment === undefined || this.environment === null) {
-            this.environment = new NamedNode();
+            this.environment = new NamedNode()
         }
-        return this.environment;
+        return this.environment
     }
-    name: string = "ANY";
+    name: string = "ANY"
 
     /**
      * A private constructor, as demanded by the singleton pattern.
@@ -24,45 +24,53 @@ class NamedNode implements FreNamedNode {
     private constructor() {}
 
     freOwner(): FreNode | undefined {
-        return undefined;
+        return undefined
     }
 
     freOwnerDescriptor(): FreOwnerDescriptor {
-        return undefined;
+        return undefined
     }
 
     freId(): string {
-        return "";
+        return ""
     }
 
     freIsBinaryExpression(): boolean {
-        return false;
+        return false
     }
 
     freIsExpression(): boolean {
-        return false;
+        return false
     }
 
     freIsModel(): boolean {
-        return false;
+        return false
     }
 
     freIsUnit(): boolean {
-        return false;
+        return false
     }
 
     freLanguageConcept(): string {
-        return "NamedElement";
+        return "NamedElement"
     }
 
     copy(): NamedNode {
-        return this;
+        return this
     }
     match(toBeMatched: Partial<NamedNode>): boolean {
-        return toBeMatched.name === this.name;
+        return toBeMatched.name === this.name
     }
 
-    parseLocation: FreParseLocation;
+    parseLocation: FreParseLocation | undefined
+
+    public scoperTypeName(): string {
+        return this.freLanguageConcept()
+    }
+
+    public scoperOwner(): FreNode | undefined {
+        return this.freOwner()
+    }
 }
 
 export class AstType implements FreType {

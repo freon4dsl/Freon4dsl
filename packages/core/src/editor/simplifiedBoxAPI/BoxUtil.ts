@@ -34,7 +34,7 @@ import {
     RefWrapperBox,
     StringWrapperBox
 } from '../boxes/index.js';
-import type { FreScoper } from "@freon4dsl/generic-scoper";
+import type { Scoper } from "@freon4dsl/generic-scoper";
 import { RoleProvider } from "./RoleProvider.js";
 import { type FreProjectionHandler } from "../projections/index.js";
 import { UtilPrimHelper } from "./box-util-helpers/UtilPrimHelper.js";
@@ -174,7 +174,7 @@ export class BoxUtil {
         propertyName: string,
         setFunc: (selected: string) => void,
         display: LimitedDisplay,
-        scoper?: FreScoper<FreNode>,
+        scoper?: Scoper<FreNode>,
         index?: number,
     ): LimitedControlBox | SelectBox {
         return UtilLimitedHelpers.limitedBox(node, propertyName, setFunc, display, scoper, index)
@@ -262,7 +262,7 @@ export class BoxUtil {
         node: FreNode,
         propertyName: string,
         setFunc: (selected: string | FreNamedNode) => void,
-        scoper: FreScoper<FreNode>,
+        scoper: Scoper<FreNode>,
         index?: number,
     ): ReferenceBox {
         return UtilRefHelpers.referenceBox(node, propertyName, setFunc, scoper, index)
@@ -284,7 +284,7 @@ export class BoxUtil {
     public static verticalReferenceListBox(
         node: FreNode,
         propertyName: string,
-        scoper: FreScoper<FreNode>,
+        scoper: Scoper<FreNode>,
         listInfo?: FreListInfo,
         initializer?: Partial<VerticalListBox>,
     ): VerticalListBox {
@@ -307,7 +307,7 @@ export class BoxUtil {
     public static horizontalReferenceListBox(
         node: FreNode,
         propertyName: string,
-        scoper: FreScoper<FreNode>,
+        scoper: Scoper<FreNode>,
         listJoin?: FreListInfo,
         initializer?: Partial<HorizontalListBox>,
     ): HorizontalListBox {
@@ -353,7 +353,7 @@ export class BoxUtil {
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        scoper: FreScoper<FreNode>,
+        scoper: Scoper<FreNode>,
         initializer?: Partial<RefListReplacerBox>,
     ): RefListReplacerBox {
         return UtilRefHelpers.refListReplacerBox(node, propertyName, externalComponentName, scoper, initializer)

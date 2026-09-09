@@ -6,7 +6,7 @@ import { FreLanguage } from "../../../language/index.js";
 import type { FreLanguageProperty } from "../../../language/index.js";
 import { UtilCheckers } from "./UtilCheckers.js";
 import { RoleProvider } from "../RoleProvider.js";
-import type {FreScoper} from "@freon4dsl/generic-scoper";
+import type {Scoper} from "@freon4dsl/generic-scoper";
 import type {FreEditor} from "../../FreEditor.js";
 import {BehaviorExecutionResult} from "../../util/index.js";
 
@@ -17,7 +17,7 @@ export class UtilLimitedHelpers {
         propertyName: string,
         setFunc: (selected: string) => void,
         display: LimitedDisplay,
-        scoper?: FreScoper<FreNode>,
+        scoper?: Scoper<FreNode>,
         index?: number,
     ): LimitedControlBox | SelectBox {
         // find the information on the property to be shown
@@ -125,7 +125,7 @@ export class UtilLimitedHelpers {
         node: FreNode,
         propertyName: string,
         setFunc: (selected: string) => void,
-        scoper?: FreScoper<FreNode>,
+        scoper?: Scoper<FreNode>,
         index?: number,
     ): SelectBox {
         const propType: string = FreLanguage.getInstance().classifierProperty(

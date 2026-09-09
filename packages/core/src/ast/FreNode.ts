@@ -6,27 +6,31 @@ import type { FreParseLocation } from "../reader/index.js";
  * as described in `https://www.typescriptlang.org/docs/handbook/declaration-merging.html`.
  */
 export interface FreNode {
-    freId(): string;
+    freId(): string
 
-    freLanguageConcept(): string;
+    freLanguageConcept(): string
 
-    freOwner(): FreNode | undefined;
+    freOwner(): FreNode | undefined
 
-    freOwnerDescriptor(): FreOwnerDescriptor;
+    freOwnerDescriptor(): FreOwnerDescriptor
 
-    freIsModel(): boolean;
+    freIsModel(): boolean
 
-    freIsUnit(): boolean;
+    freIsUnit(): boolean
 
-    freIsExpression(): boolean;
+    freIsExpression(): boolean
 
-    freIsBinaryExpression(): boolean;
+    freIsBinaryExpression(): boolean
 
-    copy(): FreNode;
+    copy(): FreNode
 
-    match(toBeMatched: Partial<FreNode>): boolean;
+    match(toBeMatched: Partial<FreNode>): boolean
 
-    parseLocation?: FreParseLocation; // if relevant, the location of this node within the source from which it is parsed
+    parseLocation?: FreParseLocation // if relevant, the location of this node within the source from which it is parsed
+
+    // generic scoper API
+    scoperTypeName(): string
+    scoperOwner(): FreNode | undefined
 }
 
 export function isFreNode(node: any): node is FreNode {

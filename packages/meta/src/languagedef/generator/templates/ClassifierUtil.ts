@@ -9,14 +9,14 @@ export class ClassifierUtil {
     public static findMobxImportsForConcept(hasSuper: boolean, concept: FreMetaConcept | FreMetaUnitDescription): Set<string> {
         const mobxImports: Set<string> = new Set<string>();
         if (!hasSuper) {
-            mobxImports.add("MobxModelElementImpl");
+            mobxImports.add("FreNodeBaseImpl");
         }
         this.getObserveFunctions(concept.implementedProperties(), mobxImports);
         return mobxImports;
     }
 
     public static findMobxImports(unit: FreMetaUnitDescription | FreMetaModelDescription): Set<string> {
-        const mobxImports:  Set<string> = new Set<string>(["MobxModelElementImpl"]);
+        const mobxImports:  Set<string> = new Set<string>(["FreNodeBaseImpl"]);
         this.getObserveFunctions(unit.allProperties(), mobxImports);
         return mobxImports;
     }

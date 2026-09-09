@@ -12,14 +12,8 @@
 //     matchElementList,
 //     matchReferenceList,
 // } from "@freon4dsl/core";
-import { type IWithoutName, type IWithName } from "./internal.js";
-import {
-    type FreModelUnit,
-    type FreNodeReference,
-    MobxModelElementImpl,
-    observablepartlist,
-    observableprim
-} from '../../../ast/index.js';
+import { type IWithoutName, type IWithName } from "./internal.js"
+import { type FreModelUnit, FreNodeBaseImpl, type FreNodeReference, MobxModelElementImpl, observablepartlist, observableprim } from "../../../ast/index.js"
 import { type FreParseLocation } from '../../../reader/index.js';
 import { FreUtils } from '../../../util/index.js';
 import { matchElementList, matchReferenceList } from '../../../ast-utils/index.js';
@@ -31,7 +25,7 @@ import { makeObservable, action } from "mobx";
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
  * to any changes in the state of its properties.
  */
-export class UnitB extends MobxModelElementImpl implements FreModelUnit, IWithName {
+export class UnitB extends FreNodeBaseImpl implements FreModelUnit, IWithName {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.

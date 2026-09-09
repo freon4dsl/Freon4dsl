@@ -1,12 +1,12 @@
-import { FreCompositeScoper, FreScoper } from "@freon4dsl/generic-scoper"
+import { CompositeScoper, Scoper } from "@freon4dsl/generic-scoper"
 import { FreNode } from "../../ast"
 import { CoreConfig, FreLanguageEnvironment } from "../../environment"
 import { FreonDeclaredNodeProvider, freonScoperLanguage } from "../../scoper"
 
-export function createTestScoper(scoper?: FreScoper<FreNode>): FreCompositeScoper<FreNode> {
+export function createTestScoper(scoper?: Scoper<FreNode>): CompositeScoper<FreNode> {
     const env = FreLanguageEnvironment.getInstance()
 
-    const mainScoper = new FreCompositeScoper<FreNode>(freonScoperLanguage, new FreonDeclaredNodeProvider())
+    const mainScoper = new CompositeScoper<FreNode>(freonScoperLanguage, new FreonDeclaredNodeProvider())
 
     if (scoper !== undefined) {
         mainScoper.appendScoper(scoper)

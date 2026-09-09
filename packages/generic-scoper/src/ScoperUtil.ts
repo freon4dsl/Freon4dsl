@@ -1,141 +1,216 @@
-import { isNullOrUndefined } from "./SimpleUtils.js";
+import { isNullOrUndefined } from "./SimpleUtils.js"
 import {
-    FreNamespace,
-    type FreScoperLanguage,
-    type FreScoperNamedNode,
-    type FreCompositeScoper,
-    FreNamespaceRegistry,
-    type FreScoperNode
+    Namespace,
+    type ScoperLanguage,
+    type ScoperNamedNode,
+    type CompositeScoper,
+    NamespaceRegistry,
+    type ScoperNode,
 } from "./internal.js"
 
 /**
- * This file contains a few methods that are used by both FreScoperBase and FreNamespace.
+ * Utility functions used by the generic scoping implementation.
+ *
+ * These functions contain reusable algorithms for locating namespaces,
+ * resolving qualified paths, and finding visible nodes.
  */
 
 /**
- * Returns the enclosing namespace for 'node'. The result could be 'node' itself, if this is a namespace.
- * @param node
- * @param registry          the registry of all known namespaces
- * @param scoperLanguage    holds info about the language, like 'is this type a namespace'
+ * Finds the namespace containing the given node.
+ *
+ * If the node itself represents a namespace, that namespace is returned.
+ * Otherwise the owner hierarchy is followed until a namespace is found.
+ *
+ * Returns undefined when the node has no enclosing namespace.
+ *
+ * @param node Node for which the enclosing namespace should be found.
+ * @param registry Registry containing all known namespaces.
+ * @param scoperLanguage Language-specific information used to determine
+ *                       whether a node represents a namespace.
  */
-export function findEnclosingNamespace<T extends FreScoperNode<T>>(
+export function findEnclosingNamespace<T extends ScoperNode<T>>(
     node: T | undefined,
-    registry: FreNamespaceRegistry<T>,
-    scoperLanguage: FreScoperLanguage<T>
-): FreNamespace<T> | undefined {
+    registry: NamespaceRegistry<T>,
+    scoperLanguage: ScoperLanguage<T>,
+): Namespace<T> | undefined {
     if (isNullOrUndefined(node)) {
         return undefined
     }
-    console.log(`findEnclosingNamespace for ${node.freOwner()}`)
+
+    // console.log(`findEnclosingNamespace: ${node.scoperTypeName()}`)
+
     if (scoperLanguage.isNamespace(node)) {
-        console.log("\t is part and namespace")
-        // if (isScoperNamedNode(node)) {
-        console.log("\t isScoperNamedNode")
+        // console.log(`  found namespace: ${node.scoperTypeName()}`)
         return registry.getOrCreate(node)
-        // } else {
-        //     console.log("\t is NOT isScoperNamedNode: " + node.constructor.name)
-        //     return undefined
-        // }
-    } else {
-        console.log("\t is part and NOT namespace")
-        return findEnclosingNamespace<T>(node.freOwner(), registry, scoperLanguage)
     }
+
+    return findEnclosingNamespace(
+        node.scoperOwner(),
+        registry,
+        scoperLanguage,
+    )
 }
 
 /**
- * Returns the node that is indicated by 'pathname'. The first part of the 'pathname' is resolved within 'currentNamespace', after which
- * the rest of 'pathname' is resolved in the namespace that is indicated by the first part of 'pathname'.
+ * Resolves a qualified pathname starting in the given namespace.
  *
- * @param baseNamespace		the namespace in which the complete pathname is being resolved, used to determine whether private nodes are taken into account
- * @param currentNamespace	the namespace in which the first of 'pathname' is resolved
- * @param pathname			the (part of the) qualified name that is to be resolved
- * @param mainScoper
- * @param typeName			the meta type of the node that we are searching for
- * @param registry          the registry of all known namespaces
- * @param scoperLanguage    holds info about the language, like 'is this type a namespace'
+ * Every pathname segment except the last must resolve to a namespace.
+ * The final segment may resolve to any named node, but must conform to
+ * the requested type.
+ *
+ * The first pathname segment must be visible in currentNamespace.
+ * Visibility of private declarations depends on whether currentNamespace
+ * is the same namespace as baseNamespace.
+ *
+ * @param baseNamespace Namespace in which the complete pathname is being
+ *                      resolved. Used to determine whether private nodes
+ *                      are visible.
+ * @param currentNamespace Namespace in which the next pathname segment
+ *                         should be resolved.
+ * @param pathname Remaining pathname segments to resolve.
+ * @param mainScoper Composite scoper used to calculate visible nodes.
+ * @param typeName Language type that the final resolved node must conform to.
+ * @param registry Registry containing all known namespaces.
+ * @param scoperLanguage Language-specific information required during
+ *                       namespace and type checks.
  */
-export function resolvePathStartingInNamespace<T extends FreScoperNode<T>>(
-    baseNamespace: FreNamespace<T>,
-    currentNamespace: FreNamespace<T>,
+export function resolvePathStartingInNamespace<T extends ScoperNode<T>>(
+    baseNamespace: Namespace<T>,
+    currentNamespace: Namespace<T>,
     pathname: string[],
-    mainScoper: FreCompositeScoper<T>,
+    mainScoper: CompositeScoper<T>,
     typeName: string,
-    registry: FreNamespaceRegistry<T>,
-    scoperLanguage: FreScoperLanguage<T>
-) {
-    // We must be able to resolve every name in the path to a namespace without taking its metaType into account,
-    // except the last. The last should be a FreNamedNode of the type indicated by 'typeName'.
-    // Another requirement is that the first name must be visible in 'currentNamespace'!
+    registry: NamespaceRegistry<T>,
+    scoperLanguage: ScoperLanguage<T>,
+): ScoperNamedNode<T> | undefined {
+    // console.log(`resolve path: ${pathname.join(".")} as ${typeName}`)
 
-    let result: FreScoperNamedNode<T> = undefined
-    // Loop over the set of names in the pathname.
+    let result: ScoperNamedNode<T> | undefined
+
     for (let index = 0; index < pathname.length; index++) {
-        const publicOnly = baseNamespace !== currentNamespace // everything in the namespace that this reference is in, is visible
+        const publicOnly = baseNamespace !== currentNamespace
+        const currentName = pathname[index]
+
+        // console.log(`  resolving '${currentName}'`)
+
         if (index !== pathname.length - 1) {
-            // Search the next name of pathname in the 'previousNamespace'.
-            // Do not use the 'typeName' information, because we are searching for another namespace, not for an element of type 'typeName'.
-            result = getFromVisibleNodes<T>(currentNamespace, pathname[index], mainScoper, publicOnly)
-            // todo if a namespace may contain multiple nodes with the same name but different type, this code needs to be adjusted
-            if (isNullOrUndefined(result) || !scoperLanguage.isNamespace(result)) {
-                // The pathname is not correct, it does not lead to a namespace that is visible within 'previousNamespace',
-                // so return.
+            /*
+             * Every intermediate pathname segment must resolve to a namespace.
+             *
+             * typeName is deliberately not used here because the intermediate
+             * result is only required to be a namespace, regardless of the
+             * requested type of the final result.
+             */
+            result = getFromVisibleNodes(
+                currentNamespace,
+                currentName,
+                mainScoper,
+                publicOnly,
+            )
+
+            // TODO:
+            // If a namespace may contain multiple nodes with the same name but
+            // different types, this lookup needs to be adjusted.
+
+            if (
+                isNullOrUndefined(result) ||
+                !scoperLanguage.isNamespace(result)
+            ) {
+                // console.log(`  '${currentName}' does not resolve to a namespace`)
                 return undefined
-            } else {
-                // result is the next namespace in the pathname!
-                // But 'result' is a FreNamedNode, so transform it into a namespace.
-                currentNamespace = registry.getOrCreate(result)
             }
+
+            /*
+             * The result represents the next namespace in the path.
+             * Convert the node into its Namespace representation.
+             */
+            currentNamespace = registry.getOrCreate(result)
         } else {
-            // Search the last name in the path, the result need not be a namespace, so use 'typeName'.
-            result = getFromVisibleNodes<T>(currentNamespace, pathname[index], mainScoper, publicOnly, typeName)
+            /*
+             * The final pathname segment need not resolve to a namespace.
+             * It must, however, conform to the requested type.
+             */
+            result = getFromVisibleNodes(
+                currentNamespace,
+                currentName,
+                mainScoper,
+                publicOnly,
+                typeName,
+            )
         }
     }
+
     return result
 }
 
 /**
- * A convenience method that finds the node with name 'name' within the visible nodes of the namespace that 'node' resides in.
- * Often 'node' itself represents this namespace.
+ * Finds a visible node with the given name in the specified namespace.
  *
- * If 'metaType' is present, only return the node if its type conforms to 'metaType'.
+ * Built-in nodes are considered visible in addition to nodes contributed
+ * by the namespace itself.
  *
- * @param namespace
- * @param name
- * @param mainScoper
- * @param publicOnly
- * @param metaType
+ * When typeName is provided, the result must also conform to that
+ * language type.
+ *
+ * @param namespace Namespace in which visibility is calculated.
+ * @param name Name of the node to find.
+ * @param mainScoper Composite scoper used to calculate visible nodes.
+ * @param publicOnly Whether only public declarations should be considered.
+ * @param typeName Optional language type that the result must conform to.
  */
-export function getFromVisibleNodes<T extends FreScoperNode<T>>(
-	namespace: FreNamespace<T>,
-	name: string,
-	mainScoper: FreCompositeScoper<T>,
-	publicOnly: boolean,
-	metaType?: string
-): FreScoperNamedNode<T> | undefined {
-	// console.log('BASE getFromVisibleNodes, searching for type of ' + metaType);
-	// const visibleNodes = FreLanguage.getInstance().stdLib.elements.concat(namespace.getVisibleNodes(mainScoper, [], publicOnly));
-    let visibleNodes: FreScoperNamedNode<T>[] = mainScoper.scoperLanguage.builtInNodes()
-    visibleNodes = visibleNodes.concat(namespace.getVisibleNodes(mainScoper, [], publicOnly))
-	for (const node of visibleNodes) {
-		const n: string = node.name;
-		if (name === n && hasCorrectType(mainScoper, node, metaType)) {
-			return node;
-		}
-	}
-	return undefined;
+export function getFromVisibleNodes<T extends ScoperNode<T>>(
+    namespace: Namespace<T>,
+    name: string,
+    mainScoper: CompositeScoper<T>,
+    publicOnly: boolean,
+    typeName?: string,
+): ScoperNamedNode<T> | undefined {
+    // console.log(`getFromVisibleNodes: searching for '${name}', type '${typeName}'`)
+
+    let visibleNodes: ScoperNamedNode<T>[] =
+        mainScoper.scoperLanguage.builtInNodes()
+
+    visibleNodes = visibleNodes.concat(
+        namespace.getVisibleNodes(
+            mainScoper,
+            [],
+            publicOnly,
+        ),
+    )
+
+    for (const node of visibleNodes) {
+        if (
+            name === node.name &&
+            hasCorrectType(mainScoper, node, typeName)
+        ) {
+            return node
+        }
+    }
+
+    return undefined
 }
 
 /**
- * Checks whether 'freNode' has a type that conforms to 'metaType'.
+ * Determines whether the given node conforms to the requested language type.
  *
- * @param freNode
- * @param metaType
- * @private
+ * When no typeName is provided, every node is considered to have the
+ * correct type.
+ *
+ * @param mainScoper Composite scoper providing language-specific type checks.
+ * @param node Node whose type should be checked.
+ * @param typeName Optional requested language type.
  */
-export function hasCorrectType<T extends FreScoperNode<T>>(mainScoper: FreCompositeScoper<T>, freNode: FreScoperNode<T>, metaType: string): boolean {
-    if (!!metaType && metaType.length > 0) {
-        return mainScoper.scoperLanguage.conformsToType(freNode, metaType)
-    } else {
-        return true
+export function hasCorrectType<T extends ScoperNode<T>>(
+    mainScoper: CompositeScoper<T>,
+    node: T,
+    typeName?: string,
+): boolean {
+    if (typeName) {
+        return mainScoper.scoperLanguage.conformsToType(
+            node,
+            typeName,
+        )
     }
+
+    return true
 }

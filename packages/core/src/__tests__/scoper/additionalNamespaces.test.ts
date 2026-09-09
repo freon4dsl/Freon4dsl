@@ -9,7 +9,7 @@ import { beforeEach, describe, test, expect } from 'vitest';
 import { type ScoperModel } from "./scoper-model/ScoperModel.js"
 import { ModelCreator } from './ModelCreator.js';
 import { initializeLanguage, type NodeX, type NodeY, type UnitA, type UnitB } from "./scoper-model/index.js"
-import { type FreScoper } from "@freon4dsl/generic-scoper"
+import { type Scoper } from "@freon4dsl/generic-scoper"
 import { type FreNamedNode, FreNode, FreNodeReference } from "../../ast/index.js"
 import { FreLanguage } from '../../language/index.js';
 import { AdditionalNamespacesScoper } from './scoper-model/AdditionalNamespacesScoper.js';
@@ -39,7 +39,7 @@ function unsetNamespaces() {
 	}
 }
 
-describe("FreNamespace visibleNames with additions, but without replacements", () => {
+describe("Namespace visibleNames with additions, but without replacements", () => {
 	let model: ScoperModel;
 	let unitA1: UnitA;
 	let concept_A_2: NodeY;
@@ -49,7 +49,7 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 	let concept_B_4_3: NodeX;
 
     initializeLanguage()
-    const scoper: FreScoper<FreNode> = new AdditionalNamespacesScoper()
+    const scoper: Scoper<FreNode> = new AdditionalNamespacesScoper()
     const mainScoper = createTestScoper(scoper)
 
 	beforeEach(() => {

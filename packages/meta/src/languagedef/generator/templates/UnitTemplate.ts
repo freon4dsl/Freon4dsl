@@ -13,7 +13,7 @@ export class UnitTemplate {
     public generateUnit(unitDescription: FreMetaUnitDescription) {
         // const language = unitDescription.language;
         const myName = Names.classifier(unitDescription);
-        const extendsClass = "MobxModelElementImpl";
+        const extendsClass = "FreNodeBaseImpl";
         const hasReferences = unitDescription.implementedReferences().length > 0;
         const imports = new Imports()
         imports.language = this.findModelImports(unitDescription, myName);
