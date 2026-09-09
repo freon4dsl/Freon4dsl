@@ -60,9 +60,9 @@
         "node": ">=24.0.0"
     },
     "workspaces": [
+        "packages/generic-scoper",
         "packages/core",
         "packages/core-svelte",
-        "packages/generic-scoper",
         "packages/meta",
         "packages/test-helpers",
         "packages/samples/*",
