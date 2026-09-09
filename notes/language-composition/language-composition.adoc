@@ -6,12 +6,16 @@
 A language should be a reusable component that can be packaged and published separately.
 A Freon project should be able to use packaged languages.
 
-A language package should
+A language package should include
 
-- The Freon definitions (.ast, ...)
-- The generated code
-- The custom code
-- The external Svelte components
+- The language structure definitions (.language)
+- The generated code (src/<language>/gen/**.ts)
+- The custom code    (src/<language>/custom/**.ts)
+
+== Langium Issues 
+Laqngium allows importing languages:
+- _Entry grammar_ is a grammar with an entry point and a _language name_
+- imported grammar does not _need_ to start with the `grammar` keyword.
 
 [[General-Patterns]]
 == General Patterns

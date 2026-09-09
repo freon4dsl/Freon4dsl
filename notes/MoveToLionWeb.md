@@ -1,5 +1,14 @@
 # How to move to 100% LionWeb
 
+Motivation
+Hi all,  Anneke and I have decided to make some adjustments to what we are going to be working on.
+We plan to move Freon into maintenance mode, meaning:
+we will keep fixing bugs,
+we are open to feature requests
+we will not initiate new features ourselves
+We are starting a new project to create a LionWeb-IDE, to make developing and working woth LionWeb languages easy.
+We plan to generate a Langium based LSP for editing LionWeb languages
+
 ## Only take the good parts that we want and need.
 
 - The core generated TypeScript code, including mobx is working perfectly.
@@ -18,6 +27,7 @@ Add
 
 Change
 - ModelUnits become (special) Concepts, like partitions in LionWeb.
+- Primitives in M3 should be done rather differently
 
 ## Roadmap
 
