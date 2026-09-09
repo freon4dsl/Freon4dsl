@@ -15,11 +15,11 @@ import { beforeEach, describe, test, expect } from 'vitest';
 import { type ScoperModel } from "./scoper-model/ScoperModel.js"
 import { ModelCreator } from './ModelCreator.js';
 import { initializeLanguage, type NodeX, type NodeY, type UnitA, type UnitB } from "./scoper-model/index.js"
-import { FreCompositeScoper, FreonDeclaredNodeProvider, FreonScoperLanguage } from "../../scoper/index.js"
-import { type FreNamedNode, FreNode } from "../../ast/index.js"
+import { type FreNamedNode } from "../../ast/index.js"
 import { FreLanguage } from '../../language/index.js';
-import { CoreConfig, FreLanguageEnvironment, FREON } from "../../environment/index.js"
+import { FreLanguageEnvironment } from "../../environment/index.js"
 import { ExportedNamespacesScoper } from './scoper-model/ExportedNamespacesScoper.js';
+import { createTestScoper } from "./createScoperHelper"
 
 function printNames(set: FreNamedNode[]) {
 	let names: string = '';
@@ -52,15 +52,8 @@ describe("FreNamespace visibleNames with replacements, but without additions, ",
 	let concept_B_2_1: NodeX;
 
     initializeLanguage()
-
-    const env = FreLanguageEnvironment.getInstance()
-    const mainScoper = new FreCompositeScoper<FreNode>(new FreonScoperLanguage(), new FreonDeclaredNodeProvider())
     const scoper: ExportedNamespacesScoper = new ExportedNamespacesScoper()
-
-    mainScoper.appendScoper(scoper)
-    env.scoper = mainScoper
-
-    CoreConfig.initialize(env, null)
+    const mainScoper = createTestScoper(scoper)
 
 	beforeEach(() => {
 		// create a simple model where some nodes are namespaces and some are not

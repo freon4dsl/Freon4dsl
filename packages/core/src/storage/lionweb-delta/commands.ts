@@ -55,7 +55,7 @@ export const newAddPropertyCommand = (nodeid: string, newValue: string, property
         node: nodeid,
         newValue: newValue,
         property: {
-            language: "LionCore-builtins",
+            language: "LionCore-builtInNodes",
             key: propertyKey,
             version: LanguageVersion,
         },
@@ -84,7 +84,7 @@ export const newDeletePropertyCommand = (nodeid: string, propertyKey: string): D
         commandId: `command-id-${queryId++}`,
         node: nodeid,
         property: {
-            language: "LionCore-builtins",
+            language: "LionCore-builtInNodes",
             key: propertyKey,
             version: LanguageVersion,
         },

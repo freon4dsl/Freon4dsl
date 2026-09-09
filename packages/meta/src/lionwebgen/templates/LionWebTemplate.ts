@@ -26,7 +26,7 @@ export class LionWebTemplate {
                     version: "2023.1"
                 },
                 {
-                    key: "LionCore-builtins",
+                    key: "LionCore-builtInNodes",
                     version: "2023.1"
                 }
             ],

@@ -23,9 +23,8 @@ export class ScoperTemplate {
         this.importedNamespaceText = "";
 
         const imports = new Imports(relativePath);
-        imports.core = new Set<string>([
-            Names.FreScoperBase, Names.FreNode, Names.FreNamespaceInfo
-        ]);
+        imports.core = new Set<string>([Names.FreNode]);
+        imports.scoper = new Set<string>([Names.FreScoperBase, Names.FreNamespaceInfo])
         if (!!scopedef) {
             // should always be the case, either the definition read from file or the default
             this.makeAlternativeNamespaceTexts(scopedef, imports);

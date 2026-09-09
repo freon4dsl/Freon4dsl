@@ -6,7 +6,7 @@ import { FreLanguage } from "../../../language/index.js";
 import type { FreLanguageProperty } from "../../../language/index.js";
 import { UtilCheckers } from "./UtilCheckers.js";
 import { RoleProvider } from "../RoleProvider.js";
-import type {FreScoper} from "../../../scoper/index.js";
+import type {FreScoper} from "@freon4dsl/generic-scoper";
 import type {FreEditor} from "../../FreEditor.js";
 import {BehaviorExecutionResult} from "../../util/index.js";
 

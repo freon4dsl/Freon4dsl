@@ -13,7 +13,7 @@ import {
 import type { FreNamedNode, FreNode, FreNodeReference } from '../../../ast/index.js';
 import { qualifiedName } from '../../../ast/index.js';
 import { RoleProvider } from "../RoleProvider.js";
-import type { FreScoper } from "../../../scoper/index.js";
+import type { FreScoper } from "@freon4dsl/generic-scoper";
 import { BehaviorExecutionResult } from "../../util/index.js";
 import { BoxUtil, type FreListInfo } from "../BoxUtil.js";
 import { UtilCommon } from "./UtilCommon.js";

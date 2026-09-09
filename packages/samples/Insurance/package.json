@@ -14,10 +14,9 @@
         "test": "vitest run",
         "install-local": "npm install --registry http://localhost:4873",
         "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d src/defs",
-        "clean-gen": "bash ../../../scripts/freon-samples-dev.sh clean-it -d src/defs",
         "clean-config": "rm */custom/FreonConfiguration.ts",
         "clean-custom": "rm */*/Custom*.ts",
-        "clean-all": "npm run clean-gen && npm run clean-config && npm run clean-custom"
+        "clean-all": "npm run clean-config && npm run clean-custom"
     },
     "devDependencies": {
         "@freon4dsl/meta": "~3.0.0-beta.1",
@@ -25,6 +24,7 @@
     },
     "dependencies": {
         "@freon4dsl/core": "~3.0.0-beta.1",
+        "@freon4dsl/generic-scoper": "~3.0.0-beta.1",
         "@types/node": "^25.6.2",
         "kotlin": "^1.5.21",
         "mobx": "6.15.0",

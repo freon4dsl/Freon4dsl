@@ -1,7 +1,7 @@
 import type { FreEditor, FreProjectionHandler } from "../editor/index.js"
 import type { FreInterpreter } from "../interpreter/index.js";
 import type { FreValidator } from "../validator/index.js";
-import type { FreCompositeScoper } from "../scoper/index.js";
+import type { FreCompositeScoper } from "@freon4dsl/generic-scoper"
 import type { FreCompositeTyper } from "../typer/index.js";
 import type { FreWriter } from "../writer/index.js";
 import type { FreReader } from "../reader/index.js";

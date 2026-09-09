@@ -14,7 +14,8 @@ export class ScoperDefTemplate {
             })
         })
         const imports = new Imports(relativePath)
-        imports.core.add(Names.FreLanguage).add(Names.FreCompositeScoper).add(Names.FreNode)
+        imports.core = new Set<string>([Names.FreLanguage, Names.FreNode])
+        imports.scoper = new Set<string>([Names.FreCompositeScoper])
 
         return `// TEMPLATE: ScoperDefTemplate.generateScoperDef(...)
             ${imports.makeImports(language)}

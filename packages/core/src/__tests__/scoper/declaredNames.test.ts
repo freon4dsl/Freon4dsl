@@ -3,13 +3,13 @@
  * All tests determine whether the declared nodes of a namespace are correct.
  */
 import { beforeEach, describe, test, expect } from 'vitest';
-import { CoreConfig, FREON } from "../../environment/index.js"
 import { type ScoperModel } from "./scoper-model/ScoperModel.js"
 import { ModelCreator } from './ModelCreator.js';
 import { initializeLanguage, type UnitB } from "./scoper-model/index.js"
 import { type FreNamedNode, FreNode } from "../../ast/index.js"
 import { FreLanguage } from '../../language/index.js';
-import { FreCompositeScoper, FreNamespaceRegistry, FreonDeclaredNodeProvider, FreonScoperLanguage } from "../../scoper"
+import { createTestScoper } from "./createScoperHelper"
+import { FreCompositeScoper } from "@freon4dsl/generic-scoper"
 
 
 function printNames(set: Set<FreNamedNode>) {
@@ -20,15 +20,14 @@ function printNames(set: Set<FreNamedNode>) {
 
 describe("FreNamespace declaredNames", () => {
 	let model: ScoperModel;
-    CoreConfig.initialize(null, null)
-	initializeLanguage();
+    initializeLanguage()
+
     let mainScoper: FreCompositeScoper<FreNode>
-	
-	beforeEach(() => {
-		// create a simple model where some nodes are namespaces and some are not
-		model = ModelCreator.createSimpleModel();
-        mainScoper = new FreCompositeScoper<FreNode>(new FreonScoperLanguage(), new FreonDeclaredNodeProvider())
-	});
+
+    beforeEach(() => {
+        mainScoper = createTestScoper()
+        model = ModelCreator.createSimpleModel()
+    })
 
 	test(" model has all names as declared names", () => {
 		// test namespace for 'model'

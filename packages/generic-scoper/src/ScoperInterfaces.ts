@@ -1,10 +1,8 @@
-import type { FreOwnerDescriptor } from "../ast/index.js"
 import { FreNamespace } from "./internal.js"
 
 export interface FreScoperNode<T> {
     freLanguageConcept(): string
     freOwner(): T | undefined
-    freOwnerDescriptor(): FreOwnerDescriptor | undefined
 }
 
 export type FreScoperNamedNode<T extends FreScoperNode<T>> = T & {
@@ -17,6 +15,10 @@ export function isScoperNamedNode<T extends FreScoperNode<T>>(node: FreScoperNod
 
 export interface FreScoperLanguage<T extends FreScoperNode<T>> {
     isNamespace(node: FreScoperNode<T>): boolean
+
+    builtInNodes(): FreScoperNamedNode<T>[]
+
+    conformsToType(element: FreScoperNode<T>, requestedType: string): boolean
 }
 
 export interface FreDeclaredNodeProvider<T extends FreScoperNode<T>> {

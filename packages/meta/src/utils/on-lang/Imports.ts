@@ -1,6 +1,6 @@
 import type { FreMetaLanguage } from "../../languagedef/metalanguage/index.js"
 import { Names } from "./Names.js"
-import { EDITOR_FOLDER, FREON_CORE, LANGUAGE_FOLDER, LANGUAGE_UTILS_FOLDER, TYPER_CONCEPTS_FOLDER } from "./PathProvider.js"
+import { EDITOR_FOLDER, FREON_CORE, LANGUAGE_FOLDER, LANGUAGE_UTILS_FOLDER, SCOPER_PACK, TYPER_CONCEPTS_FOLDER } from "./PathProvider.js"
 
 /**
  * All the types and interfaces exported from Freon core and core-svelte.
@@ -50,20 +50,22 @@ export class Imports {
      * Imports from various packages and folders.
      */
     core = new Set<string>()
+    scoper = new Set<string>()
     language = new Set<string>()
     root = new Set<string>()
     typer = new Set<string>()
     editor = new Set<string>()
     utils = new Set<string>()
-    
+
     relativePath: string
-    
+
     constructor(relativePath?: string) {
-        this.relativePath = (relativePath ? relativePath : "")
+        this.relativePath = relativePath ? relativePath : ""
     }
-    
+
     reset(): void {
         this.core = new Set<string>()
+        this.scoper = new Set<string>()
         this.language = new Set<string>()
         this.root = new Set<string>()
         this.typer = new Set<string>()
@@ -77,12 +79,15 @@ export class Imports {
      */
     // @ts-ignore
     makeImports(metaLanguage: FreMetaLanguage): string {
-        return this.makeCoreImportStatements() +
-        this.makeLanguageImportStatements() +
-        this.makeTyperImportStatements() +
-        this.makeConfigImportStatements() +
-        this.makeEditorImportStatements() +
-        this.makeUtilsImportStatements()
+        return (
+            this.makeCoreImportStatements() +
+            this.makeScoperImportStatements() +
+            this.makeLanguageImportStatements() +
+            this.makeTyperImportStatements() +
+            this.makeConfigImportStatements() +
+            this.makeEditorImportStatements() +
+            this.makeUtilsImportStatements()
+        )
         // Etc.
     }
 
@@ -90,42 +95,46 @@ export class Imports {
         return this.makeImportStatement(this.core, FREON_CORE)
     }
 
+    private makeScoperImportStatements(): string {
+        return this.makeImportStatement(this.scoper, SCOPER_PACK)
+    }
+
     private makeLanguageImportStatements(): string {
-        const fromPath = (this.relativePath === "" ? "./internal.js" : `${this.relativePath}/${LANGUAGE_FOLDER}/index.js`)
+        const fromPath = this.relativePath === "" ? "./internal.js" : `${this.relativePath}/${LANGUAGE_FOLDER}/index.js`
         return this.makeImportStatement(this.language, fromPath)
     }
 
     private makeTyperImportStatements(): string {
-        const fromPath = (this.relativePath === "" ? "./internal.js" : `${this.relativePath}/${TYPER_CONCEPTS_FOLDER}/index.js`)
+        const fromPath = this.relativePath === "" ? "./internal.js" : `${this.relativePath}/${TYPER_CONCEPTS_FOLDER}/index.js`
         return this.makeImportStatement(this.typer, fromPath)
     }
 
     private makeConfigImportStatements(): string {
-        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/index.js`)
+        const fromPath = this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/index.js`
         return this.makeImportStatement(this.root, fromPath)
     }
 
     private makeEditorImportStatements(): string {
-        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/${EDITOR_FOLDER}/index.js`)
+        const fromPath = this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/${EDITOR_FOLDER}/index.js`
         return this.makeImportStatement(this.editor, fromPath)
     }
 
     private makeUtilsImportStatements(): string {
-        const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/${LANGUAGE_UTILS_FOLDER}/index.js`)
+        const fromPath = this.relativePath === undefined ? "./internal.js" : `${this.relativePath}/${LANGUAGE_UTILS_FOLDER}/index.js`
         return this.makeImportStatement(this.utils, fromPath)
     }
 
     private makeImportStatement(importSet: Set<string>, fromPath: string): string {
         return `
             ${
-            importSet.size > 0
-                ? `import { ${importSet
-                    .values()
-                    .toArray()
-                    .map((imp) => this.imports(imp))
-                    .join(", ")} } from "${fromPath}";`
-                : ""
-        }`
+                importSet.size > 0
+                    ? `import { ${importSet
+                          .values()
+                          .toArray()
+                          .map((imp) => this.imports(imp))
+                          .join(", ")} } from "${fromPath}";`
+                    : ""
+            }`
     }
 
     /**
@@ -140,14 +149,14 @@ export class Imports {
     public makeExportStatements(modelImports: Set<string>): string {
         return `
             ${
-            modelImports.size > 0
-                ? `export { ${modelImports
-                    .values()
-                    .toArray()
-                    .map((imp) => this.imports(imp))
-                    .join(",\n    ")} } from "./internal.js";`
-                : ""
-        }
+                modelImports.size > 0
+                    ? `export { ${modelImports
+                          .values()
+                          .toArray()
+                          .map((imp) => this.imports(imp))
+                          .join(",\n    ")} } from "./internal.js";`
+                    : ""
+            }
             `
     }
 
@@ -156,10 +165,7 @@ export class Imports {
      * @param language
      */
     static initialize(language: FreMetaLanguage): void {
-        TypesAndInterfaces
-            .add(Names.checkerInterface(language))
-            .add(Names.interpreterInterfacename(language))
-            .add(Names.workerInterface(language))
+        TypesAndInterfaces.add(Names.checkerInterface(language)).add(Names.interpreterInterfacename(language)).add(Names.workerInterface(language))
         for (const intface of language.interfaces) {
             TypesAndInterfaces.add(Names.interface(intface))
         }

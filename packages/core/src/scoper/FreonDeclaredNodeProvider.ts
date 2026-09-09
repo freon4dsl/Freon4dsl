@@ -1,8 +1,8 @@
-import { AstWalker } from "../../ast-utils/index.js"
-import { FreLanguage } from "../../language/index.js"
-import type { FreNamedNode, FreNode } from "../../ast/index.js"
-import type { FreScoperNamedNode, FreDeclaredNodeProvider, FreNamespace } from "../internal.js"
-import { CollectDeclaredNodesWorker } from "../internal.js"
+import { AstWalker } from "../ast-utils/index.js"
+import { FreLanguage } from "../language/index.js"
+import type { FreNamedNode, FreNode } from "../ast/index.js"
+import type { FreScoperNamedNode, FreDeclaredNodeProvider, FreNamespace } from "@freon4dsl/generic-scoper"
+import { CollectDeclaredNodesWorker } from "./CollectDeclaredNodesWorker.js"
 
 export class FreonDeclaredNodeProvider implements FreDeclaredNodeProvider<FreNode> {
     public getDeclaredNodes(namespace: FreNamespace<FreNode>, publicOnly: boolean): Set<FreScoperNamedNode<FreNode>> {

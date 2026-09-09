@@ -9,11 +9,12 @@ import { beforeEach, describe, test, expect } from 'vitest';
 import { type ScoperModel } from "./scoper-model/ScoperModel.js"
 import { ModelCreator } from './ModelCreator.js';
 import { initializeLanguage, type NodeX, type NodeY, type UnitA, type UnitB } from "./scoper-model/index.js"
-import { FreCompositeScoper, FreonDeclaredNodeProvider, FreonScoperLanguage, type FreScoper } from "../../scoper/index.js"
+import { type FreScoper } from "@freon4dsl/generic-scoper"
 import { type FreNamedNode, FreNode, FreNodeReference } from "../../ast/index.js"
 import { FreLanguage } from '../../language/index.js';
 import { AdditionalNamespacesScoper } from './scoper-model/AdditionalNamespacesScoper.js';
-import { CoreConfig, FreLanguageEnvironment, FREON } from "../../environment/index.js"
+import { FreLanguageEnvironment, FREON } from "../../environment/index.js"
+import { createTestScoper } from "./createScoperHelper"
 
 // !!!!!!!!!!!!!!!!!! model name may not be in fqn. This name is not visible in the model itself!!!!!!!!!!!!!!!!!!
 
@@ -48,15 +49,8 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 	let concept_B_4_3: NodeX;
 
     initializeLanguage()
-
-    const env = FreLanguageEnvironment.getInstance()
-    const mainScoper = new FreCompositeScoper<FreNode>(new FreonScoperLanguage(), new FreonDeclaredNodeProvider())
     const scoper: FreScoper<FreNode> = new AdditionalNamespacesScoper()
-
-    mainScoper.appendScoper(scoper)
-    env.scoper = mainScoper
-
-    CoreConfig.initialize(env, null)
+    const mainScoper = createTestScoper(scoper)
 
 	beforeEach(() => {
 		// create a simple model where some nodes are namespaces and some are not

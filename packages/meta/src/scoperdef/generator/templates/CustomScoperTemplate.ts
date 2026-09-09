@@ -4,7 +4,8 @@ import { Names, Imports } from "../../../utils/on-lang/index.js"
 export class CustomScoperTemplate {
     generateCustomScoperPart(language: FreMetaLanguage): string {
         const imports = new Imports()
-        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FreNodeReference, Names.FreNamespaceInfo, Names.FreScoperPart, Names.FreCompositeScoper])
+        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FreNodeReference])
+        imports.scoper = new Set<string>([Names.FreNamespaceInfo, Names.FreScoper, Names.FreCompositeScoper])
 
         // Template starts here
         return `
@@ -14,7 +15,7 @@ export class CustomScoperTemplate {
          * Class '${Names.customScoper(language)}' is meant to be a convenient place to add any
          * custom code for scoping.
          */
-        export class ${Names.customScoper(language)} implements ${Names.FreScoperPart}<${Names.FreNode}> {
+        export class ${Names.customScoper(language)} implements ${Names.FreScoper}<${Names.FreNode}> {
             mainScoper!: ${Names.FreCompositeScoper}<${Names.FreNode}>;
 
             /**

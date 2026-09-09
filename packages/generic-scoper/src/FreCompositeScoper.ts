@@ -1,12 +1,7 @@
-import { FreLogger } from "../logging/index.js";
+import { notNullOrUndefined } from './SimpleUtils.js';
 import { type FreScoper } from "./FreScoper.js";
-import { notNullOrUndefined } from '../util/index.js';
 import { type FreNamespaceInfo } from './FreNamespaceInfo.js';
-import { type FreNamespace } from './FreNamespace.js';
-import { findEnclosingNamespace, resolvePathStartingInNamespace } from './ScoperUtil.js';
 import { type FreDeclaredNodeProvider, FreNamespaceRegistry, type FreScoperLanguage, type FreScoperNamedNode, type FreScoperNode } from "./internal.js"
-
-const LOGGER = new FreLogger("FreCompositeScoper").mute();
 
 export class FreCompositeScoper<T extends FreScoperNode<T>> implements FreScoper<T> {
     readonly registry: FreNamespaceRegistry<T>
@@ -29,30 +24,6 @@ export class FreCompositeScoper<T extends FreScoperNode<T>> implements FreScoper
     insertScoper(t: FreScoper<T>) {
         this.scopers.splice(0, 0, t)
         t.mainScoper = this
-    }
-
-    /**
-     * Returns the node the 'refToResolve' refers to.
-     * @param refToResolve
-     */
-    resolvePathName(node: T, pathname: string[], typeName: string): FreScoperNamedNode<T> | undefined {
-        // console.log('resolving: ', refToResolve.pathname)
-        const baseNamespace: FreNamespace<T> | undefined = findEnclosingNamespace<T>(node, this.registry, this.scoperLanguage)
-        const currentNamespace: FreNamespace<T> = baseNamespace
-        if (notNullOrUndefined(baseNamespace)) {
-            return resolvePathStartingInNamespace<T>(
-                baseNamespace,
-                currentNamespace,
-                pathname,
-                this,
-                typeName,
-                this.registry,
-                this.scoperLanguage,
-            )
-        } else {
-            // LOGGER.error("Cannot find enclosing namespace for " + refToResolve.pathname)
-            return undefined
-        }
     }
 
     /**
@@ -104,7 +75,7 @@ export class FreCompositeScoper<T extends FreScoperNode<T>> implements FreScoper
      */
     alternativeNamespaces(node: T): FreNamespaceInfo<T>[] {
         // todo should we check whether node 'is' a namespace?
-        LOGGER.log("COMPOSITE alternativeNamespaces of type " + node.freLanguageConcept())
+        console.log("COMPOSITE alternativeNamespaces of type " + node.freLanguageConcept())
         if (notNullOrUndefined(node)) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??

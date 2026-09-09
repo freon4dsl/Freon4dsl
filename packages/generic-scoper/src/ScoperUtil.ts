@@ -1,6 +1,4 @@
-import { type FreNamedNode } from '../ast/index.js';
-import { isNullOrUndefined } from '../util/index.js';
-import { FreLanguage } from '../language/index.js';
+import { isNullOrUndefined } from "./SimpleUtils.js";
 import {
     FreNamespace,
     type FreScoperLanguage,
@@ -116,11 +114,11 @@ export function getFromVisibleNodes<T extends FreScoperNode<T>>(
 ): FreScoperNamedNode<T> | undefined {
 	// console.log('BASE getFromVisibleNodes, searching for type of ' + metaType);
 	// const visibleNodes = FreLanguage.getInstance().stdLib.elements.concat(namespace.getVisibleNodes(mainScoper, [], publicOnly));
-    let visibleNodes: FreScoperNamedNode<T>[] = transformFreNodes(FreLanguage.getInstance().stdLib.elements)
+    let visibleNodes: FreScoperNamedNode<T>[] = mainScoper.scoperLanguage.builtInNodes()
     visibleNodes = visibleNodes.concat(namespace.getVisibleNodes(mainScoper, [], publicOnly))
 	for (const node of visibleNodes) {
 		const n: string = node.name;
-		if (name === n && hasCorrectType(node, metaType)) {
+		if (name === n && hasCorrectType(mainScoper, node, metaType)) {
 			return node;
 		}
 	}
@@ -134,22 +132,10 @@ export function getFromVisibleNodes<T extends FreScoperNode<T>>(
  * @param metaType
  * @private
  */
-export function hasCorrectType<T extends FreScoperNode<T>>(freNode: FreScoperNode<T>, metaType: string): boolean {
+export function hasCorrectType<T extends FreScoperNode<T>>(mainScoper: FreCompositeScoper<T>, freNode: FreScoperNode<T>, metaType: string): boolean {
     if (!!metaType && metaType.length > 0) {
-        return metaConformsToType(freNode, metaType)
+        return mainScoper.scoperLanguage.conformsToType(freNode, metaType)
     } else {
         return true
     }
-}
-
-function metaConformsToType<T extends FreScoperNode<T>>(element: FreScoperNode<T>, requestedType: string): boolean {
-    if (isNullOrUndefined(element)) return false
-    const metatype = element.freLanguageConcept()
-    return metatype === requestedType || FreLanguage.getInstance().subConcepts(requestedType).includes(metatype)
-}
-
-
-// TODO remove this method
-export function transformFreNodes<T extends FreScoperNode<T>>(nodes: FreNamedNode[]): FreScoperNamedNode<T>[] {
-    return nodes.map((node) => node as unknown as FreScoperNamedNode<T>)
 }

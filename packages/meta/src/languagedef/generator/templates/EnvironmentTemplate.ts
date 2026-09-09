@@ -23,12 +23,12 @@ export class EnvironmentTemplate {
             Names.FreStdlib,
             Names.FreWriter,
             Names.FreInterpreter,
-            Names.FreCompositeScoper,
             Names.FreLanguageEnvironment,
             Names.FreProjectionHandler,
             Names.FreonScoperLanguage,
             Names.FreonDeclaredNodeProvider,
         ])
+        imports.scoper = new Set<string>([Names.FreCompositeScoper])
         imports.editor = new Set<string>([
             Names.actions(language), "initializeEditorDef", "initializeProjections"
         ])

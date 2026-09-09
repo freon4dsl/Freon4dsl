@@ -3,7 +3,7 @@ import type { FreEnvironment } from "./FreEnvironment.js";
 import type { FreModel, FreNode } from "../ast/index.js";
 import type { FreInterpreter } from "../interpreter/index.js";
 import type { FreReader } from "../reader/index.js";
-import type { FreCompositeScoper } from '../scoper/index.js';
+import type { FreCompositeScoper } from "@freon4dsl/generic-scoper"
 import type { FreStdlib } from "../stdlib/index.js";
 import type { FreCompositeTyper } from "../typer/index.js";
 import type { FreValidator } from "../validator/index.js";

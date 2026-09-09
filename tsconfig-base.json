@@ -3,6 +3,7 @@
         "baseUrl": ".", // This must be specified if "paths" is.
         "paths": {
             "@freon4dsl/core/*": ["packages/core/src/*"],
+            "@freon4dsl/generic-scoper/*": ["packages/generic-scoper/src/*"],
             "@freon4dsl/core-svelte/*": ["packages/core-svelte/src/*"],
             "@freon4dsl/meta/*": ["packages/meta/src/*"],
             "@freon4dsl/playground/*": ["packages/playground/src/*"],

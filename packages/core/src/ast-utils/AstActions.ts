@@ -168,7 +168,7 @@ export class AstActions {
 
     private async copyLionWebChunkToClipboard(jsonObject: LionWebJsonChunk, plainText: string): Promise<void> {
         const canWriteClipboard: boolean =
-            // eslint-disable-next-line n/no-unsupported-features/node-builtins
+            // eslint-disable-next-line n/no-unsupported-features/node-builtInNodes
             typeof navigator !== "undefined" && typeof ClipboardItem !== "undefined" && isSecureContext && !!navigator.clipboard?.write
 
         if (!canWriteClipboard) {
@@ -197,7 +197,7 @@ export class AstActions {
                 clipboardData[freonType] = new Blob([jsonText], { type: FREON_MIME_TYPE })
             }
 
-            // eslint-disable-next-line n/no-unsupported-features/node-builtins
+            // eslint-disable-next-line n/no-unsupported-features/node-builtInNodes
             await navigator.clipboard.write([new ClipboardItem(clipboardData)])
         } catch {
             this.editor.setUserMessage("Clipboard write was blocked. The node remains available inside Freon.", FreErrorSeverity.Warning)
@@ -207,7 +207,7 @@ export class AstActions {
     }
 
     private async readLionWebChunkFromClipboard(): Promise<LionWebJsonChunk | undefined> {
-        // eslint-disable-next-line n/no-unsupported-features/node-builtins
+        // eslint-disable-next-line n/no-unsupported-features/node-builtInNodes
         const canReadClipboard: boolean = typeof navigator !== "undefined" && isSecureContext && !!navigator.clipboard?.read
 
         if (!canReadClipboard) {
@@ -215,7 +215,7 @@ export class AstActions {
         }
 
         try {
-            // eslint-disable-next-line n/no-unsupported-features/node-builtins
+            // eslint-disable-next-line n/no-unsupported-features/node-builtInNodes
             const clipboardItems = await navigator.clipboard.read()
 
             for (const clipboardItem of clipboardItems) {

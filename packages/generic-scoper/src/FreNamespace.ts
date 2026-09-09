@@ -44,10 +44,8 @@ FreNamespace {
 
 */
 
-import { FreLanguage } from "../language/index.js";
-import { isNullOrUndefined, notNullOrUndefined } from '../util/index.js';
+import { isNullOrUndefined, notNullOrUndefined } from "./SimpleUtils.js";
 import type { FreCompositeScoper } from './FreCompositeScoper.js';
-import { FreLogger } from "../logging/index.js";
 import { resolvePathStartingInNamespace } from './ScoperUtil.js';
 import type { FreNamespaceInfo } from './FreNamespaceInfo.js';
 import {
@@ -60,8 +58,6 @@ import {
 } from "./internal.js"
 import type { FreNamespaceRegistry } from "./internal.js"
 
-const LOGGER = new FreLogger("FreonNamespace").mute();
-
 export const PUBLIC_AND_PRIVATE: boolean = false;
 export const PUBLIC_ONLY: boolean = true;
 
@@ -72,7 +68,7 @@ export class FreNamespace<T extends FreScoperNode<T>> {
 
     constructor(node: T, registry: FreNamespaceRegistry<T>, nodeProvider: FreDeclaredNodeProvider<T>) {
         if (!node) {
-            LOGGER.log("FreNamespace constructed without node!")
+            console.log("FreNamespace constructed without node!")
         }
         this.registry = registry
         this._myNode = node
@@ -162,7 +158,7 @@ export class FreNamespace<T extends FreScoperNode<T>> {
             if (toBeRemoved.length === 0) {
                 // Nothing found, while still having remaining NS-es to resolve
                 const referenceSeparator: string = "##" // todo get value from .edit file
-                LOGGER.error(
+                console.error(
                     `getImportedNodes: cannot resolve imported namespaces for ${this._myNode["name"]} => ${remainingNS.map((remain) =>
                         isScoperReference(remain.target) ? remain.target.pathname.join(referenceSeparator) : remain.target["name"],
                     )}`,
@@ -206,7 +202,7 @@ export class FreNamespace<T extends FreScoperNode<T>> {
                             mainScoper.scoperLanguage,
                         )
                         if (isNullOrUndefined(resolvedNode)) {
-                            LOGGER.error(
+                            console.error(
                                 `Namespace that is defined via a reference ('${nsNode.pathname}') must be resolvable in the parent namespace of '${this._myNode["name"]}' (i.e. in ${parentNs._myNode["name"]}).`,
                             )
                         } else {
@@ -345,7 +341,8 @@ export class FreNamespace<T extends FreScoperNode<T>> {
                 result = node
             }
         })
-        if (pathname.length > 1 && notNullOrUndefined(result) && FreLanguage.getInstance().classifier(result.freLanguageConcept()).isNamespace) {
+        // if (pathname.length > 1 && notNullOrUndefined(result) && FreLanguage.getInstance().classifier(result.freLanguageConcept()).isNamespace) {
+        if (pathname.length > 1 && notNullOrUndefined(result) && mainScoper.scoperLanguage.isNamespace(result)) {
             const currentNamespace: FreNamespace<T> = this.registry.getOrCreate(result)
             // Note that we need to pass the pathname without its first element,
             // and that the base namespace is different from the previous namespace!

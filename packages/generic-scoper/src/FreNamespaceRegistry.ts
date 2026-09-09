@@ -1,6 +1,6 @@
+import { notNullOrUndefined } from "./SimpleUtils.js"
 import type { FreDeclaredNodeProvider, FreScoperNode } from "./internal.js"
 import { FreNamespace } from "./internal.js"
-import { notNullOrUndefined } from "../util/index.js"
 
 export class FreNamespaceRegistry<T extends FreScoperNode<T>> {
     private allNamespaces: Map<FreScoperNode<T>, FreNamespace<T>> = new Map()

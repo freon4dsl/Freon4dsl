@@ -23,7 +23,6 @@ export class Names {
     static FreScoper: string = "FreScoper"
     static FreScoperBase: string = "FreScoperBase"
     static FreCompositeScoper: string = "FreCompositeScoper"
-    static FreScoperPart: string = "FreScoper"
     static FreCompositeTyper: string = "FreCompositeTyper"
     static FreValidator: string = "FreValidator"
     static FreStdlib: string = "FreStdlib"

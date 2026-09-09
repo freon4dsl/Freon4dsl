@@ -18,7 +18,8 @@ export const WRITER_FOLDER = "writer";
 export const READER_FOLDER = "reader";
 
 // the predefined interfaces and classes can be found in ...
-export const FREON_CORE = "@freon4dsl/core";
+export const FREON_CORE = "@freon4dsl/core"
+export const SCOPER_PACK = "@freon4dsl/generic-scoper"
 
 /**
  * Defines all paths to files and folders that are used in the generation, to ensure they are identical

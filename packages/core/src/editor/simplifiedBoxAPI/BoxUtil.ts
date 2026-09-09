@@ -34,7 +34,7 @@ import {
     RefWrapperBox,
     StringWrapperBox
 } from '../boxes/index.js';
-import type { FreScoper } from "../../scoper/index.js";
+import type { FreScoper } from "@freon4dsl/generic-scoper";
 import { RoleProvider } from "./RoleProvider.js";
 import { type FreProjectionHandler } from "../projections/index.js";
 import { UtilPrimHelper } from "./box-util-helpers/UtilPrimHelper.js";

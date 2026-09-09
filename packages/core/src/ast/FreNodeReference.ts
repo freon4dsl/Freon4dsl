@@ -1,11 +1,14 @@
 import type { LionWebJsonReferenceTarget } from "@lionweb/json"
+import { computed, observable, makeObservable } from "mobx";
+import { findEnclosingNamespace, type FreNamespace, resolvePathStartingInNamespace } from "@freon4dsl/generic-scoper"
 import { notNullOrUndefined } from "../util/index.js"
 import { qualifiedName, type  FreNamedNode } from './FreNamedNode.js';
-import { computed, observable, makeObservable } from "mobx";
 import { FREON } from "../environment/index.js"
 import { FreLogger } from "../logging/index.js";
 import { MobxModelElementImpl } from "./decorators/index.js";
 import type { FreParseLocation } from '../reader/index.js';
+import { freonScoperLanguage } from "../scoper/index.js"
+import type { FreNode } from "./FreNode.js"
 
 const LOGGER = new FreLogger("FreNodeReference").mute();
 /**
@@ -19,7 +22,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         const result = new FreNodeReference(null, typeName)
         result.lionWeb = {
             reference: referredId,
-            resolveInfo: resolveInfo
+            resolveInfo: resolveInfo,
         }
         // console.log(`REFERENCE READ set to [${result.lionWeb.resolveInfo}, ${result.lionWeb.reference}]`)
         result.name = resolveInfo
@@ -120,7 +123,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         if (notNullOrUndefined(this._FRE_referred)) {
             return this._FRE_referred
         } else {
-            return FREON.environment.scoper.resolvePathName(this.freOwner(), this.pathname, this.typeName) as T
+            return this.resolvePathName() as T
         }
     }
 
@@ -138,6 +141,25 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
      */
     match(toBeMatched: Partial<FreNodeReference<T>>): boolean {
         return toBeMatched.name === this.name
+    }
+
+    private resolvePathName(): T | undefined {
+        const scoper = FREON.environment.scoper
+        const baseNamespace: FreNamespace<FreNode> | undefined = findEnclosingNamespace<FreNode>(this.freOwner(), scoper.registry, freonScoperLanguage)
+
+        if (!notNullOrUndefined(baseNamespace)) {
+            return undefined
+        }
+
+        return resolvePathStartingInNamespace<FreNode>(
+            baseNamespace,
+            baseNamespace,
+            this.pathname,
+            scoper,
+            this.typeName,
+            scoper.registry,
+            freonScoperLanguage,
+        ) as T | undefined
     }
 }
 

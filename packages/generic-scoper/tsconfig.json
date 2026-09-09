@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "target": "es2021",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+
+        "declaration": true,
+        "declarationDir": "dist",
+        "declarationMap": true,
+        "sourceMap": true,
+        "inlineSources": true,
+
+        "outDir": "./dist",
+        "rootDir": "./src",
+
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "verbatimModuleSyntax": true,
+
+        "types": ["node", "vitest/globals"],
+
+        "noEmitOnError": false
+    },
+    "exclude": ["node_modules", "dist", "src/__tests__/**/*", "*.config.ts", "*.config.js"]
+}

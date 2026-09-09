@@ -72,10 +72,12 @@ export class NamespaceCheckerTemplate {
             writerInterfaceName,
             Names.FreLanguageEnvironment,
             Names.FreLanguage,
-            Names.FreNamespace,
             Names.FreNode,
             Names.FreNamedNode,
-            Names.notNullOrUndefined,
+            Names.notNullOrUndefined
+        ])
+        imports.scoper = new Set<string>([
+            Names.FreNamespace,
             Names.FreCompositeScoper,
             Names.isScoperNamedNode,
         ])
