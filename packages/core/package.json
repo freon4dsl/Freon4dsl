@@ -45,11 +45,11 @@
         "vitest": "4.1.4"
     },
     "dependencies": {
-        "@lionweb/json": "0.10.0-alpha.10",
-        "@lionweb/server-shared": "0.4.1",
-        "@lionweb/server-http-client": "0.4.1",
-        "@lionweb/server-delta-shared": "0.4.1",
-        "@lionweb/server-delta-client": "0.4.1",
+        "@lionweb/json": "0.10.0",
+        "@lionweb/server-shared": "0.4.2-beta.3",
+        "@lionweb/server-http-client": "0.4.2-beta.3",
+        "@lionweb/server-delta-shared": "0.4.2-beta.3",
+        "@lionweb/server-delta-client": "0.4.2-beta.3",
         "es-toolkit": "1.45.1",
         "mobx": "6.15.0",
         "reflect-metadata": "^0.2.2",

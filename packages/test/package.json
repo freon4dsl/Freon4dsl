@@ -66,7 +66,7 @@
         "@freon4dsl/core": "~3.0.0-beta.1",
         "@freon4dsl/meta": "~3.0.0-beta.1",
         "@freon4dsl/test-helpers": "~3.0.0-beta.1",
-        "@lionweb/validation": "0.10.0-alpha.10",
+        "@lionweb/validation": "0.10.0",
         "protobufjs": "8.0.3",
         "global": "^4.4.0",
         "kotlin": "^1.5.21",

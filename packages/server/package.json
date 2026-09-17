@@ -34,8 +34,8 @@
     },
     "dependencies": {
         "@types/koa": "3.0.2",
-        "@lionweb/json": "0.10.0-alpha.10",
-        "@lionweb/validation": "0.10.0-alpha.10",
+        "@lionweb/json": "0.10.0",
+        "@lionweb/validation": "0.10.0",
         "koa": "3.2.0",
         "koa-bodyparser": "4.4.1",
         "@koa/router": "15.5.0",
