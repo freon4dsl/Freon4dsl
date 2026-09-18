@@ -52,7 +52,7 @@
         "@lionweb/server-delta-client": "0.4.2-beta.3",
         "es-toolkit": "1.45.1",
         "mobx": "6.15.0",
-        "reflect-metadata": "^0.2.2",
+        "reflect-metadata": "0.2.2",
         "tslib": "2.8.1",
         "uuid": "13.0.0"
     }
