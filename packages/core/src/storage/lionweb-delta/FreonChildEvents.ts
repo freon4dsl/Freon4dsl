@@ -1,13 +1,13 @@
 import type {
-    ChildMovedFromOtherContainmentEvent,
     ChildReplacedEvent,
     ChildDeletedEvent,
     ChildAddedEvent,
-    ChildMovedAndReplacedFromOtherContainmentEvent,
+    ChildMovedAndReplacedFromContainmentInOtherParentEvent,
     ChildMovedAndReplacedFromOtherContainmentInSameParentEvent,
-    ChildMovedAndReplacedInSameContainmentEvent,
+    ChildMovedAndReplacedInSameContainmentInSameParentEvent,
     ChildMovedFromOtherContainmentInSameParentEvent,
-    ChildMovedInSameContainmentEvent,
+    ChildMovedInSameContainmentInSameParentEvent,
+    ChildMovedFromContainmentInOtherParentEvent,
 } from "@lionweb/server-delta-shared"
 import { type ReceivingDelta } from "@lionweb/server-delta-client"
 import { runInAction } from "mobx"
@@ -104,28 +104,28 @@ const ChildReplacedFunction = (msg: ChildReplacedEvent): void => {
     LOGGER.log("Called ChildReplacedFunction " + msg.messageKind)
 }
 
-const ChildMovedFromOtherContainmentFunction = (msg: ChildMovedFromOtherContainmentEvent): void => {
-    LOGGER.log("Called ChildMovedFromOtherContainmentFunction " + msg.messageKind)
+const ChildMovedFromContainmentInOtherParentFunction = (msg: ChildMovedFromContainmentInOtherParentEvent): void => {
+    LOGGER.log("Called ChildMovedFromContainmentInOtherParentFunction " + msg.messageKind)
 }
 
 const ChildMovedFromOtherContainmentInSameParentFunction = (msg: ChildMovedFromOtherContainmentInSameParentEvent): void => {
     LOGGER.log("Called ChildMovedFromOtherContainmentInSameParentFunction " + msg.messageKind)
 }
 
-const ChildMovedInSameContainmentFunction = (msg: ChildMovedInSameContainmentEvent): void => {
-    LOGGER.log("Called ChildMovedInSameContainmentFunction " + msg.messageKind)
+const ChildMovedInSameContainmentInSameParentFunction = (msg: ChildMovedInSameContainmentInSameParentEvent): void => {
+    LOGGER.log("Called ChildMovedInSameContainmentInSameParentFunction " + msg.messageKind)
 }
 
-const ChildMovedAndReplacedFromOtherContainmentFunction = (msg: ChildMovedAndReplacedFromOtherContainmentEvent): void => {
-    LOGGER.log("Called ChildMovedAndReplacedFromOtherContainmentFunction " + msg.messageKind)
+const ChildMovedAndReplacedFromContainmentInOtherParentFunction = (msg: ChildMovedAndReplacedFromContainmentInOtherParentEvent): void => {
+    LOGGER.log("Called ChildMovedAndReplacedFromContainmentInOtherParentFunction " + msg.messageKind)
 }
 
 const ChildMovedAndReplacedFromOtherContainmentInSameParentFunction = (msg: ChildMovedAndReplacedFromOtherContainmentInSameParentEvent): void => {
     LOGGER.log("Called ChildMovedAndReplacedFromOtherContainmentInSameParentFunction " + msg.messageKind)
 }
 
-const ChildMovedAndReplacedInSameContainmentFunction = (msg: ChildMovedAndReplacedInSameContainmentEvent): void => {
-    LOGGER.log("Called ChildMovedAndReplacedInSameContainmentFunction " + msg.messageKind)
+const ChildMovedAndReplacedInSameContainmentInSameParentFunction = (msg: ChildMovedAndReplacedInSameContainmentInSameParentEvent): void => {
+    LOGGER.log("Called ChildMovedAndReplacedInSameContainmentInSameParentFunction " + msg.messageKind)
 }
 
 export const childEventFunctions: ReceivingDelta[] = [
@@ -140,9 +140,9 @@ export const childEventFunctions: ReceivingDelta[] = [
         processor: ChildDeletedFunction,
     },
     {
-        messageKind: "ChildMovedAndReplacedFromOtherContainment",
+        messageKind: "ChildMovedAndReplacedFromContainmentInOtherParent",
         // @ts-expect-error TS2322
-        processor: ChildMovedAndReplacedFromOtherContainmentFunction,
+        processor: ChildMovedAndReplacedFromContainmentInOtherParentFunction,
     },
     {
         messageKind: "ChildMovedAndReplacedFromOtherContainmentInSameParent",
@@ -150,14 +150,14 @@ export const childEventFunctions: ReceivingDelta[] = [
         processor: ChildMovedAndReplacedFromOtherContainmentInSameParentFunction,
     },
     {
-        messageKind: "ChildMovedAndReplacedInSameContainment",
+        messageKind: "ChildMovedAndReplacedInSameContainmentInSameParent",
         // @ts-expect-error TS2322
-        processor: ChildMovedAndReplacedInSameContainmentFunction,
+        processor: ChildMovedAndReplacedInSameContainmentInSameParentFunction,
     },
     {
-        messageKind: "ChildMovedFromOtherContainment",
+        messageKind: "ChildMovedFromContainmentInOtherParent",
         // @ts-expect-error TS2322
-        processor: ChildMovedFromOtherContainmentFunction,
+        processor: ChildMovedFromContainmentInOtherParentFunction,
     },
     {
         messageKind: "ChildMovedFromOtherContainmentInSameParent",
@@ -165,9 +165,9 @@ export const childEventFunctions: ReceivingDelta[] = [
         processor: ChildMovedFromOtherContainmentInSameParentFunction,
     },
     {
-        messageKind: "ChildMovedInSameContainment",
+        messageKind: "ChildMovedInSameContainmentInSameParent",
         // @ts-expect-error TS2322
-        processor: ChildMovedInSameContainmentFunction,
+        processor: ChildMovedInSameContainmentInSameParentFunction,
     },
     {
         messageKind: "ChildReplaced",
