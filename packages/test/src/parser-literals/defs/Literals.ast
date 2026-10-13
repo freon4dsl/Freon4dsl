@@ -1,0 +1,20 @@
+language LiteralsTest
+
+// Primitive values the writer writes and the reader must read back unchanged:
+// booleans with language-specific keywords, and strings containing quotes,
+// backslashes, and newlines.
+
+model LiteralsModel {
+    name: identifier;
+    units: Literals[];
+}
+
+modelunit Literals {
+    name: identifier;
+    flag: boolean;
+    other: boolean;
+    flags: boolean[];
+    text: string;
+    texts: string[];
+    file-extension = "lit";
+}

@@ -324,15 +324,24 @@ export class WriterTemplate {
                         const isLastInList: boolean = index === list.length - 1;
                         this.doInitiator(sepText, sepType);
                         if (typeof listElem === "string" && !isIdentifier) {
-                            this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
+                            this.output[this.currentLine] += \`\"\$\{this._escapeString(listElem)\}\"\`;
                         } else if (typeof listElem === "string" && isIdentifier) {
                             this.output[this.currentLine] += \`\\\`\$\{listElem\}\\\`\`;
+                        } else if (typeof listElem === "boolean") {
+                            this.output[this.currentLine] += listElem ? ${JSON.stringify(this.trueValue)} : ${JSON.stringify(this.falseValue || "false")};
                         } else {
                             this.output[this.currentLine] += \`\$\{listElem\}\`;
                         }
                         this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                     });
                 }
+            }
+
+            /**
+             * Escapes a string value so the reader can read it back unchanged: backslash, double quote, and newline.
+             */
+            private _escapeString(value: string): string {
+                return value.replace(/\\\\/g, "\\\\\\\\").replace(/"/g, '\\\\"').replace(/\\n/g, "\\\\n");
             }
 
             /**
@@ -680,7 +689,7 @@ export class WriterTemplate {
             let myCall: string;
             const myType: FreMetaClassifier = myElem.type;
             if (myType === FreMetaPrimitiveType.string) {
-                myCall = `this.output[this.currentLine] += notNullOrUndefined(${elemStr}) ? \`"\$\{${elemStr}\}" \` : \`""\` /* 5 */`;
+                myCall = `this.output[this.currentLine] += notNullOrUndefined(${elemStr}) ? \`"\$\{this._escapeString(${elemStr})\}" \` : \`""\` /* 5 */`;
             } else if (myType === FreMetaPrimitiveType.boolean) {
                 // get the right manner to unparse the boolean values
                 // either from the standard boolean keywords in the default projection group
