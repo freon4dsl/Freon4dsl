@@ -1,0 +1,14 @@
+editor default
+
+global {
+    boolean [YES | NO] // booleans are written and read with these keywords, not true/false
+}
+
+Literals {[
+Literals ${name}
+    flag ${flag}
+    other ${other}
+    flags ${flags separator[,]}
+    text ${text}
+    texts ${texts separator[,]}
+]}

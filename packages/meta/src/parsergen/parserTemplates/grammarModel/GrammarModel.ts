@@ -202,14 +202,17 @@ leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
                     case PrimValueType.number:
                         const num = parseFloat(element);
                         return (isNaN(num) ? 0 : num) as T; // Handle invalid number gracefully.
-                    case PrimValueType.string:
-                        // todo make sure we remove only the outer quotes
-                        return element.replace(/"/g, "") as T;
+                    case PrimValueType.string: {
+                        // Remove only the outer quotes, then undo the writer's escapes (\\\\, \\", \\n).
+                        const inner: string = element.length >= 2 && element.startsWith('"') && element.endsWith('"') ? element.slice(1, -1) : element;
+                        return inner.replace(/\\\\(["\\\\n])/g, (_match: string, char: string) => (char === "n" ? "\\n" : char)) as T;
+                    }
                     case PrimValueType.identifier:
                         // todo make sure we remove only the outer quotes
                         return element.replace(/\`/g, "") as T;
                     case PrimValueType.boolean:
-                        return (element.toLowerCase() === "true") as T; // Case-insensitive matching for booleans.
+                        // Compare with the language's true keyword (default "true"), case-insensitively.
+                        return (element.toLowerCase() === ${JSON.stringify(this.trueValue.toLowerCase())}) as T;
                     default:
                         return element as T; // Default case (string)
                 }
