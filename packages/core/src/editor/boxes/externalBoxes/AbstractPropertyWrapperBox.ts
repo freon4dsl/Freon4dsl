@@ -4,31 +4,49 @@ import { FreLanguage } from "../../../language/index.js";
 import type { Box } from "../Box.js";
 
 export abstract class AbstractPropertyWrapperBox extends AbstractExternalBox {
-    // the following two are inherit from Box
-    // propertyName: string;       // the name of the property, if any, in 'element' which this box projects
-    // propertyIndex: number;      // the index within the property, if appropriate
-    propertyClassifierName: string = "unknown-type"; // the name of the type of the elements in the list
-    private _childBox: Box; // todo mix this with .children from Box
+  // the following two are inherit from Box
+  // propertyName: string;       // the name of the property, if any, in 'element' which this box projects
+  // propertyIndex: number;      // the index within the property, if appropriate
+  propertyClassifierName: string = "unknown-type"; // the name of the type of the elements in the list
+  private _childBox: Box; // todo mix this with .children from Box
 
-    constructor(externalComponentName: string, node: FreNode, role: string, propertyName: string, childBox: Box) {
-        super(externalComponentName, node, role);
-        this.propertyName = propertyName;
-        this._childBox = childBox;
-        this.propertyClassifierName = FreLanguage.getInstance().classifierProperty(
-            node.freLanguageConcept(),
-            propertyName,
-        )?.type;
-    }
+  constructor(
+    externalComponentName: string,
+    node: FreNode,
+    role: string,
+    propertyName: string,
+    childBox: Box,
+  ) {
+    super(externalComponentName, node, role);
+    this.propertyName = propertyName;
+    this._childBox = childBox;
+    this.propertyClassifierName = FreLanguage.getInstance().classifierProperty(
+      node.freLanguageConcept(),
+      propertyName,
+    )?.type;
+  }
 
-    getPropertyName(): string {
-        return this.propertyName;
-    }
+  getPropertyName(): string {
+    return this.propertyName;
+  }
 
-    get childBox(): Box {
-        return this._childBox;
-    }
+  get childBox(): Box {
+    return this._childBox;
+  }
 
-    get children(): ReadonlyArray<Box> {
-        return [this._childBox] as ReadonlyArray<Box>;
-    }
+  get children(): ReadonlyArray<Box> {
+    return [this._childBox] as ReadonlyArray<Box>;
+  }
+
+  get firstLeaf(): Box | null {
+    if (!this.isVisible) return null;
+    if (this.selectable) return this;
+    return this._childBox?.firstLeaf ?? null;
+  }
+
+  get lastLeaf(): Box | null {
+    if (!this.isVisible) return null;
+    if (this.selectable) return this;
+    return this._childBox?.lastLeaf ?? null;
+  }
 }
