@@ -31,4 +31,16 @@ export abstract class AbstractPropertyWrapperBox extends AbstractExternalBox {
     get children(): ReadonlyArray<Box> {
         return [this._childBox] as ReadonlyArray<Box>;
     }
+
+    get firstLeaf(): Box | null {
+        if (!this.isVisible) return null;
+        if (this.selectable) return this;
+        return this._childBox?.firstLeaf ?? null;
+    }
+
+    get lastLeaf(): Box | null {
+        if (!this.isVisible) return null;
+        if (this.selectable) return this;
+        return this._childBox?.lastLeaf ?? null;
+    }
 }
