@@ -48,7 +48,8 @@ skip SINGLE_LINE_COMMENT = "//[^\\\\r\\\\n]*" ;
 skip MULTI_LINE_COMMENT = "/\\\\*[^*]*\\\\*+(?:[^*/][^*]*\\\\*+)*/" ;
 
 // the predefined basic types
-leaf identifier        = "\\\`[a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\\:;\\\\"'<>,.?/][a-zA-Z0-9-_~!@#$%^&*()\\\\\\\\+={\\\\[}\\\\]|\\\:;\\\\"'<>,.?/ ]*\\\`" ;
+/* any text between backticks, in any script; the writer escapes backslash, backtick, and newline */
+leaf identifier        = '\\\`' "[^\\\`\\\\\\\\]*(\\\\\\\\.[^\\\`\\\\\\\\]*)*" '\\\`' ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf optStringLiteral  = "<no-value>" | stringLiteral ;
 leaf stringLiteral     = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
@@ -208,8 +209,7 @@ leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
                         return inner.replace(/\\\\(["\\\\n])/g, (_match: string, char: string) => (char === "n" ? "\\n" : char)) as T;
                     }
                     case PrimValueType.identifier:
-                        // todo make sure we remove only the outer quotes
-                        return element.replace(/\`/g, "") as T;
+                        return this.unquoteIdentifier(element) as T;
                     case PrimValueType.boolean:
                         // Compare with the language's true keyword (default "true"), case-insensitively.
                         return (element.toLowerCase() === ${JSON.stringify(this.trueValue.toLowerCase())}) as T;
@@ -218,6 +218,14 @@ leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
                 }
             }
             
+            /**
+             * Removes only the outer backticks of an identifier, then undoes the writer's escapes (backslash, backtick, newline).
+             */
+            public unquoteIdentifier(element: string): string {
+                const inner: string = element.length >= 2 && element.startsWith("\`") && element.endsWith("\`") ? element.slice(1, -1) : element;
+                return inner.replace(/\\\\([\`\\\\n])/g, (_match: string, char: string) => (char === "n" ? "\\n" : char));
+            }
+
             /**
              * Generic method to transform lists of parts.
              */
@@ -261,9 +269,7 @@ leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
                 let pathname: string[] = [];
                 for (const child of children.asJsReadonlyArrayView()) {
                     if (child !== null && child !== undefined && (typeof child === 'string' ? child !== '${this.refSeparator}' : false)) {
-                        // todo make sure we remove only the outer quotes
-                        const name = child.toString().replace(/\`/g, "") ;
-                        pathname.push(name);
+                        pathname.push(this.unquoteIdentifier(child.toString()));
                     }
                 }
                 return new ${tempReferenceClassName}(pathname, this.location(sentence, nodeInfo.node));

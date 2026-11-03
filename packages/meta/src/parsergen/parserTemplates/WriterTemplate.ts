@@ -245,12 +245,12 @@ export class WriterTemplate {
                                       )
                                       .join("")}
                             } else {
-                                this.output[this.currentLine] += node.pathname.map(s => "\`" + s + "\`").join("${this.refSeparator}") + " ";
+                                this.output[this.currentLine] += node.pathname.map(s => this._quoteIdentifier(s)).join("${this.refSeparator}") + " ";
                             }`
-                                : `this.output[this.currentLine] += node.pathname.map(s => "\`" + s + "\`").join("${this.refSeparator}") + " ";`
+                                : `this.output[this.currentLine] += node.pathname.map(s => this._quoteIdentifier(s)).join("${this.refSeparator}") + " ";`
                         }
                     } else {
-                        this.output[this.currentLine] += node.pathname.map(s => "\`" + s + "\`").join("${this.refSeparator}") + " ";
+                        this.output[this.currentLine] += node.pathname.map(s => this._quoteIdentifier(s)).join("${this.refSeparator}") + " ";
                     }
                 }
             }
@@ -326,7 +326,7 @@ export class WriterTemplate {
                         if (typeof listElem === "string" && !isIdentifier) {
                             this.output[this.currentLine] += \`\"\$\{this._escapeString(listElem)\}\"\`;
                         } else if (typeof listElem === "string" && isIdentifier) {
-                            this.output[this.currentLine] += \`\\\`\$\{listElem\}\\\`\`;
+                            this.output[this.currentLine] += this._quoteIdentifier(listElem);
                         } else if (typeof listElem === "boolean") {
                             this.output[this.currentLine] += listElem ? ${JSON.stringify(this.trueValue)} : ${JSON.stringify(this.falseValue || "false")};
                         } else {
@@ -342,6 +342,13 @@ export class WriterTemplate {
              */
             private _escapeString(value: string): string {
                 return value.replace(/\\\\/g, "\\\\\\\\").replace(/"/g, '\\\\"').replace(/\\n/g, "\\\\n");
+            }
+
+            /**
+             * Writes an identifier between backticks so the reader can read it back unchanged: backslash, backtick, and newline are escaped.
+             */
+            private _quoteIdentifier(value: string): string {
+                return "\`" + (value ?? "").replace(/\\\\/g, "\\\\\\\\").replace(/\`/g, "\\\\\`").replace(/\\n/g, "\\\\n") + "\`";
             }
 
             /**
@@ -724,7 +731,7 @@ export class WriterTemplate {
             } else if (myType === FreMetaPrimitiveType.number) {
                 myCall = `this.output[this.currentLine] += notNullOrUndefined(${elemStr}) ? \`\$\{${elemStr}\} \` : \`${this.noValue} \` /* 2 */`;
             } else if (myType === FreMetaPrimitiveType.identifier) {
-                myCall = `this.output[this.currentLine] += \`\\\`\$\{${elemStr}\}\\\` \` /* 3 */`;
+                myCall = `this.output[this.currentLine] += this._quoteIdentifier(${elemStr}) + " " /* 3 */`;
             } else {
                 myCall = `this.output[this.currentLine] += notNullOrUndefined(${elemStr}) ? \`\$\{${elemStr}\} \` : \`${this.noValue} \` /* 4 */`;
             }
