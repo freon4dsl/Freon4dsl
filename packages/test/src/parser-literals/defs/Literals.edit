@@ -11,4 +11,11 @@ Literals ${name}
     flags ${flags separator[,]}
     text ${text}
     texts ${texts separator[,]}
+    ids ${ids separator[,]}
+    items ${items vertical terminator[;]}
+    chosen ${chosen}
+]}
+
+Item {[
+item ${name}
 ]}

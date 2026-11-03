@@ -1,8 +1,9 @@
 language LiteralsTest
 
 // Primitive values the writer writes and the reader must read back unchanged:
-// booleans with language-specific keywords, and strings containing quotes,
-// backslashes, and newlines.
+// booleans with language-specific keywords, strings containing quotes,
+// backslashes, and newlines, and identifiers (names, and references to them)
+// in any script and containing backticks, backslashes, dots, and spaces.
 
 model LiteralsModel {
     name: identifier;
@@ -16,5 +17,12 @@ modelunit Literals {
     flags: boolean[];
     text: string;
     texts: string[];
+    ids: identifier[];
+    items: Item[];
+    reference chosen?: Item;
     file-extension = "lit";
+}
+
+concept Item {
+    name: identifier;
 }
