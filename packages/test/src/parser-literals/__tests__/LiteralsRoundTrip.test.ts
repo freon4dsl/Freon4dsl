@@ -21,7 +21,7 @@ describe("Reading back what the writer wrote", () => {
     }
 
     function literals(values: Partial<Literals>): Literals {
-        return Literals.create({ name: "lit", flag: false, other: false, flags: [], text: "", texts: [], ...values });
+        return Literals.create({ name: "lit", flag: false, other: false, flags: [], text: "", texts: [], count: 0, counts: [], ...values });
     }
 
     test("booleans are written with the language's keywords and read back as the same values", () => {
@@ -40,6 +40,19 @@ describe("Reading back what the writer wrote", () => {
         const { back } = roundTrip(literals({ text, texts: [json, 'plain', 'a "b" c'] }));
         expect(back.text).toBe(text);
         expect(Array.from(back.texts)).toEqual([json, "plain", 'a "b" c']);
+    });
+
+    test("negative numbers, and lists holding them, are read back unchanged", () => {
+        const { text, back } = roundTrip(literals({ count: -28, counts: [-1, 0, 7, -365] }));
+        expect(text).toContain("count -28");
+        expect(back.count).toBe(-28);
+        expect(Array.from(back.counts)).toEqual([-1, 0, 7, -365]);
+    });
+
+    test("a minus sign separated from its digits is read as part of the number", () => {
+        const { text } = roundTrip(literals({ count: -28 }));
+        const back = reader.readFromString(text.replace("count -28", "count - 28"), "Literals", new LiteralsModel()) as Literals;
+        expect(back.count).toBe(-28);
     });
 
     test("strings without special characters are unchanged by escaping", () => {

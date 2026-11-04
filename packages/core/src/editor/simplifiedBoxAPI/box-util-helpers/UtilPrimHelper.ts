@@ -400,9 +400,13 @@ export class UtilPrimHelper {
     }
 }
 
-function isNumber(currentText: string, key: string, index: number): CharAllowed {
+export function isNumber(currentText: string, key: string, index: number): CharAllowed {
     // tslint:disable-next-line:max-line-length
     // console.log("isNumber text [" + currentText + "] + length [" + currentText.length + "] typeof ["+ typeof currentText + "] key [" + key + "] index [" + index + "]");
+    // A minus sign is allowed once, as the first character, so a number can be negative.
+    if (key === "-" && index === 0 && !currentText.startsWith("-")) {
+        return CharAllowed.OK;
+    }
     if (isNaN(Number(key))) {
         if (index === currentText.length) {
             return CharAllowed.GOTO_NEXT;

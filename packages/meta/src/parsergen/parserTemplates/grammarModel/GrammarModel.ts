@@ -52,8 +52,11 @@ leaf identifier        = "\\\`[a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\\:;\\\\"'<
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf optStringLiteral  = "<no-value>" | stringLiteral ;
 leaf stringLiteral     = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
-leaf optNumberLiteral  = "<no-value>" | numberLiteral;
-leaf numberLiteral     = "[0-9]+";
+/* A number is a rule, not a leaf, so a minus sign belongs to it only where a number is
+   expected: a leaf "-?[0-9]+" would also take the "-3" out of "5-3" in a binary expression. */
+optNumberLiteral       = '<no-value>' | numberLiteral ;
+numberLiteral          = '-'? numberDigits ;
+leaf numberDigits      = "[0-9]+";
 leaf optBooleanLiteral = "<no-value>" | booleanLiteral;
 leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
 
@@ -86,6 +89,10 @@ leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
         );
 
         handlerRegistration += `super.registerFor('${refRuleName}', (n: SpptDataNodeInfo, c: KtList<object>, s: Sentence) => this.transform${refRuleName}(n, c, s));`
+        // A number (or <no-value>) is read as its text, as when it was a leaf; whitespace between the
+        // minus sign and the digits is dropped.
+        handlerRegistration += `super.registerFor('numberLiteral', (n: SpptDataNodeInfo, c: KtList<object>, s: Sentence) => this.numberText(n.node, s));`
+        handlerRegistration += `super.registerFor('optNumberLiteral', (n: SpptDataNodeInfo, c: KtList<object>, s: Sentence) => this.numberText(n.node, s));`
 
         const imports = new Imports(relativePath)
         imports.core = new Set([Names.FreParseLocation, Names.FreNamedNode, Names.FreNode, Names.FreNodeReference, Names.FreOwnerDescriptor])
@@ -170,6 +177,14 @@ leaf booleanLiteral    = '${this.falseValue}' | '${this.trueValue}';
                 ${handlerRegistration}
             }
             
+            /**
+             * The text of a number (an optional minus sign and digits) or of <no-value>, as when it was
+             * a leaf, without whitespace between the minus sign and the digits.
+             */
+            private numberText(node: SpptDataNode, sentence: Sentence): string {
+                return sentence.textAt(node.startPosition, node.nextInputNoSkip - node.startPosition).replace(/\\s+/g, "");
+            }
+
             /**
              * Generic method to transform lists of primitive values
              */
