@@ -11,4 +11,6 @@ Literals ${name}
     flags ${flags separator[,]}
     text ${text}
     texts ${texts separator[,]}
+    count ${count}
+    counts ${counts separator[,]}
 ]}

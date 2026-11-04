@@ -54,8 +54,11 @@ leaf identifier        = "\\\`[a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\:;\\\\"'<>
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf optStringLiteral  = "<no-value>" | stringLiteral ;
 leaf stringLiteral     = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
-leaf optNumberLiteral  = "<no-value>" | numberLiteral;
-leaf numberLiteral     = "[0-9]+";
+/* A number is a rule, not a leaf, so a minus sign belongs to it only where a number is
+   expected: a leaf "-?[0-9]+" would also take the "-3" out of "5-3" in a binary expression. */
+optNumberLiteral       = '<no-value>' | numberLiteral ;
+numberLiteral          = '-'? numberDigits ;
+leaf numberDigits      = "[0-9]+";
 leaf optBooleanLiteral = "<no-value>" | booleanLiteral;
 leaf booleanLiteral    = 'false' | 'true';
 
@@ -115,8 +118,11 @@ leaf identifier        = "\\\`[a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\:;\\\\"'<>
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf optStringLiteral  = "<no-value>" | stringLiteral ;
 leaf stringLiteral     = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
-leaf optNumberLiteral  = "<no-value>" | numberLiteral;
-leaf numberLiteral     = "[0-9]+";
+/* A number is a rule, not a leaf, so a minus sign belongs to it only where a number is
+   expected: a leaf "-?[0-9]+" would also take the "-3" out of "5-3" in a binary expression. */
+optNumberLiteral       = '<no-value>' | numberLiteral ;
+numberLiteral          = '-'? numberDigits ;
+leaf numberDigits      = "[0-9]+";
 leaf optBooleanLiteral = "<no-value>" | booleanLiteral;
 leaf booleanLiteral    = 'false' | 'true';
 
@@ -177,8 +183,11 @@ leaf identifier        = "\\\`[a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\:;\\\\"'<>
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf optStringLiteral  = "<no-value>" | stringLiteral ;
 leaf stringLiteral     = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
-leaf optNumberLiteral  = "<no-value>" | numberLiteral;
-leaf numberLiteral     = "[0-9]+";
+/* A number is a rule, not a leaf, so a minus sign belongs to it only where a number is
+   expected: a leaf "-?[0-9]+" would also take the "-3" out of "5-3" in a binary expression. */
+optNumberLiteral       = '<no-value>' | numberLiteral ;
+numberLiteral          = '-'? numberDigits ;
+leaf numberDigits      = "[0-9]+";
 leaf optBooleanLiteral = "<no-value>" | booleanLiteral;
 leaf booleanLiteral    = 'false' | 'true';
 
@@ -238,8 +247,11 @@ leaf identifier        = "\\\`[a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\:;\\\\"'<>
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf optStringLiteral  = "<no-value>" | stringLiteral ;
 leaf stringLiteral     = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
-leaf optNumberLiteral  = "<no-value>" | numberLiteral;
-leaf numberLiteral     = "[0-9]+";
+/* A number is a rule, not a leaf, so a minus sign belongs to it only where a number is
+   expected: a leaf "-?[0-9]+" would also take the "-3" out of "5-3" in a binary expression. */
+optNumberLiteral       = '<no-value>' | numberLiteral ;
+numberLiteral          = '-'? numberDigits ;
+leaf numberDigits      = "[0-9]+";
 leaf optBooleanLiteral = "<no-value>" | booleanLiteral;
 leaf booleanLiteral    = 'false' | 'true';
 
